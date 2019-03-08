@@ -1,0 +1,20 @@
+# The query type, represents all of the entry points into our object graph
+type Query {
+    pets: [Pet]
+    pet(id: Int!): Pet
+}
+
+type Mutation {
+    addPet(pet: InputPet!): Pet
+}
+
+type Pet{
+    id: ID!
+    name: String!
+}
+
+input InputPet{
+    id: ID!
+    name: String!
+    tag: String
+}
