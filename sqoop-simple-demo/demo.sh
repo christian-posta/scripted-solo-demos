@@ -45,3 +45,6 @@ run "kubectl get resolvermap  petstore -o yaml -n gloo-system"
 SQOOP_URL=$(echo http://$(minikube ip):$(kubectl get svc sqoop -n gloo-system -o 'jsonpath={.spec.ports[?(@.name=="http")].nodePort}'))
 
 open $SQOOP_URL
+
+desc "some examples"
+run "cat $(relative example-queries.md)"
