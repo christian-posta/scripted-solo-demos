@@ -27,7 +27,7 @@ backtotop
 desc "Create AWS secrets"
 # basically, just run something like this in a scrip on the path:
 # glooctl create secret aws --access-key $AWS_ACCESS_KEY --secret-key $AWS_SECRET_KEY --name aws-credentials
-run "create-aws-secret"
+#run "create-aws-secret"
 
 desc "Now that we have the AWS secret, we create the upstream"
 run "glooctl create upstream aws aws --aws-region us-east-1 --aws-secret-name aws-credentials"
