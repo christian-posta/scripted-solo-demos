@@ -1,0 +1,2 @@
+kubectx gloo-e
+minikube profile gloo-e
