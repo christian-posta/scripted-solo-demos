@@ -34,3 +34,6 @@ run "supergloo apply routingrule faultinjection delay fixed \
     --dest-upstreams supergloo-system.default-reviews-9080"
 
 run "kubectl get routingrule -n supergloo-system rule1 -o yaml"
+
+desc "Cleanup"
+run "kubectl delete routingrules rule1 -n supergloo-system"

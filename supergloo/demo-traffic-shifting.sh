@@ -48,3 +48,6 @@ run "kubectl get upstream -n supergloo-system default-reviews-v3-9080 -o json | 
 
 desc "All upstreams"
 run "kubectl get upstream -n supergloo-system"
+
+desc "Cleanup"
+run "kubectl delete routingrules reviews-v3 -n supergloo-system"
