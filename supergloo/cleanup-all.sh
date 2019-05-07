@@ -10,6 +10,11 @@ kubectl delete crd $(k get crd | grep istio | awk '{print $1 }')
 kubectl delete clusterrole  $(k get clusterrole | grep istio | awk '{print $1 }')
 kubectl delete clusterrolebinding  $(k get clusterrolebinding | grep istio | awk '{print $1 }')
 
+kubectl delete ns linkerd
+kubectl delete crd $(k get crd | grep linkerd | awk '{print $1 }')
+kubectl delete clusterrole  $(k get clusterrole | grep linkerd| awk '{print $1 }')
+kubectl delete clusterrolebinding  $(k get clusterrolebinding | grep linkerd| awk '{print $1 }')
+
 echo "Uninstall bookinfo"
 kubectl delete -n default -f https://raw.githubusercontent.com/istio/istio/1.0.6/samples/bookinfo/platform/kube/bookinfo.yaml
 

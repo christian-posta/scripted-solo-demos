@@ -1,0 +1,1 @@
+kubectl port-forward deploy/productpage-v1 9080 $@
