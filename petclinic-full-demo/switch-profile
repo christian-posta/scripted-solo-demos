@@ -1,0 +1,3 @@
+#kubectx gloo-e
+#minikube profile gloo-e
+kubectx gke-gloo
