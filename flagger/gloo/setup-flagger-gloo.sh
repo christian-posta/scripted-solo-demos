@@ -5,6 +5,7 @@
 SOURCE_DIR=$PWD
 
 kubectl create ns test
+kubectl create ns gloo-system
 
 helm repo add gloo https://storage.googleapis.com/solo-public-helm
 helm upgrade -i gloo gloo/gloo --namespace gloo-system
