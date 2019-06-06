@@ -1,0 +1,20 @@
+# TrafficTarget defines allowed routes for counting.
+# In this example dashboard is allow to connect using
+# TCP.
+---
+kind: TrafficTarget
+apiVersion: access.smi-spec.io/v1alpha1
+metadata:
+  name: counting-traffic-target
+  namespace: default
+destination:
+  kind: ServiceAccount
+  name: counting
+  namespace: default
+sources:
+- kind: ServiceAccount
+  name: dashboard
+  namespace: default
+specs:
+- kind: TCPRoute
+  name: counting-tcp-route

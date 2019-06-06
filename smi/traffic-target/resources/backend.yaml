@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counting
+  annotations:
+    'consul.hashicorp.com/connect-inject': 'true'
+    "consul.hashicorp.com/connect-service": "counting"
+spec:
+  serviceAccountName: counting
+  automountServiceAccountToken: true
+  containers:
+    - name: counting
+      image: hashicorp/counting-service:0.0.2
+      ports:
+        - containerPort: 9001
+          name: http

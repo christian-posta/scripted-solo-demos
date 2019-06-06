@@ -1,0 +1,167 @@
+---
+# Source: smi-metrics/templates/config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+  name: dev-smi-metrics
+data:
+  config.yml: |
+    prometheus-url: http://linkerd-prometheus.linkerd.svc.cluster.local:9090
+    
+
+---
+# Source: smi-metrics/templates/rbac.yaml
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+  name: dev-smi-metrics
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+  name: dev-smi-metrics
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: dev-smi-metrics
+  namespace: default
+---
+
+---
+# Source: smi-metrics/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-smi-metrics
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  ports:
+    - port: 443
+      targetPort: api
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: smi-metrics
+    app.kubernetes.io/instance: dev
+
+---
+# Source: smi-metrics/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-smi-metrics
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: smi-metrics
+      app.kubernetes.io/instance: dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: smi-metrics
+        app.kubernetes.io/instance: dev
+    spec:
+      serviceAccountName: dev-smi-metrics
+      containers:
+        - name: shim
+          image: thomasr/smi-metrics:v1alpha1-0.1
+          imagePullPolicy: IfNotPresent
+
+          command:
+            - /smi-metrics
+            - --config=/config.yml
+
+          ports:
+            - containerPort: 8080
+              name: api
+              protocol: TCP
+            - containerPort: 8081
+              name: admin
+              protocol: TCP
+
+          volumeMounts:
+            - name: config
+              mountPath: /config.yml
+              subPath: config.yml
+            - mountPath: /var/run/smi-metrics
+              name: tls
+              readOnly: true
+
+          
+          resources:
+            {}
+            
+
+      volumes:
+        - name: config
+          configMap:
+            name: dev-smi-metrics
+        - name: tls
+          secret:
+            secretName: dev-smi-metrics
+
+---
+# Source: smi-metrics/templates/apiservice.yaml
+apiVersion: apiregistration.k8s.io/v1beta1
+kind: APIService
+metadata:
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+  name: v1alpha1.metrics.smi-spec.io
+spec:
+  service:
+    name: dev-smi-metrics
+    namespace: default
+  caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHVENDQWdHZ0F3SUJBZ0lSQU42M3l5Smo1cHFZWW5XVDBEcHlXQUF3RFFZSktvWklodmNOQVFFTEJRQXcKSmpFa01DSUdBMVVFQXhNYlpHVjJMWE50YVMxdFpYUnlhV056TG1SbFptRjFiSFF1YzNaak1CNFhEVEU1TURZdwpOREl5TVRBMU1Wb1hEVEl3TURZd016SXlNVEExTVZvd0pqRWtNQ0lHQTFVRUF4TWJaR1YyTFhOdGFTMXRaWFJ5CmFXTnpMbVJsWm1GMWJIUXVjM1pqTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEKeUlRY0ZsdlFsNWRVTjVRdHBRcU5jWk1hdmdDSjF5YVlxb1gvaG94UUY4cFdtcncvY3BrQ3N4RlkySFZ4ZGxSUgowU3dObHAxcXBDN1ZGOFFvQjJhbkpOcDRjMjY4TjJQd0VJeGpnU3FqaG05TWUzcTBXRFJwRThQc0h5SFptLzJ0Cm1naXVwcDFUOXpUM3B1S3Q4OWE0U3g4UHBMYjJSN2VNbThDZDFTM2swSHl0NVFkeEtjcHJ0ZVpHR1prb2NHci8KcFZVNERzUm5OT0hKaWREWE16dWRObkJ3VTB5SlNOQ242ZDErUjVpSWR6VzEwY1IvQTA0WFk5Y1ZFeDRrVVh5NgpqL2VrN1pZSDVYTXpVUk5XdytLZFBuSDJiOGhuV2V0WXpBT05STzF5VEZJUEFsbVZtZWJUbW5kWGxvODhlRW5tClkxY3FENUhnUllkUkJ3eG5vVStHR3dJREFRQUJvMEl3UURBT0JnTlZIUThCQWY4RUJBTUNBcVF3SFFZRFZSMGwKQkJZd0ZBWUlLd1lCQlFVSEF3RUdDQ3NHQVFVRkJ3TUNNQThHQTFVZEV3RUIvd1FGTUFNQkFmOHdEUVlKS29aSQpodmNOQVFFTEJRQURnZ0VCQUZid1J0TDluVU1mS2N4K2hGVGt1cExQREJzTG1TZkl1OFJtb1B4MjZOTmhoWURyCjNrVUVka09kbUxuY29NbTNvcmRRQi9sVURhci9teUtlM1g0VXZjWHpwWTR3LzBURUFva0NsNUloVEtCK0hNZjUKVGVZUHJmanNlTGg0ZllWUWszOEtEWTNlR3NwTVJTOFJzRTJxWnRoUGI0UlFJSUVMeTFLaWFJbmpqR3lhclludgpRbFUzK1VmRGNqWlVvZkszMjR2ZVVOVTgxbmhVeVd1c3JudnpMcC9FZUZ5SHFLSnF4L3VIVTVuRytnSUNlOG5PCnNGaWc4NVowd1RsRnhlVzRyVHB0RTlXSXhBcCtEaENiejZVREVVdEVtKytsVzl5SElBVjFvYTFxNzhzTytHWEgKR1ppOGVIeXNqTFdpUUg0Q2Fwa3ZOeWRFcFBiZXZ3UFRmWC9US1hrPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  group: metrics.smi-spec.io
+  version: v1alpha1
+  insecureSkipTLSVerify: false
+  groupPriorityMinimum: 100
+  versionPriority: 100
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/name: smi-metrics
+    helm.sh/chart: smi-metrics-0.1.0
+    app.kubernetes.io/instance: dev
+    app.kubernetes.io/managed-by: Tiller
+  name: dev-smi-metrics
+type: kubernetes.io/tls
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRTStYdHB5VW1xeCtNb0tGM1NaRW1lekFOQmdrcWhraUc5dzBCQVFzRkFEQW0KTVNRd0lnWURWUVFERXh0a1pYWXRjMjFwTFcxbGRISnBZM011WkdWbVlYVnNkQzV6ZG1Nd0hoY05NVGt3TmpBMApNakl4TURVeFdoY05NakF3TmpBek1qSXhNRFV4V2pBbU1TUXdJZ1lEVlFRREV4dGtaWFl0YzIxcExXMWxkSEpwClkzTXVaR1ZtWVhWc2RDNXpkbU13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRHAKcG5qeWJUTm1wem1zWE5NRTJnWWl0UEtQSDJjSXBhT3J2TnNmRWREUWNnNDJZNmtpbHV6SEd1eHl6eThqRjUzUwpBVXQyUkYyV3RybWk1UXZySllxY2IvQWxkNngrODl1NURlcWNuVXpsZkFmWXUrMDJCMC84d2hNcUNEcXlwakpOClo4TGtjY3F2YTBnMmgvTXFmWjZqVjhUVjdUcEQvNGZPVHlQVWZVRG1QTVJMUFhOUDM3bnoxZjlpOWlyZWdqdG0KZnBickRYZUV5alN1Y3NnZnd4M2szS0pHRWdvWGRrNDdleXEyckdDUkozdndUd3V0dksxUWZOK2NSaElyeXM2RQpVN2Y5SmdOaWxXUjZ3N1J3b2ZtN0VaeHVDQW5yQmZpUzJrVFR2bzI4YnEzVjFHTk9TMk9jM2h2eXdLRWFQc3Y3ClIvWEZSTzQzRTlSRlJpN0RCY2hiQWdNQkFBR2pQekE5TUE0R0ExVWREd0VCL3dRRUF3SUZvREFkQmdOVkhTVUUKRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEQVlEVlIwVEFRSC9CQUl3QURBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsMllOcTF3eGFUamJOcEcrZ0hTNlI5RHlrK1BwYm5wWWtPYTM1MVFtV3p5a2dsSTZWUWd0ClBiOGlFek9hMlV3NTF4bHFCRDlFR1JRRURwV2ZtRk56bEl0RDBGZzVUWDg3T2xDQnRoYkdrRUJHYVB4c3NVKzUKcDRPQTdwbEZnQTNjSFNnUk9hT3g5cmRtTWd6b28yV1doOG43SGZNV1RnYXBNK0thN0JRNG1KM1hXZ3d4b3JUUQpqMGo4ZVU3dlZxOURSQjRrR1BRS2FjVnZLSHhkQWdrK0NLSHRQVjIrTG5OaGVha3FDRE9pU25QVFI4NHF0OUlICjJEOWJxU3NYVWM5d3JpdlZySUlyd2FBc3VKdHdpdS9OREs3WnZCVnJaQjkzUmFXME8wamNLNTByWXJPU3Yza0UKNlIxbmNvSWw4MEpkeklPVmJ4U1U3Nll0a2dDKzVDTkplZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBNmFaNDhtMHpacWM1ckZ6VEJOb0dJclR5ang5bkNLV2pxN3piSHhIUTBISU9ObU9wCklwYnN4eHJzY3M4dkl4ZWQwZ0ZMZGtSZGxyYTVvdVVMNnlXS25HL3dKWGVzZnZQYnVRM3FuSjFNNVh3SDJMdnQKTmdkUC9NSVRLZ2c2c3FZeVRXZkM1SEhLcjJ0SU5vZnpLbjJlbzFmRTFlMDZRLytIems4ajFIMUE1anpFU3oxegpUOSs1ODlYL1l2WXEzb0k3Wm42VzZ3MTNoTW8wcm5MSUg4TWQ1TnlpUmhJS0YzWk9PM3NxdHF4Z2tTZDc4RThMCnJieXRVSHpmbkVZU0s4ck9oRk8zL1NZRFlwVmtlc08wY0tINXV4R2NiZ2dKNndYNGt0cEUwNzZOdkc2dDFkUmoKVGt0am5ONGI4c0NoR2o3TCswZjF4VVR1TnhQVVJVWXV3d1hJV3dJREFRQUJBb0lCQVFEWFJLNTRSUTR2alBEQgpFa0RGWG81Nm1aWkZNUngveGdSMjdTaEJodXVKc1J2UkZwODFKREtBK3hoUWF2eTE2ME5Yd2lPaGtqbGI2M3c3ClRhWmVmeGNuTEtib0RrdWFKOWtQdFhlcjFlMk1IV3NwVDNPczdLM1FaWXE4bGhwbWtHTVdGL3hpOTBoVHVKY3UKenJER1BEalZxNzdKanFpNUQ0d3pFNDBpY0VoRUZvUEg0VTNrYXlPTzQyc2JOckorNEpkQ0hSK1c1YWM2akUySAo2NjNyc1NpbC9vRGl3VGxsalQzVEIrcEJxV2hBblpYalhlejJESnplODBvWlRBSVhER00zdy9lN2hiT1pPTWNuCkFsd0k0ejEydnNLS1o1RlVQNFp0UkNITWVaUFhFVjlXWTN1R2hYK3hINUtxT3djYmdGc3l4K1ZMOEJEaWFqS2MKSGhaakRXN0JBb0dCQVBvMWlGU0p5SC9qdDV6RHpRTTgxVjdSMThNMFNBUEVuYUd6R3V2SGNTZ1lWZVhzVlNBbwp4MnhhYzBaOWFwUWxoN3RJN3lpLzlLNTliNVhmdk5qY3F4Y0hwRDJ0Z2xtMEZtaHgzZ3o1TURoMzVQRTJIblF3ClVLOWpickdmbUk0RlhMeFJ5R0RvSmZ3ODFQMFdDS0pDL0xMMWdNMGc5Yk5VQmgxaEVMekJBVFk3QW9HQkFPOE8KMUl6bS9zam5jVlBQUXZFeDdZMFVCMmZJWHBRV0czUW5WNlkvbjVFMTJYSDNwWkd5SElkdFd0REFsMUdhZUR0VQp2UTJ0bzlPVXRLNXd6US8zazB5dHc1SnlKUTRZbHYwRTcxdlhXYmJPcUNteW9JeEZiL3dCZlJzb01ldHlSNExJCmZuM0dpblAxMWw4b293dWpiZm5qdVZRUTVYTDhOU2NFeEYxdm9QUmhBb0dBYzBwemRUQy8yRjRmWHZiQjRyb0gKUDFmRjZjYVBZRjBhblVXZ0pBQ1VYWHRKS1ZiS3FyVGZuMGZXVWlhOEUyTnZ0WmFYek5rV2I4aVF3Q2lHSmc4WQpMdFp3a1pML3UwSEdDWDVlYU8veGpqT0FwTHpoTDN5TDBTVXAvbUtoc3Q4NXFmU3ROaW9DUnNYcEJtMCtzVFhZCnBzV0ZBZ0FyOXVQQ3BZcnlZV2MxbmIwQ2dZQWJxUXlnN1Exbjg1ZWlTZVlHQUcvckZma3hZZmJIamJOSmdrL2EKOVp1aDhxZ2hUclZDb1dnNXAwYU54dXI3VHpOQU1qTFp4VkNpWjU5c1c3THVlUWY3SkZQdnV2TmNxUzIzUXYzcgpFNFRXNlJ4K0RxUVM5dW5aTDlibzhJS3VLbi9wdXdjZnlIdzJwS2hVUkdCeE5VekJVRDhlWWdJYWh1SWpqS0tuCjZRV25vUUtCZ1FDazBzby96ZlFzV29QVHpxQmxoaERhUlpzWEMxekVZMnNZSlhnbk9iUzBRTkJRakRvQVZ4K3EKUjVDREs3RkVTZnNyMW13Mi9aelAzMDdqTjVDaGpmMS9zVlNOM1BRUGZ2OXl2WjVJOGMwSUlvcTl6WGRkWGcvRApGSFV0NDhCbEJPR1NidXluUmRnN2x6MUVYNjdJN0ttdVgvTzZyelBEclpZQTlQbjhYWG00VlE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+

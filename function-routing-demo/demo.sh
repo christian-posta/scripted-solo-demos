@@ -12,8 +12,6 @@ backtotop
 desc "Let's review the petstore upstream"
 run "glooctl get upstream default-petstore-8080 -o yaml"
 
-desc "These functions were discovered by the discovery microservice"
-run "kubectl -n gloo-system logs -l gloo=discovery"
 backtotop
 
 
@@ -24,16 +22,17 @@ read -s
 backtotop
 
 desc "Let's route to a specific function (not just a reverse proxy)"
-run "glooctl add route  --path-exact /petstore/findPet --dest-name default-petstore-8080 --rest-function-name findPetById"
+run "glooctl create virtualservice --name petstore --domains petstore.solo.io"
+run "glooctl add route --name petstore  --path-exact /petstore/findPet --dest-name default-petstore-8080 --rest-function-name findPetById"
 
 desc "If we canll our service, we should see that it defaults to getting all pets"
-run "curl $(glooctl proxy url)/petstore/findPet"
+run "curl -H 'Host: petstore.solo.io' $(glooctl proxy url)/petstore/findPet"
 
 desc "The findPetById function expects a parameter though. It will default to empty string. Where does this parameter come from?"
 desc "We can send it in via the body"
 read -s
 
-run "curl $(glooctl proxy url)/petstore/findPet -d '{\"id\": 1}'"
+run "curl -H 'Host: petstore.solo.io' $(glooctl proxy url)/petstore/findPet -d '{\"id\": 1}'"
 
 desc "This is a simple example. This sample is subtle, but here's what's going on:"
 read -s
@@ -45,8 +44,8 @@ read -s
 desc "We can also read the parameters for a function from the headers"
 
 
-run "glooctl add route --path-prefix /petstore/findWithId/ --dest-name default-petstore-8080  --rest-function-name findPetById --rest-parameters ':path=/petstore/findWithId/{id}'"
+run "glooctl add route --name petstore --path-prefix /petstore/findWithId/ --dest-name default-petstore-8080  --rest-function-name findPetById --rest-parameters ':path=/petstore/findWithId/{id}'"
 
 
-run "curl $(glooctl proxy url)/petstore/findWithId/1"
+run "curl -H 'Host: petstore.solo.io' $(glooctl proxy url)/petstore/findWithId/1"
 
