@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: loop-tap
+  namespace: loop-system
+spec:
+  filters:
+    - listenerMatch:
+        listenerType: SIDECAR_INBOUND # will match with the inbound listener for reviews:8080
+        listenerProtocol: HTTP
+      insertPosition:
+        index: LAST
+      filterName: envoy.filters.http.tap
+      filterType: HTTP
+      filterConfig:
+        common_config:
+          tds_config:
+            name: loop-system.calc-ise
+            config_source:
+              initial_fetch_timeout: 1s
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                  google_grpc:
+                    target_uri: loop.loop-system:5678
+                    stat_prefix: tap-control-plane

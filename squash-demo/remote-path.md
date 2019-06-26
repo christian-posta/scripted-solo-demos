@@ -1,0 +1,1 @@
+/home/yuval/go/src/github.com/solo-io/squash/contrib/example/service1

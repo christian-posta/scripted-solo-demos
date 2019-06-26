@@ -1,0 +1,1 @@
+kubectl patch deployment -n calc example-service2 -p '{"spec":{"template":{"spec":{"containers":[{"name":"example-service2","image":"soloio/example-service2-java:v0.2.2"}]}}}}'   
