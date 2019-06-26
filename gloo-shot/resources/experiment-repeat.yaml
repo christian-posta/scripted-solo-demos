@@ -1,0 +1,26 @@
+apiVersion: glooshot.solo.io/v1
+kind: Experiment
+metadata:
+  name: abort-ratings-metric-repeat
+  namespace: bookinfo
+spec:
+  spec:
+    duration: 15s
+    failureConditions:
+      - trigger:
+          prometheus:
+            customQuery: |
+              scalar(sum(rate(istio_requests_total{ source_app="productpage",response_code="500",reporter="destination",destination_app="reviews",destination_version!="v1"}[1m])))
+            thresholdValue: 0.01
+            comparisonOperator: ">"
+    faults:
+    - destinationServices:
+      - name: bookinfo-ratings-9080
+        namespace: glooshot
+      fault:
+        abort:
+          httpStatus: 500
+        percentage: 100
+    targetMesh:
+      name: istio-istio-system
+      namespace: glooshot

@@ -42,6 +42,7 @@ run "kubectl delete pods -n calc --all"
 
 # we have to redo this for some reason
 kill -9 $SVC_PID > /dev/null 2>&1
+read -s
 kubectl port-forward -n calc deploy/example-service1 8080:8080  &> /dev/null &
 read -s
 
@@ -58,13 +59,3 @@ read -s
 
 desc "Let's replay the traffic"
 run "loopctl replay --id 1"
-
-
-desc "end demo"
-read -s
-
-
-
-# cleanup port-forrward
-killall kubectl &> /dev/null 
-kubectl delete pods -n squash-debugger --all > /dev/null 2>&1
