@@ -11,7 +11,7 @@ spec:
           prometheus:
             customQuery: |
               scalar(sum(rate(istio_requests_total{ source_app="productpage",response_code="500",reporter="destination",destination_app="reviews",destination_version!="v1"}[1m])))
-            thresholdValue: 0.01
+            thresholdValue: 0.50
             comparisonOperator: ">"
     faults:
     - destinationServices:
