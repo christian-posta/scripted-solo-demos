@@ -1,0 +1,85 @@
+#app mesh virtual node
+---
+apiVersion: appmesh.k8s.aws/v1beta1
+kind: VirtualNode
+metadata:
+  name: colorgatewayv2
+  namespace: appmesh-demo
+spec:
+  meshName: color-mesh
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  serviceDiscovery:
+    dns:
+      hostName: colorgatewayv2.appmesh-demo.svc.cluster.local
+  backends:
+    - virtualService:
+        virtualServiceName: colorteller.appmesh-demo
+
+#app mesh virtualservice
+---
+apiVersion: appmesh.k8s.aws/v1beta1
+kind: VirtualService
+metadata:
+  name: colorgatewayv2.appmesh-demo
+  namespace: appmesh-demo
+spec:
+  meshName: color-mesh
+  routes:
+    - name: color-route
+      http:
+        match:
+          prefix: /color
+        action:
+          weightedTargets:
+            - virtualNodeName: colorgatewayv2
+              weight: 1
+
+#service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: colorgatewayv2
+  namespace: appmesh-demo
+  labels:
+    app: colorgatewayv2
+spec:
+  ports:
+    - port: 9080
+      name: http
+  selector:
+    app: colorgatewayv2
+
+#deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colorgatewayv2
+  namespace: appmesh-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: colorgatewayv2
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: colorgatewayv2
+        version: v2
+    spec:
+      containers:
+        - name: colorgatewayv2
+          image: "fmedery/color-gatewayv2:latest"
+          ports:
+            - containerPort: 9080
+          env:
+            - name: "SERVER_PORT"
+              value: "9080"
+            - name: "COLOR_TELLER_ENDPOINT"
+              value: "colorteller.appmesh-demo:9080"
+---

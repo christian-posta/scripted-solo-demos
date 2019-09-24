@@ -22,12 +22,12 @@ spec:
     port: 9898
   canaryAnalysis:
     # schedule interval (default 60s)
-    interval: 10s
+    interval: 5s
     # max number of failed metric checks before rollback
     threshold: 5
     # max traffic percentage routed to canary
     # percentage (0-100)
-    maxWeight: 25
+    maxWeight: 50
     # canary increment step
     # percentage (0-100)
     stepWeight: 5

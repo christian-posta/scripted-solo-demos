@@ -22,6 +22,9 @@ kubectl delete taps -n loop-system --all > /dev/null 2>&1
 open http://localhost:8080
 
 desc "Starting squash demo"
+read -s
+desc "Go debug and fix it"
+read -s
 desc "Take a look at behavior... we can patch?"
 read -s
 
@@ -46,8 +49,11 @@ read -s
 kubectl port-forward -n calc deploy/example-service1 8080:8080  &> /dev/null &
 read -s
 
-desc "Let's check what recordings we have so far: "
+desc "Let's check what recordings we have so far before we've generated any errors"
 run "loopctl list"
+
+desc "Now go find some errors"
+read -s
 
 desc "Let's check again after we've found an error"
 run "loopctl list"

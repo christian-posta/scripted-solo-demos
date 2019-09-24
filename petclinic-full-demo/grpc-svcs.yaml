@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqoopdemo-hr
+  labels:
+    app: sqoopdemo-hr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqoopdemo-hr
+  template:
+    metadata:
+      labels:
+        app: sqoopdemo-hr
+    spec:
+      containers:
+      - name: sqoopdemo-hr
+        image: soloio/sqoop-demo-hr@sha256:0ecbfab70cb6306e301103d7fbab2b5b0e0064ce9920b656d1e36c9e1b446b4d
+        ports:
+        - containerPort: 10000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sqoopdemo-hr
+spec:
+  selector:
+    app: sqoopdemo-hr
+  ports:
+  - protocol: TCP
+    port: 10000
+    targetPort: 10000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqoopdemo-projects
+  labels:
+    app: sqoopdemo-projects
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqoopdemo-projects
+  template:
+    metadata:
+      labels:
+        app: sqoopdemo-projects
+    spec:
+      containers:
+      - name: sqoopdemo-projects
+        image: soloio/sqoop-demo-projects@sha256:f516d0b8664d68c507d8a09a43f27b99fb7040fd02e159e548d163df63053a04
+        ports:
+        - containerPort: 10000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sqoopdemo-projects
+spec:
+  selector:
+    app: sqoopdemo-projects
+  ports:
+  - protocol: TCP
+    port: 10000
+    targetPort: 10000

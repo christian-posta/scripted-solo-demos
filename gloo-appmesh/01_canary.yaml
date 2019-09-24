@@ -1,0 +1,38 @@
+---
+apiVersion: gloo.solo.io/v1
+kind: UpstreamGroup
+metadata:
+  name: upstreamgroup-gateway
+  namespace: gloo-system
+spec:
+  destinations:
+  - destination:
+      upstream:
+        name: appmesh-demo-colorgateway-9080
+        namespace: gloo-system
+    weight: 80
+  - destination:
+      upstream:
+        name: appmesh-demo-colorgatewayv2-9080
+        namespace: gloo-system
+    weight: 20
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: colorgateway
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matcher:
+        prefix: /appmesh/color
+      routeAction:
+        upstreamGroup:
+          name: upstreamgroup-gateway
+          namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /color

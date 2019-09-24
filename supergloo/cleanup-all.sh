@@ -9,6 +9,7 @@ kubectl delete ns istio-system
 kubectl delete crd $(k get crd | grep istio | awk '{print $1 }')
 kubectl delete clusterrole  $(k get clusterrole | grep istio | awk '{print $1 }')
 kubectl delete clusterrolebinding  $(k get clusterrolebinding | grep istio | awk '{print $1 }')
+kubectl delete  mutatingwebhookconfigurations.admissionregistration.k8s.io istio-sidecar-injector 
 
 kubectl delete ns linkerd
 kubectl delete crd $(k get crd | grep linkerd | awk '{print $1 }')

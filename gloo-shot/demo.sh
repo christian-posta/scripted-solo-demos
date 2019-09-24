@@ -15,6 +15,7 @@ desc "May also want to check Prom"
 read -s
 
 desc "Let's see the status of the experiment after the run"
+run "kubectl get exp -n bookinfo abort-ratings-metric -o yaml"
 run "kubectl get reports -n bookinfo abort-ratings-metric -o yaml"
 
 backtotop

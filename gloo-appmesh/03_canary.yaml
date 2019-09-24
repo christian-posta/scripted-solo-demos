@@ -1,0 +1,13 @@
+---
+apiVersion: gloo.solo.io/v1
+kind: UpstreamGroup
+metadata:
+  name: upstreamgroup-gateway
+  namespace: gloo-system
+spec:
+  destinations:
+  - destination:
+      upstream:
+        name: appmesh-demo-colorgatewayv2-9080
+        namespace: gloo-system
+    weight: 100

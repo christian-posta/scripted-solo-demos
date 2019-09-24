@@ -1,0 +1,16 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: GlooDemo
+  region: us-west-2
+  version: "1.13"
+nodeGroups:
+  - name: ng1-GlooDemo
+    instanceType: m5.large
+    desiredCapacity: 2
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        appMesh: true
+        xRay: true
+        cloudWatch: true
