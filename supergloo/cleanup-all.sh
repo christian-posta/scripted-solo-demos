@@ -22,3 +22,11 @@ kubectl delete -n default -f https://raw.githubusercontent.com/istio/istio/1.0.6
 echo "Uninstall Gloo"
 kubectl delete ns gloo-system
 kubectl delete crd $(k get crd | grep gloo | awk '{print $1 }')
+kubectl delete ns bookinfo-appmesh
+kubectl delete -f https://raw.githubusercontent.com/solo-io/service-mesh-hub/master/install/service-mesh-hub.yaml
+
+kubectl delete ns bookinfo-appmesh
+kubectl delete secret aws -n supergloo-system
+kubectl delete mesh demo-appmesh -n supergloo-system
+kubectl delete routingrule split-reviews -n supergloo-system
+. cleanup-appmesh-resources.sh demo-appmesh

@@ -37,6 +37,7 @@ kubectl apply -f resources/deploy_calc.yaml -n calc
 
 # disable istio mtls
 kubectl  delete meshpolicy default -n default
-code $GOPATH/src/github.com/solo-io/squash/contrib/example/service2-java
-code $GOPATH/src/github.com/solo-io/squash/contrib/example/service1
+#code $GOPATH/src/github.com/solo-io/squash/contrib/example/service2-java
+#code $GOPATH/src/github.com/solo-io/squash/contrib/example/service1
 # remote path: /home/yuval/go/src/github.com/solo-io/squash/contrib/example/service1
+echo "Make sure to double check Istio TLS!!!!!!!!"

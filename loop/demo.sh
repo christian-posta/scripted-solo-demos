@@ -28,12 +28,13 @@ read -s
 desc "Take a look at behavior... we can patch?"
 read -s
 
+kubectl delete po --all -n squash-debugger  &> /dev/null
 desc "Let's patch"
 run "./patch-service2-ise.sh"
 
+
 desc "verify correct behavior"
 read -s
-
 desc "Let's use loop!"
 run "loopctl"
 
@@ -43,10 +44,12 @@ run "kubectl apply -f resources/tap.yaml"
 run "kubectl apply -f resources/envoyfilter.yaml"
 run "kubectl delete pods -n calc --all"
 
+kubectl delete po -l app=pilot -n istio-system > /dev/null 2>&1
+
 # we have to redo this for some reason
 kill -9 $SVC_PID > /dev/null 2>&1
 read -s
-kubectl port-forward -n calc deploy/example-service1 8080:8080  &> /dev/null &
+kubectl port-forward -n calc deploy/example-service1 8080:8080  > /dev/null &
 read -s
 
 desc "Let's check what recordings we have so far before we've generated any errors"
