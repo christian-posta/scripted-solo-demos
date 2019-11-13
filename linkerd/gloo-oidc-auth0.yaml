@@ -1,0 +1,31 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  displayName: default
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: emojivoto-web-svc-80
+            namespace: gloo-system
+    virtualHostPlugins:
+      extensions:
+        configs:
+          extauth:
+            configs:
+            - oauth:
+                app_url: http://34.82.77.50:80/
+                callback_path: /callback
+                client_id: pCL3rwY9cmpMGgmDQqFTxzSEmlqLpQg6
+                client_secret_ref:
+                  name: auth0
+                  namespace: gloo-system
+                issuer_url: https://ceposta-solo.auth0.com
