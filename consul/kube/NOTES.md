@@ -1,3 +1,5 @@
+## Updating to latest helm charts
+
 ## Installing into kubernetes from helm chart:
 
 helm template --name consul ./ | kubectl apply --validate=false -f -
