@@ -1,0 +1,24 @@
+apiVersion: examples.io/v1
+kind: AutoRoute
+operatorName: autoroute-operator
+phases:
+
+- description: AutoRoute is pending processing
+  # initial: true indicates this state is the initial state of the CRD
+  # initial can only be true for one phase
+  initial: true
+  name: Initializing
+
+- description: AutoRoute is syncing with deployments in the cluster
+  name: Syncing
+  inputs:
+    - deployments
+  outputs:
+  - services
+  - virtualservices
+  - gateways
+
+- description: AutoRoute is in-sync and ready to serve traffic
+  inputs:
+  - deployments
+  name: Ready
