@@ -1,0 +1,21 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: autoroutes.examples.io
+spec:
+  group: examples.io
+  names:
+    kind: AutoRoute
+    listKind: AutoRouteList
+    plural: autoroutes
+    singular: autoroute
+  scope: Namespaced
+  subresources:
+    status: {}
+  versions:
+  - name: v1
+    served: true
+    storage: true

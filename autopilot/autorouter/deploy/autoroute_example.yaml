@@ -1,0 +1,7 @@
+apiVersion: examples.io/v1
+kind: AutoRoute
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: example

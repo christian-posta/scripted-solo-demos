@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: autoroute-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: autoroute-operator
+subjects:
+- kind: ServiceAccount
+  name: autoroute-operator
+  namespace: REPLACE_NAMESPACE

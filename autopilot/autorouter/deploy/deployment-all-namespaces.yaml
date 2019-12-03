@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: autoroute-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: autoroute-operator
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: autoroute-operator
+      name: autoroute-operator
+    spec:
+      containers:
+      - command:
+        - autoroute-operator
+        env:
+        - name: WATCH_NAMESPACE
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OPERATOR_NAME
+          value: autoroute-operator
+        image: REPLACE_IMAGE
+        imagePullPolicy: Always
+        name: autoroute-operator
+        resources: {}
+        volumeMounts:
+        - mountPath: /config
+          name: autoroute-operator
+          readOnly: true
+        workingDir: /config
+      serviceAccountName: autoroute-operator
+      volumes:
+      - configMap:
+          name: autoroute-operator
+        name: autoroute-operator

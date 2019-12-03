@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  autopilot-operator.yaml: |
+    controlPlaneNs: istio-system
+    enableLeaderElection: true
+    logLevel: 1
+    metricsAddr: :9091
+    version: 0.0.1
+    workInterval: 5s
+kind: ConfigMap
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: autoroute-operator

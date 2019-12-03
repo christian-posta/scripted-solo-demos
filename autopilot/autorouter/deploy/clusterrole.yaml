@@ -1,0 +1,76 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: autoroute-operator
+    app.kubernetes.io/name: autoroute-operator
+  name: autoroute-operator
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.istio.io
+  resources:
+  - gateways
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - '*'
+- apiGroups:
+  - networking.istio.io
+  resources:
+  - virtualservices
+  verbs:
+  - '*'
+- apiGroups:
+  - examples.io
+  resources:
+  - autoroutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - examples.io
+  resources:
+  - autoroutes/status
+  verbs:
+  - update
