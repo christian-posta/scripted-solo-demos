@@ -1,0 +1,1 @@
+glooctl create secret oauth --namespace gloo-system --name auth0 --client-secret $CLIENT_SECRET
