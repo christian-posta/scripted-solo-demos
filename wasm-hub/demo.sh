@@ -19,7 +19,7 @@ run "wasme init ./filter"
 pushd ./filter > /dev/null 2>&1
 
 desc "Let's open our project"
-run "clion ."
+run "code ."
 
 desc "Let's build our project"
 run "wasme build ."

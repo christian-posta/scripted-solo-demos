@@ -13,7 +13,7 @@ spec:
       extensions:
         configs:
           wasm:
-            image: webassemblyhub.io/christian-posta/filter-test:v0.2
+            image: webassemblyhub.io/christian-posta/online-test:v0.1
             name: christian
             root_id: add_header_root_id
   proxyNames:
