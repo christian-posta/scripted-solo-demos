@@ -1,0 +1,26 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: loanstatus-routes
+  namespace: default  
+spec:
+  routes:
+  - matchers:
+      -  exact: /api/loanstatus/check
+    routeAction:
+      single:
+        upstream:
+          name: default-echo-server-8080     
+          namespace: gloo-system
+    options:
+      transformations:
+        requestTransformation:
+          transformationTemplate:
+            headers:
+              new-header: 
+                text: 'foo'
+  - matchers:
+      - prefix: /api/loanstatus/user
+    directResponseAction:
+      status: 200        
+      body: '{"code": "success"}' 

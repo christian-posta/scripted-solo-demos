@@ -1,0 +1,39 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: banking-vs
+  namespace: gloo-system  
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+        -  prefix: /api/riskscreen
+      delegateAction:
+        name: riskscreen-routes
+        namespace: default
+    - matchers:
+        -  prefix: /api/checkcard
+      delegateAction:
+        name: checkcard-routes
+        namespace: default        
+    - matchers:
+        -  prefix: /api/loanstatus
+      delegateAction:
+        name: loanstatus-routes
+        namespace: default      
+    - matchers:
+        - prefix: /callback 
+      routeAction:
+        single:
+          upstream:
+            name: gloo-system-gateway-proxy-80       
+            namespace: gloo-system     
+      options:
+        prefixRewrite: '/'
+    - matchers:
+        - prefix: / 
+      directResponseAction:
+        status: 405        
+        body: '{"error": "do not do this"}'   

@@ -1,0 +1,31 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: banking-vs
+  namespace: gloo-system  
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      -  exact: /api/checkcard/check
+      routeAction:
+        single:
+          upstream:
+            name: default-echo-server-8080     
+            namespace: gloo-system  
+    - matchers:
+      -  exact: /api/loanstatus/check
+      routeAction:
+        single:
+          upstream:
+            name: default-echo-server-8080     
+            namespace: gloo-system   
+    - matchers:
+      -  exact: /api/riskscreen/check
+      routeAction:
+        single:
+          upstream:
+            name: default-echo-server-8080     
+            namespace: gloo-system

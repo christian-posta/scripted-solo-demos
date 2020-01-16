@@ -1,0 +1,19 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: riskscreen-routes
+  namespace: default  
+spec:
+  routes:
+  - matchers:
+      -  exact: /api/riskscreen/check
+    routeAction:
+      single:
+        upstream:
+          name: default-echo-server-8080     
+          namespace: gloo-system
+  - matchers:
+      - prefix: /api/riskscreen/user
+    directResponseAction:
+      status: 200        
+      body: '{"code": "success"}'                 

@@ -1,0 +1,16 @@
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: auth0-oidc
+  namespace: gloo-system
+spec:
+  configs:
+    - oauth:
+        app_url: http://34.68.50.113:80
+        callback_path: /callback
+        client_id: uc9rZtpaEyeAY50i4kbzlwZmP4kUNes2
+        client_secret_ref:
+          name: auth0
+          namespace: gloo-system
+        issuer_url: https://ceposta-solo.auth0.com
+        
