@@ -1,16 +1,16 @@
 apiVersion: enterprise.gloo.solo.io/v1
 kind: AuthConfig
 metadata:
-  name: auth0-oidc
+  name: onelogin-oidc
   namespace: gloo-system
 spec:
   configs:
     - oauth:
-        app_url: http://34.82.244.151:80
+        app_url: https://35.233.232.91
         callback_path: /callback
-        client_id: uc9rZtpaEyeAY50i4kbzlwZmP4kUNes2
+        client_id: ddbf50e0-265c-0138-79f0-022d9be0b45e163544
         client_secret_ref:
-          name: auth0
+          name: onelogin
           namespace: gloo-system
-        issuer_url: https://ceposta-solo.auth0.com
+        issuer_url: https://ceposta.onelogin.com/oidc/2
         

@@ -20,7 +20,3 @@ public:
 static RegisterContextFactory register_ExampleContext(CONTEXT_FACTORY(ExampleContext),
                                                       ROOT_FACTORY(ExampleRootContext),
                                                       "my_root_id");
-FilterHeadersStatus ExampleContext::onResponseHeaders(uint32_t headers){
-    addResponseHeader("kubecon", "ceposta");
-    return FilterHeadersStatus::Continue;
-}

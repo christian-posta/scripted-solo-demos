@@ -14,6 +14,5 @@ helm template --name consul ./ | kubectl delete -f -
 ## Bootstrap ACL token
 
 ```
-BOOTSTRAP_TOKEN=$(kubectl get secret consul-consul-bootstrap-acl-token  -o jsonpath={.data.token} | ba
-se64 --decode)
+BOOTSTRAP_TOKEN=$(kubectl get secret consul-consul-bootstrap-acl-token  -o jsonpath={.data.token} | base64 --decode)
 ```

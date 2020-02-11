@@ -6,7 +6,7 @@ SOURCE_DIR=$PWD
 
 desc "Get pods"
 run "kubectl get po"
-run "kubectl get po -n gloo-system"
+#run "kubectl get po -n gloo-system"
 
 
 desc "Set up routing, simulating multiple APIs"
@@ -17,6 +17,7 @@ read -s
 backtotop
 
 desc "Let's apply this and see if it works:"
+#run "cat $(relative banking-vs-allinone.yaml)"
 run "kubectl apply -f $(relative banking-vs-allinone.yaml)"
 run "glooctl proxy url"
 
@@ -28,6 +29,8 @@ desc "Let's separate routing into separate route tables"
 desc "Let's take a look at the riskscreen-routes.yaml"
 read -s
 #run "cat $(relative route-table/riskscreen-routes.yaml)"
+#run "cat $(relative route-table/loanstatus-routes.yaml)"
+#run "cat $(relative route-table/checkcard-routes.yaml)"
 run "kubectl apply -f $(relative route-table/)"
 
 desc "Let's take a look at the VirtualService now to show delegation"

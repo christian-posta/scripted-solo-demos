@@ -12,6 +12,7 @@ kind: Deployment
 metadata:
   labels:
     app: petstore
+    discovery.solo.io/function_discovery: enabled
   name: petstore
   namespace: default
 spec:
