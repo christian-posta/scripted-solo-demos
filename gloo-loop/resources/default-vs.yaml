@@ -1,0 +1,27 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matcher:
+        prefix: /svc2
+      routeAction:
+        single:
+          upstream:
+            name: calc-example-service2-80
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /calculate
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: calc-example-service1-80
+            namespace: gloo-system

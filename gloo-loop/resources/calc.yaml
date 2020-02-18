@@ -1,0 +1,90 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: example-service1
+  name: example-service1
+spec:
+  selector:
+    matchLabels:
+      app: example-service1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyImage: soloio/proxyv2:loop.7
+      labels:
+        app: example-service1
+    spec:
+      containers:
+        - env:
+            - name: SERVICE2_URL
+          image: soloio/example-service1:v0.2.2
+          imagePullPolicy: IfNotPresent
+          name: example-service1
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: example-service1
+spec:
+  selector:
+    app: example-service1
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: example-service2
+  name: example-service2
+spec:
+  selector:
+    matchLabels:
+      app: example-service2
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyImage: soloio/proxyv2:loop.7
+      labels:
+        app: example-service2
+    spec:
+      containers:
+        - env:
+            - name: SERVICE2_URL
+          image: soloio/example-service2-java:v0.2.2
+#          image: soloio/example-service2ise:0.1.0
+          imagePullPolicy: IfNotPresent
+          name: example-service2
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: example-service2
+spec:
+  selector:
+    app: example-service2
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080

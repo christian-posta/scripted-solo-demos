@@ -10,6 +10,7 @@ echo "http://localhost:8500/ui"
 read -s
 
 desc "Let's add a service to  Consul"
+#curl -v  -XPUT --data @petstore-service.json  "http://127.0.0.1:8500/v1/agent/service/register"
 run "curl -v  -XPUT --data @petstore-service.json  \"http://127.0.0.1:8500/v1/agent/service/register\""
 
 run "consul catalog services"

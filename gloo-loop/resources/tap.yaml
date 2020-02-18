@@ -4,4 +4,4 @@ metadata:
   name: gloo
   namespace: loop-system
 spec:
-  match: responseHeaders[":status"] == prefix("2")
+  match: responseHeaders[":status"] == prefix("5")
