@@ -3,7 +3,6 @@
 . $(dirname ${BASH_SOURCE})/../util.sh
 
 SOURCE_DIR=$PWD
-GLOO_PROXY_URL=$($(relative bin/glooctl) proxy url)
 
 killall kubectl
 kubectl port-forward -n loop-system deployment/loop 5678 &> /dev/null &
