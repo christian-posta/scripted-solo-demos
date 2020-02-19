@@ -23,4 +23,8 @@ read -s
 JAVA_POD=$(kubectl get pod | grep java | awk '{ print $1 }')
 
 desc "Let's open port-forwarding for the java service"
-run "squashctl --localport 5005"
+#run "squashctl --localport 5005"
+run "squashctl --machine"
+
+# take the output of the ^^^ command and run it manually
+# binding to the 5005 port
