@@ -5,9 +5,11 @@ metadata:
   namespace: gloo-system
 spec:
   virtualHost:
+    domains:
+    - '*'
     routes:
-    - matcher:
-        prefix: /
+    - matchers:
+      - prefix: /
       routeAction:
         single:
           upstream:

@@ -39,6 +39,7 @@ metadata:
   namespace: default
   labels:
     service: petstore
+    discovery.solo.io/function_discovery: enabled    
 spec:
   ports:
   - port: 8080

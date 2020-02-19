@@ -24,6 +24,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: sqoopdemo-hr
+  labels:
+    discovery.solo.io/function_discovery: enabled
 spec:
   selector:
     app: sqoopdemo-hr
@@ -59,6 +61,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: sqoopdemo-projects
+  labels:
+    discovery.solo.io/function_discovery: enabled  
 spec:
   selector:
     app: sqoopdemo-projects
