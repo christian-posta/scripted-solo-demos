@@ -18,13 +18,16 @@ kubectl -n glooshot port-forward deployment/glooshot-prometheus-server 9090 &> /
 # scalar(sum(rate(istio_requests_total{ source_app="productpage",response_code="500",reporter="destination",destination_app="reviews",destination_version!="v1"}[1m])))
 
 
+desc "Let's take a look at prometheus"
+/Applications/Firefox.app/Contents/MacOS/firefox --new-tab  localhost:9090
+
+
 desc "Let's run a chaos experiment"
 desc "First, let's take a look at the definition of the experiment"
 run "cat $(relative resources/experiment.yaml)"
 
-backtotop
-desc "Let's take a look at prometheus"
-open http://localhost:9090
+desc "Let's try run some of these queries"
+read -s
 
 backtotop
 
