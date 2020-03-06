@@ -25,9 +25,14 @@ read -s
 desc "Recall our service response from productpage to details"
 run "kubectl exec -it -n bookinfo deploy/productpage-v1 -c istio-proxy -- curl -v http://details.bookinfo:9080/details/123"
 
+backtotop
+
 desc "We will deploy the module to Istio with the wasme deploy istio command"
 read -s
 run "wasme deploy istio --help"
+backtotop
+
+desc "Let's do the real deploy"
 run "wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1} --id=myfilter --namespace=bookinfo --config 'tomorrow'"
 
 backtotop
