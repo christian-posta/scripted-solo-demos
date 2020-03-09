@@ -1,0 +1,12 @@
+apiVersion: wasme.io/v1
+kind: FilterDeployment
+metadata:
+  name: bookinfo-custom-filter
+  namespace: bookinfo
+spec:
+  deployment:
+    istio:
+      kind: Deployment
+  filter:
+    config: 'world'
+    image: webassemblyhub.io/ceposta/demo-add-header:v0.2
