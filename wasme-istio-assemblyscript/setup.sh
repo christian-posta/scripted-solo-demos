@@ -6,3 +6,7 @@ kubectl apply -f resources/istio-1.5.yaml
 kubectl create ns bookinfo
 kubectl label namespace bookinfo istio-injection=enabled --overwrite
 kubectl apply -n bookinfo -f resources/bookinfo.yaml 
+
+#Install Wasme Operator
+kubectl apply -f resources/wasme-crds.yaml
+kubectl apply -f resources/wasme-operator.yaml
