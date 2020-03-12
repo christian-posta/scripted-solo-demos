@@ -33,6 +33,11 @@ run "wasme deploy istio --help"
 backtotop
 
 desc "Let's do the real deploy"
+
+# wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.2 --id=myfilter  --namespace=bookinfo  --config 'tomorrow'
+
+# wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.2 --id=myfilter  --namespace=bookinfo  --config 'tomorrow' --labels app=details'
+
 run "wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1} --id=myfilter --namespace=bookinfo --config 'tomorrow'"
 
 backtotop
