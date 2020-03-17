@@ -1,3 +1,6 @@
+GLOO_VERSION=1.2.12 docker-compose up -d
+
+
 PETSTORE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gloo-consul-vm_petstore_1)
 
 cat > petstore-service.json <<EOF
@@ -8,5 +11,3 @@ cat > petstore-service.json <<EOF
   "Port": 8080
 }
 EOF
-
-GLOO_VERSION=1.2.12 docker-compose up
