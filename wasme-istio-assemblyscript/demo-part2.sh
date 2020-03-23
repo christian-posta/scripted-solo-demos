@@ -11,7 +11,7 @@ WASME=wasme
 
 CURRENT_BUILD=$(wasme list | grep ceposta/demo-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
 #DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
-DEMO_BUILD_NUMBER=2
+DEMO_BUILD_NUMBER=3
 
 
 desc "We can even search from the cli:"
