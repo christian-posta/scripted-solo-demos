@@ -1,1 +1,0 @@
-kubectl delete vs default -n gloo-system
