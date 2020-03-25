@@ -1,0 +1,1 @@
+kubectl apply -f resources/echoapp-vs.yaml

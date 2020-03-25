@@ -1,0 +1,33 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: echoapp
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      - prefix: /
+        headers:
+        - name: x-company
+          value: solo.io
+      routeAction:
+        single:
+          upstream:
+            name: echoapp
+            namespace: gloo-system
+          subset:
+            values:
+              stage: canary
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: echoapp
+            namespace: gloo-system
+          subset:
+            values:
+              stage: primary

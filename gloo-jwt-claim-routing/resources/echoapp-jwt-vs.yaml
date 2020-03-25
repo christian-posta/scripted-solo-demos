@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: petstore
+  name: echoapp
   namespace: gloo-system
 spec:
   virtualHost:
@@ -10,19 +10,31 @@ spec:
     routes:
     - matchers:
       - prefix: /
+        headers:
+        - name: x-group
+          value: pets
       routeAction:
         single:
-          kube:
-            ref:
-              name: petstore
-              namespace: default
-            port: 8080
+          upstream:
+            name: echoapp
+            namespace: gloo-system
+          subset:
+            values:
+              stage: canary
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: echoapp
+            namespace: gloo-system
+          subset:
+            values:
+              stage: primary
     options:
       jwt:
         providers:
           solo:
-            audiences:
-            - gloo
             issuer: solo.io
             jwks:
               local:
@@ -35,4 +47,4 @@ spec:
                   oG9YLp1pbatjpqvO1XlxX4qCNLScY5FOFrkTf95O3a3Y195o89D9XwULWT1baVuO
                   /z7Ueug68b0t51mGXuEC572DmEbc8xHLnVfLM18QADvOnSzqY6vtIQcuGE/V/c7A
                   TQIDAQAB
-                  -----END PUBLIC KEY----- 
+                  -----END PUBLIC KEY-----
