@@ -1,0 +1,23 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: productpage
+    service: productpage
+  name: productpage
+  namespace: gloo-system
+spec:
+  discoveryMetadata: {}
+  kube:
+    selector:
+      app: productpage
+    serviceName: productpage
+    serviceNamespace: bookinfo
+    servicePort: 9080
+  sslConfig:
+    alpn_protocols:
+    - istio
+    sslFiles:
+      tlsCert: /etc/istio-certs/cert-chain.pem
+      tlsKey: /etc/istio-certs/key.pem
+      rootCa: /etc/istio-certs/root-cert.pem    
