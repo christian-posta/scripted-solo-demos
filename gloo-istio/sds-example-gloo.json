@@ -1,0 +1,2743 @@
+{
+    "configs": [
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.BootstrapConfigDump",
+      "bootstrap": {
+       "node": {
+        "id": "gateway-proxy-7f9984b784-sxql8.gloo-system",
+        "cluster": "gateway",
+        "metadata": {
+         "role": "gloo-system~gateway-proxy"
+        },
+        "hidden_envoy_deprecated_build_version": "65071aadc529ac0c773b9f78ba99d8e4e45e322d/1.14.0-dev/Distribution/RELEASE/BoringSSL",
+        "user_agent_name": "envoy",
+        "user_agent_build_version": {
+         "version": {
+          "major_number": 1,
+          "minor_number": 14
+         },
+         "metadata": {
+          "ssl.version": "BoringSSL",
+          "revision.status": "Distribution",
+          "revision.sha": "65071aadc529ac0c773b9f78ba99d8e4e45e322d",
+          "build.label": "dev",
+          "build.type": "RELEASE"
+         }
+        },
+        "extensions": [
+         {
+          "name": "envoy.filters.dubbo.router",
+          "category": "envoy.dubbo_proxy.filters"
+         },
+         {
+          "name": "envoy.dog_statsd",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.metrics_service",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.stat_sinks.dog_statsd",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.stat_sinks.hystrix",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.stat_sinks.metrics_service",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.stat_sinks.statsd",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.statsd",
+          "category": "envoy.stats_sinks"
+         },
+         {
+          "name": "envoy.health_checkers.redis",
+          "category": "envoy.health_checkers"
+         },
+         {
+          "name": "envoy.transport_sockets.alts",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "envoy.transport_sockets.raw_buffer",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "envoy.transport_sockets.tap",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "envoy.transport_sockets.tls",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "raw_buffer",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "tls",
+          "category": "envoy.transport_sockets.upstream"
+         },
+         {
+          "name": "dubbo.hessian2",
+          "category": "envoy.dubbo_proxy.serializers"
+         },
+         {
+          "name": "dubbo",
+          "category": "envoy.dubbo_proxy.protocols"
+         },
+         {
+          "name": "auto",
+          "category": "envoy.thrift_proxy.transports"
+         },
+         {
+          "name": "framed",
+          "category": "envoy.thrift_proxy.transports"
+         },
+         {
+          "name": "header",
+          "category": "envoy.thrift_proxy.transports"
+         },
+         {
+          "name": "unframed",
+          "category": "envoy.thrift_proxy.transports"
+         },
+         {
+          "name": "envoy.buffer",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.cors",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.csrf",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.ext_authz",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.fault",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.adaptive_concurrency",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.aws_request_signing",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.buffer",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.cache",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.cors",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.csrf",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.dynamic_forward_proxy",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.dynamo",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.ext_authz",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.fault",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.grpc_http1_bridge",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.grpc_http1_reverse_bridge",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.grpc_json_transcoder",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.grpc_stats",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.grpc_web",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.gzip",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.header_to_metadata",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.health_check",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.ip_tagging",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.jwt_authn",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.lua",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.on_demand",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.original_src",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.ratelimit",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.rbac",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.router",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.squash",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.http.tap",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.grpc_http1_bridge",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.grpc_json_transcoder",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.grpc_web",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.gzip",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.health_check",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.http_dynamo_filter",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.ip_tagging",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.lua",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.rate_limit",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.router",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.squash",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "io.solo.aws_lambda",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "io.solo.nats_streaming",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "io.solo.transformation",
+          "category": "envoy.filters.http"
+         },
+         {
+          "name": "envoy.filters.udp_listener.udp_proxy",
+          "category": "envoy.filters.udp_listener"
+         },
+         {
+          "name": "envoy.filters.listener.http_inspector",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.filters.listener.original_dst",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.filters.listener.original_src",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.filters.listener.proxy_protocol",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.filters.listener.tls_inspector",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.listener.http_inspector",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.listener.original_dst",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.listener.original_src",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.listener.proxy_protocol",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.listener.tls_inspector",
+          "category": "envoy.filters.listener"
+         },
+         {
+          "name": "envoy.cluster.eds",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.cluster.logical_dns",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.cluster.original_dst",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.cluster.static",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.cluster.strict_dns",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.clusters.aggregate",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.clusters.dynamic_forward_proxy",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "envoy.clusters.redis",
+          "category": "envoy.clusters"
+         },
+         {
+          "name": "raw_udp_listener",
+          "category": "envoy.udp_listeners"
+         },
+         {
+          "name": "default",
+          "category": "envoy.dubbo_proxy.route_matchers"
+         },
+         {
+          "name": "envoy.filters.thrift.rate_limit",
+          "category": "envoy.thrift_proxy.filters"
+         },
+         {
+          "name": "envoy.filters.thrift.router",
+          "category": "envoy.thrift_proxy.filters"
+         },
+         {
+          "name": "auto",
+          "category": "envoy.thrift_proxy.protocols"
+         },
+         {
+          "name": "binary",
+          "category": "envoy.thrift_proxy.protocols"
+         },
+         {
+          "name": "binary/non-strict",
+          "category": "envoy.thrift_proxy.protocols"
+         },
+         {
+          "name": "compact",
+          "category": "envoy.thrift_proxy.protocols"
+         },
+         {
+          "name": "twitter",
+          "category": "envoy.thrift_proxy.protocols"
+         },
+         {
+          "name": "envoy.resource_monitors.fixed_heap",
+          "category": "envoy.resource_monitors"
+         },
+         {
+          "name": "envoy.resource_monitors.injected_resource",
+          "category": "envoy.resource_monitors"
+         },
+         {
+          "name": "envoy.retry_host_predicates.omit_canary_hosts",
+          "category": "envoy.retry_host_predicates"
+         },
+         {
+          "name": "envoy.retry_host_predicates.omit_host_metadata",
+          "category": "envoy.retry_host_predicates"
+         },
+         {
+          "name": "envoy.retry_host_predicates.previous_hosts",
+          "category": "envoy.retry_host_predicates"
+         },
+         {
+          "name": "envoy.grpc_credentials.aws_iam",
+          "category": "envoy.grpc_credentials"
+         },
+         {
+          "name": "envoy.grpc_credentials.default",
+          "category": "envoy.grpc_credentials"
+         },
+         {
+          "name": "envoy.grpc_credentials.file_based_metadata",
+          "category": "envoy.grpc_credentials"
+         },
+         {
+          "name": "envoy.extensions.http.cache.simple",
+          "category": "http_cache_factory"
+         },
+         {
+          "name": "envoy.dynamic.ot",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.lightstep",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.datadog",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.dynamic_ot",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.lightstep",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.opencensus",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.xray",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.tracers.zipkin",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.zipkin",
+          "category": "envoy.tracers"
+         },
+         {
+          "name": "envoy.ip",
+          "category": "envoy.resolvers"
+         },
+         {
+          "name": "envoy.transport_sockets.alts",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "envoy.transport_sockets.raw_buffer",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "envoy.transport_sockets.tap",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "envoy.transport_sockets.tls",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "raw_buffer",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "tls",
+          "category": "envoy.transport_sockets.downstream"
+         },
+         {
+          "name": "envoy.access_loggers.file",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.access_loggers.http_grpc",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.access_loggers.tcp_grpc",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.file_access_log",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.http_grpc_access_log",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.tcp_grpc_access_log",
+          "category": "envoy.access_loggers"
+         },
+         {
+          "name": "envoy.client_ssl_auth",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.echo",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.ext_authz",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.client_ssl_auth",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.dubbo_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.echo",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.ext_authz",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.http_connection_manager",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.kafka_broker",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.local_ratelimit",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.mongo_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.mysql_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.ratelimit",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.rbac",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.redis_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.sni_cluster",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.tcp_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.thrift_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.filters.network.zookeeper_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.http_connection_manager",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.mongo_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.ratelimit",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.redis_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.tcp_proxy",
+          "category": "envoy.filters.network"
+         },
+         {
+          "name": "envoy.retry_priorities.previous_priorities",
+          "category": "envoy.retry_priorities"
+         }
+        ]
+       },
+       "static_resources": {
+        "listeners": [
+         {
+          "name": "prometheus_listener",
+          "address": {
+           "socket_address": {
+            "address": "0.0.0.0",
+            "port_value": 8081
+           }
+          },
+          "filter_chains": [
+           {
+            "filters": [
+             {
+              "name": "envoy.http_connection_manager",
+              "hidden_envoy_deprecated_config": {
+               "http_filters": [
+                {
+                 "name": "envoy.router",
+                 "config": {}
+                }
+               ],
+               "stat_prefix": "prometheus",
+               "route_config": {
+                "name": "prometheus_route",
+                "virtual_hosts": [
+                 {
+                  "routes": [
+                   {
+                    "match": {
+                     "path": "/ready",
+                     "headers": [
+                      {
+                       "name": ":method",
+                       "exact_match": "GET"
+                      }
+                     ]
+                    },
+                    "route": {
+                     "cluster": "admin_port_cluster"
+                    }
+                   },
+                   {
+                    "route": {
+                     "cluster": "admin_port_cluster",
+                     "prefix_rewrite": "/stats/prometheus"
+                    },
+                    "match": {
+                     "prefix": "/metrics",
+                     "headers": [
+                      {
+                       "exact_match": "GET",
+                       "name": ":method"
+                      }
+                     ]
+                    }
+                   }
+                  ],
+                  "domains": [
+                   "*"
+                  ],
+                  "name": "prometheus_host"
+                 }
+                ]
+               },
+               "codec_type": "auto"
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "clusters": [
+         {
+          "name": "gloo.gloo-system.svc.cluster.local:9977",
+          "type": "STRICT_DNS",
+          "connect_timeout": "5s",
+          "http2_protocol_options": {},
+          "alt_stat_name": "xds_cluster",
+          "upstream_connection_options": {
+           "tcp_keepalive": {}
+          },
+          "load_assignment": {
+           "cluster_name": "gloo.gloo-system.svc.cluster.local:9977",
+           "endpoints": [
+            {
+             "lb_endpoints": [
+              {
+               "endpoint": {
+                "address": {
+                 "socket_address": {
+                  "address": "gloo.gloo-system.svc.cluster.local",
+                  "port_value": 9977
+                 }
+                }
+               }
+              }
+             ]
+            }
+           ]
+          },
+          "respect_dns_ttl": true
+         },
+         {
+          "name": "wasm-cache",
+          "type": "STRICT_DNS",
+          "connect_timeout": "5s",
+          "upstream_connection_options": {
+           "tcp_keepalive": {}
+          },
+          "load_assignment": {
+           "cluster_name": "wasm-cache",
+           "endpoints": [
+            {
+             "lb_endpoints": [
+              {
+               "endpoint": {
+                "address": {
+                 "socket_address": {
+                  "address": "gloo.gloo-system.svc.cluster.local",
+                  "port_value": 9979
+                 }
+                }
+               }
+              }
+             ]
+            }
+           ]
+          },
+          "respect_dns_ttl": true
+         },
+         {
+          "name": "gloo.gloo-system.svc.cluster.local:9966",
+          "type": "STRICT_DNS",
+          "connect_timeout": "5s",
+          "http2_protocol_options": {},
+          "alt_stat_name": "metrics_cluster",
+          "load_assignment": {
+           "cluster_name": "gloo.gloo-system.svc.cluster.local:9966",
+           "endpoints": [
+            {
+             "lb_endpoints": [
+              {
+               "endpoint": {
+                "address": {
+                 "socket_address": {
+                  "address": "gloo.gloo-system.svc.cluster.local",
+                  "port_value": 9966
+                 }
+                }
+               }
+              }
+             ]
+            }
+           ]
+          }
+         },
+         {
+          "name": "admin_port_cluster",
+          "type": "STATIC",
+          "connect_timeout": "5s",
+          "load_assignment": {
+           "cluster_name": "admin_port_cluster",
+           "endpoints": [
+            {
+             "lb_endpoints": [
+              {
+               "endpoint": {
+                "address": {
+                 "socket_address": {
+                  "address": "127.0.0.1",
+                  "port_value": 19000
+                 }
+                }
+               }
+              }
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "dynamic_resources": {
+        "lds_config": {
+         "ads": {}
+        },
+        "cds_config": {
+         "ads": {}
+        },
+        "ads_config": {
+         "api_type": "GRPC",
+         "grpc_services": [
+          {
+           "envoy_grpc": {
+            "cluster_name": "gloo.gloo-system.svc.cluster.local:9977"
+           }
+          }
+         ],
+         "rate_limit_settings": {}
+        }
+       },
+       "stats_sinks": [
+        {
+         "name": "envoy.metrics_service",
+         "hidden_envoy_deprecated_config": {
+          "grpc_service": {
+           "envoy_grpc": {
+            "cluster_name": "gloo.gloo-system.svc.cluster.local:9966"
+           }
+          }
+         }
+        }
+       ],
+       "admin": {
+        "access_log_path": "/dev/null",
+        "address": {
+         "socket_address": {
+          "address": "127.0.0.1",
+          "port_value": 19000
+         }
+        }
+       }
+      },
+      "last_updated": "2020-03-25T20:46:46.417Z"
+     },
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.ClustersConfigDump",
+      "version_info": "11943583151433473289",
+      "static_clusters": [
+       {
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "admin_port_cluster",
+         "type": "STATIC",
+         "connect_timeout": "5s",
+         "load_assignment": {
+          "cluster_name": "admin_port_cluster",
+          "endpoints": [
+           {
+            "lb_endpoints": [
+             {
+              "endpoint": {
+               "address": {
+                "socket_address": {
+                 "address": "127.0.0.1",
+                 "port_value": 19000
+                }
+               }
+              }
+             }
+            ]
+           }
+          ]
+         }
+        },
+        "last_updated": "2020-03-25T20:46:46.421Z"
+       },
+       {
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo.gloo-system.svc.cluster.local:9966",
+         "type": "STRICT_DNS",
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "alt_stat_name": "metrics_cluster",
+         "load_assignment": {
+          "cluster_name": "gloo.gloo-system.svc.cluster.local:9966",
+          "endpoints": [
+           {
+            "lb_endpoints": [
+             {
+              "endpoint": {
+               "address": {
+                "socket_address": {
+                 "address": "gloo.gloo-system.svc.cluster.local",
+                 "port_value": 9966
+                }
+               }
+              }
+             }
+            ]
+           }
+          ]
+         }
+        },
+        "last_updated": "2020-03-25T20:46:46.420Z"
+       },
+       {
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo.gloo-system.svc.cluster.local:9977",
+         "type": "STRICT_DNS",
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "alt_stat_name": "xds_cluster",
+         "upstream_connection_options": {
+          "tcp_keepalive": {}
+         },
+         "load_assignment": {
+          "cluster_name": "gloo.gloo-system.svc.cluster.local:9977",
+          "endpoints": [
+           {
+            "lb_endpoints": [
+             {
+              "endpoint": {
+               "address": {
+                "socket_address": {
+                 "address": "gloo.gloo-system.svc.cluster.local",
+                 "port_value": 9977
+                }
+               }
+              }
+             }
+            ]
+           }
+          ]
+         },
+         "respect_dns_ttl": true
+        },
+        "last_updated": "2020-03-25T20:46:46.419Z"
+       },
+       {
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "wasm-cache",
+         "type": "STRICT_DNS",
+         "connect_timeout": "5s",
+         "upstream_connection_options": {
+          "tcp_keepalive": {}
+         },
+         "load_assignment": {
+          "cluster_name": "wasm-cache",
+          "endpoints": [
+           {
+            "lb_endpoints": [
+             {
+              "endpoint": {
+               "address": {
+                "socket_address": {
+                 "address": "gloo.gloo-system.svc.cluster.local",
+                 "port_value": 9979
+                }
+               }
+              }
+             }
+            ]
+           }
+          ]
+         },
+         "respect_dns_ttl": true
+        },
+        "last_updated": "2020-03-25T20:46:46.420Z"
+       }
+      ],
+      "dynamic_active_clusters": [
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "default-kubernetes-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.052Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gateway-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.121Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gateway-proxy-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.110Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gateway-proxy-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.044Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gateway-proxy-gateway-proxy-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.033Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gateway-proxy-gateway-proxy-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.122Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gloo-9966_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.103Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gloo-9977_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.034Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gloo-9979_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.038Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "gloo-system-gloo-9988_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.103Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-2726f61c7669be328a2a12e9a4729d8_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.089Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-2888406e07e4a69a2356879a18bf3d5_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.116Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-2a1dac9e5b63e26e08f1cbfad0cb6ae_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.105Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-2dcdc65d1bb45cd9ce5f871ba7bf01c_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.062Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-a8c0946dbc26043523741857d163aee_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.123Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-c7d21c316bdc1bc6a098cf0e90d9b5a_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.064Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-d325442422a2be3efd3c755b1c589b6_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.117Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgatew-ec18e0cf8af73281348b7603b6a0240_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.085Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15020_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.095Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15029_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.075Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15030_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.096Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15031_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.068Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15032_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.039Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-15443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.057Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.035Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-ingressgateway-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.076Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-15010_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.098Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-15011_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.118Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-15012_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.065Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-15014_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.078Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.053Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.071Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-15010_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.045Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-15011_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.086Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-15012_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.054Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-15014_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.090Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.058Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istio-pilot-istiod-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.040Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istiod-15012_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.036Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-istiod-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.072Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istio-system-prometheus-9090_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.072Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-purchase-history--c492b0a517d1c0a6e8f7b53e833dba0_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.087Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-purchase-history-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.046Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-recommendation-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.097Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-recommendation-istio-recommendation-latest-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.111Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-sleep-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.060Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-web-api-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "transport_socket": {
+          "name": "envoy.transport_sockets.tls",
+          "typed_config": {
+           "@type": "type.googleapis.com/envoy.api.v2.auth.UpstreamTlsContext",
+           "common_tls_context": {
+            "tls_params": {},
+            "tls_certificate_sds_secret_configs": [
+             {
+              "name": "default",
+              "sds_config": {
+               "api_config_source": {
+                "api_type": "GRPC",
+                "grpc_services": [
+                 {
+                  "google_grpc": {
+                   "target_uri": "unix:/etc/istio/proxy/SDS",
+                   "channel_credentials": {
+                    "local_credentials": {}
+                   },
+                   "call_credentials": [
+                    {
+                     "from_plugin": {
+                      "name": "envoy.grpc_credentials.file_based_metadata",
+                      "typed_config": {
+                       "@type": "type.googleapis.com/envoy.config.grpc_credential.v2alpha.FileBasedMetadataConfig",
+                       "secret_data": {
+                        "filename": "[redacted]"
+                       },
+                       "header_key": "istio_sds_credentials_header-bin"
+                      }
+                     }
+                    }
+                   ],
+                   "stat_prefix": "sds",
+                   "credentials_factory_name": "envoy.grpc_credentials.file_based_metadata"
+                  }
+                 }
+                ]
+               }
+              }
+             }
+            ],
+            "validation_context_sds_secret_config": {
+             "name": "ROOTCA",
+             "sds_config": {
+              "api_config_source": {
+               "api_type": "GRPC",
+               "grpc_services": [
+                {
+                 "google_grpc": {
+                  "target_uri": "unix:/etc/istio/proxy/SDS",
+                  "channel_credentials": {
+                   "local_credentials": {}
+                  },
+                  "call_credentials": [
+                   {
+                    "from_plugin": {
+                     "name": "envoy.grpc_credentials.file_based_metadata",
+                     "typed_config": {
+                      "@type": "type.googleapis.com/envoy.config.grpc_credential.v2alpha.FileBasedMetadataConfig",
+                      "secret_data": {
+                       "filename": "[redacted]"
+                      },
+                      "header_key": "istio_sds_credentials_header-bin"
+                     }
+                    }
+                   }
+                  ],
+                  "stat_prefix": "sds",
+                  "credentials_factory_name": "envoy.grpc_credentials.file_based_metadata"
+                 }
+                }
+               ]
+              }
+             }
+            }
+           }
+          }
+         },
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.092Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "istioinaction-web-api-istio-web-api-latest-8080_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.041Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:default-kubernetes-443_default",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.107Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gateway-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.047Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gateway-proxy-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.119Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gateway-proxy-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.048Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gloo-9966_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.080Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gloo-9977_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.073Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gloo-9979_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.074Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:gloo-system-gloo-9988_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.091Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15020_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.112Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15029_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.050Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15030_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.099Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15031_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.051Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15032_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.082Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-15443_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.101Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-443_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.055Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-ingressgateway-80_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.083Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-15010_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "http2_protocol_options": {},
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.084Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-15011_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.113Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-15012_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.061Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-15014_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.093Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-443_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.056Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istio-pilot-8080_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.037Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istiod-15012_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.094Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-istiod-443_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.070Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istio-system-prometheus-9090_istio-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.108Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istioinaction-purchase-history-8080_istioinaction",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.066Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istioinaction-recommendation-8080_istioinaction",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.102Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istioinaction-sleep-80_istioinaction",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.120Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:istioinaction-web-api-8080_istioinaction",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.114Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:kube-system-default-http-backend-80_kube-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.032Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:kube-system-heapster-80_kube-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.109Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:kube-system-kube-dns-53_kube-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.106Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-svc:kube-system-metrics-server-443_kube-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.067Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-default-http-backend-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.069Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-default-http-backend-glbc-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.042Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-heapster-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.081Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-heapster-v1-7-2-80_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.049Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-kube-dns-53_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.043Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-metrics-server-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.079Z"
+       },
+       {
+        "version_info": "11943583151433473289",
+        "cluster": {
+         "@type": "type.googleapis.com/envoy.api.v2.Cluster",
+         "name": "kube-system-metrics-server-v0-3-1-443_gloo-system",
+         "type": "EDS",
+         "eds_cluster_config": {
+          "eds_config": {
+           "ads": {}
+          }
+         },
+         "connect_timeout": "5s",
+         "metadata": {}
+        },
+        "last_updated": "2020-03-25T20:46:47.059Z"
+       }
+      ]
+     },
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.ListenersConfigDump",
+      "version_info": "12737523793233583224",
+      "static_listeners": [
+       {
+        "listener": {
+         "@type": "type.googleapis.com/envoy.api.v2.Listener",
+         "name": "prometheus_listener",
+         "address": {
+          "socket_address": {
+           "address": "0.0.0.0",
+           "port_value": 8081
+          }
+         },
+         "filter_chains": [
+          {
+           "filters": [
+            {
+             "name": "envoy.http_connection_manager",
+             "config": {
+              "codec_type": "auto",
+              "http_filters": [
+               {
+                "name": "envoy.router",
+                "config": {}
+               }
+              ],
+              "stat_prefix": "prometheus",
+              "route_config": {
+               "name": "prometheus_route",
+               "virtual_hosts": [
+                {
+                 "routes": [
+                  {
+                   "route": {
+                    "cluster": "admin_port_cluster"
+                   },
+                   "match": {
+                    "path": "/ready",
+                    "headers": [
+                     {
+                      "exact_match": "GET",
+                      "name": ":method"
+                     }
+                    ]
+                   }
+                  },
+                  {
+                   "route": {
+                    "prefix_rewrite": "/stats/prometheus",
+                    "cluster": "admin_port_cluster"
+                   },
+                   "match": {
+                    "headers": [
+                     {
+                      "exact_match": "GET",
+                      "name": ":method"
+                     }
+                    ],
+                    "prefix": "/metrics"
+                   }
+                  }
+                 ],
+                 "domains": [
+                  "*"
+                 ],
+                 "name": "prometheus_host"
+                }
+               ]
+              }
+             }
+            }
+           ]
+          }
+         ]
+        },
+        "last_updated": "2020-03-25T20:46:46.427Z"
+       }
+      ],
+      "dynamic_listeners": [
+       {
+        "name": "listener-::-8080",
+        "active_state": {
+         "version_info": "12737523793233583224",
+         "listener": {
+          "@type": "type.googleapis.com/envoy.api.v2.Listener",
+          "name": "listener-::-8080",
+          "address": {
+           "socket_address": {
+            "address": "::",
+            "port_value": 8080,
+            "ipv4_compat": true
+           }
+          },
+          "filter_chains": [
+           {
+            "filters": [
+             {
+              "name": "envoy.http_connection_manager",
+              "config": {
+               "http_filters": [
+                {
+                 "name": "envoy.fault"
+                },
+                {
+                 "name": "envoy.cors"
+                },
+                {
+                 "name": "envoy.grpc_web"
+                },
+                {
+                 "name": "io.solo.transformation"
+                },
+                {
+                 "name": "envoy.router"
+                }
+               ],
+               "normalize_path": true,
+               "rds": {
+                "route_config_name": "listener-::-8080-routes",
+                "config_source": {
+                 "ads": {}
+                }
+               },
+               "stat_prefix": "http",
+               "upgrade_configs": [
+                {
+                 "upgrade_type": "websocket"
+                }
+               ]
+              }
+             }
+            ],
+            "use_proxy_proto": false
+           }
+          ]
+         },
+         "last_updated": "2020-03-25T20:47:02.131Z"
+        }
+       }
+      ]
+     },
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.ScopedRoutesConfigDump"
+     },
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.RoutesConfigDump",
+      "static_route_configs": [
+       {
+        "route_config": {
+         "@type": "type.googleapis.com/envoy.api.v2.RouteConfiguration",
+         "name": "prometheus_route",
+         "virtual_hosts": [
+          {
+           "name": "prometheus_host",
+           "domains": [
+            "*"
+           ],
+           "routes": [
+            {
+             "match": {
+              "path": "/ready",
+              "headers": [
+               {
+                "name": ":method",
+                "exact_match": "GET"
+               }
+              ]
+             },
+             "route": {
+              "cluster": "admin_port_cluster"
+             }
+            },
+            {
+             "match": {
+              "prefix": "/metrics",
+              "headers": [
+               {
+                "name": ":method",
+                "exact_match": "GET"
+               }
+              ]
+             },
+             "route": {
+              "cluster": "admin_port_cluster",
+              "prefix_rewrite": "/stats/prometheus"
+             }
+            }
+           ]
+          }
+         ]
+        },
+        "last_updated": "2020-03-25T20:46:46.427Z"
+       }
+      ],
+      "dynamic_route_configs": [
+       {
+        "version_info": "14015745171519639840",
+        "route_config": {
+         "@type": "type.googleapis.com/envoy.api.v2.RouteConfiguration",
+         "name": "listener-::-8080-routes",
+         "virtual_hosts": [
+          {
+           "name": "gloo-system_default",
+           "domains": [
+            "*"
+           ],
+           "routes": [
+            {
+             "match": {
+              "prefix": "/"
+             },
+             "route": {
+              "cluster": "istioinaction-web-api-8080_gloo-system"
+             }
+            }
+           ]
+          }
+         ]
+        },
+        "last_updated": "2020-03-25T20:47:02.132Z"
+       }
+      ]
+     },
+     {
+      "@type": "type.googleapis.com/envoy.admin.v3.SecretsConfigDump",
+      "dynamic_warming_secrets": [
+       {
+        "name": "default",
+        "version_info": "uninitialized",
+        "last_updated": "2020-03-25T20:46:47.091Z",
+        "secret": {
+         "@type": "type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Secret",
+         "name": "default"
+        }
+       },
+       {
+        "name": "ROOTCA",
+        "version_info": "uninitialized",
+        "last_updated": "2020-03-25T20:46:47.091Z",
+        "secret": {
+         "@type": "type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Secret",
+         "name": "ROOTCA"
+        }
+       }
+      ]
+     }
+    ]
+   }
+   

@@ -1,0 +1,16 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: apigateway
+  name: apigateway
+  namespace: gloo-dev2
+spec:
+  discoveryMetadata: {}
+  kube:
+    selector:
+      acme.cert-manager.io/http-domain: "3214871549"
+      acme.cert-manager.io/http-token: "984681993"
+      acme.cert-manager.io/http01-solver: "true"
+      app: apigateway
+

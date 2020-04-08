@@ -1,0 +1,20 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: apigateway
+    discovery.solo.io/function_discovery: enabled
+  name: default-apigateway-80
+  namespace: other-gloo
+spec:
+  discoveryMetadata: {}
+  kube:
+    selector:
+      app: apigateway
+    serviceName: apigateway
+    serviceNamespace: default
+    servicePort: 80
+    serviceSpec:
+      rest:
+        swaggerInfo:
+          url: http://apigateway.default/foo/bar/swagger.json

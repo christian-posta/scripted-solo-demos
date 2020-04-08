@@ -1,0 +1,15 @@
+{
+    "securityDefinitions": {
+      "petStoreApiKey": {
+        "type": "apiKey",
+        "name": "api-key",
+        "in": "header"
+      }
+    },
+    "security": [
+      {
+        "petStoreApiKey": []
+      }
+    ]
+  }
+  

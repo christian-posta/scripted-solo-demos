@@ -1,0 +1,23 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: petstore
+  namespace: gloo-system
+spec:
+  virtualHost:
+    options:
+      cors:
+        allowOrigin:
+        - "http://localhost:1234"
+    domains:
+    - "localhost:8080"
+    routes:
+    - matchers:
+      - prefix: /api
+      routeAction:
+        single:
+          kube:
+            port: 8080
+            ref:
+              name: petstore
+              namespace: default

@@ -1,0 +1,29 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: other-gloo
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      - prefix: /todos
+      options:
+        hostRewrite: "jsonplaceholder.typicode.com"
+      routeAction:        
+        single:
+          consul:
+            dataCenters:
+            - dc1
+            serviceName: jsonplaceholder
+            
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: default-gloo-consul-server-8500
+            namespace: other-gloo
+

@@ -15,13 +15,13 @@ spec:
   selector:
     app: apigateway
 ---
-# No FDS, we have the swagger in a different spot /foo/bar/swagger/json
+# No FDS, we have the swagger in a different spot /foo/bar/swagger.json
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: apigateway
-    discovery.solo.io/function_discovery: enabled    
+    discovery.solo.io/function_discovery: enabled   
   name: apigateway
 spec:
   replicas: 1
@@ -32,6 +32,9 @@ spec:
     metadata:
       labels:
         app: apigateway
+        acme.cert-manager.io/http-domain: "3214871549"
+        acme.cert-manager.io/http-token: "984681993"
+        acme.cert-manager.io/http01-solver: "true"         
     spec:
       containers:
       - env:

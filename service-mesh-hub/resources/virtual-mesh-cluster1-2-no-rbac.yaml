@@ -1,0 +1,12 @@
+apiVersion: networking.zephyr.solo.io/v1alpha1
+kind: VirtualMesh
+metadata:
+  name: virtual-mesh
+  namespace: service-mesh-hub
+spec:
+  enforceAccessControl: false
+  meshes:
+  - name: istio-istio-system-management-plane
+    namespace: service-mesh-hub
+  - name: istio-istio-system-remote-cluster
+    namespace: service-mesh-hub
