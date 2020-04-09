@@ -1,6 +1,5 @@
 
-CLUSTER_1=kind-management-plane-cluster
-CLUSTER_2=kind-remote-cluster
+source ./env.sh
 
 
 kind create cluster --name management-plane-cluster
