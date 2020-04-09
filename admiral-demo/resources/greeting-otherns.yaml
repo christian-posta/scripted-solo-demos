@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: otherns
+---
+apiVersion: v1
+data:
+  nginx.conf: "user nginx;\nworker_processes  3;\nerror_log  /var/log/nginx/error.log;\nevents
+    {\n  worker_connections  10240;\n}\nhttp {\n  log_format  main\n          'remote_addr:$remote_addr\\t'\n
+    \         'time_local:$time_local\\t'\n          'method:$request_method\\t'\n
+    \         'uri:$request_uri\\t'\n          'host:$host\\t'\n          'status:$status\\t'\n
+    \         'bytes_sent:$body_bytes_sent\\t'\n          'referer:$http_referer\\t'\n
+    \         'useragent:$http_user_agent\\t'\n          'forwardedfor:$http_x_forwarded_for\\t'\n
+    \         'request_time:$request_time';\n  access_log\t/var/log/nginx/access.log
+    main;\n  server {\n      listen       80;\n      server_name  _;\n      location
+    / {\n          return 200 \"Remote cluster says: Hello World! - Admiral!!\";\n
+    \     }\n  }\n}\n"
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: otherns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: greeting
+    identity: greeting
+  name: greeting
+  namespace: otherns
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: greeting
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: greeting
+  namespace: otherns
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: greeting
+        identity: greeting
+    spec:
+      containers:
+      - image: nginx
+        name: greeting
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx
+          name: nginx-conf
+          readOnly: true
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - configMap:
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+          name: nginx-conf
+        name: nginx-conf
+      - emptyDir: {}
+        name: log

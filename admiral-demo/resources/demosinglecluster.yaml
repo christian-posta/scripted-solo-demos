@@ -1,0 +1,160 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: disabled
+  name: admiral
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: dependencies.admiral.io
+spec:
+  group: admiral.io
+  names:
+    kind: Dependency
+    plural: dependencies
+    shortNames:
+    - dep
+    - deps
+    singular: dependency
+  scope: Namespaced
+  version: v1alpha1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: admiral
+  name: admiral
+  namespace: admiral
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: admiral-configmap-role
+  namespace: admiral-sync
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - update
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: admiral-dependency-role
+  namespace: admiral
+rules:
+- apiGroups:
+  - admiral.io
+  resources:
+  - dependencies
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: admiral-secret-role
+  namespace: admiral
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - watch
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admiral-configmap-role-binding
+  namespace: admiral-sync
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: admiral-configmap-role
+subjects:
+- kind: ServiceAccount
+  name: admiral
+  namespace: admiral
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admiral-dependency-role-binding
+  namespace: admiral
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: admiral-dependency-role
+subjects:
+- kind: ServiceAccount
+  name: admiral
+  namespace: admiral
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admiral-secret-role-binding
+  namespace: admiral
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: admiral-secret-role
+subjects:
+- kind: ServiceAccount
+  name: admiral
+  namespace: admiral
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: admiral
+  name: admiral
+  namespace: admiral
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admiral
+  template:
+    metadata:
+      labels:
+        app: admiral
+    spec:
+      containers:
+      - args:
+        - --dependency_namespace
+        - admiral
+        - --secret_namespace
+        - admiral
+        - --sync_namespace
+        - admiral-sync
+        - --sync_period
+        - 20s
+        image: docker.io/admiralproj/admiral:latest
+        name: admiral
+        ports:
+        - containerPort: 8443
+          name: service
+        - containerPort: 8490
+          name: metrics
+        resources:
+          limits:
+            cpu: 1
+            memory: 1028M
+          requests:
+            cpu: 0.25
+            memory: 256M
+      serviceAccountName: admiral

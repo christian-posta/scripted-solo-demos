@@ -1,0 +1,25 @@
+---
+apiVersion: admiral.io/v1alpha1
+kind: GlobalTrafficPolicy
+metadata:
+  name: gtp-greeting
+spec:
+  selector:
+    app: greeting
+  policy:
+  - dns: greeting.global
+    lbtype: TOPOLOGY
+  - dns: greeting-west.global
+    lbtype: FAILOVER
+    target:
+    - region: uswest-2
+      weight: 100
+    - region: useast-2
+      weight: 0
+  - dns: greeting-east.global
+    lbtype: FAILOVER
+    target:
+    - region: uswest-2
+      weight: 0
+    - region: useast-2
+      weight: 100
