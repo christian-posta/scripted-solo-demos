@@ -43,6 +43,16 @@ run "kubectl get virtualservice -A -o yaml"
 desc "Go check the browser before we clean up"
 read -s
 
+backtotop
+desc "It's possible we end up with traffic rules cross cluster that make it difficult to understand"
+read -s
+desc "We can use meshctl describe to get the rules for a particular service"
+run "meshctl describe --help"
+
+backtotop
+desc "Let's see what rules are on the reviews service"
+run "meshctl describe service reviews.default.cluster-1"
+
 
 desc "Now time to clean up"
 read -s

@@ -13,9 +13,10 @@ helm template $ISTIO_DIR/install/kubernetes/helm/istio-init --namespace istio-sy
 kubectl --context $CLUSTER_1 delete ns istio-system
 
 kubectl --context $CLUSTER_1 delete -f resources/remotecluster.yaml
-kubectl --context $CLUSTER_1 delete -f resources/remotecluster_sample.yaml
 kubectl --context $CLUSTER_1 delete -f resources/demosinglecluster.yaml
 kubectl --context $CLUSTER_1 delete -f resources/sample.yaml
+
+kubectl --context $CLUSTER_1 apply -f resources/clean-kube-dns.yaml
 
 kubectl --context $CLUSTER_1 delete crd $(kubectl --context $CLUSTER_1 get crd | grep istio | awk '{ print $1 }')
 
@@ -29,9 +30,13 @@ helm template $ISTIO_DIR/install/kubernetes/helm/istio-init --namespace istio-sy
 kubectl --context $CLUSTER_2 delete ns istio-system
 
 kubectl --context $CLUSTER_2 delete -f resources/remotecluster.yaml
-kubectl --context $CLUSTER_2 delete -f resources/remotecluster_sample.yaml
+kubectl --context $CLUSTER_2 delete -f resources/greeting-sample.yaml
+kubectl --context $CLUSTER_2 delete -f resources/greeting-otherns.yaml
 kubectl --context $CLUSTER_2 delete -f resources/demosinglecluster.yaml
 kubectl --context $CLUSTER_2 delete -f resources/sample.yaml
 
+kubectl --context $CLUSTER_2 apply -f resources/clean-kube-dns.yaml
 
 kubectl --context $CLUSTER_2 delete crd $(kubectl --context $CLUSTER_2 get crd | grep istio | awk '{ print $1 }')
+
+
