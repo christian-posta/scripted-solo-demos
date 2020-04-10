@@ -13,6 +13,12 @@ desc "We have installed istio onto two clustes:"
 run "kubectl get po -n istio-system --context $CLUSTER_1 "
 run "kubectl get po -n istio-system --context $CLUSTER_2"
 
+desc "We also have bookinfo (v1 and v2 of reviews) on cluster 1"
+run "kubectl get po -n default --context $CLUSTER_1 "
+
+desc "And boookinfo reviews-v3 on cluster 2"
+run "kubectl get po -n default --context $CLUSTER_2"
+
 backtotop
 desc "Let's install the SMH management plane onto cluster 1"
 read -s
@@ -39,6 +45,14 @@ run "meshctl cluster register --remote-context $CLUSTER_2 --remote-cluster-name 
 desc "Now we should have discovered the meshes"
 run "kubectl get kubernetesclusters -n service-mesh-hub --context $CLUSTER_1"
 run "kubectl get meshes -n service-mesh-hub --context $CLUSTER_1"
+
+desc "We've discovered all of the services"
+run "kubectl get meshservices -A"
+run "kubectl get meshservices productpage-default-cluster-1 -o yaml -n service-mesh-hub --context $CLUSTER_1"
+
+desc "We've discovered all of the workload instances"
+run "kubectl get meshworkloads -A"
+run "kubectl get meshworkloads istio-reviews-v3-default-cluster-2 -o yaml -n service-mesh-hub --context $CLUSTER_1"
 
 desc "Now let's look at federating the clusters"
 

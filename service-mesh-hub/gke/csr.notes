@@ -1,0 +1,4 @@
+# getting a csr
+kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub -o yaml --context gke-istio-cluster-2   -o "jsonpath={.items[].spec.csrData}" | base64 --decode > ./temp/foo.csr
+
+#taking a look at the CSR

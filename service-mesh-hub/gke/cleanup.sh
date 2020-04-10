@@ -3,13 +3,13 @@
 # We should also delete bookinfo
 
 ## Install Bookinfo on cluster 1
-kubectl delete -f resources/bookinfo-cluster1.yaml --context $CLUSTER_1
+kubectl delete -f ../resources-common/bookinfo-cluster1.yaml --context $CLUSTER_1
 
 
 
 
 ## Install Bookinfo on cluster 2
-kubectl delete -f resources/bookinfo-cluster2.yaml --context $CLUSTER_2
+kubectl delete -f ../resources-common/bookinfo-cluster2.yaml --context $CLUSTER_2
 
 
 # Delete Resources cluster 2
@@ -32,7 +32,7 @@ kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUS
 kubectl delete deploy --all -n default --context $CLUSTER_1
 kubectl delete svc details productpage ratings reviews --context $CLUSTER_1
 
-kubectl --context $CLUSTER_1 delete -f resources/clean-kube-dns.yaml
+kubectl --context $CLUSTER_1 delete -f ../resources-common/clean-kube-dns.yaml
 
 
 
@@ -57,4 +57,4 @@ kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUS
 kubectl delete deploy --all -n default --context $CLUSTER_2
 kubectl delete svc details productpage ratings reviews --context $CLUSTER_2
 
-kubectl --context $CLUSTER_2 apply -f resources/clean-kube-dns.yaml
+kubectl --context $CLUSTER_2 apply -f ../resources-common/clean-kube-dns.yaml

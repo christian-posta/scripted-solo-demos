@@ -12,6 +12,8 @@ read -s
 desc "We have installed istio onto two clustes:"
 run "kubectl get po -n istio-system --context $CLUSTER_1 "
 run "kubectl get po -n istio-system --context $CLUSTER_2"
+run "kubectl get kubernetesclusters -n service-mesh-hub --context $CLUSTER_1"
+run "kubectl get meshes -n service-mesh-hub --context $CLUSTER_1"
 
 backtotop
 desc "Right now, the two meshes have different root trusts"
@@ -42,8 +44,8 @@ desc "The VirtualMesh CRD allows us to federate the two meshes"
 read -s
 
 run "cat resources/virtual-mesh.yaml"
-run "kubectl --context $CLUSTER_1 apply -f resources/virtual-mesh.yaml"
-run "kubectl --context $CLUSTER_1 get virtualmesh -n service-mesh-hub -o yaml"
+run "kubectl apply -f resources/virtual-mesh.yaml --context $CLUSTER_1"
+run "kubectl get virtualmesh -n service-mesh-hub -o yaml --context $CLUSTER_1"
 
 backtotop
 desc "Let's watch what's happening... "
@@ -54,27 +56,43 @@ run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub --con
 run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub --context $CLUSTER_2"
 run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub -o yaml --context $CLUSTER_2"
 
+backtotop
+desc "Let's take a quick look at this CSR"
+read -s
+
+run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub -o yaml --context gke-istio-cluster-2   -o \"jsonpath={.items[].spec.csrData}\" --context $CLUSTER_2| base64 --decode > ./temp/cluster-2.csr"
+run "openssl req -in ./temp/cluster-2.csr -noout -text"
+
+
+backtotop
+desc "Let's look at the root cert that was created on the SMH management plane cluster"
+read -s
 run "kubectl get secret -n service-mesh-hub"
 
-desc "this is the root cert we created for SMH"
+
+
+# more suited for copy/paste
+# kubectl get secret -n service-mesh-hub virtual-mesh-ca-certs  -o "jsonpath={.data['root-cert\.pem']}" --context $CLUSTER_1 | base64 --decode
 run "kubectl get secret -n service-mesh-hub virtual-mesh-ca-certs  -o \"jsonpath={.data['root-cert\.pem']}\" --context $CLUSTER_1 | base64 --decode"
 
 desc "Copy this cert so we can compare"
 read -s
 
 backtotop
-desc "this is the root cert used to sign handle the CSR"
+desc "this is the root cert used to sign the CSR"
 read -s
 
+#kubectl get virtualmeshcertificatesigningrequests  -n service-mesh-hub -o "jsonpath={.items[0].status.response.rootCertificate}" --context $CLUSTER_2 | base64 --decode
 run "kubectl get virtualmeshcertificatesigningrequests  -n service-mesh-hub -o \"jsonpath={.items[0].status.response.rootCertificate}\" --context $CLUSTER_2 | base64 --decode"
 
 backtotop
 desc "We've created the new CA for  istio"
 read -s
-run "kubectl --context $CLUSTER_1 get secret -n istio-system cacerts"
-run "kubectl --context $CLUSTER_2 get secret -n istio-system cacerts"
+run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
+run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
 
 desc "Looking at the root cert from the cacerts intermediate chain"
+#kubectl get secret cacerts -n istio-system -o "jsonpath={.data['root-cert\.pem']}" --context $CLUSTER_2| base64 --decode
 run "kubectl get secret cacerts -n istio-system -o \"jsonpath={.data['root-cert\.pem']}\" --context $CLUSTER_2| base64 --decode"
 
 desc "Bounce the istio pod (and workloads so they pick up the new cert)"
@@ -89,7 +107,7 @@ backtotop
 desc "let's check the certs now in the workloads"
 read -s
 
-run "kubectl get po -n default -w --cluster $CLUSTER_1"
+run "kubectl get po -n default -w --context $CLUSTER_1"
 
 run "kubectl --context $CLUSTER_1 exec -it $(kubectl --context $CLUSTER_1 get po -l app=reviews -o jsonpath={.items..metadata.name}|awk '{ print $1 }') -c istio-proxy -- openssl s_client -showcerts -connect ratings.default:9080"
 
