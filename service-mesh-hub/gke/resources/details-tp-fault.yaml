@@ -2,7 +2,7 @@ apiVersion: networking.zephyr.solo.io/v1alpha1
 kind: TrafficPolicy
 metadata:
   namespace: service-mesh-hub
-  name: fault-injection-details
+  name: details-tp-fault
 spec:
   sourceSelector:
     labels:

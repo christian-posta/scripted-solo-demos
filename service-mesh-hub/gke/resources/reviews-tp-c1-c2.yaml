@@ -2,7 +2,7 @@ apiVersion: networking.zephyr.solo.io/v1alpha1
 kind: TrafficPolicy
 metadata:
   namespace: service-mesh-hub
-  name: simple
+  name: reviews-tp
 spec:
   destinationSelector:
     serviceRefs:

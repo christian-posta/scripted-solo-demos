@@ -38,12 +38,12 @@ backtotop
 desc "Now let's control the traffic for services running on cluster 1"
 read -s
 
-run "cat resources/traffic-policy-v1.yaml"
-run "kubectl apply -f resources/traffic-policy-v1.yaml --context $CLUSTER_1"
+run "cat resources/reviews-tp-v1.yaml"
+run "kubectl apply -f resources/reviews-tp-v1 --context $CLUSTER_1"
 
 desc "Let's introduce v2"
-run "cat resources/traffic-policy-v1-v2-75.yaml"
-run "kubectl apply -f resources/traffic-policy-v1-v2-75.yaml --context $CLUSTER_1"
+run "cat resources/reviews-tp-v1-v2.yaml"
+run "kubectl apply -f resources/reviews-tp-v1-v2.yaml --context $CLUSTER_1"
 
 desc "When we introduce v3, we will need to route across clusters"
 
@@ -52,8 +52,8 @@ backtotop
 desc "Now let's route reviews traffic to balance between cluster 1 and 2"
 read -s
 
-run "cat resources/cross-cluster-traffic-policy.yaml"
-run "kubectl apply -f resources/cross-cluster-traffic-policy.yaml"
+run "cat resources/reviews-tp-c1-c2.yaml"
+run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
 run "kubectl get virtualservice -A"
 run "kubectl get virtualservice -A -o yaml"
 
@@ -79,7 +79,7 @@ read -s
 desc "Are you sure?"
 read -s
 
-run "kubectl delete -f resources/cross-cluster-traffic-policy.yaml --context $CLUSTER_1"
+run "kubectl delete -f resources/reviews-tp-c1-c2 --context $CLUSTER_1"
 run "kubectl delete vs reviews -n default --context $CLUSTER_1"
 desc "Wait a few moments and check the VSs are deleted"
 read -s

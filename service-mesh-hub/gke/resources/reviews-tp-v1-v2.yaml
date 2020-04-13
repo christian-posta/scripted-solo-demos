@@ -2,31 +2,27 @@ apiVersion: networking.zephyr.solo.io/v1alpha1
 kind: TrafficPolicy
 metadata:
   namespace: service-mesh-hub
-  name: traffic-policy-details
+  name: reviews-tp
 spec:
-  sourceSelector:
-    labels:
-      app: productpage
-    namespaces:
-      - default
   destinationSelector:
     serviceRefs:
       services:
-        - name: details
+        - cluster: cluster-1
+          name: reviews
           namespace: default
-          cluster: cluster-1
   trafficShift:
     destinations:
       - destination:
           cluster: cluster-1
-          name: details
+          name: reviews
           namespace: default
-        weight: 50
+        weight: 75
         subset:
           version: v1
       - destination:
-          cluster: cluster-2
-          name: details
+          cluster: cluster-1
+          name: reviews
           namespace: default
-        weight: 50
-
+        weight: 25
+        subset:
+          version: v2

@@ -16,6 +16,6 @@ desc "We may not want every service to be able to talk with every other"
 desc "Let's enforce access policies by starting with a Deny All posture"
 read -s
 
-run "cat resources/virtual-mess-access.yaml"
+run "cat resources/virtual-mesh-access.yaml"
 
 exit
