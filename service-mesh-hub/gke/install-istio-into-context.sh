@@ -3,7 +3,7 @@ CLUSTER_1=$1
 echo "********************************"
 echo "Install Istio onto $CLUSTER_1"
 echo "********************************"
-read -s
+#read -s
 meshctl mesh install istio --context $CLUSTER_1 --operator-spec=- <<EOF
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
@@ -36,8 +36,8 @@ spec:
       selfSigned: false
 EOF
 
-echo "Wait for Istio to come up on $CLUSTER_1"
-kubectl get po -n istio-system -w
+#echo "Wait for Istio to come up on $CLUSTER_1"
+#kubectl get po -n istio-system -w
 
 
 #echo "********************************"

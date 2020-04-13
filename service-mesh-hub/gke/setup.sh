@@ -3,6 +3,9 @@
 ./install-istio-into-context.sh $CLUSTER_1
 ./install-istio-into-context.sh $CLUSTER_2
 
+echo "Ready to install Bookinfo."
+echo "Yes?"
+read -s
 
 ## Install Bookinfo on cluster 1
 kubectl label --context $CLUSTER_1 namespace default istio-injection=enabled --overwrite
