@@ -5,6 +5,10 @@
 SOURCE_DIR=$PWD
 source env.sh
 
+#############################################
+# Traffic Routing
+#############################################
+
 desc "In the previous demo, we federated the meshes"
 run "kubectl get virtualmesh -n service-mesh-hub -o yaml --context $CLUSTER_1"
 
@@ -28,7 +32,7 @@ read -s
 desc "Let's port-forward the bookinfo demo so we can see its behavior"
 tmux split-window -v -d -c $SOURCE_DIR
 tmux select-pane -t 0
-tmux send-keys -t 1 "kubectl port-forward deployments/productpage-v1 9080" C-m
+tmux send-keys -t 1 "kubectl port-forward deployments/productpage-v1 9080 --context $CLUSTER_1" C-m
 
 # wait 
 desc "Go to product page in browser http://localhost:9080"
@@ -53,9 +57,9 @@ desc "Now let's route reviews traffic to balance between cluster 1 and 2"
 read -s
 
 run "cat resources/reviews-tp-c1-c2.yaml"
-run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
-run "kubectl get virtualservice -A"
-run "kubectl get virtualservice -A -o yaml"
+run "kubectl apply -f resources/reviews-tp-c1-c2.yaml --context $CLUSTER_1"
+run "kubectl get virtualservice -A --context $CLUSTER_1"
+run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
 
 backtotop
 desc "It's possible we end up with traffic rules cross cluster that make it difficult to understand"
