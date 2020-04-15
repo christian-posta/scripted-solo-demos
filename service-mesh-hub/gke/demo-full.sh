@@ -103,12 +103,12 @@ kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null
 run "kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_2"
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
+run "kubectl get po -n default -w --context $CLUSTER_1"
+
 #Now check out the certs from the workloads
 backtotop
 desc "let's check the certs now in the workloads"
 read -s
-
-run "kubectl get po -n default -w --context $CLUSTER_1"
 
 desc "Cert chain we see on cluster 1"
 REVIEWS_POD=$(kubectl get po -n default -l app=reviews --context $CLUSTER_1 | grep -i running | head -n 1 | awk '{ print $1 }')
