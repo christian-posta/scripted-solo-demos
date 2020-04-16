@@ -6,7 +6,8 @@ rm -fr ./temp/*.*
 #############################################
 kubectl delete trafficpolicy -n service-mesh-hub --all --context $CLUSTER_1
 kubectl delete virtualservices.networking.istio.io  reviews -n default --context $CLUSTER_1
-
+kubectl delete gateway smh-vm-virtual-mesh-gateway -n istio-system
+kubectl delete envoyfilter smh-virtual-mesh-filter -n istio-system 
 
 #############################################
 # Access Control

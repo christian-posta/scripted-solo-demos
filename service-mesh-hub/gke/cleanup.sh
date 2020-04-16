@@ -1,6 +1,10 @@
 . ./env.sh
 
-# We should also delete bookinfo
+
+#call rest
+. ./reset.sh
+
+# Now delete other things
 
 ## Install Bookinfo on cluster 1
 kubectl delete -f ../resources-common/bookinfo-cluster1.yaml --context $CLUSTER_1
