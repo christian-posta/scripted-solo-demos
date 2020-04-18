@@ -24,8 +24,27 @@ kubectl delete authorizationpolicies -n default --all --context $CLUSTER_2
 kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep csr-agent)
 kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep csr-agent)
 
+
+
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep mesh-discovery)
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep mesh-discovery)
+
+
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep mesh-networking-clusterrole)
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep mesh-networking-clusterrole)
+
+
+
+
 kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep csr-agent)
 kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep csr-agent)
+
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2
+ get clusterrole | grep mesh-discovery)
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding |  grep mesh-discovery)
+
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep mesh-networking)
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding |  grep mesh-networking)
 
 
 kubectl delete virtualmesh virtual-mesh -n service-mesh-hub --context $CLUSTER_1
