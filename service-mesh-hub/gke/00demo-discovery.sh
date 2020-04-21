@@ -30,7 +30,7 @@ desc "Let's install the SMH management plane onto cluster 1"
 read -s
 
 run "meshctl install --context $CLUSTER_1 "
-run "kubectl get po -n service-mesh-hub -w"
+run "kubectl get po -n service-mesh-hub -w --context $CLUSTER_1 "
 run "meshctl check --context $CLUSTER_1"
 
 backtotop

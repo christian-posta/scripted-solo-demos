@@ -15,7 +15,8 @@ read -s
 desc "Let's port-forward the bookinfo demo so we can see its behavior"
 tmux split-window -v -d -c $SOURCE_DIR
 tmux select-pane -t 0
-tmux send-keys -t 1 "kubectl port-forward deployments/productpage-v1 9080 --context $CLUSTER_1" C-m
+tmux send-keys -t 1 "source env.sh" C-m
+tmux send-keys -t 1 "kubectl --context $CLUSTER_1 port-forward deployments/productpage-v1 9080" C-m
 
 desc "Go to the browser make sure it works"
 read -s

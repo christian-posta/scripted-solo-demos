@@ -29,7 +29,7 @@ desc "Let's install the SMH management plane onto cluster 1"
 read -s
 
 run "meshctl install --context $CLUSTER_1 "
-run "kubectl get po -n service-mesh-hub -w"
+run "kubectl get po -n service-mesh-hub -w --context $CLUSTER_1 "
 run "meshctl check --context $CLUSTER_1"
 
 backtotop
@@ -139,7 +139,8 @@ read -s
 desc "Let's port-forward the bookinfo demo so we can see its behavior"
 tmux split-window -v -d -c $SOURCE_DIR
 tmux select-pane -t 0
-tmux send-keys -t 1 "kubectl port-forward deployments/productpage-v1 9080" C-m
+tmux send-keys -t 1 "source env.sh" C-m
+tmux send-keys -t 1 "kubectl --context $CLUSTER_1 port-forward deployments/productpage-v1 9080" C-m
 
 run "cat resources/reviews-tp-c1-c2.yaml"
 run "kubectl apply -f resources/reviews-tp-c1-c2.yaml --context $CLUSTER_1"
