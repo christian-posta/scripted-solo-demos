@@ -39,8 +39,7 @@ kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUS
 kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep csr-agent)
 kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep csr-agent)
 
-kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2
- get clusterrole | grep mesh-discovery)
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep mesh-discovery)
 kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding |  grep mesh-discovery)
 
 kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep mesh-networking)

@@ -12,6 +12,9 @@ metadata:
   namespace: istio-operator
 spec:
   profile: minimal
+  addonComponents:
+    istiocoredns:
+      enabled: true
   components:
     # Istio Gateway feature
     ingressGateways:
