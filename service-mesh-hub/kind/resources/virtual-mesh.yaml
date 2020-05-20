@@ -1,0 +1,21 @@
+apiVersion: networking.zephyr.solo.io/v1alpha1
+kind: VirtualMesh
+metadata:
+  name: virtual-mesh
+  namespace: service-mesh-hub
+spec:
+  displayName: "Demo Mesh Federation"
+  certificateAuthority:
+    builtin:
+      ttlDays: 356
+      rsaKeySizeBytes: 4096
+      orgName: "service-mesh-hub"
+  federation: 
+    mode: PERMISSIVE
+  shared: {}
+  enforceAccessControl: false
+  meshes:
+  - name: istio-istio-system-cluster-1
+    namespace: service-mesh-hub
+  - name: istio-istio-system-cluster-2
+    namespace: service-mesh-hub

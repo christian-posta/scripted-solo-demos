@@ -1,0 +1,64 @@
+---
+# Source: gloo/templates/8-default-gateways.yaml
+apiVersion: gateway.solo.io/v1
+kind: Gateway
+metadata:
+  name: gateway-proxy
+  namespace: gloo-system
+  labels:
+    app: gloo
+spec:
+  bindAddress: "::"
+  bindPort: 8080
+  httpGateway: {}
+  useProxyProto: false
+  ssl: false
+  proxyNames:
+  - gateway-proxy
+---
+# Source: gloo/templates/8-default-gateways.yaml
+apiVersion: gateway.solo.io/v1
+kind: Gateway
+metadata:
+  name: gateway-proxy-ssl
+  namespace: gloo-system
+  labels:
+    app: gloo
+spec:
+  bindAddress: "::"
+  bindPort: 8443
+  httpGateway: {}
+  useProxyProto: false
+  ssl: true
+  proxyNames:
+  - gateway-proxy
+---
+# Source: gloo/templates/18-settings.yaml
+apiVersion: gloo.solo.io/v1
+kind: Settings
+metadata:
+  labels:
+    app: gloo
+  name: default
+  namespace: gloo-system
+spec:
+  gloo:
+    xdsBindAddr: "0.0.0.0:9977"
+    invalidConfigPolicy:
+      invalidRouteResponseBody: Gloo Gateway has invalid configuration. Administrators should
+        run `glooctl check` to find and fix config errors.
+      invalidRouteResponseCode: 404
+    disableKubernetesDestinations: false
+    disableProxyGarbageCollection: false
+  discoveryNamespace: gloo-system
+  kubernetesArtifactSource: {}
+  kubernetesConfigSource: {}
+  kubernetesSecretSource: {}
+  refreshRate: 60s
+  gateway:
+    readGatewaysFromAllNamespaces: false
+    validation:
+      proxyValidationServerAddr: gloo:9988
+      alwaysAccept: true
+  discovery:
+    fdsMode: WHITELIST

@@ -79,6 +79,8 @@ desc "Let's watch what's happening... "
 desc "We've now created a new Root CA, and initated intermediate CAs on each istio cluster"
 read -s
 
+
+
 # more suited for copy/paste
 # kubectl get secret -n service-mesh-hub virtual-mesh-ca-certs  -o "jsonpath={.data['root-cert\.pem']}" --context $CLUSTER_1 | base64 --decode
 desc "This is the root cert we created on the management plane"
@@ -87,21 +89,18 @@ run "kubectl get secret -n service-mesh-hub virtual-mesh-ca-certs  -o \"jsonpath
 desc "The remote clusters created a CSR"
 run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub --context $CLUSTER_2"
 
-desc "If successfully signed, will be signed by the root cert"
-run "kubectl get virtualmeshcertificatesigningrequests -n service-mesh-hub -o yaml --context $CLUSTER_2"
+#Bounce the istio pod (and workloads so they pick up the new cert)
+kubectl delete po --wait=false -n istio-system -l app=istiod --context $CLUSTER_1 > /dev/null 2>&1
+kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
+
+kubectl delete po --wait=false -n istio-system -l app=istiod --context $CLUSTER_2 > /dev/null 2>&1
+kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
 backtotop
 desc "We've created the new CA for  istio"
 read -s
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
-
-desc "Bounce the istio pod (and workloads so they pick up the new cert)"
-run "kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_1"
-kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
-
-run "kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_2"
-kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
 run "kubectl get po -n default -w --context $CLUSTER_1"
 

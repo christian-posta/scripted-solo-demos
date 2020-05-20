@@ -1,0 +1,46 @@
+---
+# Source: gloo/templates/2-gloo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gloo
+  name: gloo
+  namespace: gloo-system
+spec:
+  ports:
+  - name: grpc-xds
+    port: 9977
+    protocol: TCP
+  - name: grpc-validation
+    port: 9988
+    protocol: TCP
+  - name: metrics-grpc
+    port: 9966
+    protocol: TCP
+  - name: wasm-cache
+    port: 9979
+    protocol: TCP
+  selector:
+    gloo: gloo
+---
+# Source: gloo/templates/5-gateway-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    discovery.solo.io/function_discovery: disabled
+    app: gloo
+    gloo: gateway
+  name: gateway
+  namespace: gloo-system
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    # this should map to projects/gateway/pkg/defaults.ValidationWebhookBindPort
+    targetPort: 8443
+  selector:
+    gloo: gateway

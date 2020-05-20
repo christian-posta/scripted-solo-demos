@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-certgen
+  name: gateway-certgen
+  namespace: gloo-system
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        gloo: gateway-certgen
+    spec:
+      serviceAccountName: certgen
+      containers:
+        - image: quay.io/solo-io/certgen:1.3.27
+          imagePullPolicy: IfNotPresent
+          name: certgen
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          args:
+            - "--secret-name=gateway-validation-certs"
+            - "--svc-name=gateway"
+            - "--validating-webhook-configuration-name=gloo-gateway-validation-webhook-gloo-system"
+      restartPolicy: OnFailure
+    # this feature is still in Alpha, which means it must be manually enabled in the k8s api server
+    # with --feature-gates="TTLAfterFinished=true". This flag also works with minikube start ...
+    # if the feature flag is not enabled in the k8s api server, this setting will be silently ignored at creation time
+    ttlSecondsAfterFinished: 60
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: gloo
+    gloo: rbac
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5" # must be executed before cert-gen job
+  name: certgen
+  namespace: gloo-system    

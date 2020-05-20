@@ -1,0 +1,184 @@
+---
+# Source: gloo/templates/1-gloo-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gloo
+  name: gloo
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: gloo
+  template:
+    metadata:
+      labels:
+        gloo: gloo
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: gloo
+      volumes:
+      - name: labels-volume
+        downwardAPI:
+          items:
+            - path: "labels"
+              fieldRef:
+                fieldPath: metadata.labels
+      containers:
+      - image: quay.io/solo-io/gloo:1.3.27
+        imagePullPolicy: IfNotPresent
+        name: gloo
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: 9977
+          name: grpc-xds
+          protocol: TCP
+        - containerPort: 9988
+          name: grpc-validation
+          protocol: TCP
+        - containerPort: 9979
+          name: wasm-cache
+          protocol: TCP
+        volumeMounts:
+        - name: labels-volume
+          mountPath: /etc/gloo
+          readOnly: true
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: START_STATS_SERVER
+            value: "true"
+        readinessProbe:
+          tcpSocket:
+            port: 9977
+          initialDelaySeconds: 1
+          periodSeconds: 2
+          failureThreshold: 10
+---
+# Source: gloo/templates/3-discovery-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: discovery
+  name: discovery
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: discovery
+  template:
+    metadata:
+      labels:
+        gloo: discovery
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: discovery
+      containers:
+      - image: quay.io/solo-io/discovery:1.3.27
+        imagePullPolicy: IfNotPresent
+        name: discovery
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: START_STATS_SERVER
+            value: "true"
+---
+# Source: gloo/templates/5-gateway-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway
+  name: gateway
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: gateway
+  template:
+    metadata:
+      labels:
+        gloo: gateway
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: gateway
+      containers:
+      - image: quay.io/solo-io/gateway:1.3.27
+        imagePullPolicy: IfNotPresent
+        name: gateway
+        ports:
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: START_STATS_SERVER
+            value: "true"
+          - name: VALIDATION_MUST_START
+            value: "true"
+        volumeMounts:
+          - mountPath: /etc/gateway/validation-certs
+            name: validation-certs
+        readinessProbe:
+          tcpSocket:
+            port: 8443
+          initialDelaySeconds: 1
+          periodSeconds: 2
+          failureThreshold: 10
+      volumes:
+        - name: validation-certs
+          secret:
+            defaultMode: 420
+            secretName: gateway-validation-certs

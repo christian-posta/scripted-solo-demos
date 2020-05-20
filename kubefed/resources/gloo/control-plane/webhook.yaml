@@ -1,0 +1,26 @@
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: gloo-gateway-validation-webhook-gloo-system
+  labels:
+    app: gloo
+    gloo: gateway
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5" # must be executed before cert-gen job
+webhooks:
+- name: gateway.gloo-system.svc  # must be a domain with at least three segments separated by dots
+  clientConfig:
+    service:
+      name: gateway
+      namespace: gloo-system
+      path: "/validation"
+    caBundle: "" # update manually or use certgen job
+  rules:
+  - operations: [ "CREATE", "UPDATE", "DELETE" ]
+    apiGroups: ["gateway.solo.io"]
+    apiVersions: ["v1"]
+    resources: ["*"]
+  sideEffects: None
+  failurePolicy: Ignore

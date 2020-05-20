@@ -1,0 +1,127 @@
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-gateway-secret-create-vwc-update-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5" # must be executed before cert-gen job
+subjects:
+- kind: ServiceAccount
+  name: certgen
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: gloo-gateway-secret-create-vwc-update-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-gateway-secret-create-vwc-update-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5" # must be executed before cert-gen job
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create", "get", "update"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingwebhookconfigurations"]
+  verbs: ["get", "update"]
+
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: kube-resource-watcher-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "secrets", "endpoints", "configmaps", "namespaces"]
+  verbs: ["get", "list", "watch"]
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: gloo-upstream-mutator-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: ["gloo.solo.io"]
+  resources: ["upstreams"]
+  # update is needed for status updates
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: gloo-resource-reader-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: ["gloo.solo.io", "enterprise.gloo.solo.io"]
+  resources: ["upstreams","upstreamgroups", "proxies", "authconfigs"]
+  # update is needed for status updates
+  verbs: ["get", "list", "watch", "update"]
+- apiGroups: [""] # get/update on configmaps for recording envoy metrics
+  resources: ["configmaps"]
+  verbs: ["get", "update"]
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: settings-user-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: ["gloo.solo.io"]
+  resources: ["settings"]
+  # update is needed for status updates
+  verbs: ["get", "list", "watch", "create"]
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: gloo-resource-mutator-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: ["gloo.solo.io"]
+  resources: ["proxies"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+# Source: gloo/templates/20-namespace-clusterrole-gateway.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: gateway-resource-reader-gloo-system
+    labels:
+        app: gloo
+        gloo: rbac
+rules:
+- apiGroups: ["gateway.solo.io"]
+  resources: ["virtualservices", "routetables"]
+  # update is needed for status updates
+  verbs: ["get", "list", "watch", "update"]
+- apiGroups: ["gateway.solo.io"]
+  resources: ["gateways"]
+  # update is needed for status updates, create for creating the default ones.
+  verbs: ["get", "list", "watch", "create", "update"]

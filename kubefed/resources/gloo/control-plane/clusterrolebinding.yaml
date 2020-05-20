@@ -1,0 +1,112 @@
+
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kube-resource-watcher-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: gloo
+  namespace: gloo-system
+- kind: ServiceAccount
+  name: discovery
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: kube-resource-watcher-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-upstream-mutator-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: discovery
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: gloo-upstream-mutator-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-resource-reader-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: gloo
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: gloo-resource-reader-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: settings-user-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: gloo
+  namespace: gloo-system
+- kind: ServiceAccount
+  name: gateway
+  namespace: gloo-system
+- kind: ServiceAccount
+  name: discovery
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: settings-user-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-resource-mutator-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: gateway
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: gloo-resource-mutator-gloo-system
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: gloo/templates/23-namespace-clusterrolebinding-gateway.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gateway-resource-reader-binding-gloo-system
+  labels:
+    app: gloo
+    gloo: rbac
+subjects:
+- kind: ServiceAccount
+  name: gateway
+  namespace: gloo-system
+roleRef:
+  kind: ClusterRole
+  name: gateway-resource-reader-gloo-system
+  apiGroup: rbac.authorization.k8s.io

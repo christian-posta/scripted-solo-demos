@@ -1,0 +1,25 @@
+---
+# Source: gloo/templates/8-gateway-proxy-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-proxy
+    gateway-proxy-id: gateway-proxy
+  name: gateway-proxy
+  namespace: gloo-system
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: https
+  selector:
+    gateway-proxy-id: gateway-proxy
+    gateway-proxy: live
+  type: LoadBalancer

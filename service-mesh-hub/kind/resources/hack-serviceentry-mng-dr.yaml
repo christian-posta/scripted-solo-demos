@@ -1,0 +1,19 @@
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: reviews.default.management-plane-cluster
+  namespace: istio-system
+spec:
+  host: reviews.default.management-plane-cluster
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+  subsets:
+  - labels:
+      cluster: management-plane-cluster
+    name: version-v1
+  - labels:
+      cluster: management-plane-cluster
+    name: version-v2      
