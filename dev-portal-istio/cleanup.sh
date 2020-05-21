@@ -1,15 +1,10 @@
-# Delete wasme operator
-kubectl delete -f resources/wasme-crds.yaml
-kubectl delete -f resources/wasme-operator.yaml
+. ./reset.sh
 
-# Delete Istio
-kubectl delete -f resources/istio-1.5.yaml
+# make sure Istio and the dev portal are running
+istioctl manifest generate | kubectl delete -f -
 
-# Delete Bookinfo
-kubectl delete -n bookinfo resources/bookinfo.yaml 
-kubectl delete ns bookinfo
+helm del idp -n dev-portal
+kubectl delete ns dev-portal
 
-# Delete wasme 
-kubectl delete ns wasme
-
-rm -fr ./filter/
+kubectl delete -f resources/petstore-classic-manifest.yaml
+kubectl delete -f resources/petstore-special-manifest.yaml

@@ -1,1 +1,24 @@
-## Additional routes can go here?
+---
+apiVersion: devportal.solo.io/v1alpha1
+kind: Route
+metadata:
+  name: petstore-classic-route
+  namespace: dev-portal
+spec:
+  backends:
+  - kube:
+      name: petstore
+      namespace: default
+      port: 8080
+---      
+apiVersion: devportal.solo.io/v1alpha1
+kind: Route
+metadata:
+  name: petstore-special-route
+  namespace: dev-portal
+spec:
+  backends:
+  - kube:
+      name: petstore
+      namespace: default
+      port: 8080
