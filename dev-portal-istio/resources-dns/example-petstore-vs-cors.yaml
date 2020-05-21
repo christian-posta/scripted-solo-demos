@@ -1,0 +1,31 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: pet-store
+  namespace: dev-portal
+spec:
+  gateways:
+  - istio-system/istio-ingressgateway
+  hosts:
+  - petstore.com
+  http:
+  - match:
+    - method:
+        exact: GET
+      uri:
+        exact: /api/pets
+    name: pet-store.dev-portal.swagger-petstore.dev-portal.findPets
+    route:
+    - destination:
+        host: petstore.default.svc.cluster.local
+        port:
+          number: 8080
+    #  We need to add this action on each route we need to test in the portal
+    corsPolicy:
+      allowOrigin:
+      - "http://localhost:1234" # This should be the host that is serving the portal
+      allowHeaders:
+      - "api-key"
+      allowMethods: # I think you can omit these, just including them in case
+      - POST
+      - GET

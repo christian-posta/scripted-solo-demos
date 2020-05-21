@@ -1,0 +1,45 @@
+apiVersion: devportal.solo.io/v1alpha1
+kind: User
+metadata:
+  name: ceposta
+  namespace: dev-portal
+spec:
+  accessLevel:
+    apiProducts:
+    - name: petstore
+      namespace: dev-portal
+      plans:
+      - petstore-plan      
+    portals:
+    - name: petstore-portal
+      namespace: dev-portal
+  basicAuth:
+    passwordSecretKey: password
+    passwordSecretName: ceposta-password
+    passwordSecretNamespace: dev-portal
+  email: ceposta@apache.org
+  username: ceposta
+---
+apiVersion: v1
+data:
+  password: JDJhJDEwJE9kS2tIZzN2alhzWUtTQVRRL1l2UnUvaVpVcEk0ZmVhMlFGbURvY2dscXRHS3loZjZSZnpl
+kind: Secret
+metadata:
+  name: ceposta-password
+  namespace: dev-portal
+type: Opaque  
+---
+apiVersion: v1
+data:
+  api-key: WVRReU1qY3dZVFV0TnpnNE5TMWlNalptTFdRMVltTXRNamRrT1dVNFpEVmxObUV3
+  plan: cGV0c3RvcmUtcGxhbg==
+  product: cGV0c3RvcmUuZGV2LXBvcnRhbA==
+  username: Y2Vwb3N0YQ==
+kind: Secret
+metadata:
+  labels:
+    apiproducts.devportal.solo.io: petstore.dev-portal
+    portals.devportal.solo.io/dev-portal.petstore.petstore-plan: "true"
+  name: petstore-plan-c83dc965-1112-155d-9e05-6e23e4950764
+  namespace: dev-portal
+type: extauth.solo.io/apikey

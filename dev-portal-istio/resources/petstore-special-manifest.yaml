@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: petstore-v2
+  name: petstore-v2
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: petstore-v2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: petstore-v2
+    spec:
+      containers:
+      - image: swaggerapi/petstore:latest
+        name: petstore-v2
+        ports:
+        - containerPort: 8080
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: petstore-v2
+  namespace: default
+  labels:
+    service: petstore-v2
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: petstore-v2

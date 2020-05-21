@@ -1,0 +1,45 @@
+
+apiVersion: devportal.solo.io/v1alpha1
+kind: APIProduct
+metadata:
+  labels:
+    portals.devportal.solo.io/dev-portal.petstore-portal: "true"
+  name: petstore
+  namespace: dev-portal
+spec:
+  apis:
+  - apiDoc:
+      name: petstore-classic
+      namespace: dev-portal
+    openApi:
+      operations:
+      - id: findPetById
+      - id: findPets
+  - apiDoc:
+      name: petstore-special
+      namespace: dev-portal
+    openApi:
+      operations:
+      - id: addPet
+  defaultRoute:
+    routeRef:
+      name: petstore-classic-route
+      namespace: dev-portal
+  displayInfo:
+    image:
+      configMap:
+        key: image
+        name: dev-portal-petstore-image
+        namespace: dev-portal
+    title: Pet Store product
+    version: "1.0"
+  domains:
+  - petstore.org
+  plans:
+  - authPolicy: APIKey
+    displayName: Pet Store Plan
+    name: petstore-plan
+    rateLimit:
+      requestsPerUnit: 5
+      unit: HOUR      
+      
