@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: echo-server
-        image: quay.io/solo-io/echo-server:latest
+        image: docker.io/jmalloc/echo-server:0.1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

@@ -34,10 +34,27 @@ run "kubectl get ns --context $CLUSTER_2"
 backtotop
 desc "Now let's federate a deployment and a service"
 run "kubefedctl federate -f resources/deployment.yaml"
+
+backtotop
+desc "Let's deploy some federated resources"
+read -s
 run "kubefedctl federate -f resources/deployment.yaml | kubectl --context $CLUSTER_1 apply -f -"
 run "kubefedctl federate -f resources/service.yaml | kubectl --context $CLUSTER_1 apply -f -"
 
-desc "If we remove the FederatedNamespace, it will be reconciled"
-run "kubectl delete federatednamespace test-namespace -n test-namespace"
+backtotop
+desc "Let's see the status of our federated deployment"
+read -s
+run "kubectl get federateddeployment --context $CLUSTER_1 -A -o yaml"
 
-run "kubectl get ns --context $CLUSTER_2"
+run "kubectl get svc -n test-namespace --context $CLUSTER_2"
+
+run "kubectl get po -n test-namespace --context $CLUSTER_1"
+run "kubectl get po -n test-namespace --context $CLUSTER_2"
+
+
+#desc "Let's see how reconciliation on delete works"
+#read -s
+#desc "If we remove the FederatedNamespace, it will be reconciled"
+#run "kubectl delete federatednamespace test-namespace -n test-namespace"
+
+#run "kubectl get ns --context $CLUSTER_2"

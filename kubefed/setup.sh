@@ -26,7 +26,14 @@ subjects:
     namespace: kube-system
 EOF
 
+helm2 init --service-account tiller
+echo "waiting for helm tiller to load..."
+sleep 5s
 
 helm2 repo add kubefed-charts https://raw.githubusercontent.com/kubernetes-sigs/kubefed/master/charts
+
+docker pull docker.io/jmalloc/echo-server:0.1.0
+kind load docker-image --name $CLUSTER_1 docker.io/jmalloc/echo-server:0.1.0
+kind load docker-image --name $CLUSTER_2 docker.io/jmalloc/echo-server:0.1.0
 
 helm2 install kubefed-charts/kubefed --name kubefed --version=0.3.0 --namespace kube-federation-system --devel
