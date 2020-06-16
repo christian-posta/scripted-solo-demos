@@ -13,7 +13,7 @@ spec:
   federation: 
     mode: PERMISSIVE
   shared: {}
-  enforceAccessControl: true
+  enforceAccessControl: ENABLED
   meshes:
   - name: istio-istio-system-cluster-1
     namespace: service-mesh-hub
