@@ -6,7 +6,7 @@ metadata:
 spec:
   configs:
     - oauth:
-        app_url: http://34.82.244.151:80
+        app_url: http://35.233.216.55:80
         callback_path: /callback
         client_id: uc9rZtpaEyeAY50i4kbzlwZmP4kUNes2
         client_secret_ref:

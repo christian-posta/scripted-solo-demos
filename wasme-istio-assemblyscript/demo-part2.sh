@@ -10,29 +10,20 @@ WASME=wasme
 
 
 CURRENT_BUILD=$(wasme list | grep ceposta/demo-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
-#DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
-DEMO_BUILD_NUMBER=4
-
-
-desc "We can even search from the cli:"
-run "$WASME list --published --search ceposta"
-backtotop
+# We shouldn't add +1 to this because that was already done in the previous demo
+#DEMO_BUILD_NUMBER=$CURRENT_BUILD
+DEMO_BUILD_NUMBER=$CURRENT_BUILD
 
 # wasme deploy
-desc "Now let's deploy the wasm module to istio"
+desc "Now let's deploy the demo-add-header:v0.${DEMO_BUILD_NUMBER:-1} wasm module to istio"
 read -s
 
 desc "Recall our service response from productpage to details"
 run "kubectl exec -it -n bookinfo deploy/productpage-v1 -c istio-proxy -- curl -v http://details.bookinfo:9080/details/123"
 
 backtotop
-
 desc "We will deploy the module to Istio with the wasme deploy istio command"
 read -s
-run "wasme deploy istio --help"
-backtotop
-
-desc "Let's do the real deploy"
 
 # wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.2 --id=myfilter  --namespace=bookinfo  --config 'tomorrow'
 
@@ -41,14 +32,17 @@ desc "Let's do the real deploy"
 run "wasme deploy istio webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1} --id=myfilter --namespace=bookinfo --config 'tomorrow'"
 
 backtotop
-
 desc "Let's see the control plane resources we created"
+read -s
+
 run "kubectl get envoyfilter -n bookinfo"
 run "kubectl get envoyfilter productpage-v1-myfilter -n bookinfo -o yaml"
-
 run "kubectl get po -n bookinfo"
 
+backtotop
 desc "Let's make the call from productpage -> details"
+read -s
+
 run  "kubectl exec -it -n bookinfo deploy/productpage-v1 -c istio-proxy -- curl -v http://details.bookinfo:9080/details/123"
 
 

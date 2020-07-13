@@ -12,18 +12,6 @@ source env.sh
 # Discovery
 #############################################
 
-desc "We have bookinfo (v1 and v2 of reviews) on cluster 1"
-run "kubectl get po -n default --context $CLUSTER_1 "
-
-desc "And boookinfo reviews-v3 on cluster 2"
-run "kubectl get po -n default --context $CLUSTER_2"
-
-desc "Let's port-forward the bookinfo demo so we can see its behavior"
-tmux split-window -v -d -c $SOURCE_DIR
-tmux select-pane -t 0
-tmux send-keys -t 1 "source env.sh" C-m
-tmux send-keys -t 1 "kubectl --context $CLUSTER_1 port-forward service/productpage 9080" C-m
-
 backtotop
 desc "Let's install the SMH management plane onto cluster 1"
 read -s

@@ -9,3 +9,7 @@ kubectl delete portals --all -n dev-portal
 kubectl delete routes --all -n dev-portal
 kubectl delete apidoc --all -n dev-portal
 kubectl delete users --all -n dev-portal
+
+
+kubectl apply -f resources/petstore-routes.yaml
+#kubectl apply -f resources/user-ceposta.yaml

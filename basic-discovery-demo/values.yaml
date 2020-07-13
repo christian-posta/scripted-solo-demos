@@ -1,0 +1,7 @@
+gateway:
+  proxyServiceAccount:
+    disableAutomount: true
+gatewayProxies:
+  gatewayProxy:
+    podTemplate:
+      disableNetBind: true

@@ -11,10 +11,9 @@ WASME=wasme
 
 CURRENT_BUILD=$(wasme list | grep ceposta/demo-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
 #DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
-DEMO_BUILD_NUMBER=4
+DEMO_BUILD_NUMBER=8
 
-#echo "Going to tag as webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
-
+desc "Going to tag as webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 desc "Let's see what services we have deployed"
 run "kubectl get po -n istio-system"
 run "kubectl get po -n bookinfo"
@@ -49,10 +48,6 @@ backtotop
 
 desc "Now let's push it to the webassemblyhub registry"
 run "$WASME push webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
-backtotop
-
-desc "We can even search from the cli:"
-run "$WASME list --published --search ceposta"
 backtotop
 popd 
 

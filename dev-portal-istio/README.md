@@ -26,12 +26,12 @@ curl -v -H 'api-key: YTQyMjcwYTUtNzg4NS1iMjZmLWQ1YmMtMjdkOWU4ZDVlNmEw'  http://$
 ```
   
   customStyling:
-    backgroundColor: '#F9F9F9'
-    defaultTextColor: '#35393B'
-    primaryColor: '#eb921b'
-    buttonColorOverride: '#eb921b'
-    secondaryColor: '#074d57'
-    navigationLinksColorOverride: '#074d57'
+
+  primaryColor: '#eb921b'
+
+  secondaryColor: '#074d57'
+
+
 
 petstore.myddns.me
 
