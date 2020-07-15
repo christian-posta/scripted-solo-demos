@@ -1,0 +1,27 @@
+apiVersion: fed.gateway.solo.io/v1
+kind: FederatedVirtualService
+metadata:
+  name: federate-default-vs
+  namespace: gloo-fed
+spec:
+  placement:
+    clusters:
+      - kind-local
+      - kind-remote
+    namespaces:
+      - gloo-system
+  template:
+    metadata:
+      name: federated-default-vs  
+    spec:
+      virtualHost:
+        domains:
+        - '*'
+        routes:
+        - matchers:
+          - prefix: /
+          routeAction:
+            single:
+              upstream:
+                name: default-echo-10000
+                namespace: gloo-system

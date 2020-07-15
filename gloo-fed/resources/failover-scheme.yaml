@@ -1,0 +1,17 @@
+apiVersion: fed.solo.io/v1
+kind: FailoverScheme
+metadata:
+ name: echo-failover
+ namespace: gloo-fed
+spec:
+ primary:
+   clusterName: kind-local
+   name: default-echo-10000
+   namespace: gloo-system  
+ failoverGroups:
+ - priorityGroup:
+   - cluster: kind-remote
+     upstreams:
+     - name: default-echo-10000
+       namespace: gloo-system
+
