@@ -9,7 +9,7 @@ echo "Wait for gloo"
 sleep 20s
 
 ## Add health checks
-kubectl patch --context $LOCAL_CLUSTER_CONTEXT upstream -n gloo-system default-service-blue-10000 --type=merge -p "
+kubectl patch --context $LOCAL_CLUSTER_CONTEXT upstream -n gloo-system default-echo-10000  --type=merge -p "
 spec:
  healthChecks:
  - timeout: 1s
@@ -19,3 +19,4 @@ spec:
    httpHealthCheck:
      path: /health
 "
+kubectl get us -n gloo-system default-echo-10000  -o yaml

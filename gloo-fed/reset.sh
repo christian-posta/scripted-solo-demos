@@ -12,7 +12,7 @@ kubectl --context $LOCAL_CLUSTER_CONTEXT delete vs gloo-system federated-default
 kubectl --context $REMOTE_CLUSTER_CONTEXT delete vs gloo-system federated-default-vs 
 
 echo "removing gloo federation plane"
-./glooctl uninstall federation
+glooctl uninstall federation
 kubectl delete ns gloo-fed --context $LOCAL_CLUSTER_CONTEXT
 kubectl delete ns gloo-fed --context $REMOTE_CLUSTER_CONTEXT
 kubectl --context $LOCAL_CLUSTER_CONTEXT delete clusterrolebinding $(kubectl --context $LOCAL_CLUSTER_CONTEXT get clusterrolebinding |  grep gloo-fed)

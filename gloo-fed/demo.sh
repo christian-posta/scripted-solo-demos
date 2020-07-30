@@ -35,8 +35,8 @@ run "kubectl get po -n default --context $CLUSTER_2"
 backtotop
 desc "Let's install the GlooFed management plane onto cluster 1"
 read -s
-
-run "./glooctl install federation"
+source ~/bin/gloo-license-key-env
+run "glooctl install federation --license-key $GLOO_LICENSE"
 run "kubectl -n gloo-fed rollout status deployment gloo-fed --timeout=1m"
 
 
@@ -44,8 +44,8 @@ backtotop
 desc "Let's register our two clusters"
 read -s
 
-run "./glooctl cluster register --remote-context $CLUSTER_1 --cluster-name kind-local --local-cluster-domain-override host.docker.internal --federation-namespace gloo-fed"
-run "./glooctl cluster register --remote-context $CLUSTER_2 --cluster-name kind-remote --local-cluster-domain-override host.docker.internal --federation-namespace gloo-fed"
+run "glooctl cluster register --remote-context $CLUSTER_1 --cluster-name kind-local --local-cluster-domain-override host.docker.internal --federation-namespace gloo-fed"
+run "glooctl cluster register --remote-context $CLUSTER_2 --cluster-name kind-remote --local-cluster-domain-override host.docker.internal --federation-namespace gloo-fed"
 
 backtotop
 desc "Let's see how to manage configuration for the clusters"
@@ -55,7 +55,7 @@ desc "Lets enable routing on the gloo gateways with a federated config"
 run "cat ./resources/federated-default-vs.yaml"
 run "kubectl apply -f ./resources/federated-default-vs.yaml"
 run "kubectl get  FederatedVirtualService -A -o yaml"
-run "./glooctl get vs"
+run "glooctl get vs"
 
 desc "If we call the gateway on cluster 1 to get the echo service, it should work"
 run "curl localhost:8080"
