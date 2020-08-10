@@ -1,7 +1,7 @@
 . ./reset.sh
 
 # make sure Istio and the dev portal are running
-istioctl manifest generate | kubectl delete -f -
+#istioctl manifest generate | kubectl delete -f -
 
 helm del idp -n dev-portal
 kubectl delete ns dev-portal

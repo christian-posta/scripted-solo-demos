@@ -24,6 +24,9 @@ For calling with the API key:
 ```
 curl -v -H 'api-key: YTQyMjcwYTUtNzg4NS1iMjZmLWQ1YmMtMjdkOWU4ZDVlNmEw'  http://$HOST/api/pets
 ```
+
+un/pw:
+ceposta/changeme
   
   customStyling:
 

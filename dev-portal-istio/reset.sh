@@ -12,4 +12,4 @@ kubectl delete users --all -n dev-portal
 
 
 kubectl apply -f resources/petstore-routes.yaml
-#kubectl apply -f resources/user-ceposta.yaml
+kubectl apply -f resources/user-ceposta.yaml
