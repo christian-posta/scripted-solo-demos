@@ -1,3 +1,4 @@
+killall kubectl
 echo "Stopping all kubectl portforward..."
 kubectl port-forward svc/dev-portal -n dev-portal 1234:8080 &> /dev/null & 
 echo "Dev Portal on port 1234"
