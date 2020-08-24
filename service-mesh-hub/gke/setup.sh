@@ -9,7 +9,7 @@ kubectl label namespace default istio-injection=enabled --context $CLUSTER_2 --o
 
 echo "Ready to install Bookinfo."
 echo "Waiting for istio to be ready..."
-kubectl get po -n istio-system -w
+kubectl --context $CLUSTER_1 get po -n istio-system -w
 
 ## Install Bookinfo on cluster 1
 kubectl apply -f ../resources-common/bookinfo-cluster1.yaml --context $CLUSTER_1

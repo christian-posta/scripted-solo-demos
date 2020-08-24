@@ -36,7 +36,7 @@ backtotop
 desc "Let's install the GlooFed management plane onto cluster 1"
 read -s
 source ~/bin/gloo-license-key-env
-run "glooctl install federation --license-key $GLOO_LICENSE"
+run "glooctl install federation --license-key \$GLOO_LICENSE"
 run "kubectl -n gloo-fed rollout status deployment gloo-fed --timeout=1m"
 
 
