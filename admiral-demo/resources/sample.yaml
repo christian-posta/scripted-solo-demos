@@ -64,6 +64,9 @@ kind: Deployment
 metadata:
   name: greeting
   namespace: sample
+  labels:
+    app: greeting
+    identity: greeting  
 spec:
   replicas: 1
   selector:

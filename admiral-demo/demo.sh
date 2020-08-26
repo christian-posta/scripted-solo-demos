@@ -53,17 +53,12 @@ run "kubectl --context $CLUSTER_2 get serviceentry -n admiral-sync"
 run "kubectl --context $CLUSTER_2 get serviceentry -n admiral-sync default.greeting.global-se -o yaml"
 
 
-
-
-
 backtotop
-desc "Let's try calling greeting 3x again from webapp"
+desc "Let's try calling greeting a few times again from webapp"
 read -s
 
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
+run "for i in {1..3}; do kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl http://default.greeting.global && printf \"\n\";  done"
+
 
 backtotop
 desc "Let's scale down the local greeting service and make sure we connect over to the second cluster"
@@ -71,16 +66,22 @@ read -s
 
 run "kubectl --context $CLUSTER_1 -n sample scale deploy/greeting --replicas=0"
 
-desc "Now let's try the traffic again"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
-run "kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl -v http://default.greeting.global"
+run "for i in {1..10}; do kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl http://default.greeting.global && printf \"\n\";  done"
 
 
-exit
+backtotop
+desc "Now let's try control the locality directly with Global Traffic Policy"
+read -s
 
+desc "First scale the greeting svc back"
+run "kubectl --context $CLUSTER_1 -n sample scale deploy/greeting --replicas=1"
 
-desc "Let's create a dependency mapping"
-run "kubectl apply -f resources/sample_dep.yaml"
+desc "Let's take a look at a Global Traffic Policy"
+run "cat resources/global-traffic-policy.yaml"
+run "kubectl --context $CLUSTER_1 apply -f resources/global-traffic-policy.yaml"
 
+desc "We should see the destination rules updated for greeting"
+run "kubectl get destinationrule -n admiral-sync default.greeting.global-default-dr -o yaml"
 
+desc "Now try call it 5 times"
+run "for i in {1..5}; do kubectl --context $CLUSTER_1 exec --namespace=sample -it $WEBAPP_POD -c webapp -- curl http://default.greeting.global && printf \"\n\"; done"

@@ -1,2 +1,0 @@
-export CLUSTER_NAME=gke_solo-public_us-west1-c_ceposta-istio-cluster-1
-export KUBECFG_FILE=/tmp/gke_solo-public_us-west1-c_ceposta-istio-cluster-1
