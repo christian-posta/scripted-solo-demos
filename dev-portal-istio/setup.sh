@@ -1,7 +1,7 @@
 # make sure Istio and the dev portal are running
 #istioctl1.6 install -y
 
-echo "Make sure to install Istio 1.5.65(ENTER to contine, CTRL+C to exit)"
+echo "Make sure to install Istio 1.5.6 (ENTER to contine, CTRL+C to exit)"
 read -s
 #kubectl create ns dev-portal
 #helm repo add istio-dev-portal https://storage.googleapis.com/istio-dev-portal-helm
@@ -31,6 +31,7 @@ read -s
 
 install-idp
 
+kubectl label namespace default istio-injection=enabled --overwrite
 kubectl apply -f resources/petstore-classic-manifest.yaml
 kubectl apply -f resources/petstore-special-manifest.yaml
 

@@ -11,7 +11,7 @@ WASME=wasme
 
 CURRENT_BUILD=$(wasme list | grep ceposta/demo-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
 #DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
-DEMO_BUILD_NUMBER=8
+DEMO_BUILD_NUMBER=9
 
 desc "Going to tag as webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 desc "Let's see what services we have deployed"
