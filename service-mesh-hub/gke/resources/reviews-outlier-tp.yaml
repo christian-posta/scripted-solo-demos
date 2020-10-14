@@ -1,0 +1,19 @@
+apiVersion: networking.smh.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  namespace: service-mesh-hub
+  name: mgmt-reviews-outlier
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - name: reviews
+        namespace: default
+        clusterName: cluster-1
+      - name: reviews
+        namespace: default
+        clusterName: cluster-2
+  outlierDetection:
+    consecutiveErrors: 1
+    interval: 10s
+    baseEjectionTime: 2m

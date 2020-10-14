@@ -1,0 +1,17 @@
+apiVersion: networking.smh.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  name: reviews-shift-failover
+  namespace: default
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - clusterName: cluster-1
+        name: reviews
+        namespace: default
+  trafficShift:
+    destinations:
+    - failoverService:
+        name: reviews-failover
+        namespace: service-mesh-hub

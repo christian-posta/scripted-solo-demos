@@ -1,0 +1,22 @@
+apiVersion: networking.smh.solo.io/v1alpha2
+kind: FailoverService
+metadata:
+  name: reviews-failover
+  namespace: service-mesh-hub
+spec:
+  hostname: reviews-failover.default.global
+  port:
+    number: 9080
+    protocol: http
+  meshes:
+    - name: istiod-istio-system-cluster-1
+      namespace: service-mesh-hub
+  backingServices:
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: cluster-1
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: cluster-2
