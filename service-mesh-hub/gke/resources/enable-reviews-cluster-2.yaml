@@ -10,6 +10,9 @@ spec:
         - name: bookinfo-reviews
           namespace: default
           clusterName: cluster-1
+        - name: bookinfo-reviews
+          namespace: default
+          clusterName: cluster-2
   destinationSelector:
   - kubeServiceMatcher:
       namespaces:

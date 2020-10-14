@@ -1,6 +1,12 @@
 source env.sh
 rm -fr ./temp/*.*
 
+kind delete cluster --name smh-management
+
+
+kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_1
+kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_2
+
 #############################################
 # traffic policy
 #############################################

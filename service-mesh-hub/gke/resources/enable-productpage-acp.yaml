@@ -1,16 +1,18 @@
-apiVersion: networking.zephyr.solo.io/v1alpha1
-kind: AccessControlPolicy
+apiVersion: networking.smh.solo.io/v1alpha2
+kind: AccessPolicy
 metadata:
   namespace: service-mesh-hub
-  name: productpage
+  name: istio-ingressgateway
 spec:
   sourceSelector:
-    serviceAccountRefs:
+  - kubeServiceAccountRefs:
       serviceAccounts:
-        - name: bookinfo-productpage
-          namespace: default
-          cluster: cluster-1
+        - name: istio-ingressgateway-service-account
+          namespace: istio-system
+          clusterName: cluster-1
   destinationSelector:
-    matcher:
+  - kubeServiceMatcher:
       namespaces:
-        - default
+      - default
+      labels:
+        service: productpage

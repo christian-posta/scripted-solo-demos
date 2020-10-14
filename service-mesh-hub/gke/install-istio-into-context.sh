@@ -1,59 +1,35 @@
 CLUSTER_1=$1
+TRUST_DOMAIN="${2:-cluster.local}"
 
 echo "********************************"
 echo "Install Istio onto $CLUSTER_1"
 echo "********************************"
-#read -s
-meshctl mesh install istio --context $CLUSTER_1 --operator-spec=- <<EOF
+istioctl1.7 --context $CLUSTER_1 operator init
+
+kubectl --context $CLUSTER_1 create ns istio-system
+
+cat << EOF | kubectl --context $CLUSTER_1 apply -f -
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
-  name: example-istiooperator
-  namespace: istio-operator
+  name: istiocontrolplane-default
+  namespace: istio-system
 spec:
-  profile: minimal
+  profile: default
   addonComponents:
     istiocoredns:
       enabled: true
-  components:
-    # Istio Gateway feature
-    ingressGateways:
-    - name: istio-ingressgateway
-      enabled: true
-      k8s:
-        env:
-          - name: ISTIO_META_ROUTER_MODE
-            value: "sni-dnat"
-          - name: PILOT_CERT_PROVIDER
-            value: "kubernetes"
+  meshConfig:
+    accessLogFile: /dev/stdout
+    enableAutoMtls: true
+    trustDomain: $TRUST_DOMAIN
   values:
     global:
-      pilotCertProvider: kubernetes
-      controlPlaneSecurityEnabled: true
-      mtls:
-        enabled: true
-      podDNSSearchNamespaces:
-      - global
-      - '{{ valueOrDefault .DeploymentMeta.Namespace "default" }}.global'
-    security:
-      selfSigned: false
+      trustDomain: $TRUST_DOMAIN
+  components:
+    pilot:
+      k8s:
+        env:
+          - name: PILOT_SKIP_VALIDATE_TRUST_DOMAIN
+            value: "true"
 EOF
-
-#echo "Wait for Istio to come up on $CLUSTER_1"
-#kubectl get po -n istio-system -w
-
-
-#echo "********************************"
-#echo "Update DNS on Cluster 2"
-#echo "********************************"
-#kubectl --context $CLUSTER_1 apply -f - <<EOF
-#apiVersion: v1
-#kind: ConfigMap
-#metadata:
-#  name: kube-dns
-#  namespace: kube-system
-#data:
-#  stubDomains: |
-#    {"global": ["$(kubectl --context $CLUSTER_1 get svc -n istio-system istiocoredns -o jsonpath={.spec.clusterIP})"]}
-#EOF
-

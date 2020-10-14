@@ -1,33 +1,36 @@
-apiVersion: networking.zephyr.solo.io/v1alpha1
+apiVersion: networking.smh.solo.io/v1alpha2
 kind: TrafficPolicy
 metadata:
   namespace: service-mesh-hub
   name: reviews-tp
 spec:
   destinationSelector:
-    serviceRefs:
+  - kubeServiceRefs:
       services:
-        - cluster: cluster-1
+        - clusterName: cluster-1
           name: reviews
           namespace: default
   trafficShift:
     destinations:
-      - destination:
-          cluster: cluster-2
+      - kubeService:
+          clusterName: cluster-2
           name: reviews
           namespace: default
-        weight: 75
-      - destination:
-          cluster: cluster-1
+          subset:
+            version: v3          
+        weight: 75        
+      - kubeService:
+          clusterName: cluster-1
           name: reviews
           namespace: default
+          subset:
+            version: v1          
         weight: 15
-        subset:
-          version: v1
-      - destination:
-          cluster: cluster-1
+      - kubeService:
+          clusterName: cluster-1
           name: reviews
           namespace: default
+          subset:
+            version: v2          
         weight: 10
-        subset:
-          version: v2
+      

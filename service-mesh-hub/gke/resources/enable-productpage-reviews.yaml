@@ -2,12 +2,12 @@ apiVersion: networking.smh.solo.io/v1alpha2
 kind: AccessPolicy
 metadata:
   namespace: service-mesh-hub
-  name: reviews
+  name: productpage
 spec:
   sourceSelector:
   - kubeServiceAccountRefs:
       serviceAccounts:
-        - name: bookinfo-reviews
+        - name: bookinfo-productpage
           namespace: default
           clusterName: cluster-1
   destinationSelector:
@@ -15,4 +15,9 @@ spec:
       namespaces:
       - default
       labels:
-        service: ratings
+        service: details
+  - kubeServiceMatcher:
+      namespaces:
+      - default
+      labels:
+        service: reviews
