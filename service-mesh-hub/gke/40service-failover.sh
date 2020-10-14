@@ -6,4 +6,5 @@ SOURCE_DIR=$PWD
 source env.sh
 
 
-#WIP
+# Delete traffic policy
+kubectl delete TrafficPolicy reviews-tp -n service-mesh-hub
