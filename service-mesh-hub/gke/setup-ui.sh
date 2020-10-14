@@ -6,6 +6,10 @@ SOURCE_DIR=$PWD
 source env.sh
 kubectl config use-context $MGMT_CONTEXT
 
+#helm repo add service-mesh-hub-ui https://storage.googleapis.com/service-mesh-hub-enterprise/service-mesh-hub-ui
+#helm repo update
+#helm install smh-ui service-mesh-hub-ui/service-mesh-hub-ui -n service-mesh-hub --set license_key=${SMH_LICENSE_KEY}
+
 install-smh-ui
 
 sleep 5s

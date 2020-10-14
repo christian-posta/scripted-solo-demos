@@ -3,6 +3,7 @@ rm -fr ./temp/*.*
 
 kind delete cluster --name smh-management
 
+helm uninstall smh-ui -n service-mesh-hub
 
 kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_1
 kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_2
