@@ -46,6 +46,8 @@ desc "Now let's route reviews traffic to balance between cluster 1 and 2"
 read -s
 
 run "cat resources/reviews-tp-c1-c2.yaml"
+
+desc "Let's apply it and see what resources it creates"
 run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
 run "kubectl get virtualservice -A --context $CLUSTER_1"
 run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"

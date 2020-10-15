@@ -77,8 +77,8 @@ read -s
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
 
-kubectl --context cluster1 -n istio-system delete pod -l app=istio-ingressgateway
-kubectl --context cluster2 -n istio-system delete pod -l app=istio-ingressgateway
+kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway
+kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway
 kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 

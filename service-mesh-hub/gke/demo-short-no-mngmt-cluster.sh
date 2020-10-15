@@ -55,22 +55,38 @@ read -s
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
 run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
 
-kubectl --context cluster1 -n istio-system delete pod -l app=istio-ingressgateway
-kubectl --context cluster2 -n istio-system delete pod -l app=istio-ingressgateway
+kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
+kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
 run "kubectl get po -n default -w --context $CLUSTER_1"
+
+backtotop
+desc "Using this federated mesh, we can do things like control the access and traffic policies "
+read -s
+
+desc "Let's port-forward the bookinfo demo so we can see its behavior"
+desc "Make sure to go to http://localhost:9080/productpage"
+tmux split-window -v -d -c $SOURCE_DIR
+tmux select-pane -t 0
+tmux send-keys -t 1 "source env.sh" C-m
+tmux send-keys -t 1 "kubectl --context $CLUSTER_1 -n istio-system port-forward svc/istio-ingressgateway  9080:80" C-m
+
+desc "Go to the browser make sure it works: http://localhost:9080/productpage"
+read -s
 
 
 #############################################
 # Traffic Routing
 #############################################
 backtotop
-desc "Now let's route reviews traffic to balance between cluster 1 and 2"
+desc "Now let's explicitly control traffic between cluster 1 and cluster 2"
 read -s
 
 run "cat resources/reviews-tp-c1-c2.yaml"
+
+desc "Let's apply it and see what resources it creates"
 run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
 run "kubectl get virtualservice -A --context $CLUSTER_1"
 run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
@@ -79,8 +95,7 @@ run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
 #############################################
 # Traffic Failover
 #############################################
-desc "In the previous demos, we federated the meshes and enabled access"
-desc "In this demo, we'll explore how to declare failover behavior"
+desc "Now let's declare failover behavior between clusters"
 read -s
 
 # Delete traffic policy
