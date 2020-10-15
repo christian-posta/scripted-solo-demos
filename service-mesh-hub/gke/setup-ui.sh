@@ -10,6 +10,9 @@ kubectl config use-context $MGMT_CONTEXT
 #helm repo update
 #helm install smh-ui service-mesh-hub-ui/service-mesh-hub-ui -n service-mesh-hub --set license_key=${SMH_LICENSE_KEY}
 
+# To uninstall:
+# helm uninstall smh-ui -n service-mesh-hub
+
 install-smh-ui
 
 sleep 5s

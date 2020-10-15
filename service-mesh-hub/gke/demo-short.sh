@@ -7,82 +7,111 @@ SOURCE_DIR=$PWD
 source env.sh
 
 
-
-#############################################
-# Discovery
-#############################################
-
-backtotop
-desc "Let's install the SMH management plane onto cluster 1"
+echo "Make sure management plane cluster is up"
 read -s
 
-run "meshctl install --context $CLUSTER_1 "
-run "kubectl get po -n service-mesh-hub -w --context $CLUSTER_1 "
-run "meshctl check --context $CLUSTER_1"
+kubectl config use-context $MGMT_CONTEXT
+
+backtotop
+desc "Let's install the SMH management plane onto a separate cluster"
+read -s
+
+run "meshctl install"
+run "kubectl get po -n service-mesh-hub -w"
+run "meshctl check"
 
 backtotop
 desc "Let's register our two clusters"
 read -s
 
-run "meshctl cluster register --remote-context $CLUSTER_1 --remote-cluster-name cluster-1"
-run "meshctl cluster register --remote-context $CLUSTER_2 --remote-cluster-name cluster-2 "
+run "meshctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
 
-desc "Now we should have discovered the meshes"
-run "kubectl get kubernetesclusters -n service-mesh-hub --context $CLUSTER_1"
-run "kubectl get meshes -n service-mesh-hub --context $CLUSTER_1"
-
-desc "Let's see how easy it is to federate the two meshes"
-read -s
+run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 #############################################
 # Trust Federation
 #############################################
 
+kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_1
+kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_2
+
 backtotop
-desc "The VirtualMesh CRD allows us to federate the two meshes"
+desc "Right now, the two meshes have different root trusts"
+read -s
+
+
+backtotop
+desc "The VirtualMesh CRD allows us to federate  and unify the two meshes"
 read -s
 
 run "cat resources/virtual-mesh.yaml"
-run "kubectl apply -f resources/virtual-mesh.yaml --context $CLUSTER_1"
+run "kubectl apply -f resources/virtual-mesh.yaml"
+run "kubectl get virtualmesh -n service-mesh-hub -o yaml"
 
-desc "What happened was..."
+backtotop
+desc "We've now created a new Root CA, and initated intermediate CAs on each cluster"
 read -s
 
-run "kubectl get virtualmesh -n service-mesh-hub -o yaml --context $CLUSTER_1"
+run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
+run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
 
-desc "Wait a moment to let the control plane converge on its new config..."
-#Bounce the istio pod (and workloads so they pick up the new cert)
-kubectl delete po --wait=false -n istio-system -l app=istiod --context $CLUSTER_1 > /dev/null 2>&1
+kubectl --context cluster1 -n istio-system delete pod -l app=istio-ingressgateway
+kubectl --context cluster2 -n istio-system delete pod -l app=istio-ingressgateway
 kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
-
-kubectl delete po --wait=false -n istio-system -l app=istiod --context $CLUSTER_2 > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
+run "kubectl get po -n default -w --context $CLUSTER_1"
+
 
 #############################################
-# Traffic shifting
+# Traffic Routing
 #############################################
-
-
-
-
 backtotop
-desc "Using this federated mesh, we can do things like control the traffic routing "
-read -s
-
-desc "The underlying Istio objects automatically created"
-run "kubectl get serviceentry -A --context $CLUSTER_1"
-run "kubectl get serviceentry -A --context $CLUSTER_2"
-
-backtotop
-desc "Let's look at the traffic routing API"
+desc "Now let's route reviews traffic to balance between cluster 1 and 2"
 read -s
 
 run "cat resources/reviews-tp-c1-c2.yaml"
-run "kubectl apply -f resources/reviews-tp-c1-c2.yaml --context $CLUSTER_1"
+run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
+run "kubectl get virtualservice -A --context $CLUSTER_1"
 run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
 
-backtotop
-desc "Let's see what rules are on the reviews service"
+
+#############################################
+# Traffic Failover
+#############################################
+desc "In the previous demos, we federated the meshes and enabled access"
+desc "In this demo, we'll explore how to declare failover behavior"
 read -s
-run "meshctl describe service reviews.default.cluster-1"
+
+# Delete traffic policy
+desc "Let's demonstrate failover between clusters"
+run "kubectl delete TrafficPolicy reviews-tp -n service-mesh-hub"
+
+desc "Next we need to add passive health checking to determine health and when to failover"
+run "cat resources/reviews-outlier-tp.yaml"
+run "kubectl apply -f resources/reviews-outlier-tp.yaml"
+
+
+backtotop
+desc "Now that we've defined health checking, let's see how to specify failover:"
+read -s
+
+run "cat resources/reviews-failover.yaml"
+run "kubectl apply -f resources/reviews-failover.yaml"
+
+run "cat resources/reviews-failover-tp.yaml"
+run "kubectl apply -f resources/reviews-failover-tp.yaml"
+
+backtotop
+desc "To test it, let's make the reviews service (v1, v2) unhealthy on cluster-1"
+read -s
+
+run "kubectl --context $CLUSTER_1 patch deploy reviews-v1 --patch '{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"reviews\",\"command\": [\"sleep\", \"20h\"]}]}}}}'"
+run "kubectl --context $CLUSTER_1 patch deploy reviews-v2 --patch '{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"reviews\",\"command\": [\"sleep\", \"20h\"]}]}}}}'"
+
+
+# watch the logs in other cluster
+run "kubectl --context $CLUSTER_2 logs -l app=reviews -c istio-proxy -f"
+
+desc "You can also see all of this in the UI!"
+read -s
