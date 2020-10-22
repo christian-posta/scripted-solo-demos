@@ -38,4 +38,4 @@ done
 
 
 # create smh cluster
-#kind create cluster --name smh-management
+kind create cluster --name smh-management

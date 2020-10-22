@@ -7,18 +7,11 @@ SOURCE_DIR=$PWD
 source env.sh
 
 
-echo "Make sure management plane cluster is up"
+echo "Make sure management plane cluster is up and SMH installed"
+echo "UI should be on http://localhost:8090"
 read -s
 
 kubectl config use-context $MGMT_CONTEXT
-
-backtotop
-desc "Let's install the SMH management plane onto a separate cluster"
-read -s
-
-run "meshctl install"
-run "kubectl get po -n service-mesh-hub -w"
-run "meshctl check"
 
 backtotop
 desc "Let's register our two clusters"
@@ -32,8 +25,8 @@ run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER
 # Trust Federation
 #############################################
 
-kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_1
-kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_2
+kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_1 > /dev/null 2>&1
+kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_2 > /dev/null 2>&1
 
 backtotop
 desc "Right now, the two meshes have different root trusts"
@@ -51,9 +44,6 @@ run "kubectl get virtualmesh -n service-mesh-hub -o yaml"
 backtotop
 desc "We've now created a new Root CA, and initated intermediate CAs on each cluster"
 read -s
-
-run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
-run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
 
 kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
 kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
@@ -88,8 +78,9 @@ run "cat resources/reviews-tp-c1-c2.yaml"
 
 desc "Let's apply it and see what resources it creates"
 run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
-run "kubectl get virtualservice -A --context $CLUSTER_1"
-run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
+
+desc "Review the routing in the UI"
+read -s
 
 
 #############################################

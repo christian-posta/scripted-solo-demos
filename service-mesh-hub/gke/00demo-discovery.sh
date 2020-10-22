@@ -5,7 +5,7 @@
 SOURCE_DIR=$PWD
 source env.sh
 
-
+kubectl config use-context $MGMT_CONTEXT
 
 desc "Welcome to Serivce Mesh Hub demo!"
 desc "Let's get started"
@@ -31,8 +31,8 @@ backtotop
 desc "Let's install the SMH management plane onto a separate cluster"
 read -s
 
-run "kind create cluster --name smh-management"
-run "kubectl config use-context $MGMT_CONTEXT"
+#run "kind create cluster --name smh-management"
+#run "kubectl config use-context $MGMT_CONTEXT"
 
 run "meshctl install"
 run "kubectl get po -n service-mesh-hub -w"

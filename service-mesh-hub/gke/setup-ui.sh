@@ -22,4 +22,4 @@ until [ $(kubectl --context $MGMT_CONTEXT -n service-mesh-hub get pods -o jsonpa
   sleep 1
 done
 echo "Port forwarding the UI to port 8090"
-kubectl port-forward -n service-mesh-hub svc/service-mesh-hub-console 8090
+kubectl port-forward -n service-mesh-hub svc/service-mesh-hub-console 8090  > /dev/null 2>&1 &

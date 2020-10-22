@@ -4,6 +4,8 @@
 SOURCE_DIR=$PWD
 source env.sh
 
+kubectl config use-context $MGMT_CONTEXT
+
 #############################################
 # Discovery
 #############################################
@@ -12,9 +14,9 @@ desc "Welcome to Serivce Mesh Hub demo!"
 desc "Let's get started"
 read -s
 
-desc "We have installed istio onto two clustes:"
-run "kubectl get po -n istio-system --context $CLUSTER_1 "
-run "kubectl get po -n istio-system --context $CLUSTER_2"
+#desc "We have installed istio onto two clustes:"
+#run "kubectl get po -n istio-system --context $CLUSTER_1 "
+#run "kubectl get po -n istio-system --context $CLUSTER_2"
 
 desc "We also have bookinfo (v1 and v2 of reviews) on cluster 1"
 run "kubectl get po -n default --context $CLUSTER_1 "
@@ -26,8 +28,7 @@ backtotop
 desc "Let's install the SMH management plane onto a separate cluster"
 read -s
 
-run "kind create cluster --name smh-management"
-run "kubectl config use-context $MGMT_CONTEXT"
+#run "kind create cluster --name smh-management"
 
 run "meshctl install"
 run "kubectl get po -n service-mesh-hub -w"

@@ -1,6 +1,8 @@
 source env.sh
 rm -fr ./temp/*.*
 
+killall kubectl
+
 kind delete cluster --name smh-management
 
 kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_1
