@@ -3,8 +3,8 @@
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
 desc "Basic routing demo"
-run "cat default-vs.yaml"
-run "kubectl apply -n gloo-system -f default-vs.yaml"
+run "kubectl get virtualservice -n gloo-system -o yaml"
+run "glooctl get virtualservice"
 
 desc "Get the url"
 run "glooctl proxy url"
