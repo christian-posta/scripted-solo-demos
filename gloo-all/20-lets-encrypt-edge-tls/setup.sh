@@ -90,4 +90,9 @@ echo "Getting certs"
 kubectl get -n default certificates.cert-manager.io -w
 
 
+echo "After things turn to true, we should delete the letsencrypt vs"
+
+kubectl delete -n gloo-system virtualservice letsencrypt
+
+
 

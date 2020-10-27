@@ -2,6 +2,9 @@
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
+desc "Did you run setup? (ENTER to continue)"
+read -s
+
 desc "TLS termination / lets encrypt"
 run "cat default-tls-vs.yaml"
 run "kubectl get certificates.cert-manager.io nip-io -o yaml"

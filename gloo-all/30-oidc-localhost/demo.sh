@@ -3,6 +3,8 @@
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
 desc "Be sure to use localhost:8080 since running dex local"
+desc ""
+desc "Did you run setup? (ENTER to continue)"
 read -s
 
 desc "Set up dex oidc in gloo ext auth"

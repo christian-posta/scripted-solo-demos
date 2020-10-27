@@ -1,5 +1,5 @@
 # Set up services
+. ~/bin/create-aws-secret
+kubectl apply -f resources/k8s
+kubectl apply -f resources/gloo
 
-kubectl apply -f resources/k8s/web-api.yaml
-kubectl apply -f resources/k8s/recommendation.yaml
-kubectl apply -f resources/k8s/purchase-history-v1.yaml
