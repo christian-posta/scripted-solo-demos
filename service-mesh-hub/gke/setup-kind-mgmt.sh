@@ -13,9 +13,7 @@ meshctl install
 
 echo "installing the UI (separate for now, but will be bundled)"
 ./setup-ui.sh
+
+echo "Finished installing UI (ENTER to continue)"
 read -s
 
-
-echo "SMH UI now available on port 8090"
-echo "kubectl port-forward -n service-mesh-hub svc/service-mesh-hub-console 8090  > /dev/null 2>&1 &"
-kubectl port-forward -n service-mesh-hub svc/service-mesh-hub-console 8090  > /dev/null 2>&1 &
