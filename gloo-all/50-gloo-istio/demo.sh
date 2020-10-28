@@ -5,6 +5,7 @@
 desc "Remember to install Istio 1.7.x"
 desc "ENTER to continue"
 read -s
+backtotop
 
 desc "Istio demo"
 run "glooctl istio inject"

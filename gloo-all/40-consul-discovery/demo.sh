@@ -2,22 +2,29 @@
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
+desc "Did you run setup? (ENTER to continue)"
+read -s
+backtotop
+
+export CONSUL_HTTP_ADDR="$(glooctl proxy url)"
 desc "Query Consul to make sure we can access it"
-run "consul members -http-addr $(glooctl proxy url)"
+run "consul members"
+#old way: -http-addr $(glooctl proxy url)
 
 desc "Query available services"
-run "consul catalog services -http-addr $(glooctl proxy url)"
+run "consul catalog services"
 
 desc "Let's add a service to json placeholder"
 run "cat $(relative consul/jsonplaceholder.json)"
-run "consul services register -http-addr $(glooctl proxy url)  $(relative consul/jsonplaceholder.json)"
+run "consul services register  $(relative consul/jsonplaceholder.json)"
 
 
 desc "Query available services"
-run "consul catalog services -http-addr $(glooctl proxy url)"
+run "consul catalog services"
 
 desc "Let's configure Gloo to discover upstreams from the consul server"
-run "kubectl get settings default -n gloo-system"
+run "kubectl patch settings default -n gloo-system --type merge --patch '$(cat ./consul/settings-patch.yaml)'"
+run "kubectl get settings default -n gloo-system -o yaml"
 
 backtotop
 desc "give a moment for discovery to kick in"

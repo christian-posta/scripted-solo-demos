@@ -4,6 +4,7 @@ killall kubectl
 
 # delete istio
 istioctl x uninstall --purge -y
+kubectl delete ns istio-system
 glooctl istio uninject
 kubectl delete upstream -n gloo-system default-web-api-8080
 
@@ -29,9 +30,11 @@ kubectl delete secret -n gloo-system upstream-tls
 
 ## reset settings, get rid of consul discovery
 kubectl patch settings default -n gloo-system --type json  --patch "$(cat ./40-consul-discovery/consul/settings-patch-delete.json)"
+
 kubectl delete -f 40-consul-discovery/consul/consul-1.6.2.yaml
 kubectl delete upstream consul -n gloo-system
 kubectl delete upstream jsonplaceholder -n gloo-system
+k delete pvc $(k get pvc | grep consul | awk '{print $ 1}')
 
 kubectl delete virtualservice -n gloo-system --all
 kubectl delete po --all

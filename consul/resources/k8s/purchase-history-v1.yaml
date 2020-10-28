@@ -22,6 +22,7 @@ spec:
         app: purchase-history
         version: v1
       annotations:
+        "consul.hashicorp.com/connect-inject": "true"
     spec:
       serviceAccountName: purchase-history-v1
       containers:

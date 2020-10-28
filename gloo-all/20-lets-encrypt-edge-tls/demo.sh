@@ -4,6 +4,7 @@
 
 desc "Did you run setup? (ENTER to continue)"
 read -s
+backtotop
 
 desc "TLS termination / lets encrypt"
 run "cat default-tls-vs.yaml"

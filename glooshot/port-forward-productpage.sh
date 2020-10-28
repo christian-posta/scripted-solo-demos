@@ -1,1 +1,0 @@
-kubectl port-forward -n bookinfo deployment/productpage-v1 9080 & > /dev/null &1>2 &

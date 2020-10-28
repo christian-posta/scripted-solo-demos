@@ -6,6 +6,7 @@ desc "Be sure to use localhost:8080 since running dex local"
 desc ""
 desc "Did you run setup? (ENTER to continue)"
 read -s
+backtotop
 
 desc "Set up dex oidc in gloo ext auth"
 run "cat dex-oidc-authconfig.yaml"

@@ -1,6 +1,31 @@
 ## Updating to latest helm charts
 
-## Installing into kubernetes from helm chart:
+
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo update
+
+helm install -f consul-values.yaml consul-sm hashicorp/consul --version 0.25.0  --namespace consul-system --create-namespace
+
+
+Add annotation to any of the Deployments which should get the consul sidecar:
+
+"consul.hashicorp.com/connect-inject": "true"
+
+Add this annotation to make an upstream available on a localhost port:
+
+"consul.hashicorp.com/connect-service-upstreams": "api:9091"
+
+
+
+
+
+
+
+
+
+
+
+## Old instructions
 
 helm template --name consul ./ | kubectl apply --validate=false -f -
 
