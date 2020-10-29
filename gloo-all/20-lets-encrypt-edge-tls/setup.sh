@@ -1,11 +1,4 @@
-kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.yaml
-
-until [ $(kubectl get pods -n cert-manager -o jsonpath='{range .items[*].status.containerStatuses[*]}{.ready}{"\n"}{end}' | grep false -c) -eq 0 ]; do
-  echo "Waiting for all the pods of the cert-manager namespace to become ready"
-  sleep 1
-done
-
+echo "preparing certs"
 
 cat << EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1alpha2

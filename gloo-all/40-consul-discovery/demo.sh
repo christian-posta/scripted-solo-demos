@@ -2,10 +2,8 @@
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
-desc "Did you run setup? (ENTER to continue)"
-read -s
-backtotop
-
+desc "Configure default vs to expose consul service"
+run "kubectl apply -f default-vs-consul.yaml"
 export CONSUL_HTTP_ADDR="$(glooctl proxy url)"
 desc "Query Consul to make sure we can access it"
 run "consul members"
@@ -46,5 +44,7 @@ backtotop
 desc "Now let's call to /todos"
 run "curl $(glooctl proxy url)/todos"
 
+desc "clean up"
+run "kubectl apply -f ../resources/gloo/default-vs.yaml"
 # clean up
 # kubectl patch settings default -n gloo-system --type json  --patch "$(cat ./consul/settings-patch-delete.json)"

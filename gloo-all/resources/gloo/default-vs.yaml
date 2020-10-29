@@ -9,6 +9,15 @@ spec:
     - '*'
     routes:
     - matchers:
+      - prefix: /httpbin
+      routeAction:
+        single:
+          upstream:
+            name: httpbin-static
+            namespace: gloo-system 
+      options:
+        prefixRewrite: '/headers'               
+    - matchers:
       - prefix: /
       routeAction:
         single:

@@ -12,6 +12,7 @@ URL=$(glooctl proxy url)
 
 desc "Call the API:"
 run "curl $URL"
+run "curl $URL/httpbin"
 
 desc "Try the browser as well"
 echo "$URL/ui"
