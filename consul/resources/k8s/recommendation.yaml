@@ -19,7 +19,16 @@ spec:
       labels:
         app: recommendation
       annotations:
+        # available consul sm annotations:
+        # https://www.consul.io/docs/k8s/connect#available-annotations
+        # eg. "consul.hashicorp.com/connect-service-upstreams":"[service-name]:[port]:[optional datacenter]"
+        # If you would like to specify multiple services or upstreams, delimit them with commas        
         "consul.hashicorp.com/connect-inject": "true"
+        # defaults to first named container on this sepc
+        # if set explicit, should be the svc account name
+        "consul.hashicorp.com/connect-service": "recommendation"
+        # defaults to first port on the pod spec
+        "consul.hashicorp.com/connect-service-port": "8080"
         "consul.hashicorp.com/connect-service-upstreams": "purchase-history:9090"
     spec:
       serviceAccountName: recommendation

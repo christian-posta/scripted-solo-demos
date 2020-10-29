@@ -16,8 +16,14 @@ Add this annotation to make an upstream available on a localhost port:
 "consul.hashicorp.com/connect-service-upstreams": "api:9091"
 
 
+# CA root from consul
+curl -s http://localhost:8500/v1/agent/connect/ca/roots | jq -r .Roots[0].RootCert > rootca.pem
 
+# Ge leaf node cert
+curl -s http://localhost:8500/v1/agent/connect/ca/leaf/gloo-service | jq -r .CertPEM > gateway-proxy.pem
 
+# get leaf node key
+curl -s http://localhost:8500/v1/agent/connect/ca/leaf/gloo-service | jq -r .PrivateKeyPEM > gateway-proxy.key
 
 
 
