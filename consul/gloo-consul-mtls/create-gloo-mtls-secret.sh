@@ -23,3 +23,19 @@ kubectl delete secret -n gloo-system gloo-consul-sm &> /dev/null
 glooctl create secret tls --name gloo-consul-sm --certchain certs/gateway-proxy.crt --privatekey certs/gateway-proxy.key --rootca certs/rootca.pem
 
 kill -9 $PID
+
+
+exit 0
+
+# Using the ACL token:
+#CONSUL_HTTP_TOKEN=$(kubectl get secret hashicorp-consul-bootstrap-acl-token -o jsonpath={.data.token} | base64 -D)
+
+#curl -s \
+#    --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
+#    http://localhost:8500/v1/agent/connect/ca/leaf/gloo-service | jq -r .CertPEM > certs/gateway-proxy.crt
+#curl -s \
+#    --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
+#    http://localhost:8500/v1/agent/connect/ca/leaf/gloo-service | jq -r .PrivateKeyPEM > certs/gateway-proxy.key
+#curl -s \
+#    --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
+#    http://localhost:8500/v1/agent/connect/ca/roots | jq -r .Roots[0].RootCert > certs/rootca.pem
