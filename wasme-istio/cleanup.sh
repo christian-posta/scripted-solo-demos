@@ -3,7 +3,7 @@ kubectl delete -f resources/wasme-crds.yaml
 kubectl delete -f resources/wasme-operator.yaml
 
 # Delete Istio
-kubectl delete -f resources/istio-1.5.yaml
+istioctl x uninstall --purge
 
 # Delete Bookinfo
 kubectl delete -n bookinfo resources/bookinfo.yaml 

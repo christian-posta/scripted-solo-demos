@@ -7,11 +7,12 @@ SOURCE_DIR=$PWD
 #WASME=$(relative bin/wasme)
 GLOOCTL=glooctl
 WASME=wasme
+LANGUAGE=${1:-assemblyscript}
 
 
 CURRENT_BUILD=$(wasme list | grep ceposta/demo-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
-#DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
-DEMO_BUILD_NUMBER=10
+DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
+#DEMO_BUILD_NUMBER=11
 
 desc "Going to tag as webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 desc "Let's see what services we have deployed"
@@ -39,7 +40,9 @@ run "code ."
 #echo "Going to tag as webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 
 desc "Let's build our project"
-run "$WASME build assemblyscript . -t webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
+run "$WASME build $LANGUAGE . -t webassemblyhub.io/ceposta/demo-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
+# wasme build assemblyscript . -t webassemblyhub.io/ceposta/demo-add-header:v0.15
+# wasme build tinygo . -t webassemblyhub.io/ceposta/demo-add-header:v0.15
 backtotop
 
 desc "Let's list our locally built wasm modules"

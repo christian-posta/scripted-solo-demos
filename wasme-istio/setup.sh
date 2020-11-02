@@ -1,6 +1,6 @@
 # Install Istio
 kubectl create ns istio-system
-kubectl apply -f resources/istio-1.5.yaml
+istioctl install -y
 
 
 echo "Wait for Istio"
