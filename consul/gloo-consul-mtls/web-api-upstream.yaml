@@ -1,0 +1,14 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: web-api-sidecar-proxy
+  namespace: gloo-system
+spec:
+  consul:
+    dataCenters:
+    - dc1
+    serviceName: web-api-sidecar-proxy
+  sslConfig:
+    secretRef:
+      name: gloo-consul-sm
+      namespace: gloo-system
