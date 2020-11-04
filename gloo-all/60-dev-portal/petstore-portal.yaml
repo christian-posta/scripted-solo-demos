@@ -1,0 +1,40 @@
+apiVersion: devportal.solo.io/v1alpha1
+kind: Portal
+metadata:
+  name: petstore-portal
+  namespace: dev-portal
+spec:
+  banner:
+    configMap:
+      key: banner-img
+      name: dev-portal-petstore-portal-banner-img
+      namespace: dev-portal
+  customStyling: {}
+  displayName: petstore-portal
+  domains:
+  - apis.myddns.me
+  enableIngress: false
+  oidcAuth:
+    callbackUrlPrefix: http://localhost:8080/callback
+    clientId: gloo
+    clientSecret:
+      name: oauth
+      namespace: gloo-system
+      key: oauth
+    groupClaimKey: aud
+    issuer: http://dex.gloo-system.svc.cluster.local:32000
+  favicon:
+    configMap:
+      key: favicon
+      name: dev-portal-petstore-portal-favicon
+      namespace: dev-portal
+  primaryLogo:
+    configMap:
+      key: primary-logo
+      name: dev-portal-petstore-portal-primary-logo
+      namespace: dev-portal
+  publishApiProducts:
+    matchLabels:
+      portals.devportal.solo.io/dev-portal.petstore-portal: "true"
+    namespaces:
+    - '*'

@@ -1,10 +1,11 @@
 #!/bin/bash
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
+. ../.env.sh
 
 desc "Basic routing demo"
-run "kubectl get virtualservice -n gloo-system -o yaml"
 run "glooctl get virtualservice"
+run "kubectl get virtualservice -n gloo-system -o yaml"
 
 desc "Get the url"
 run "glooctl proxy url"
@@ -12,7 +13,8 @@ URL=$(glooctl proxy url)
 
 desc "Call the API:"
 run "curl $URL"
-run "curl $URL/httpbin"
+run "curl http://$DEFAULT_DOMAIN_NAME"
+run "curl http://$DEFAULT_DOMAIN_NAME/httpbin"
 
 desc "Try the browser as well"
-echo "$URL/ui"
+echo "http://$DEFAULT_DOMAIN_NAME/ui"

@@ -1,0 +1,31 @@
+apiVersion: devportal.solo.io/v1alpha1
+kind: Route
+metadata:
+  name: petstore-classic-route
+  namespace: default
+spec:
+  backends:
+  - kube:
+      name: petstore
+      namespace: default
+      port: 8080
+    weight: 1
+  headerManipulation:
+    request: {}
+    response: {}
+---      
+apiVersion: devportal.solo.io/v1alpha1
+kind: Route
+metadata:
+  name: petstore-special-route
+  namespace: default
+spec:
+  backends:
+  - kube:
+      name: petstore
+      namespace: default
+      port: 8080
+    weight: 1
+  headerManipulation:
+    request: {}
+    response: {}

@@ -1,12 +1,12 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: default
+  name: consul-vs
   namespace: gloo-system
 spec:
   virtualHost:
     domains:
-    - '*'
+    - 'ceposta-gloo-demo.solo.io'
     routes:
     - matchers:
       - prefix: /todos

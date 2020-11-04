@@ -1,19 +1,17 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: httpbin-vs
+  name: devportal-vs
   namespace: gloo-system
 spec:
   virtualHost:
     domains:
-    - 'httpbin.solo.io'
+    - 'ceposta-devportal-demo.solo.io'
     routes:
     - matchers:
-      - prefix: /httpbin
+      - prefix: /
       routeAction:
         single:
           upstream:
-            name: httpbin-static
-            namespace: gloo-system 
-      options:
-        prefixRewrite: '/headers'               
+            name: dev-portal-admin-server-8080  
+            namespace: gloo-system              

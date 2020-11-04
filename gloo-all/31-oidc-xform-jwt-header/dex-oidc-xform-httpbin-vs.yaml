@@ -4,9 +4,13 @@ metadata:
   name: default
   namespace: gloo-system
 spec:
+  sslConfig:
+    secretRef:
+      name: ceposta-gloo-demo-dns
+      namespace: gloo-system
   virtualHost:
     domains:
-    - '*'
+    - 'ceposta-gloo-demo.solo.io'
     routes:
     - matchers:
       - prefix: /httpbin

@@ -1,18 +1,24 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: consul-vs
+  name: auth-gloo-vs
   namespace: gloo-system
 spec:
+  sslConfig:
+    secretRef:
+      name: ceposta-auth-demo-dns
+      namespace: gloo-system
+    sniDomains:
+    - ceposta-auth-demo.solo.io      
   virtualHost:
     domains:
-    - 'ceposta-gloo-demo.solo.io'
+    - 'ceposta-auth-demo.solo.io'
     routes:
     - matchers:
       - prefix: /
       routeAction:
         single:
           upstream:
-            name: default-gloo-consul-server-8500
+            name: gloo-system-dex-32000
             namespace: gloo-system
-
+              

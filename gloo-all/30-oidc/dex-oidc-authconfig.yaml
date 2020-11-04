@@ -6,12 +6,12 @@ metadata:
 spec:
   configs:
   - oauth:
-      app_url: http://localhost:8080/
+      app_url: https://ceposta-gloo-demo.solo.io/
       callback_path: /callback
       client_id: gloo
       client_secret_ref:
         name: oauth
         namespace: gloo-system
-      issuer_url: http://dex.gloo-system.svc.cluster.local:32000/
+      issuer_url: https://ceposta-auth-demo.solo.io/
       scopes:
       - email

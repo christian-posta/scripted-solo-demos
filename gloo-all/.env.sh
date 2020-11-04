@@ -1,0 +1,1 @@
+DEFAULT_DOMAIN_NAME=ceposta-gloo-demo.solo.io

@@ -1,18 +1,12 @@
 #!/bin/bash
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
-
-desc "Be sure to use localhost:8080 since running dex local"
-read -s
-
-desc "go check page now: http://localhost:8080/httpbin"
-desc "See that the jwt is in a cookie"
-read -s
+. ../.env.sh
 
 desc "let's xform that to be a jwt token"
 run "cat dex-oidc-xform-httpbin-vs.yaml"
 run "kubectl apply -f dex-oidc-xform-httpbin-vs.yaml"
 
 desc "But what does the client end up seeing?"
-desc "go check page now: http://localhost:8080/httpbin"
+desc "go check page now: https://$DEFAULT_DOMAIN_NAME/httpbin"
 read -s

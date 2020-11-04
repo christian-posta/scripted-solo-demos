@@ -12,7 +12,7 @@ metadata:
   name: dex
 stringData:
   config.yaml: |-
-    issuer: http://dex.gloo-system.svc.cluster.local:32000
+    issuer: http://auth-gloo.myddns.me/
     storage:
       config:
         inCluster: true
@@ -35,8 +35,9 @@ stringData:
     staticClients:
     - id: gloo
       name: GlooApp
+      public: true
       redirectURIs:
-      - http://localhost:8080/callback
+      - http://gloo.myddns.me/callback
       secret: secretvalue
     
     enablePasswordDB: true

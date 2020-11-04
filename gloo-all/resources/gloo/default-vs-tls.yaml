@@ -6,11 +6,11 @@ metadata:
 spec:
   sslConfig:
     secretRef:
-      name: upstream-tls
-      namespace: gloo-system
+      name: ceposta-gloo-demo-dns
+      namespace: gloo-system      
   virtualHost:
     domains:
-    - '*'
+    - 'ceposta-gloo-demo.solo.io'
     routes:
     - matchers:
       - prefix: /httpbin
@@ -20,7 +20,7 @@ spec:
             name: httpbin-static
             namespace: gloo-system 
       options:
-        prefixRewrite: '/headers'             
+        prefixRewrite: '/headers'               
     - matchers:
       - prefix: /
       routeAction:

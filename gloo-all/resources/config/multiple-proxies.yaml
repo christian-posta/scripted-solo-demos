@@ -1,0 +1,50 @@
+gloo:
+  gatewayProxies:
+    gatewayProxy:
+      readConfig: true
+    secondProxy:
+      antiAffinity: false
+      configMap:
+        data: null
+      failover:
+        enabled: false
+        port: 15443
+        secretName: failover-downstream
+      gatewaySettings:
+        disableGeneratedGateways: false
+        options: {}
+        useProxyProto: false
+      globalDownstreamMaxConnections: 250000
+      kind:
+        deployment:
+          replicas: 1
+      loopBackAddress: 127.0.0.1
+      podTemplate:
+        customReadinessProbe: {}
+        disableNetBind: true
+        floatingUserId: false
+        fsGroup: 10101
+        gracefulShutdown:
+          enabled: false
+          sleepTimeSeconds: 25
+        httpPort: 8080
+        httpsPort: 8443
+        image:
+          extended: false
+          repository: gloo-envoy-wrapper
+          tag: 1.5.2
+        probes: false
+        runAsUser: 10101
+        runUnprivileged: true
+        terminationGracePeriodSeconds: 0
+        tolerations: null
+      readConfig: false
+      service:
+        httpPort: 80
+        httpsFirst: false
+        httpsPort: 443
+        type: LoadBalancer
+  crds:
+    create: true
+devPortal:
+  enabled: true

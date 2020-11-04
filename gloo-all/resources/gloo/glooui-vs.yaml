@@ -1,18 +1,17 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: consul-vs
+  name: glooui-vs
   namespace: gloo-system
 spec:
   virtualHost:
     domains:
-    - 'ceposta-gloo-demo.solo.io'
+    - 'ceposta-glooui-demo.solo.io'
     routes:
     - matchers:
       - prefix: /
       routeAction:
         single:
           upstream:
-            name: default-gloo-consul-server-8500
-            namespace: gloo-system
-
+            name: gloo-system-apiserver-ui-8080
+            namespace: gloo-system              

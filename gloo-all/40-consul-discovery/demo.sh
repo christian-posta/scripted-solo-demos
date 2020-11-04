@@ -1,10 +1,11 @@
 #!/bin/bash
 
 . $(dirname ${BASH_SOURCE})/../../util.sh
+. ../.env.sh
 
 desc "Configure default vs to expose consul service"
 run "kubectl apply -f default-vs-consul.yaml"
-export CONSUL_HTTP_ADDR="$(glooctl proxy url)"
+export CONSUL_HTTP_ADDR="ceposta-gloo-demo.solo.io"
 desc "Query Consul to make sure we can access it"
 run "consul members"
 #old way: -http-addr $(glooctl proxy url)
@@ -31,7 +32,6 @@ read -s
 desc "Get upstreams, grep by Consul"
 run "glooctl get upstream | grep Consul"
 run "glooctl get upstream jsonplaceholder"
-run "glooctl get upstream jsonplaceholder -o yaml"
 
 backtotop
 
@@ -42,9 +42,6 @@ run "kubectl apply -f default-vs-jsonplaceholder.yaml"
 backtotop
 
 desc "Now let's call to /todos"
-run "curl $(glooctl proxy url)/todos"
+run "curl http://$DEFAULT_DOMAIN_NAME/todos"
 
-desc "clean up"
-run "kubectl apply -f ../resources/gloo/default-vs.yaml"
-# clean up
-# kubectl patch settings default -n gloo-system --type json  --patch "$(cat ./consul/settings-patch-delete.json)"
+
