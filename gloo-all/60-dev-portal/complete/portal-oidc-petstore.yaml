@@ -1,3 +1,4 @@
+---
 apiVersion: devportal.solo.io/v1alpha1
 kind: Portal
 metadata:
@@ -9,20 +10,24 @@ spec:
       key: banner-img
       name: dev-portal-petstore-portal-banner-img
       namespace: dev-portal
-  customStyling: {}
+  customStyling:
+    backgroundColor: '#F9F9F9'
+    defaultTextColor: '#35393B'
+    primaryColor: '#2196C9'
+    secondaryColor: '#253E58'
   displayName: petstore-portal
   domains:
-  - apis.myddns.me
-  enableIngress: false
+  - ceposta-apis-demo.solo.io
+  enableIngress: true
   oidcAuth:
-    callbackUrlPrefix: http://localhost:8080/callback
+    callbackUrlPrefix: https://ceposta-apis-demo.solo.io
     clientId: gloo
     clientSecret:
-      name: oauth
-      namespace: gloo-system
-      key: oauth
+      name: petstore-oidc-secret
+      namespace: dev-portal
+      key: client_secret
     groupClaimKey: aud
-    issuer: http://dex.gloo-system.svc.cluster.local:32000
+    issuer: https://ceposta-auth-demo.solo.io/  
   favicon:
     configMap:
       key: favicon
@@ -38,3 +43,7 @@ spec:
       portals.devportal.solo.io/dev-portal.petstore-portal: "true"
     namespaces:
     - '*'
+  sslConfig:
+    secretRef:
+      name: ceposta-apis-demo-dns 
+      namespace: gloo-system    

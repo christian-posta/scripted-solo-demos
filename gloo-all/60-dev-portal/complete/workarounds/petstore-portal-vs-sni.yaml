@@ -1,0 +1,34 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  generation: 27
+  labels:
+    cluster.multicluster.solo.io: ""
+    portals.devportal.solo.io/dev-portal.petstore-portal: "true"
+  name: petstore-portal
+  namespace: dev-portal
+  ownerReferences:
+  - apiVersion: devportal.solo.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Portal
+    name: petstore-portal
+spec:
+  sslConfig:
+    secretRef:
+      name: ceposta-apis-demo-dns
+      namespace: gloo-system
+    sniDomains:
+    - ceposta-apis-demo.solo.io
+  virtualHost:
+    domains:
+    - ceposta-apis-demo.solo.io
+    routes:
+    - matchers:
+      - prefix: /
+      name: petstore-portal.dev-portal-route
+      routeAction:
+        single:
+          upstream:
+            name: dev-portal.dev-portal
+            namespace: dev-portal

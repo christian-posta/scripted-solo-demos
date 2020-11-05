@@ -11,6 +11,9 @@ helm uninstall dex --namespace gloo-system
 kubectl delete secret -n gloo-system $(k get secret -n gloo-system | grep dex | awk '{print $1}' )
 kubectl delete -n gloo-system cm $(k get cm -n gloo-system | grep dex | awk '{print $1}')
 
+# delete client secret
+glooctl create secret oauth --client-secret secretvalue oauth
+
 #########################
 # delete consul
 #########################
@@ -44,6 +47,6 @@ istioctl x uninstall --purge -y
 kubectl delete ns istio-system
 
 # delete dev portal
-kubectl delete -f ./60-dev-portal/petstore-routes.yaml -n default
+kubectl delete -f ./60-dev-portal/complete/petstore-routes.yaml -n default
 helm uninstall dev-portal -n dev-portal
 kubectl delete namespace dev-portal

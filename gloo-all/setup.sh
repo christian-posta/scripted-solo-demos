@@ -8,7 +8,6 @@ helm repo update
 
 # dex
 helm install dex --namespace gloo-system --version 2.9.0 stable/dex -f resources/dex/values.yaml
-
 glooctl create secret oauth --client-secret secretvalue oauth &> /dev/null
 
 #consul 
@@ -34,22 +33,7 @@ EOF
 kubectl create namespace dev-portal
 helm install dev-portal dev-portal/dev-portal --version 0.4.12 --create-namespace -n dev-portal --values /tmp/dev-portal-values.yaml
 
-## rredirect all of the DNS names to this gateway
-source ~/bin/ddns-token
-
-SVC_IP=$(kubectl  get svc -n gloo-system | grep gateway-proxy | awk ' { print $ 4 }')
-
-# petstore
-curl -H "User-Agent: Company NameOfProgram/OSVersion-ReleaseVersion maintainer-contact@example.com" -H "Authorization: Basic $DDNSAUTH"  "https://dynupdate.no-ip.com/nic/update?hostname=petstore.myddns.me&myip=$SVC_IP"   
-
-curl -H "User-Agent: Company NameOfProgram/OSVersion-ReleaseVersion maintainer-contact@example.com" -H "Authorization: Basic $DDNSAUTH"  "https://dynupdate.no-ip.com/nic/update?hostname=apis.myddns.me&myip=$SVC_IP"   
-
-curl -H "User-Agent: Company NameOfProgram/OSVersion-ReleaseVersion maintainer-contact@example.com" -H "Authorization: Basic $DDNSAUTH"  "https://dynupdate.no-ip.com/nic/update?hostname=gloo.myddns.me&myip=$SVC_IP"   
-
-curl -H "User-Agent: Company NameOfProgram/OSVersion-ReleaseVersion maintainer-contact@example.com" -H "Authorization: Basic $DDNSAUTH"  "https://dynupdate.no-ip.com/nic/update?hostname=auth-gloo.myddns.me&myip=$SVC_IP"   
-
-curl -H "User-Agent: Company NameOfProgram/OSVersion-ReleaseVersion maintainer-contact@example.com" -H "Authorization: Basic $DDNSAUTH"  "https://dynupdate.no-ip.com/nic/update?hostname=glooui.myddns.me&myip=$SVC_IP"   
-kubectl apply -f ./60-dev-portal/petstore-routes.yaml -n default
+./60-dev-portal/reset.sh
 
 
 #########
@@ -88,15 +72,13 @@ spec:
         dnsNames:
           - ceposta-gloo-demo.solo.io
           - ceposta-auth-demo.solo.io
+          - ceposta-apis-demo.solo.io
 EOF
 
 ./prepare-certs.sh ceposta-gloo-demo
 ./prepare-certs.sh ceposta-auth-demo
+./prepare-certs.sh ceposta-apis-demo
 
 
 kubectl apply -f resources/k8s
-
-kubectl apply -f resources/gloo/httpbin-static-upstream.yaml
-kubectl apply -f resources/gloo/default-vs.yaml
-kubectl apply -f resources/gloo/glooui-vs.yaml
-kubectl apply -f resources/gloo/devportal-vs.yaml 
+kubectl apply -f resources/gloo

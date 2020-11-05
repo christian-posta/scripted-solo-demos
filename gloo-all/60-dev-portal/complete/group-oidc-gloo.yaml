@@ -1,0 +1,18 @@
+apiVersion: devportal.solo.io/v1alpha1
+kind: Group
+metadata:
+  name: gloo
+  namespace: dev-portal
+spec:
+  accessLevel:
+    apiProducts:
+    - name: petstore
+      namespace: dev-portal
+      plans:
+      - petstore-plan
+    portals:
+    - name: petstore-portal
+      namespace: dev-portal
+  displayName: "Gloo OIDC Group"
+  oidcGroup:
+    groupName: gloo

@@ -2,33 +2,39 @@
 # delete all port forwards
 killall kubectl
 
-#########################
-# delete istio injection
-#########################
-kubectl label namespace default istio-injection-
-glooctl istio uninject
-kubectl delete upstream -n gloo-system default-web-api-8080
-kubectl delete -f default-peerauth-strict.yaml
-
 
 #########################
-# undo all of the tls and jwt/oidc demos
+# undo the oidc demo
 #########################
-kubectl delete cm -n gloo-system allow-jwt
+#. ./30-oidc/reset.sh
+
+#########################
+# undo the opa demo
+#########################
+. ./34-oidc-jwt-opa-rbac/reset.sh
 
 #########################
 # reset consul
 #########################
-kubectl patch settings default -n gloo-system --type json  --patch "$(cat ./40-consul-discovery/consul/settings-patch-delete.json)"
+. ./40-consul-discovery/reset.sh
 
-kubectl delete upstream consul -n gloo-system
-kubectl delete upstream jsonplaceholder -n gloo-system
+
+#########################
+# delete istio injection
+#########################
+. ./50-gloo-istio/reset.sh
+
+#########################
+# delete dev-portal
+#########################
+. ./60-dev-portal/reset.sh
 
 #########################
 # reset VS/authconfig
 #########################
 kubectl delete virtualservice -n gloo-system --all
 kubectl delete authconfig -n gloo-system --all
-kubectl apply -f resources/gloo/default-vs.yaml
+kubectl apply -f resources/gloo
 
+# Bounce all the sample app pods
 kubectl delete po -n default --all

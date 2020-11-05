@@ -5,6 +5,7 @@ DOMAIN="$NAME.solo.io"
 
 echo "Naming things $NAME"
 echo "For Domain: $DOMAIN"
+echo "Press <ENTER> to continue"
 read -s
 
 cat << EOF | kubectl apply -f -
@@ -22,8 +23,8 @@ spec:
     - $DOMAIN
 EOF
 
-echo "Sleep for gloo to discover this upstream..."
-sleep 5s
+echo "Watch acme svc to be created"
+kubectl get svc -n gloo-system -w
 
 UPSTREAM_NAME=$(kubectl get upstream -n gloo-system | grep cm-acme-http-solver | awk '{print $1}')
 echo "Upstream name for acme http solver: $UPSTREAM_NAME"

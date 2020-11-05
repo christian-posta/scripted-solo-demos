@@ -1,0 +1,51 @@
+apiVersion: gloo.solo.io/v1
+kind: Settings
+metadata:
+  labels:
+    app: gloo
+    gloo: settings
+  name: default
+  namespace: gloo-system
+spec:
+  discovery:
+    fdsMode: WHITELIST
+
+  ##
+  ## This configuration configures the Envoy rate limit filter 
+  ## (ie, on proxy)
+  ratelimitServer:
+
+    ratelimit_server_ref:
+      name: rate-limit
+      namespace: gloo-system
+
+    # how to treat failures in communicating with the RLS
+    # and whether to deny in that case, default false
+    denyOnFail: false
+
+    # controls ordering of RLS filter, default is ExtAuth
+    # first then RLS
+    rateLimitBeforeAuth: false
+
+    # timeout for the request to the RLS
+    requestTimeout: 20ms
+
+  refreshRate: 60s    
+  discoveryNamespace: gloo-system
+  extauth:
+    extauthzServerRef:
+      name: extauth
+      namespace: gloo-system
+  gateway:
+    validation:
+      alwaysAccept: true
+      proxyValidationServerAddr: gloo:9988
+  gloo:
+    disableKubernetesDestinations: false
+    disableProxyGarbageCollection: false
+    restXdsBindAddr: 0.0.0.0:9976
+    xdsBindAddr: 0.0.0.0:9977
+  kubernetesArtifactSource: {}
+  kubernetesConfigSource: {}
+  kubernetesSecretSource: {}
+

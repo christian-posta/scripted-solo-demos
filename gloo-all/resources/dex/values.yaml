@@ -9,6 +9,7 @@ config:
   - id: gloo
     redirectURIs:
     - 'https://ceposta-gloo-demo.solo.io/callback'
+    - 'https://ceposta-apis-demo.solo.io/callback'
     name: 'GlooApp'
     secret: secretvalue
   

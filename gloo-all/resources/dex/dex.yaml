@@ -1,3 +1,15 @@
+##
+##
+##
+##
+
+# Note this file is only used if we need to do a manual delete
+# Helm sometimes doesn't clean up everything
+
+##
+##
+##
+##
 ---
 # Source: dex/templates/secret.yaml
 apiVersion: v1
