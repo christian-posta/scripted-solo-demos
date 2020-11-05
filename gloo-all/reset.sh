@@ -2,11 +2,10 @@
 # delete all port forwards
 killall kubectl
 
-
 #########################
 # undo the oidc demo
 #########################
-#. ./30-oidc/reset.sh
+. ./30-oidc/reset.sh
 
 #########################
 # undo the opa demo
@@ -17,7 +16,6 @@ killall kubectl
 # reset consul
 #########################
 . ./40-consul-discovery/reset.sh
-
 
 #########################
 # delete istio injection
@@ -38,3 +36,5 @@ kubectl apply -f resources/gloo
 
 # Bounce all the sample app pods
 kubectl delete po -n default --all
+
+kubectl delete ns squash-debugger

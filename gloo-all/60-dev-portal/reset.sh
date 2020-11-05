@@ -1,3 +1,4 @@
+DIR=$(dirname ${BASH_SOURCE})
 kubectl delete apiproduct --all -n dev-portal
 kubectl delete portals --all -n dev-portal
 kubectl delete routes --all -n dev-portal
@@ -20,8 +21,8 @@ kubectl delete secret -n dev-portal $APIKEYS
 
 
 # create default routes/users/apidco
-kubectl apply -f ./complete/apidoc-classic.yaml
-kubectl apply -f ./complete/routes-default.yaml
+kubectl apply -f $DIR/complete/apidoc-classic.yaml
+kubectl apply -f $DIR/complete/routes-default.yaml
 
 
 ## hack until we have better retry for the k8s api server
