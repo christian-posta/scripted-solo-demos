@@ -1,1 +1,0 @@
-kubectl apply -f resources/petstore-vs.yaml
