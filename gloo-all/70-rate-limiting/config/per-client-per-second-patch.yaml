@@ -1,0 +1,17 @@
+spec:
+  ratelimit:
+    descriptors:
+      - key: generic_key
+        value: "per-minute"
+        descriptors:
+          - key: remote_address
+            rateLimit:
+              requestsPerUnit: 50
+              unit: MINUTE
+      - key: generic_key
+        value: "per-second"
+        descriptors:
+          - key: remote_address
+            rateLimit:
+              requestsPerUnit: 2
+              unit: SECOND

@@ -8,7 +8,7 @@ killall kubectl
 . ./30-oidc/reset.sh
 
 #########################
-# undo the opa demo
+# reset opa
 #########################
 . ./34-oidc-jwt-opa-rbac/reset.sh
 
@@ -18,14 +18,19 @@ killall kubectl
 . ./40-consul-discovery/reset.sh
 
 #########################
-# delete istio injection
+#  istio injection
 #########################
 . ./50-gloo-istio/reset.sh
 
 #########################
-# delete dev-portal
+#  dev-portal
 #########################
 . ./60-dev-portal/reset.sh
+
+#########################
+# reset rate-limit
+#########################
+. ./70-rate-limiting/reset.sh
 
 #########################
 # reset VS/authconfig

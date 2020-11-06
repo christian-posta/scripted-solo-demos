@@ -7,7 +7,9 @@ spec:
   sslConfig:
     secretRef:
       name: ceposta-gloo-demo-dns
-      namespace: gloo-system
+      namespace: gloo-system      
+    sniDomains:
+    - ceposta-gloo-demo.solo.io    
   virtualHost:
     domains:
     - 'ceposta-gloo-demo.solo.io'
@@ -17,19 +19,26 @@ spec:
       routeAction:
         single:
           upstream:
-            name: httpbin-static
-            namespace: gloo-system 
+            name: default-httpbin-8000 
+            namespace: gloo-system     
       options:
         prefixRewrite: '/headers'             
+        ratelimit:
+          rateLimits:
+            - actions:
+                - remoteAddress: {}
+            - actions:
+                - requestHeaders:
+                    descriptorKey: method
+                    headerName: :method
+                - remoteAddress: {}                                       
     - matchers:
       - prefix: /
       routeAction:
         single:
           upstream:
             name: default-web-api-8080
-            namespace: gloo-system
-    options:
-      rateLimitConfigs:
-        refs:
-        - name: global-limit
-          namespace: gloo-system
+            namespace: gloo-system     
+
+       
+

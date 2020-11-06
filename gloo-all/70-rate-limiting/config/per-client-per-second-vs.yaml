@@ -19,19 +19,27 @@ spec:
       routeAction:
         single:
           upstream:
-            name: httpbin-static
-            namespace: gloo-system 
+            name: default-httpbin-8000 
+            namespace: gloo-system     
       options:
-        prefixRewrite: '/headers'               
+        prefixRewrite: '/headers'             
+        ratelimit:
+          rateLimits:
+              - actions:
+                  - genericKey:
+                      descriptorValue: "per-minute"
+                  - remoteAddress: {}
+              - actions:
+                  - genericKey:
+                      descriptorValue: "per-second"
+                  - remoteAddress: {}                                    
     - matchers:
       - prefix: /
       routeAction:
         single:
           upstream:
             name: default-web-api-8080
-            namespace: gloo-system
-    options:
-      extauth:
-        configRef:
-          name: oidc-dex
-          namespace: gloo-system            
+            namespace: gloo-system     
+
+       
+

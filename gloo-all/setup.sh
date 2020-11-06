@@ -32,6 +32,11 @@ $DIR/manage-installation/consul/setup.sh
 #########################
 $DIR/manage-installation/cert-manager/setup.sh
 
+#########################
+# apply any additional patches
+#########################
+$DIR/resources/patches/apply.sh
+
 
 $DIR/prepare-certs.sh ceposta-gloo-demo
 $DIR/prepare-certs.sh ceposta-auth-demo

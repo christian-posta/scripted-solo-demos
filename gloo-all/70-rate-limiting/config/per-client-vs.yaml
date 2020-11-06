@@ -9,7 +9,7 @@ spec:
       name: ceposta-gloo-demo-dns
       namespace: gloo-system      
     sniDomains:
-    - ceposta-gloo-demo.solo.io      
+    - ceposta-gloo-demo.solo.io    
   virtualHost:
     domains:
     - 'ceposta-gloo-demo.solo.io'
@@ -19,16 +19,21 @@ spec:
       routeAction:
         single:
           upstream:
-            name: httpbin-static
-            namespace: gloo-system 
+            name: default-httpbin-8000 
+            namespace: gloo-system     
       options:
-        prefixRewrite: '/headers'               
+        prefixRewrite: '/headers'             
+        ratelimit:
+          rateLimits:
+            - actions:
+                - remoteAddress: {}                                         
     - matchers:
       - prefix: /
       routeAction:
         single:
           upstream:
             name: default-web-api-8080
-            namespace: gloo-system
-           
+            namespace: gloo-system     
+
+       
 

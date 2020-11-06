@@ -7,7 +7,9 @@ spec:
   sslConfig:
     secretRef:
       name: ceposta-gloo-demo-dns
-      namespace: gloo-system
+      namespace: gloo-system      
+    sniDomains:
+    - ceposta-gloo-demo.solo.io    
   virtualHost:
     domains:
     - 'ceposta-gloo-demo.solo.io'

@@ -1,0 +1,7 @@
+spec:
+  ratelimit:
+    descriptors:
+      - key: remote_address
+        rateLimit:
+          requestsPerUnit: 5
+          unit: MINUTE

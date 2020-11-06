@@ -1,0 +1,7 @@
+spec:
+  options:
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          stringFormat: ""  

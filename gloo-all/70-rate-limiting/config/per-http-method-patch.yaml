@@ -1,0 +1,16 @@
+spec:
+  ratelimit:
+    descriptors:
+      # allow 5 calls per minute for any unique host
+      - key: remote_address
+        rateLimit:
+          requestsPerUnit: 10
+          unit: MINUTE
+      # specifically limit GET requests from unique hosts to 2 per min
+      - key: method
+        value: GET
+        descriptors:
+          - key: remote_address
+            rateLimit:
+              requestsPerUnit: 2
+              unit: MINUTE

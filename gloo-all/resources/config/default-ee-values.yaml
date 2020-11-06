@@ -8,6 +8,11 @@ gloo:
         type: LoadBalancer      
         # if we change this on gcloud, we need to update
         loadBalancerIP: 35.203.151.111
+
+        # because we want to preserve the client's IP address
+        # and disallow hops between cluster for k8s load balancing
+        # https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
+        externalTrafficPolicy: Local
   crds:
     create: true
 devPortal:

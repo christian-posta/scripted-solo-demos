@@ -1,4 +1,0 @@
-spec:
-  consul:
-    address: gloo-consul-server.default:8500
-    serviceDiscovery: {}

@@ -1,0 +1,8 @@
+spec:
+  ratelimit:
+    descriptors:
+      - key: generic_key
+        value: "per-minute"
+        rateLimit:
+          requestsPerUnit: 5
+          unit: MINUTE  

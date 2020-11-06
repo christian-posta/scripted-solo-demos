@@ -9,6 +9,7 @@ metadata:
 spec:
   discovery:
     fdsMode: WHITELIST
+    
 
   ##
   ## This configuration configures the Envoy rate limit filter 
