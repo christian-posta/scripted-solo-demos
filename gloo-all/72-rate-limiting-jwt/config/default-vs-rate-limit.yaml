@@ -22,16 +22,11 @@ spec:
             name: default-httpbin-8000 
             namespace: gloo-system     
       options:
-        prefixRewrite: '/post'             
-        ratelimit:
-          rateLimits:
-            - actions:
-                - remoteAddress: {}
-            - actions:
-                - requestHeaders:
-                    descriptorKey: method
-                    headerName: :method
-                - remoteAddress: {}                                       
+        prefixRewrite: '/headers'             
+        rateLimitConfigs:
+          refs:
+          - name: http-headers-limit
+            namespace: gloo-system                                
     - matchers:
       - prefix: /
       routeAction:

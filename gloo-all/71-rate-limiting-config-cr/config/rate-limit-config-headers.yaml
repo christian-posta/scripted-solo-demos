@@ -1,0 +1,44 @@
+apiVersion: ratelimit.solo.io/v1alpha1
+kind: RateLimitConfig
+metadata:
+  name: http-headers-limit
+  namespace: gloo-system
+spec:
+  raw:
+    descriptors:
+      - key: type
+        value: Messenger
+        rateLimit:
+          requestsPerUnit: 3
+          unit: MINUTE
+      - key: type
+        value: Whatsapp
+        rateLimit:
+          requestsPerUnit: 2
+          unit: MINUTE
+        # Note this descriptor has a `weight` setting
+        # which elevates its evaluation
+        descriptors:
+          - key: number
+            rateLimit:
+              requestsPerUnit: 30
+              unit: MINUTE
+            value: "411"
+            weight: 1 
+      # Default catch-all rule
+      - key: type
+        rateLimit:
+          requestsPerUnit: 1
+          unit: MINUTE              
+    rateLimits:
+    - actions:
+      - requestHeaders:
+          descriptorKey: type
+          headerName: x-type
+    - actions:
+      - requestHeaders:
+          descriptorKey: type
+          headerName: x-type
+      - requestHeaders:
+          descriptorKey: number
+          headerName: x-number     

@@ -41,5 +41,3 @@ spec:
             name: default-web-api-8080
             namespace: gloo-system     
 
-       
-

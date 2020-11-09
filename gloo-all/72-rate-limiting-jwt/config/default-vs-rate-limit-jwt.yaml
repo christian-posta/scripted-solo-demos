@@ -1,0 +1,69 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  sslConfig:
+    secretRef:
+      name: ceposta-gloo-demo-dns
+      namespace: gloo-system      
+    sniDomains:
+    - ceposta-gloo-demo.solo.io    
+  virtualHost:
+    domains:
+    - 'ceposta-gloo-demo.solo.io'
+    routes:
+    - matchers:
+      - prefix: /httpbin
+      routeAction:
+        single:
+          upstream:
+            name: default-httpbin-8000 
+            namespace: gloo-system     
+      options:
+        prefixRewrite: '/headers'   
+        jwt:
+          disable: false            
+        rateLimitConfigs:
+          refs:
+          - name: http-headers-limit
+            namespace: gloo-system                                
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: default-web-api-8080
+            namespace: gloo-system
+      options:
+        jwt:
+          disable: true
+        options:
+    options:
+      jwt:
+        providers:
+          solo:
+            tokenSource:
+              headers:
+                - header: x-token
+              queryParams:
+                - token
+            claimsToHeaders:
+              - claim: type
+                header: x-type
+              - claim: number
+                header: x-number
+            issuer: solo.io
+            jwks:
+              local:
+                key: |
+                  -----BEGIN PUBLIC KEY-----
+                  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxdil+UiTSKYKV90YkeZ/
+                  9CWvb4XfUgqYDeW/OG1Le+/BvSVkAFc1s3Fg0l9Zo4yvS4OGQszsNGJNl1mYya/L
+                  sSTTD7suKLXY7FBTaBB8CQvvW873yRij1F4EaygOJ1ujuFmpgBGvQLSS5rceNaCl
+                  Qzo+bmf3z0UGbhCxgsjDsJK2/aW2D/3dep/kF1GyEOGz8fewnwVp0zVyuS4UMidV
+                  2cdnAobX2GvPwpjAeIeqhHG3HX4fen+TwU8rkej3y4efKHNj/GbKQmtt2EoOhEox
+                  iK/JALlhQNAJqYn+81amRM7wGWeLEByt0+mwyAfnShOr6MFwrhQjsm4orwAx7yHB
+                  jwIDAQAB
+                  -----END PUBLIC KEY-----

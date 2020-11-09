@@ -16,7 +16,12 @@ desc "Now we should see rate limit kick in:"
 run "curl -I https://$DEFAULT_DOMAIN_NAME/httpbin"
 
 desc "But we dont!!"
+read -s
+
+backtotop
 desc "We need to attach the descriptors/attributes to the request"
+read -s
+
 run "cat config/per-client-vs.yaml"
 run "kubectl apply -f config/per-client-vs.yaml"
 
@@ -30,7 +35,7 @@ desc "We can do even more complicated nesting for rate limiting"
 read -s
 
 desc "Specify the rate limit descriptors"
-run "cat config/per-client-per-secoond-patch.yaml"
+run "cat config/per-client-per-second-patch.yaml"
 run "./apply-patch-settings.sh config/per-client-per-second-patch.yaml"
 
 desc "Specify the rate limit actions"
