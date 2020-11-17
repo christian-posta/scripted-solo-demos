@@ -4,35 +4,11 @@
 SOURCE_DIR=$PWD
 source env.sh
 
+echo "Make sure management plane cluster is up and GM installed"
+echo "UI should be on http://localhost:8090"
+read -s
+
 kubectl config use-context $MGMT_CONTEXT
-
-#############################################
-# Discovery
-#############################################
-
-desc "Welcome to Serivce Mesh Hub demo!"
-desc "Let's get started"
-read -s
-
-#desc "We have installed istio onto two clustes:"
-#run "kubectl get po -n istio-system --context $CLUSTER_1 "
-#run "kubectl get po -n istio-system --context $CLUSTER_2"
-
-desc "We also have bookinfo (v1 and v2 of reviews) on cluster 1"
-run "kubectl get po -n default --context $CLUSTER_1 "
-
-desc "And boookinfo reviews-v3 on cluster 2"
-run "kubectl get po -n default --context $CLUSTER_2"
-
-backtotop
-desc "Let's install the SMH management plane onto a separate cluster"
-read -s
-
-#run "kind create cluster --name smh-management"
-
-run "meshctl install"
-run "kubectl get po -n service-mesh-hub -w"
-run "meshctl check"
 
 backtotop
 desc "Let's register our two clusters"
@@ -43,9 +19,9 @@ run "meshctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER
 run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 desc "Now we should have discovered the meshes"
-run "kubectl get kubernetesclusters -n service-mesh-hub"
-run "kubectl get meshes -n service-mesh-hub"
-run "kubectl get workloads -n service-mesh-hub"
+run "kubectl get kubernetesclusters -n gloo-mesh"
+run "kubectl get meshes -n gloo-mesh"
+run "kubectl get workloads -n gloo-mesh"
 
 desc "Now let's look at federating the clusters"
 
@@ -67,7 +43,7 @@ read -s
 
 run "cat resources/virtual-mesh.yaml"
 run "kubectl apply -f resources/virtual-mesh.yaml"
-run "kubectl get virtualmesh -n service-mesh-hub -o yaml"
+run "kubectl get virtualmesh -n gloo-mesh -o yaml"
 
 backtotop
 desc "We've now created a new Root CA, and initated intermediate CAs on each cluster"
@@ -175,7 +151,7 @@ read -s
 
 # Delete traffic policy
 desc "First let's clean up from the previous demo"
-run "kubectl delete TrafficPolicy reviews-tp -n service-mesh-hub"
+run "kubectl delete TrafficPolicy reviews-tp -n gloo-mesh"
 
 desc "Next we need to add passive health checking to determine health and when to failover"
 run "cat resources/reviews-outlier-tp.yaml"

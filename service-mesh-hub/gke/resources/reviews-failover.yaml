@@ -1,8 +1,8 @@
-apiVersion: networking.smh.solo.io/v1alpha2
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
 kind: FailoverService
 metadata:
   name: reviews-failover
-  namespace: service-mesh-hub
+  namespace: gloo-mesh
 spec:
   hostname: reviews-failover.default.global
   port:
@@ -10,7 +10,7 @@ spec:
     protocol: http
   meshes:
     - name: istiod-istio-system-cluster-1
-      namespace: service-mesh-hub
+      namespace: gloo-mesh
   backingServices:
   - kubeService:
       name: reviews

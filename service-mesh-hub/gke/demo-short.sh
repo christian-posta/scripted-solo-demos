@@ -7,7 +7,7 @@ SOURCE_DIR=$PWD
 source env.sh
 
 
-echo "Make sure management plane cluster is up and SMH installed"
+echo "Make sure management plane cluster is up and GM installed"
 echo "UI should be on http://localhost:8090"
 read -s
 
@@ -39,7 +39,7 @@ read -s
 
 run "cat resources/virtual-mesh.yaml"
 run "kubectl apply -f resources/virtual-mesh.yaml"
-run "kubectl get virtualmesh -n service-mesh-hub -o yaml"
+run "kubectl get virtualmesh -n gloo-mesh -o yaml"
 
 backtotop
 desc "We've now created a new Root CA, and initated intermediate CAs on each cluster"
@@ -91,7 +91,7 @@ read -s
 
 # Delete traffic policy
 desc "Let's demonstrate failover between clusters"
-run "kubectl delete TrafficPolicy reviews-tp -n service-mesh-hub"
+run "kubectl delete TrafficPolicy reviews-tp -n gloo-mesh"
 
 desc "Next we need to add passive health checking to determine health and when to failover"
 run "cat resources/reviews-outlier-tp.yaml"

@@ -1,7 +1,7 @@
-apiVersion: networking.smh.solo.io/v1alpha2
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
 kind: TrafficPolicy
 metadata:
-  namespace: service-mesh-hub
+  namespace: gloo-mesh
   name: mgmt-reviews-outlier
 spec:
   destinationSelector:

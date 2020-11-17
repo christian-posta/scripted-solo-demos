@@ -28,24 +28,13 @@ run "kubectl get po -n default --context $CLUSTER_2"
 # Install SMH
 ##############################
 backtotop
-desc "Let's install the SMH management plane onto a separate cluster"
+desc "Let's see what we're working with"
 read -s
 
-#run "kind create cluster --name smh-management"
-#run "kubectl config use-context $MGMT_CONTEXT"
-
-run "meshctl install"
-run "kubectl get po -n service-mesh-hub -w"
-run "meshctl check"
-
-backtotop
-desc "Now that we've got the management plane installed, let's see what we're working with"
-read -s
-
-run "kubectl get kubernetesclusters -n service-mesh-hub"
+run "kubectl get kubernetesclusters -n gloo-mesh"
 desc "We don't have any clusters..."
 desc "... or meshes"
-run "kubectl get meshes -n service-mesh-hub"
+run "kubectl get meshes -n gloo-mesh"
 
 ##############################
 # Register some clusters
@@ -63,9 +52,9 @@ run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER
 # View discovered resources
 ##############################
 desc "Now we should have discovered the meshes"
-run "kubectl get kubernetesclusters -n service-mesh-hub"
-run "kubectl get meshes -n service-mesh-hub"
-run "kubectl get workloads -n service-mesh-hub"
+run "kubectl get kubernetesclusters -n gloo-mesh"
+run "kubectl get meshes -n gloo-mesh"
+run "kubectl get workloads -n gloo-mesh"
 
 desc "Now let's look at federating the clusters"
 

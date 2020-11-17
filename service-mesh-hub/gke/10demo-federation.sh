@@ -62,7 +62,7 @@ read -s
 
 run "cat resources/virtual-mesh.yaml"
 run "kubectl apply -f resources/virtual-mesh.yaml"
-run "kubectl get virtualmesh -n service-mesh-hub -o yaml"
+run "kubectl get virtualmesh -n gloo-mesh -o yaml"
 
 backtotop
 desc "We've now created a new Root CA, and initated intermediate CAs on each istio cluster"
