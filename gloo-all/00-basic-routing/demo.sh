@@ -5,7 +5,6 @@
 
 desc "Basic routing demo"
 run "glooctl get virtualservice"
-run "kubectl get virtualservice -n gloo-system -o yaml"
 
 desc "Get the url"
 run "glooctl proxy url"

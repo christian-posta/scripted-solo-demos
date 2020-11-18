@@ -3,6 +3,9 @@
 . $(dirname ${BASH_SOURCE})/../../util.sh
 . ../.env.sh
 
+desc "Let's include OIDC vs"
+run "kubectl apply -f ../30-oidc/dex-oidc-vs.yaml"
+
 desc "Istio demo"
 run "glooctl istio inject"
 
