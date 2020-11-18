@@ -8,8 +8,6 @@ kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_2
 kubectl --context $CLUSTER_1 patch deployment reviews-v1  --type json   -p '[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}]'
 kubectl --context $CLUSTER_1 patch deployment reviews-v2  --type json   -p '[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}]'
 
-
-
 #############################################
 # traffic policy
 #############################################
