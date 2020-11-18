@@ -6,6 +6,10 @@
 desc "Configure default vs to expose consul service"
 run "kubectl apply -f default-vs-consul.yaml"
 export CONSUL_HTTP_ADDR="ceposta-gloo-demo.solo.io"
+
+# delete consul service if it exists
+consul services deregister -id jsonplaceholder &> /dev/null
+
 desc "Query Consul to make sure we can access it"
 run "consul members"
 #old way: -http-addr $(glooctl proxy url)
