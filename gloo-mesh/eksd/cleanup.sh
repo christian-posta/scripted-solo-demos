@@ -1,0 +1,1 @@
+docker kill ekz-controller  

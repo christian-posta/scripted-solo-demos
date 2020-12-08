@@ -1,0 +1,40 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: FailoverService
+metadata:
+  name: reviews-failover
+  namespace: gloo-mesh
+spec:
+  hostname: reviews-failover.default.global
+  port:
+    number: 9080
+    protocol: http
+  meshes:
+    - name: istiod-istio-system-eks-d
+      namespace: gloo-mesh
+  backingServices:
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: eks-d
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: eks-aws
+---
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  name: reviews-shift-failover
+  namespace: default
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - clusterName: eks-d
+        name: reviews
+        namespace: default
+  trafficShift:
+    destinations:
+    - failoverService:
+        name: reviews-failover
+        namespace: gloo-mesh

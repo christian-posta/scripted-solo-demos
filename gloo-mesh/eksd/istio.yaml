@@ -1,0 +1,29 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istiocontrolplane-default
+  namespace: istio-system
+spec:
+  profile: default
+  addonComponents:
+    istiocoredns:
+      enabled: true
+  meshConfig:
+    accessLogFile: /dev/stdout
+    enableAutoMtls: true
+    trustDomain: "cluster.local"
+  values:
+    global:
+      trustDomain: "cluster.local"
+  components:
+    ingressGateways:
+    - name: istio-ingressgateway
+      k8s:
+        service:
+          type: NodePort            
+  components:
+    pilot:
+      k8s:
+        env:
+          - name: PILOT_SKIP_VALIDATE_TRUST_DOMAIN
+            value: "true"

@@ -1,0 +1,19 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  namespace: gloo-mesh
+  name: mgmt-reviews-outlier
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - name: reviews
+        namespace: default
+        clusterName: eks-d
+      - name: reviews
+        namespace: default
+        clusterName: eks-aws
+  outlierDetection:
+    consecutiveErrors: 1
+    interval: 10s
+    baseEjectionTime: 2m

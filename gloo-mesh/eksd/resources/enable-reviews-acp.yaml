@@ -1,0 +1,18 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: AccessPolicy
+metadata:
+  namespace: gloo-mesh
+  name: reviews
+spec:
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+        - name: bookinfo-reviews
+          namespace: default
+          clusterName: eks-d
+  destinationSelector:
+  - kubeServiceMatcher:
+      namespaces:
+      - default
+      labels:
+        service: ratings
