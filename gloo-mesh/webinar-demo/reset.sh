@@ -36,11 +36,6 @@ kubectl delete secret -n istio-system istio-ca-secret --context $CLUSTER_1
 kubectl delete secret -n istio-system cacerts --context $CLUSTER_2
 kubectl delete secret -n istio-system istio-ca-secret --context $CLUSTER_2
 
-kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_1
-kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
-
-kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_2
-kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 
 #############################################
 # Discovery
@@ -62,3 +57,11 @@ kubectl delete wasmdeployments.enterprise.networking.mesh.gloo.solo.io -A --all 
 
 kubectl delete ns gloo-mesh --context $CLUSTER_1
 kubectl delete ns gloo-mesh --context $CLUSTER_2
+
+sleep 5s 
+
+kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_1
+kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
+
+kubectl delete pod -n istio-system -l app=istiod --context $CLUSTER_2
+kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1

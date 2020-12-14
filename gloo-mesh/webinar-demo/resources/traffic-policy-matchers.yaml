@@ -1,31 +1,31 @@
-apiVersion: networking.zephyr.solo.io/v1alpha1
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
 kind: TrafficPolicy
 metadata:
-  namespace: service-mesh-hub
+  namespace: gloo-mesh
   name: simple
 spec:
   destinationSelector:
-    serviceRefs:
-      services:
-        - cluster: management-plane
-          name: reviews
-          namespace: default
+    matcher:
+      labels:
+        app: reviews
+      namespaces: 
+        - default
   trafficShift:
     destinations:
       - destination:
-          cluster: remote-cluster
+          cluster: cluster-2
           name: reviews
           namespace: default
         weight: 75
       - destination:
-          cluster: management-plane
+          cluster: cluster-1
           name: reviews
           namespace: default
         weight: 15
         subset:
           version: v1
       - destination:
-          cluster: management-plane
+          cluster: cluster-1
           name: reviews
           namespace: default
         weight: 10

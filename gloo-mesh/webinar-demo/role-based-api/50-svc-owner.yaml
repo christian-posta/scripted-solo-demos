@@ -1,0 +1,32 @@
+apiVersion: rbac.mesh.gloo.solo.io/v1alpha1
+kind: Role
+metadata:
+  name: svc-owner
+  namespace: gloo-mesh
+spec:
+  trafficPolicyScopes:
+    - trafficPolicyActions:
+        - ALL
+      trafficTargetSelectors:
+        - kubeServiceMatcher:
+            labels:
+              "*": "*"
+            namespaces:
+              - "svc-namespace"
+            clusters:
+              - "cluster-1"
+              - "cluster-2"
+        - kubeServiceRefs:
+            services:
+              - name: "*"
+                namespace: "svc-namespace"
+                clusterName: "*"
+      workloadSelectors:
+        - labels:
+            "*": "*"
+          namespaces:
+            - "*"
+          clusters:
+            - "*"  
+
+            

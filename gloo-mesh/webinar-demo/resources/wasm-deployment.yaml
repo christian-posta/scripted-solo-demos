@@ -1,0 +1,18 @@
+apiVersion: enterprise.networking.mesh.gloo.solo.io/v1alpha1
+kind: WasmDeployment
+metadata:
+  name: reviews-wasm
+  namespace: gloo-mesh
+spec:
+  filters:
+  - filterContext: SIDECAR_INBOUND
+    wasmImageSource:
+      wasmImageTag: webassemblyhub.io/ilackarms/assemblyscript-test:istio-1.8
+  workloadSelector:
+  - clusters:
+    - cluster-1
+    labels:
+      app: reviews
+      version: v1
+    namespaces:
+    - default

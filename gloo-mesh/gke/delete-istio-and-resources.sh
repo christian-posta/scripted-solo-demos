@@ -18,4 +18,4 @@ kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUS
 kubectl delete deploy --all -n default --context $CLUSTER_1
 kubectl delete svc details productpage ratings reviews --context $CLUSTER_1
 
-kubectl --context $CLUSTER_1 delete -f ../resources-common/clean-kube-dns.yaml
+kubectl --context $CLUSTER_1 delete -f ./resources/clean-kube-dns.yaml

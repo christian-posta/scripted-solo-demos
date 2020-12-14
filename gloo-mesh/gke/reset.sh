@@ -45,11 +45,12 @@ kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null
 #############################################
 # Discovery
 #############################################
-kubectl delete secret -n gloo-mesh cluster-1 --context $MGMT_CONTEXT
-kubectl delete secret -n gloo-mesh cluster-2 --context $MGMT_CONTEXT
+kubectl delete secret -n gloo-mesh $CLUSTER_1_NAME --context $MGMT_CONTEXT
+kubectl delete secret -n gloo-mesh $CLUSTER_2_NAME --context $MGMT_CONTEXT
 
 
 kubectl delete trafficpolicy -n gloo-mesh --all --context $MGMT_CONTEXT
+kubectl delete trafficpolicy -n default --all --context $MGMT_CONTEXT
 kubectl delete failoverservices.networking.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
 kubectl delete accesspolicies -n gloo-mesh --context $MGMT_CONTEXT
 kubectl delete meshes.discovery.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT

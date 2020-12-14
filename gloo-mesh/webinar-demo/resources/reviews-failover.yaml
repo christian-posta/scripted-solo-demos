@@ -1,0 +1,22 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: FailoverService
+metadata:
+  name: reviews-failover
+  namespace: gloo-mesh
+spec:
+  hostname: reviews-failover.default.global
+  port:
+    number: 9080
+    protocol: http
+  meshes:
+    - name: istiod-istio-system-cluster-1
+      namespace: gloo-mesh
+  backingServices:
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: cluster-1
+  - kubeService:
+      name: reviews
+      namespace: default
+      clusterName: cluster-2
