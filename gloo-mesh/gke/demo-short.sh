@@ -40,6 +40,10 @@ read -s
 
 run "cat resources/virtual-mesh.yaml"
 run "kubectl apply -f resources/virtual-mesh.yaml"
+
+. ./check-virtualmesh.sh
+
+desc "restarting workloads for new certs..."
 kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
 

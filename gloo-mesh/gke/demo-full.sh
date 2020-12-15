@@ -14,9 +14,9 @@ backtotop
 desc "Let's register our two clusters"
 read -s
 
-run "meshctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
+run "meshctl cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
 
-run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
+run "meshctl cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 desc "Now we should have discovered the meshes"
 run "kubectl get kubernetesclusters -n gloo-mesh"
@@ -43,19 +43,15 @@ read -s
 
 run "cat resources/virtual-mesh.yaml"
 run "kubectl apply -f resources/virtual-mesh.yaml"
-run "kubectl get virtualmesh -n gloo-mesh -o yaml"
 
-backtotop
-desc "We've now created a new Root CA, and initated intermediate CAs on each cluster"
-read -s
+. ./check-virtualmesh.sh
 
-run "kubectl get secret -n istio-system cacerts --context $CLUSTER_1"
-run "kubectl get secret -n istio-system cacerts --context $CLUSTER_2"
-
-kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway /dev/null 2>&1
-kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway /dev/null 2>&1
+desc "restarting workloads for new certs..."
 kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
 kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
+
+kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
+kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
 
 run "kubectl get po -n default -w --context $CLUSTER_1"
 
@@ -164,13 +160,6 @@ read -s
 
 run "cat resources/reviews-failover.yaml"
 run "kubectl apply -f resources/reviews-failover.yaml"
-
-backtotop
-desc "Now when we call the reviews service, we want it to go to failover"
-read -s
-
-run "cat resources/reviews-failover-tp.yaml"
-run "kubectl apply -f resources/reviews-failover-tp.yaml"
 
 backtotop
 desc "To test it, let's make the reviews service (v1, v2) unhealthy on cluster-1"
