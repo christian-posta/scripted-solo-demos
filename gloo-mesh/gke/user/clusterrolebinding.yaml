@@ -1,0 +1,98 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: user-networking
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - multicluster.solo.io
+  resources:
+  - kubernetesclusters
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.mesh.gloo.solo.io
+  resources:
+  - meshes
+  - workloads
+  - traffictargets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - multicluster.solo.io
+  resources:
+  - kubernetesclusters
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.mesh.gloo.solo.io
+  resources:
+  - trafficpolicies
+  - accesspolicies
+  - virtualmeshes
+  - failoverservices
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - discovery.mesh.gloo.solo.io
+  resources:
+  - meshes/status
+  - workloads/status
+  - traffictargets/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - multicluster.solo.io
+  resources:
+  - kubernetesclusters/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - networking.mesh.gloo.solo.io
+  resources:
+  - trafficpolicies/status
+  - accesspolicies/status
+  - virtualmeshes/status
+  - failoverservices/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - settings.mesh.gloo.solo.io
+  resources:
+  - settings/status
+  verbs:
+  - get
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: meshctl-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: user-networking
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: meshctl:user

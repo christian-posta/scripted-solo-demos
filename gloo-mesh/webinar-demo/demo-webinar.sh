@@ -97,6 +97,8 @@ read -s
 run "cat resources/reviews-failover.yaml"
 run "kubectl apply -f resources/reviews-failover.yaml"
 
+
+
 backtotop
 desc "To test it, let's make the reviews service (v1, v2) unhealthy on eks-d cluster"
 read -s

@@ -20,3 +20,21 @@ spec:
       name: reviews
       namespace: default
       clusterName: cluster-2
+---
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  name: reviews-shift-failover
+  namespace: default
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - clusterName: cluster-1
+        name: reviews
+        namespace: default
+  trafficShift:
+    destinations:
+    - failoverService:
+        name: reviews-failover
+        namespace: gloo-mesh

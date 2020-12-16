@@ -31,7 +31,5 @@ spec:
         weight: 25
         subset:
           version: v2
-  httpRequestMatchers:
-    prefix: /
-    
+ 
 

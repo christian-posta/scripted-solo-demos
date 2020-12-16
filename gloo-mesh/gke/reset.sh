@@ -60,5 +60,12 @@ kubectl delete traffictargets.discovery.mesh.gloo.solo.io -A --all --context $MG
 kubectl delete wasmdeployments.enterprise.networking.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
 
 
+#############################################
+# Role Based API
+#############################################
+kubectl delete -f ./role-based-api/02-trafficpolicy-fault-injection-sre.yaml
+kubectl delete -f ./role-based-api/50-svc-sre.yaml
+
+
 kubectl delete ns gloo-mesh --context $CLUSTER_1
 kubectl delete ns gloo-mesh --context $CLUSTER_2

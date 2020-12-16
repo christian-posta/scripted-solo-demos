@@ -1,0 +1,27 @@
+apiVersion: rbac.enterprise.mesh.gloo.solo.io/v1alpha1
+kind: Role
+metadata:
+  name: traffic-target-consumer-role
+  namespace: gloo-mesh
+spec:
+  # A traffic target consumer has the ability to configure policies that affect the network edge between
+  # a specific workload and an upstream traffic target.
+  trafficPolicyScopes:
+    - trafficPolicyActions:
+        - RETRIES
+        - REQUEST_TIMEOUT
+      trafficTargetSelectors:
+        # The absence of kubeServiceMatcher disallows selecting traffic targets by kubeServiceMatcher
+        - kubeServiceRefs:
+            services:
+              - name: ratings
+                namespace: bookinfo
+                clusterName: "*"
+      workloadSelectors:
+        - labels:
+            app: productpage
+            version: v1
+          namespaces:
+            - bookinfo
+          clusters:
+            - "*"
