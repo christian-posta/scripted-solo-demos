@@ -1,0 +1,1 @@
+gcloud compute addresses describe $1 --region us-west1

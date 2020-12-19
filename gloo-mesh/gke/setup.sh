@@ -1,7 +1,8 @@
 . ./env.sh
 
 # context and trust domain as params
-./install-istio-into-context.sh $CLUSTER_1 cluster1
+#./install-istio-into-context.sh $CLUSTER_1 cluster1
+./install-istio-1.8-into-context.sh $CLUSTER_1 cluster1 35.247.74.134
 # sleep to let operator kick in
 sleep 5s
 kubectl --context $CLUSTER_1 -n istio-system rollout status deploy/istiod 
@@ -9,7 +10,8 @@ kubectl --context $CLUSTER_1 -n istio-system rollout status deploy/istiod
 
 
 # context and trust domain as params
-./install-istio-into-context.sh $CLUSTER_2 cluster2
+#./install-istio-into-context.sh $CLUSTER_2 cluster2
+./install-istio-1.8-into-context.sh $CLUSTER_2 cluster2 34.83.69.23
 # sleep to let operator kick in
 sleep 5s
 kubectl --context $CLUSTER_2 -n istio-system rollout status deploy/istiod

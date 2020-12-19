@@ -28,7 +28,9 @@ kubectl apply -f user/clusterrolebinding.yaml
 
 # creating users
 echo "creating default users"
-. ./user/create-default-users.sh
+pushd ./user
+. ./create-default-users.sh
+popd ./user
 
 kubectl port-forward -n gloo-mesh svc/gloo-mesh-console 8090  > /dev/null 2>&1 &
 echo "Gloo Mesh read-only UI available on http://localhost:8090/"

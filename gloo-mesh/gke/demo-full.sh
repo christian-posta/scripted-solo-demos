@@ -19,9 +19,7 @@ run "meshctl cluster register --cluster-name $CLUSTER_1_NAME --remote-context $C
 run "meshctl cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 desc "Now we should have discovered the meshes"
-run "kubectl get kubernetesclusters -n gloo-mesh"
 run "kubectl get meshes -n gloo-mesh"
-run "kubectl get workloads -n gloo-mesh"
 
 desc "Now let's look at federating the clusters"
 
@@ -132,8 +130,6 @@ run "cat resources/reviews-tp-c1-c2.yaml"
 
 desc "Let's apply it and see what resources it creates"
 run "kubectl apply -f resources/reviews-tp-c1-c2.yaml"
-run "kubectl get virtualservice -A --context $CLUSTER_1"
-run "kubectl get virtualservice -A -o yaml --context $CLUSTER_1"
 
 desc "Damn! We didn't enable traffic for cluster 2 for reviews!"
 run "kubectl apply -f resources/enable-reviews-cluster-2.yaml"

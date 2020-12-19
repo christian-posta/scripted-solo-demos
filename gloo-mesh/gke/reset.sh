@@ -8,15 +8,20 @@ kubectl delete -f resources/peerauth-strict.yaml --context $CLUSTER_2
 kubectl --context $CLUSTER_1 patch deployment reviews-v1  --type json   -p '[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}]'
 kubectl --context $CLUSTER_1 patch deployment reviews-v2  --type json   -p '[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}]'
 
+
+
 #############################################
 # traffic policy
 #############################################
+kubectl delete trafficpolicy -n gloo-mesh --all --context $MGMT_CONTEXT
+kubectl delete trafficpolicy -n default --all --context $MGMT_CONTEXT
 kubectl delete virtualservices.networking.istio.io  reviews -n default --context $CLUSTER_1
 
 
 #############################################
 # Access Control
 #############################################
+kubectl delete accesspolicy -n gloo-mesh --all --context $MGMT_CONTEXT
 kubectl delete authorizationpolicies global-access-control  -n istio-system --context $CLUSTER_1
 kubectl delete authorizationpolicies global-access-control  -n istio-system --context $CLUSTER_2
 
@@ -49,15 +54,13 @@ kubectl delete secret -n gloo-mesh $CLUSTER_1_NAME --context $MGMT_CONTEXT
 kubectl delete secret -n gloo-mesh $CLUSTER_2_NAME --context $MGMT_CONTEXT
 
 
-kubectl delete trafficpolicy -n gloo-mesh --all --context $MGMT_CONTEXT
-kubectl delete trafficpolicy -n default --all --context $MGMT_CONTEXT
+
 kubectl delete failoverservices.networking.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
-kubectl delete accesspolicies -n gloo-mesh --context $MGMT_CONTEXT
 kubectl delete meshes.discovery.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
 kubectl delete kubernetesclusters.multicluster.solo.io -A --all --context $MGMT_CONTEXT
 kubectl delete workloads.discovery.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
 kubectl delete traffictargets.discovery.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
-kubectl delete wasmdeployments.enterprise.networking.mesh.gloo.solo.io -A --all --context $MGMT_CONTEXT
+kubectl delete wasmdeployment  -A --all --context $MGMT_CONTEXT
 
 
 #############################################
@@ -66,6 +69,11 @@ kubectl delete wasmdeployments.enterprise.networking.mesh.gloo.solo.io -A --all 
 kubectl delete -f ./role-based-api/02-trafficpolicy-fault-injection-sre.yaml
 kubectl delete -f ./role-based-api/50-svc-sre.yaml
 
+#############################################
+# Web Assembly
+#############################################
+kubectl delete wasmdeployments 
+kubectl --context $CLUSTER_1 apply -f https://raw.githubusercontent.com/istio/istio/1.7.3/samples/bookinfo/platform/kube/bookinfo.yaml -l 'app,version notin (v3)'
 
 kubectl delete ns gloo-mesh --context $CLUSTER_1
 kubectl delete ns gloo-mesh --context $CLUSTER_2

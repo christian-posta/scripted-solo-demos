@@ -2,7 +2,7 @@ apiVersion: networking.mesh.gloo.solo.io/v1alpha2
 kind: AccessPolicy
 metadata:
   namespace: gloo-mesh
-  name: productpage
+  name: productpage-two
 spec:
   sourceSelector:
   - kubeServiceAccountRefs:
