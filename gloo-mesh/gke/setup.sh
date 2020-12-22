@@ -38,6 +38,8 @@ until [ $(kubectl --context $CLUSTER_2 get pods -o jsonpath='{range .items[*].st
   sleep 1
 done
 
+kubectl apply --context $CLUSTER_1 -n default -f ./resources/bootstrap-ecds-cm.yaml
+kubectl apply --context $CLUSTER_2 -n default -f ./resources/bootstrap-ecds-cm.yaml
 
 # create smh cluster
 #kind create cluster --name smh-management

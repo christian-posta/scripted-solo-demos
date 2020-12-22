@@ -73,7 +73,15 @@ kubectl delete -f ./role-based-api/50-svc-sre.yaml
 # Web Assembly
 #############################################
 kubectl delete wasmdeployments 
+kubectl --context $CLUSTER_1 patch deployment reviews-v2  --type json   -p '[{"op": "remove", "path": "/spec/template/metadata/annotations/[sidecar.istio.io/bootstrapOverride]"}]'
+
 kubectl --context $CLUSTER_1 apply -f https://raw.githubusercontent.com/istio/istio/1.7.3/samples/bookinfo/platform/kube/bookinfo.yaml -l 'app,version notin (v3)'
+
+#wasme undeploy istio --id myfilter --namespace bookinfo
+#wasme undeploy istio --id myfilter2 --namespace bookinfo
+rm -fr ./filter
+
+
 
 kubectl delete ns gloo-mesh --context $CLUSTER_1
 kubectl delete ns gloo-mesh --context $CLUSTER_2
