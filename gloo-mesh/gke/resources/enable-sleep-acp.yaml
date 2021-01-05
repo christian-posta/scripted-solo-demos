@@ -1,0 +1,18 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: AccessPolicy
+metadata:
+  namespace: gloo-mesh
+  name: istio-ingressgateway
+spec:
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+        - name: sleep
+          namespace: default
+          clusterName: cluster-1
+  destinationSelector:
+  - kubeServiceMatcher:
+      namespaces:
+      - default
+      labels:
+        service: reviews
