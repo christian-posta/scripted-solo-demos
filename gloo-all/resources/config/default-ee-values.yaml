@@ -13,6 +13,8 @@ gloo:
         # and disallow hops between cluster for k8s load balancing
         # https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
         externalTrafficPolicy: Local
+      podTemplate:
+        probes: true
   crds:
     create: true
 devPortal:

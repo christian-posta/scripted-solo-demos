@@ -1,5 +1,7 @@
 spec:
   httpGateway:
     options:
+      healthCheck:
+        path: /envoy/healthz    
       httpConnectionManagerSettings:
         useRemoteAddress: true
