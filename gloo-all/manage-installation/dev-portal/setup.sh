@@ -12,7 +12,8 @@ licenseKey:
 EOF
 
 kubectl create namespace dev-portal
-helm install dev-portal dev-portal/dev-portal --version 0.4.13 --create-namespace -n dev-portal --values /tmp/dev-portal-values.yaml
+# previous was 0.4.13
+helm install dev-portal dev-portal/dev-portal --version 0.5.0 --create-namespace -n dev-portal --values /tmp/dev-portal-values.yaml
 
 DIR=$(dirname ${BASH_SOURCE})
 $DIR/../../60-dev-portal/reset.sh
