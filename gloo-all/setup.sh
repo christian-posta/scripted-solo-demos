@@ -33,9 +33,19 @@ $DIR/manage-installation/consul/setup.sh
 $DIR/manage-installation/cert-manager/setup.sh
 
 #########################
+# gogs
+#########################
+$DIR/manage-installation/gogs/setup.sh
+
+#########################
 # apply any additional patches
 #########################
 $DIR/resources/patches/apply.sh
+
+#########################
+# argo
+#########################
+$DIR/manage-installation/argocd/setup.sh
 
 
 $DIR/prepare-certs.sh ceposta-gloo-demo

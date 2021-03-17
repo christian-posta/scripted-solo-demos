@@ -33,6 +33,11 @@ killall kubectl
 . ./70-rate-limiting/reset.sh
 
 #########################
+# reset rate-limit
+#########################
+. ./80-argo-cd-integration/reset.sh
+
+#########################
 # reset VS/authconfig
 #########################
 kubectl delete virtualservice -n gloo-system --all

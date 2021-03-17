@@ -28,6 +28,16 @@ $DIR/manage-installation/consul/cleanup.sh
 $DIR/manage-installation/cert-manager/cleanup.sh
 
 #########################
+# gogs
+#########################
+$DIR/manage-installation/gogs/cleanup.sh
+
+#########################
+# argo
+#########################
+$DIR/manage-installation/argocd/cleanup.sh
+
+#########################
 # delete dev-portal
 #########################
 $DIR/manage-installation/dev-portal/cleanup.sh

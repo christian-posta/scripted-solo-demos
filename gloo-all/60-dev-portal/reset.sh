@@ -27,13 +27,13 @@ kubectl apply -f $DIR/complete/routes-default.yaml
 
 ## hack until we have better retry for the k8s api server
 ## race
-cat << EOF | kubectl apply -f -
-apiVersion: v1
-binaryData:
-  image: ewog
-kind: ConfigMap
-metadata:
-  name: dev-portal-petstore-image
-  namespace: dev-portal
----
-EOF
+#cat << EOF | kubectl apply -f -
+#apiVersion: v1
+#binaryData:
+#  image: ewog
+#kind: ConfigMap
+#metadata:
+#  name: dev-portal-petstore-image
+#  namespace: dev-portal
+#---
+#EOF
