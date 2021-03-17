@@ -23,6 +23,7 @@ ceposta-devportal-demo.solo.io
 
 gloo-gogs.ceposta.demo.solo.io
 gloo-argocd.ceposta.demo.solo.io
+gloo-petclinic.ceposta.demo.solo.io
 
 ## Creating a new static IP on Gcloud:
 gcloud compute addresses create ceposta-gloo-demo-ip --region us-west1
