@@ -11,7 +11,7 @@ run "ls -l"
 run "ls -l ./resources"
 
 desc "Let's add a gloo routing config"
-run "cp $DIR_NAME/../resources/gloo/petclinic-vs.yaml ./resources"
+run "cp $DIR_NAME/petclinic-vs.yaml ./resources"
 
 run "ls -l ./resources"
 
@@ -21,7 +21,7 @@ run "git push"
 
 
 desc "Let's change the routing to the new vets service"
-run "cp $DIR_NAME/../resources/gloo/petclinic-vs-vets.yaml ./resources/petclinic-vs.yaml"
+run "cp $DIR_NAME/petclinic-vs-vets.yaml ./resources/petclinic-vs.yaml"
 
 run "ls -l ./resources"
 
