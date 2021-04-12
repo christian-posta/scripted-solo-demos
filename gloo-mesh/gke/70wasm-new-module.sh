@@ -5,10 +5,10 @@
 SOURCE_DIR=$PWD
 source env.sh
 kubectl config use-context $MGMT_CONTEXT
-
-WASME='meshctl wasm'
+MESHCTL="./meshctl"
+WASME='$MESHCTL wasm'
 LANGUAGE=${1:-assemblyscript}
-CURRENT_BUILD=$(meshctl wasm list | grep ceposta/mesh-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
+CURRENT_BUILD=$($MESHCTL wasm list | grep ceposta/mesh-add-header | awk '{ print $2}' | cut -d '.' -f 2 | sort -nr | head -n 1)
 DEMO_BUILD_NUMBER=$(($CURRENT_BUILD+1))
 #DEMO_BUILD_NUMBER=11
 

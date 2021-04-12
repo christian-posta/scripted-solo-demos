@@ -4,7 +4,7 @@
 
 SOURCE_DIR=$PWD
 source env.sh
-
+MESHCTL="./meshctl"
 kubectl config use-context $MGMT_CONTEXT
 
 desc "Welcome to Serivce Mesh Hub demo!"
@@ -43,9 +43,9 @@ backtotop
 desc "Let's register our two clusters"
 read -s
 
-run "meshctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
+run "$MESHCTL cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
 
-run "meshctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
+run "$MESHCTL cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 
 ##############################

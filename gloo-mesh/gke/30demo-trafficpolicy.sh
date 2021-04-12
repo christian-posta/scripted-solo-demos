@@ -4,7 +4,7 @@
 
 SOURCE_DIR=$PWD
 source env.sh
-
+MESHCTL="./meshctl"
 kubectl config use-context $MGMT_CONTEXT
 
 desc "In the previous demos, we federated the meshes and enabled access"
@@ -59,8 +59,8 @@ backtotop
 desc "It's possible we end up with traffic rules cross cluster that make it difficult to understand"
 read -s
 desc "We can use meshctl describe to get the rules for a particular service"
-run "meshctl describe --help"
+run "$MESHCTL describe --help"
 
 backtotop
 desc "Let's see what rules are on the reviews service"
-run "meshctl describe traffictarget reviews-default-cluster-1"
+run "$MESHCTL describe traffictarget reviews-default-cluster-1"

@@ -3,14 +3,14 @@
 . $(dirname ${BASH_SOURCE})/../../util.sh
 
 SOURCE_DIR=$PWD
-
+MESHCTL="./meshctl"
 source env.sh
 kubectl config use-context $MGMT_CONTEXT
 
 # EKS-d running locally needs to be registered with host.docker.internal
-meshctl cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT
+$MESHCTL cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT
 
-meshctl cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT
+$MESHCTL cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT
 
 kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_1 > /dev/null 2>&1
 kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_2 > /dev/null 2>&1

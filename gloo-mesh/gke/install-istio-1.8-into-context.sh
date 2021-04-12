@@ -5,7 +5,7 @@ STATIC_IP=$3
 echo "********************************"
 echo "Install Istio onto $CLUSTER_1"
 echo "********************************"
-istioctl1.8 --context $CLUSTER_1 operator init
+istioctl1.8.1 --context $CLUSTER_1 operator init
 
 kubectl --context $CLUSTER_1 create ns istio-system
 

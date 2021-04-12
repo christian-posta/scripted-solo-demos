@@ -7,16 +7,16 @@ source env.sh
 echo "Make sure management plane cluster is up and GM installed"
 echo "UI should be on http://localhost:8090"
 read -s
-
+MESHCTL="./meshctl"
 kubectl config use-context $MGMT_CONTEXT
 
 backtotop
 desc "Let's register our two clusters"
 read -s
 
-run "meshctl cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
+run "$MESHCTL cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
 
-run "meshctl cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
+run "$MESHCTL cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
 
 desc "Now we should have discovered the meshes"
 run "kubectl get meshes -n gloo-mesh"

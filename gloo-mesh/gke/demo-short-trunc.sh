@@ -8,49 +8,9 @@ source env.sh
 echo "Make sure management plane cluster is up and GM installed"
 echo "UI should be on http://localhost:8090"
 read -s
-MESHCTL="./meshctl"
+
 kubectl config use-context $MGMT_CONTEXT
 
-backtotop
-desc "Let's register our two clusters"
-read -s
-
-# EKS-d running locally needs to be registered with host.docker.internal
-run "$MESHCTL cluster register --cluster-name $CLUSTER_1_NAME --remote-context $CLUSTER_1 --mgmt-context $MGMT_CONTEXT"
-
-run "$MESHCTL cluster register --cluster-name $CLUSTER_2_NAME --remote-context $CLUSTER_2 --mgmt-context $MGMT_CONTEXT"
-
-#############################################
-# Trust Federation
-#############################################
-
-kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_1 > /dev/null 2>&1
-kubectl apply -f resources/peerauth-strict.yaml --context $CLUSTER_2 > /dev/null 2>&1
-
-backtotop
-desc "Right now, the two meshes have different root trusts"
-read -s
-
-
-backtotop
-desc "The VirtualMesh CRD allows us to federate  and unify the two meshes"
-read -s
-
-run "cat resources/virtual-mesh.yaml"
-run "kubectl apply -f resources/virtual-mesh.yaml"
-
-. ./check-virtualmesh.sh
-
-desc "restarting workloads for new certs..."
-kubectl delete po --wait=false -n default --all --context $CLUSTER_1 > /dev/null 2>&1
-kubectl delete po --wait=false -n default --all --context $CLUSTER_2 > /dev/null 2>&1
-
-kubectl --context $CLUSTER_1 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
-kubectl --context $CLUSTER_2 -n istio-system delete pod -l app=istio-ingressgateway > /dev/null 2>&1
-
-run "kubectl get po -n default -w --context $CLUSTER_1"
-
-backtotop
 desc "Using this federated mesh, we can do things like control the access and traffic policies "
 read -s
 

@@ -7,6 +7,10 @@ source env.sh
 
 kind create cluster --name smh-management
 
+pushd  /Users/ceposta/go/src/github.com/christian-posta/docker-tuntap-osx/
+. ./install-metallb.sh
+popd
+
 kubectl config use-context $MGMT_CONTEXT
 
 helm repo add gloo-mesh-enterprise https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise
