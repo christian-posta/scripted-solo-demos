@@ -5,7 +5,7 @@
 SOURCE_DIR=$PWD
 source env.sh
 
-kind create cluster --name smh-management
+kind create cluster --name smh-management --image  kindest/node:v1.19.11
 
 pushd  /Users/ceposta/go/src/github.com/christian-posta/docker-tuntap-osx/
 . ./install-metallb.sh

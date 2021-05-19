@@ -83,6 +83,41 @@ kubectl --context $CLUSTER_1 apply -f https://raw.githubusercontent.com/istio/is
 rm -fr ./filter
 
 
+#############################################
+# Cluster Roles
+#############################################
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep cert-agent | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep cert-agent | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep smh-remote-access | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep smh-remote-access | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep gloomesh-remote-access | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep gloomesh-remote-access | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrole $(kubectl --context $CLUSTER_1 get clusterrole | grep wasm-agent | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrole $(kubectl --context $CLUSTER_2 get clusterrole | grep wasm-agent | awk '{print $1}') 
+ 
+ 
+
+#############################################
+# Cluster Role Bindings
+#############################################
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep cert-agent | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep cert-agent | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep cluster-1 | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep cluster-2 | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep management-cluster | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep management-cluster | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep management-plane | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep management-plane | awk '{print $1}')
+
+kubectl --context $CLUSTER_1 delete clusterrolebinding $(kubectl --context $CLUSTER_1 get clusterrolebinding |  grep wasm-agent | awk '{print $1}')
+kubectl --context $CLUSTER_2 delete clusterrolebinding $(kubectl --context $CLUSTER_2 get clusterrolebinding | grep wasm-agent | awk '{print $1}')
+
 
 kubectl delete ns gloo-mesh --context $CLUSTER_1
 kubectl delete ns gloo-mesh --context $CLUSTER_2
