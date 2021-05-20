@@ -26,17 +26,17 @@ run "code ."
 
 
 desc "Let's build our project"
-run "$WASME build $LANGUAGE . -t webassemblyhub.io/ceposta/mesh-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
+run "../$WASME build $LANGUAGE . -t webassemblyhub.io/ceposta/mesh-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 # wasme build assemblyscript . -t webassemblyhub.io/ceposta/mesh-add-header:v0.15
 # wasme build tinygo . -t webassemblyhub.io/ceposta/mesh-add-header:v0.15
 backtotop
 
 desc "Let's list our locally built wasm modules"
-run "$WASME list"
+run "../$WASME list"
 backtotop
 
 desc "Now let's push it to the webassemblyhub registry"
-run "$WASME push webassemblyhub.io/ceposta/mesh-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
+run "../$WASME push webassemblyhub.io/ceposta/mesh-add-header:v0.${DEMO_BUILD_NUMBER:-1}"
 backtotop
 popd 
 
