@@ -1,3 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: purchase-history
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,6 +25,7 @@ spec:
         prod: stable
       annotations:
     spec:
+      serviceAccountName: purchase-history
       containers:
       - name: purchase-history
         image: nicholasjackson/fake-service:v0.7.8
