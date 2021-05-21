@@ -12,5 +12,6 @@ kubectl --context $1 delete clusterrole $(kubectl --context $1 get enterprise-ag
 kubectl --context $1 delete clusterrolebinding $(kubectl --context $1 get clusterrolebinding |  grep enterprise-agent | awk '{print $1}')
 
 echo "Uninstall Istio..."
-istioctl1.8 --context $1 x uninstall --purge
+istioctl1.8 --context $1 x uninstall -y --purge
+kubectl --context $1 delete ns istio-system
 

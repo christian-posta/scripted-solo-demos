@@ -27,9 +27,7 @@ kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/enterprise-ne
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/dashboard
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/rbac-webhook
 
-meshctl check
-
 kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-ceposta.yaml
-
+meshctl check
 #kubectl port-forward -n gloo-mesh svc/dashboard 8090  > /dev/null 2>&1 &
 #echo "Gloo Mesh read-only UI available on http://localhost:8090/"
