@@ -15,3 +15,7 @@ echo "Uninstall Istio..."
 istioctl1.8 --context $1 x uninstall -y --purge
 kubectl --context $1 delete ns istio-system
 
+echo "Uninstall Gloo edge"
+helm uninstall gloo-edge -n gloo-system --kube-context $1
+kubectl --context $1 delete ns gloo-system
+

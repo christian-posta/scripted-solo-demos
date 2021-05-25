@@ -18,3 +18,8 @@ echo "Registering cluster..."
 echo "Using Relay: $RELAY_ADDRESS"
 
 meshctl cluster register enterprise --remote-context=$CLUSTER_2  --relay-server-address $RELAY_ADDRESS $CLUSTER_2_NAME
+
+
+# Install Gloo Edge for reaching the cluster
+source ~/bin/gloo-license-key-env 
+helm install gloo-edge glooe/gloo-ee --kube-context $CLUSTER_2 -f ./gloo/values-east.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE

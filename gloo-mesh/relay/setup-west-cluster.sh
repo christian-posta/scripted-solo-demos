@@ -17,3 +17,8 @@ kubectl --context $CLUSTER_1 apply -k resources/sample-apps/overlays/cluster1 -n
 echo "Registering cluster..."
 echo "Using Relay: $RELAY_ADDRESS"
 meshctl cluster register enterprise --remote-context=$CLUSTER_1  --relay-server-address $RELAY_ADDRESS $CLUSTER_1_NAME
+
+
+# Install Gloo Edge for reaching the cluster
+source ~/bin/gloo-license-key-env 
+helm install gloo-edge glooe/gloo-ee --kube-context $CLUSTER_1 -f ./gloo/values-west.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
