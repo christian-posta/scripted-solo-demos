@@ -35,13 +35,8 @@ meshctl check
 source ~/bin/gloo-license-key-env 
 helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
 
-## Create demo namespace for config
-kubectl --context $MGMT_CONTEXT create ns demo-config
-
-
-
-kubectl --context $MGMT_CONTEXT apply -f ./gloo/gloo-mesh-ui-us.yaml
-kubectl --context $MGMT_CONTEXT apply -f ./gloo/gloo-mesh-ui-vs.yaml
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gloo-mesh-ui-us.yaml
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gloo-mesh-ui-vs.yaml
 echo "Gloo Mesh read-only UI available on http://dashboard.mesh.ceposta.solo.io/"
 
 #kubectl port-forward -n gloo-mesh svc/dashboard 8090  > /dev/null 2>&1 &

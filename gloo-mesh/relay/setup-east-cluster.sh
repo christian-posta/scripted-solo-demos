@@ -19,6 +19,16 @@ echo "Using Relay: $RELAY_ADDRESS"
 
 meshctl cluster register enterprise --remote-context=$CLUSTER_2  --relay-server-address $RELAY_ADDRESS $CLUSTER_2_NAME
 
+kubectl --context $CLUSTER_2 apply -f ./resources/gloo-ingress/web-api-ingress.yaml
+
+## Set up demo sleep app
+kubectl --context $CLUSTER_2 create ns sleep
+kubectl --context $CLUSTER_2 label ns sleep istio-injection=enabled
+kubectl --context $CLUSTER_2 apply -f resources/sleep.yaml -n sleep
+
+kubectl --context $CLUSTER_2 label ns default istio-injection-
+kubectl --context $CLUSTER_2 apply -f resources/sleep.yaml -n default
+
 
 # Install Gloo Edge for reaching the cluster
 source ~/bin/gloo-license-key-env 

@@ -30,6 +30,5 @@ echo "Creating the user..."
 
 kubectl --context $MGMT_CONTEXT -n gogs exec -it deploy/gogs -- /bin/sh -c 'gosu git ./gogs admin create-user --name ceposta --password admin123 --email christian@solo.io --admin'
 
-kubectl --context $MGMT_CONTEXT apply -f ./resources/gitops/argocd/argocd-vs.yaml
-kubectl --context $MGMT_CONTEXT apply -f ./resources/gitops/gogs/gogs-vs.yaml
-echo "WARNING... You need to set up an ingress to expose this argo and gogs server"
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/argocd-vs.yaml
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gogs-vs.yaml

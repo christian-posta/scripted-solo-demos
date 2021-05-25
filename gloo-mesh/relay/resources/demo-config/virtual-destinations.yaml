@@ -2,11 +2,11 @@ apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
 kind: VirtualDestination
 metadata:
   name: web-api-global-routing
-  namespace: gloo-mesh
+  namespace: demo-config
 spec:
-  hostname: web-api.global.solo.io
+  hostname: web-api.mesh.ceposta.solo.io
   port:
-    number: 9080
+    number: 80
     protocol: http
   localized:
     outlierDetection:
@@ -16,6 +16,8 @@ spec:
       baseEjectionTime: 120s
     destinationSelectors:
     - kubeServiceMatcher:
+        namespaces:
+        - istioinaction
         labels:
           app: web-api
   virtualMesh:

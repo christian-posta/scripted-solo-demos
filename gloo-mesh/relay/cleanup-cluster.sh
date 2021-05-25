@@ -19,3 +19,4 @@ echo "Uninstall Gloo edge"
 helm uninstall gloo-edge -n gloo-system --kube-context $1
 kubectl --context $1 delete ns gloo-system
 
+
