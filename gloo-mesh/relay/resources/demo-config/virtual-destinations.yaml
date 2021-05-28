@@ -7,13 +7,14 @@ spec:
   hostname: web-api.mesh.ceposta.solo.io
   port:
     number: 80
+    targetNumber: 8080
     protocol: http
   localized:
     outlierDetection:
       consecutiveErrors: 1
       maxEjectionPercent: 100
       interval: 5s
-      baseEjectionTime: 120s
+      baseEjectionTime: 60s
     destinationSelectors:
     - kubeServiceMatcher:
         namespaces:

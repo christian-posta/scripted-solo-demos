@@ -1,6 +1,8 @@
 gloo:
   gatewayProxies:
     gatewayProxy:
+      failover: 
+        enabled: true
       readConfig: true
       service:
         httpPort: 80

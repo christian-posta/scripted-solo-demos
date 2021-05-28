@@ -35,8 +35,19 @@ meshctl check
 source ~/bin/gloo-license-key-env 
 helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
 
+## Install Gloo Edge Federation to manage GE on leaf clusters
+helm repo add gloo-fed https://storage.googleapis.com/gloo-fed-helm
+helm repo update
+kubectl --context $MGMT_CONTEXT create namespace gloo-fed
+helm install -n gloo-fed gloo-fed gloo-fed/gloo-fed --kube-context $MGMT_CONTEXT --version 1.7.7 --set license_key=$GLOO_LICENSE
+
+## We need to set up mTLS between the gloo edge gateways (between two clusters)
+## TODO: create and distribute certs
+
+
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gloo-mesh-ui-us.yaml
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gloo-mesh-ui-vs.yaml
+
 echo "Gloo Mesh read-only UI available on http://dashboard.mesh.ceposta.solo.io/"
 
 #kubectl port-forward -n gloo-mesh svc/dashboard 8090  > /dev/null 2>&1 &

@@ -19,9 +19,6 @@ echo "Using Relay: $RELAY_ADDRESS"
 meshctl cluster register enterprise --remote-context=$CLUSTER_1  --relay-server-address $RELAY_ADDRESS $CLUSTER_1_NAME
 
 
-kubectl --context $CLUSTER_1 apply -f ./resources/gloo-ingress/web-api-ingress.yaml
-
-
 ## Set up demo sleep app
 kubectl --context $CLUSTER_1 create ns sleep
 kubectl --context $CLUSTER_1 label ns sleep istio-injection=enabled
@@ -31,3 +28,13 @@ kubectl --context $CLUSTER_1 apply -f resources/sleep.yaml -n default
 # Install Gloo Edge for reaching the cluster
 source ~/bin/gloo-license-key-env 
 helm install gloo-edge glooe/gloo-ee --kube-context $CLUSTER_1 -f ./gloo/values-west.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+
+kubectl --context $CLUSTER_1 apply -f ./resources/gloo-ingress/web-api-ingress.yaml
+
+# Register cluster for gloo federation
+# unfortunately, glooctl doesn't allow for context passing, so we ahve to switch to it
+kubectl config use-context $MGMT_CONTEXT
+glooctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1
+kubectl --context $CLUSTER_1 apply -f ./gloo/certs/secrets/edge-west-failover-downstream.yaml
+kubectl --context $CLUSTER_1 apply -f ./gloo/certs/secrets/edge-west-failover-upstream.yaml
+kubectl --context $CLUSTER_1 apply -f ./resources/gloo-ingress/web-api-upstream.yaml
