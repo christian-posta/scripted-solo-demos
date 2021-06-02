@@ -1,8 +1,8 @@
 apiVersion: fed.solo.io/v1
 kind: FailoverScheme
 metadata:
- name: web-api-failover
- namespace: gloo-fed
+ name: web-api-failover-w2e
+ namespace: demo-config
 spec:
  failoverGroups:
  - priorityGroup:

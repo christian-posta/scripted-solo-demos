@@ -18,10 +18,10 @@ helm repo update
 kubectl create namespace gloo-mesh
 
 # Helm Install GM
-helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta9 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true
+helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta11 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true
 
 # serviceType=LoadBalancer might be default now
-# helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta9 --set licenseKey=${GLOO_MESH_LICENSE} --set enterprise-networking.enterpriseNetworking.serviceType=LoadBalancer 
+# helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta11 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true --force
 
 
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/enterprise-networking 
