@@ -32,3 +32,8 @@ kubectl --context $MGMT_CONTEXT -n gogs exec -it deploy/gogs -- /bin/sh -c 'gosu
 
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/argocd-vs.yaml
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo-ingress/gogs-vs.yaml
+kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-argo.yaml
+
+
+echo "Set up gogs"
+./setup-prep-gogs.sh
