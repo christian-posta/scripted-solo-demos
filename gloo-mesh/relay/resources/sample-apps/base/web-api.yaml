@@ -33,7 +33,7 @@ spec:
         - name: "LISTEN_ADDR"
           value: "0.0.0.0:8080"
         - name: "UPSTREAM_URIS"
-          value: "http://recommendation:8080"
+          value: "http://recommendation.mesh.ceposta.solo.io"          
         - name: "NAME"
           value: "web-api"
         - name: "MESSAGE"
