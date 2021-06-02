@@ -7,10 +7,18 @@ spec:
   profile: minimal
   hub: gcr.io/istio-enterprise
   tag: 1.8.5-fips
+  values:
+    global:
+      # needed for annotating istio metrics with cluster
+      multiCluster:
+        clusterName: cluster-1    
   meshConfig:
     enableAutoMtls: true
     defaultConfig:
+      envoyMetricsService:
+        address: enterprise-agent.gloo-mesh:9977      
       proxyMetadata:
+        GLOO_MESH_CLUSTER_NAME: cluster-1        
         ISTIO_META_DNS_CAPTURE: "true"
         ISTIO_META_DNS_AUTO_ALLOCATE: "true"
   components:
