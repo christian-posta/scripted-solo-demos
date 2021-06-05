@@ -29,11 +29,15 @@ kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/dashboard
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/rbac-webhook
 
 kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-ceposta.yaml
-meshctl check
+
 
 ## Let's install Gloo Edge to expose argo/gogs
 source ~/bin/gloo-license-key-env 
+helm repo add glooe http://storage.googleapis.com/gloo-ee-helm
+helm repo update
 helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+
+kubectl --context $MGMT_CONTEXT -n gloo-system rollout status deploy/gloo
 
 ## Install Gloo Edge Federation to manage GE on leaf clusters
 helm repo add gloo-fed https://storage.googleapis.com/gloo-fed-helm
