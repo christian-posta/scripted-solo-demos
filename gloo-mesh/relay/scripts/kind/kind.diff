@@ -1,0 +1,96 @@
+diff --git a/gloo-mesh/relay/gloo/values-east.yaml b/gloo-mesh/relay/gloo/values-east.yaml
+index 0c12eda..5dd4de8 100644
+--- a/gloo-mesh/relay/gloo/values-east.yaml
++++ b/gloo-mesh/relay/gloo/values-east.yaml
+@@ -9,7 +9,6 @@ gloo:
+         httpsPort: 443
+         type: LoadBalancer      
+         # if we change this on gcloud, we need to update
+-        loadBalancerIP: 34.75.208.239
+ 
+         # because we want to preserve the client's IP address
+         # and disallow hops between cluster for k8s load balancing
+diff --git a/gloo-mesh/relay/gloo/values-mgmtplane.yaml b/gloo-mesh/relay/gloo/values-mgmtplane.yaml
+index 6c46977..18a168d 100644
+--- a/gloo-mesh/relay/gloo/values-mgmtplane.yaml
++++ b/gloo-mesh/relay/gloo/values-mgmtplane.yaml
+@@ -7,7 +7,7 @@ gloo:
+         httpsPort: 443
+         type: LoadBalancer      
+         # if we change this on gcloud, we need to update
+-        loadBalancerIP: 34.134.94.165
++        #        loadBalancerIP: 34.134.94.165
+ 
+         # because we want to preserve the client's IP address
+         # and disallow hops between cluster for k8s load balancing
+diff --git a/gloo-mesh/relay/gloo/values-west.yaml b/gloo-mesh/relay/gloo/values-west.yaml
+index ac0ee82..8e51599 100644
+--- a/gloo-mesh/relay/gloo/values-west.yaml
++++ b/gloo-mesh/relay/gloo/values-west.yaml
+@@ -9,7 +9,6 @@ gloo:
+         httpsPort: 443
+         type: LoadBalancer      
+         # if we change this on gcloud, we need to update
+-        loadBalancerIP: 34.145.107.78
+ 
+         # because we want to preserve the client's IP address
+         # and disallow hops between cluster for k8s load balancing
+diff --git a/gloo-mesh/relay/resources/admin-binding-ceposta.yaml b/gloo-mesh/relay/resources/admin-binding-ceposta.yaml
+index c77a0f2..62306f9 100644
+--- a/gloo-mesh/relay/resources/admin-binding-ceposta.yaml
++++ b/gloo-mesh/relay/resources/admin-binding-ceposta.yaml
+@@ -15,4 +15,4 @@ spec:
+     namespace: gloo-mesh
+   subjects:
+   - kind: User
+-    name: christian.posta@solo.io
+\ No newline at end of file
++    name: kubernetes-admin
+diff --git a/gloo-mesh/relay/resources/istio-control-plane-fips.yaml b/gloo-mesh/relay/resources/istio-control-plane-fips.yaml
+index 74c4755..e9c126c 100644
+--- a/gloo-mesh/relay/resources/istio-control-plane-fips.yaml
++++ b/gloo-mesh/relay/resources/istio-control-plane-fips.yaml
+@@ -5,8 +5,8 @@ metadata:
+   namespace: istio-system
+ spec:
+   profile: minimal
+-  hub: gcr.io/istio-enterprise
+-  tag: 1.8.5-fips
++  #  hub: gcr.io/istio-enterprise
++  #tag: 1.8.5-fips
+   values:
+     global:
+       # needed for annotating istio metrics with cluster
+diff --git a/gloo-mesh/relay/setup-east-cluster.sh b/gloo-mesh/relay/setup-east-cluster.sh
+index ea3a1a3..bbc2daf 100755
+--- a/gloo-mesh/relay/setup-east-cluster.sh
++++ b/gloo-mesh/relay/setup-east-cluster.sh
+@@ -7,7 +7,7 @@ source env.sh
+ source relay-ports.sh
+ 
+ echo "Installing Istio"
+-istioctl1.9 --context $CLUSTER_2 install -y -f resources/istio-control-plane.yaml
++istioctl --context $CLUSTER_2 install -y -f resources/istio-control-plane.yaml
+ 
+ echo "Installing sample apps"
+ kubectl --context $CLUSTER_2 create ns istioinaction
+diff --git a/gloo-mesh/relay/setup-west-cluster.sh b/gloo-mesh/relay/setup-west-cluster.sh
+index 1918570..6df0ef9 100755
+--- a/gloo-mesh/relay/setup-west-cluster.sh
++++ b/gloo-mesh/relay/setup-west-cluster.sh
+@@ -7,7 +7,7 @@ source env.sh
+ source relay-ports.sh
+ 
+ echo "Installing Istio FIPS 1.8.x"
+-istioctl1.8 --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
++istioctl --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
+ 
+ echo "Installing sample apps"
+ kubectl --context $CLUSTER_1 create ns istioinaction
+@@ -37,4 +37,4 @@ kubectl config use-context $MGMT_CONTEXT
+ glooctl cluster register --cluster-name cluster-1 --remote-context $CLUSTER_1
+ kubectl --context $CLUSTER_1 apply -f ./gloo/certs/secrets/edge-west-failover-downstream.yaml
+ kubectl --context $CLUSTER_1 apply -f ./gloo/certs/secrets/edge-west-failover-upstream.yaml
+-kubectl --context $CLUSTER_1 apply -f ./resources/gloo-ingress/web-api-upstream.yaml
+\ No newline at end of file
++kubectl --context $CLUSTER_1 apply -f ./resources/gloo-ingress/web-api-upstream.yaml
