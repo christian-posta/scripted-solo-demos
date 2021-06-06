@@ -1,4 +1,9 @@
 gloo:
+  global:
+    istioSDS:
+      # leave this false until the chart is fixed to inject
+      # the right version of the proxy
+      enabled: true
   gatewayProxies:
     gatewayProxy:
       failover: 
