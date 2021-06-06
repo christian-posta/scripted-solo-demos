@@ -3,7 +3,7 @@ gloo:
     istioSDS:
       # leave this false until the chart is fixed to inject
       # the right version of the proxy
-      enabled: false
+      enabled: true
   gatewayProxies:
     gatewayProxy:
       failover: 
@@ -22,6 +22,7 @@ gloo:
         externalTrafficPolicy: Local
       podTemplate:
         probes: true
+      istioMetaClusterId: cluster-1
   crds:
     create: true
 devPortal:
