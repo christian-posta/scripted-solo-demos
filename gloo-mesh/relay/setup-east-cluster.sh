@@ -41,6 +41,7 @@ kubectl --context $CLUSTER_2 rollout status deploy/gateway-proxy -n gloo-system
 kubectl config use-context $CLUSTER_2
 glooctl istio inject
 
+kubectl --context $CLUSTER_1 -n gloo-system set env deployment/gateway-proxy ISTIO_META_CLUSTER_ID=$CLUSTER_1_NAME
 
 # Register cluster for gloo federation
 # unfortunately, glooctl doesn't allow for context passing, so we ahve to switch to it

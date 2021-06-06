@@ -10,7 +10,7 @@ echo "Installing Istio FIPS 1.8.x"
 istioctl1.8 --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
 
 # enable peer auth
-kubectl --context $CLUSTER_2 apply -f resources/istio/default-peer-authentication.yaml
+kubectl --context $CLUSTER_1 apply -f resources/istio/default-peer-authentication.yaml
 
 echo "Installing sample apps"
 kubectl --context $CLUSTER_1 create ns istioinaction
@@ -37,6 +37,8 @@ kubectl --context $CLUSTER_1 rollout status deploy/gateway-proxy -n gloo-system
 
 kubectl config use-context $CLUSTER_1
 glooctl istio inject
+
+kubectl --context $CLUSTER_1 -n gloo-system set env deployment/gateway-proxy ISTIO_META_CLUSTER_ID=$CLUSTER_1_NAME
 
 # Register cluster for gloo federation
 # unfortunately, glooctl doesn't allow for context passing, so we ahve to switch to it
