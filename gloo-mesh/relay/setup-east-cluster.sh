@@ -9,6 +9,9 @@ source relay-ports.sh
 echo "Installing Istio"
 istioctl1.9 --context $CLUSTER_2 install -y -f resources/istio-control-plane.yaml
 
+# enable peer auth
+kubectl --context $CLUSTER_2 apply -f resources/istio/default-peer-authentication.yaml
+
 echo "Installing sample apps"
 kubectl --context $CLUSTER_2 create ns istioinaction
 kubectl --context $CLUSTER_2 label ns istioinaction istio-injection=enabled
@@ -32,8 +35,12 @@ kubectl --context $CLUSTER_2 apply -f resources/sleep.yaml -n default
 source ~/bin/gloo-license-key-env 
 helm install gloo-edge glooe/gloo-ee --kube-context $CLUSTER_2 -f ./gloo/values-east.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
 
+kubectl --context $CLUSTER_2 rollout status deploy/gloo -n gloo-system
+kubectl --context $CLUSTER_2 rollout status deploy/gateway-proxy -n gloo-system 
 
-kubectl --context $CLUSTER_2 apply -f ./resources/gloo-ingress/web-api-ingress.yaml
+kubectl config use-context $CLUSTER_2
+glooctl istio inject
+
 
 # Register cluster for gloo federation
 # unfortunately, glooctl doesn't allow for context passing, so we ahve to switch to it
@@ -41,4 +48,5 @@ kubectl config use-context $MGMT_CONTEXT
 glooctl cluster register --cluster-name cluster-2 --remote-context $CLUSTER_2
 kubectl --context $CLUSTER_2 apply -f ./gloo/certs/secrets/edge-east-failover-downstream.yaml
 kubectl --context $CLUSTER_2 apply -f ./gloo/certs/secrets/edge-east-failover-upstream.yaml
-kubectl --context $CLUSTER_2 apply -f ./resources/gloo-ingress/web-api-upstream.yaml
+kubectl --context $CLUSTER_2 apply -f ./resources/gloo-ingress/web-api-ingress.yaml
+kubectl --context $CLUSTER_2 apply -f ./resources/gloo-ingress/web-api-upstream-istio-mtls.yaml

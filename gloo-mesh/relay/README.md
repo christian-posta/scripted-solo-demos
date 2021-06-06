@@ -31,3 +31,7 @@ helm upgrade --install enterprise-agent --namespace gloo-mesh --kube-context $CL
 
 helm ls --kube-context $CLUSTER_2 -n gloo-mesh
 helm upgrade --install enterprise-agent --namespace gloo-mesh --kube-context $CLUSTER_2 https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent/enterprise-agent-1.1.0-beta11.tgz 
+
+## Notes when using Gloo Edge + Istio mTLS:
+After running glooctl istio inject, you will need to update the ISTIO_META_CLUSTER_ID from 'Kubernetes' to 'clusteer-1' or 'cluster-2'
+

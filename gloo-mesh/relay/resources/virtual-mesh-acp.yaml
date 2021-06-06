@@ -13,7 +13,7 @@ spec:
     # federate all Destinations to all external meshes
     selectors:
     - {}
-  globalAccessPolicy: DISABLED        
+  globalAccessPolicy: ENABLED    
   meshes:
   - name: istiod-istio-system-cluster-1 
     namespace: gloo-mesh

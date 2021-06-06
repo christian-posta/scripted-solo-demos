@@ -21,7 +21,7 @@ REPO_FOLDER=$(mktemp -d)
 echo "using folder: $REPO_FOLDER"
 
 
-cp -r $DIR/resources/demo-config $REPO_FOLDER/
+cp -r $DIR/resources/failover-config $REPO_FOLDER/
 
 ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo
 
