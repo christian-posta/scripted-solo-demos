@@ -22,7 +22,7 @@ gloo:
         externalTrafficPolicy: Local
       podTemplate:
         probes: true
-      istioMetaClusterId: cluster-1
+      istioMetaClusterId: cluster-2
   crds:
     create: true
 devPortal:
