@@ -105,4 +105,4 @@ index 8e10a9a..6b156a9 100755
 +istioctl --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
  
  # enable peer auth
- kubectl --context $CLUSTER_2 apply -f resources/istio/default-peer-authentication.yaml
+ kubectl --context $CLUSTER_1 apply -f resources/istio/default-peer-authentication.yaml
