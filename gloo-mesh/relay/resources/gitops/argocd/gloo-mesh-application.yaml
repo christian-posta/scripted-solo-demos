@@ -9,5 +9,5 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: demo-config
+    path: failover-config
     repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git
