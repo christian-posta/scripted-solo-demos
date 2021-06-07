@@ -37,3 +37,4 @@ kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-argo.yaml
 
 echo "Set up gogs"
 ./setup-prep-gogs.sh
+./setup-prep-argocd.sh
