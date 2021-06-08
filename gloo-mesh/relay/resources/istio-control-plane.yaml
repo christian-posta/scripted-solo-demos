@@ -26,6 +26,8 @@ spec:
     - name: east-west-gateway
       namespace: istio-system
       enabled: true
+      label:
+        gateway: east-west
       k8s:
         env:
           - name: ISTIO_META_ROUTER_MODE
