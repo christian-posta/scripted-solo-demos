@@ -13,6 +13,25 @@ http://web-api.mesh.ceposta.solo.io
 
 DNS is set to regional affinity; if you curl http://web-api.mesh.ceposta.solo.io from west coast, you'll be routed to west cluster, if you curl from Europe, you should be routed to east cluster.
 
+## Pre-requisites
+
+Make sure you have the following CLI tools:
+
+Istio
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.9.3 sh -
+
+Gloo Edge
+curl -sL https://run.solo.io/gloo/install | GLOO_VERSION=v1.7.11 sh
+export PATH=$HOME/.gloo/bin:$PATH
+
+Gloo Mesh
+curl -sL https://run.solo.io/meshctl/install | GLOO_MESH_VERSION=v1.1.0-beta12 sh
+
+Wasme
+curl -sL https://run.solo.io/wasme/install | sh
+export PATH=$HOME/.wasme/bin:$PATH
+
+
 Note, the config namespace is `demo-config` in the Gloo Mesh Management plane
 
 cat << EOF | kubectl --context $MGMT_CONTEXT apply -f -
