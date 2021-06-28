@@ -15,7 +15,8 @@ kubectl --context $MGMT_CONTEXT rollout status -n argocd deploy/argo-cd-argocd-s
 echo "Username/Password for Argo:"
 echo "Username: admin"
 PW=$(kubectl --context $MGMT_CONTEXT get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
-echo "Password: $PW"
+echo "Admin Username: admin"
+echo "Admin Password: $PW"
 
 
 echo "Setting up GOGS"
