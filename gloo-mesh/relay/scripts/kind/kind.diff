@@ -87,6 +87,7 @@ index f933a4f..91e9f31 100755
 +++ b/gloo-mesh/relay/setup-mgmt-plane.sh
 @@ -29,6 +29,7 @@ kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/dashboard
  kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/rbac-webhook
+ kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/prometheus-server
  
  kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-ceposta.yaml
 +kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-kube-admin.yaml
