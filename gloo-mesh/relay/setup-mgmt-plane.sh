@@ -27,6 +27,7 @@ helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --ku
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/enterprise-networking 
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/dashboard
 kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/rbac-webhook
+kubectl --context $MGMT_CONTEXT -n gloo-mesh rollout status deploy/prometheus-server
 
 kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-ceposta.yaml
 

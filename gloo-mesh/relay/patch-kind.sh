@@ -1,0 +1,1 @@
+git apply scripts/kind/kind.diff

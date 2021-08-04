@@ -26,6 +26,8 @@ meshctl cluster register enterprise --remote-context=$CLUSTER_1  --relay-server-
 kubectl --context $CLUSTER_1 create ns sleep
 kubectl --context $CLUSTER_1 label ns sleep istio-injection=enabled
 kubectl --context $CLUSTER_1 apply -f resources/sleep.yaml -n sleep
+
+kubectl --context $CLUSTER_1 label ns default istio-injection-
 kubectl --context $CLUSTER_1 apply -f resources/sleep.yaml -n default
 
 # Install Gloo Edge for reaching the cluster
