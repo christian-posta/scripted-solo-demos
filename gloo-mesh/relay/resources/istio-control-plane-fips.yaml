@@ -6,7 +6,7 @@ metadata:
 spec:
   profile: minimal
   hub: gcr.io/istio-enterprise
-  tag: 1.8.5-fips
+  tag: 1.9.7-solo-fips
   values:
     global:
       # needed for annotating istio metrics with cluster

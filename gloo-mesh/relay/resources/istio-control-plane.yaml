@@ -5,7 +5,8 @@ metadata:
   namespace: istio-system
 spec:
   profile: minimal
-  tag: 1.9.3
+  hub: gcr.io/istio-enterprise
+  tag: 1.9.7-solo
   values:
     global:
       # needed for annotating istio metrics with cluster

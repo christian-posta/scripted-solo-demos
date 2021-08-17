@@ -6,8 +6,8 @@ SOURCE_DIR=$PWD
 source env.sh
 source relay-ports.sh
 
-echo "Installing Istio FIPS 1.8.x"
-istioctl1.8 --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
+echo "Installing Istio FIPS 1.9.x"
+istioctl1.9 --context $CLUSTER_1 install -y -f resources/istio-control-plane-fips.yaml
 
 # enable peer auth
 kubectl --context $CLUSTER_1 apply -f resources/istio/default-peer-authentication.yaml
