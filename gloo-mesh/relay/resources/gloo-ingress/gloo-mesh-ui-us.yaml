@@ -13,12 +13,10 @@ spec:
   useHttp2: true
   discoveryMetadata:
     labels:
-      app: gloo-mesh
-      gloo-mesh: dashboard
+      app: dashboard
   kube:
     selector:
-      app: gloo-mesh
-      gloo-mesh: dashboard
+      app: dashboard
     serviceName: dashboard
     serviceNamespace: gloo-mesh
     servicePort: 8090
