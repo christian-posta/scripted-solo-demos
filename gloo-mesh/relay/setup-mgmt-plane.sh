@@ -18,7 +18,17 @@ helm repo update
 kubectl create namespace gloo-mesh
 
 # Helm Install GM
-helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta11 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true
+helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true
+
+## Upgrade:
+# #################################################################
+# NOTE: should update the CRDs first (from the src is easiest)
+# #################################################################
+#
+# helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true
+
+# upgrade agent
+# helm upgrade --install enterprise-agent --namespace gloo-mesh https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent/enterprise-agent-1.1.0.tgz
 
 # serviceType=LoadBalancer might be default now
 # helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=1.1.0-beta11 --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=true --set metricsBackend.prometheus.enabled=true --force
