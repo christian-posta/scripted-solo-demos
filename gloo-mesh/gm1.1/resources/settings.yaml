@@ -1,0 +1,28 @@
+apiVersion: settings.mesh.gloo.solo.io/v1
+kind: Settings
+metadata:
+  annotations:
+    meta.helm.sh/release-name: gloo-mesh-enterprise
+    meta.helm.sh/release-namespace: gloo-mesh
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: settings
+  namespace: gloo-mesh
+spec:
+  discovery:
+    istio:
+      ingressGatewayDetectors:
+        '*':
+          gatewayWorkloadLabels:
+            gateway: gloo-mesh-gateway
+            istio: ingressgateway
+  mtls:
+    istio:
+      tlsMode: ISTIO_MUTUAL
+  networkingExtensionServers: []
+  relay:
+    enabled: false
+    server:
+      address: ""
+      insecure: false
+      reconnectOnNetworkFailures: false

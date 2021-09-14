@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gloo-mesh-config
+  namespace: argocd
+spec:
+  destination:
+    namespace: demo-config
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: demo-config
+    repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git

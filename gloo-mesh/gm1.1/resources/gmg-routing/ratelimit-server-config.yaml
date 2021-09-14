@@ -1,0 +1,16 @@
+---
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: RateLimitServerConfig
+metadata:
+  labels:
+    app: default-policies
+  name: default-ratelimit-config
+  namespace: gloo-mesh-gateway
+spec:
+  raw:
+    descriptors:
+      - key: generic_key
+        value: per-second
+        rateLimit:
+          requestsPerUnit: 5
+          unit: MINUTE          

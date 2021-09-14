@@ -1,0 +1,28 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: gloo-mesh-gw-install
+spec:
+  profile: empty
+  hub: gcr.io/istio-enterprise
+  tag: 1.10.4-solo  
+  components:
+    ingressGateways:
+    - name: gloo-mesh-gateway
+      namespace: gloo-mesh-gateway
+      enabled: true
+      label:
+        gateway: gloo-mesh-gateway
+      k8s:
+        service:
+          type: LoadBalancer
+          #loadBalancerIP: 34.75.208.239      
+        env:
+        - name: ISTIO_META_CLUSTER_ID
+          value: "cluster-2"
+  values:
+    gateways:
+      istio-ingressgateway:
+        # Enable gateway injection
+        injectionTemplate: gateway
+

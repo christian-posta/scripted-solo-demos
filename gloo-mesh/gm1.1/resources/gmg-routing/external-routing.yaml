@@ -1,0 +1,31 @@
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: VirtualGateway
+metadata:
+  name: demo-gateway
+  namespace: demo-config
+spec:
+  ingressGatewaySelectors:
+  - portName: http2
+    destinationSelectors:
+    - kubeServiceMatcher:
+        clusters:
+        - cluster-1
+        - cluster-2
+        labels:
+          gateway: gloo-mesh-gateway
+        namespaces:
+        - gloo-mesh-gateway
+  connectionHandlers:
+  - http:
+      routeConfig:
+      - virtualHost:
+          domains:
+          - json-placeholder.mesh.ceposta.solo.io
+          routes:
+          - matchers:
+            - uri:
+                prefix: /
+            routeAction:
+              destinations:
+              - staticDestination:
+              ## TODO

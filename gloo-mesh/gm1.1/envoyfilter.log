@@ -1,0 +1,143 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  creationTimestamp: "2021-08-25T23:41:34Z"
+  generation: 1
+  labels:
+    cluster.multicluster.solo.io: ""
+    owner.networking.mesh.gloo.solo.io: gloo-mesh
+    relay-agent: cluster-1
+  name: gloo-mesh-gateway-gloo-mesh-gateway-cluster-1
+  namespace: gloo-mesh-gateway
+  resourceVersion: "3791"
+  selfLink: /apis/networking.istio.io/v1alpha3/namespaces/gloo-mesh-gateway/envoyfilters/gloo-mesh-gateway-gloo-mesh-gateway-cluster-1
+  uid: 6d439539-de60-46d9-b906-b1a45bd63832
+spec:
+  configPatches:
+  - applyTo: HTTP_ROUTE
+    match:
+      context: GATEWAY
+      routeConfiguration:
+        portNumber: 80
+        vhost:
+          route:
+            action: ROUTE
+            name: web-api
+    patch:
+      operation: MERGE
+      value:
+        route:
+          rateLimits:
+          - actions:
+            - genericKey:
+                descriptorValue: gloo-mesh-gateway.default-ratelimit-config
+            - genericKey:
+                descriptorValue: per-second
+            stage: 1
+  - applyTo: HTTP_ROUTE
+    match:
+      context: GATEWAY
+      routeConfiguration:
+        portNumber: 80
+        vhost:
+          route:
+            action: ROUTE
+            name: web-api
+    patch:
+      operation: MERGE
+      value:
+        typedPerFilterConfig:
+          envoy.filters.http.ext_authz:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthzPerRoute
+            disabled: true
+  - applyTo: HTTP_ROUTE
+    match:
+      context: GATEWAY
+      routeConfiguration:
+        portNumber: 80
+        vhost:
+          route:
+            action: ROUTE
+            name: web-api
+    patch:
+      operation: MERGE
+      value:
+        route:
+          rateLimits:
+          - actions:
+            - genericKey:
+                descriptorValue: gloo-mesh-gateway.default-ratelimit-config
+            - genericKey:
+                descriptorValue: per-second
+            stage: 1
+  - applyTo: HTTP_ROUTE
+    match:
+      context: GATEWAY
+      routeConfiguration:
+        portNumber: 80
+        vhost:
+          route:
+            action: ROUTE
+            name: web-api
+    patch:
+      operation: MERGE
+      value:
+        typedPerFilterConfig:
+          envoy.filters.http.ext_authz:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthzPerRoute
+            disabled: true
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.filters.network.http_connection_manager
+            subFilter:
+              name: envoy.filters.http.router
+        portNumber: 8080
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.ext_authz
+        typedConfig:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+          grpcService:
+            envoyGrpc:
+              authority: outbound_.8083_._.ext-auth-service.gloo-mesh-gateway.svc.cluster.local
+              clusterName: outbound|8083||ext-auth-service.gloo-mesh-gateway.svc.cluster.local
+            timeout: 2s
+          metadataContextNamespaces:
+          - envoy.filters.http.jwt_authn
+          transportApiVersion: V3
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.filters.network.http_connection_manager
+            subFilter:
+              name: envoy.filters.http.router
+        portNumber: 8080
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.ratelimit
+        typedConfig:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
+          domain: solo.io
+          rateLimitService:
+            grpcService:
+              envoyGrpc:
+                authority: outbound_.8083_._.rate-limiter.gloo-mesh-gateway.svc.cluster.local
+                clusterName: outbound|8083||rate-limiter.gloo-mesh-gateway.svc.cluster.local
+            transportApiVersion: V3
+          requestType: both
+          stage: 1
+          timeout: 0.100s
+  workloadSelector:
+    labels:
+      app: istio-ingressgateway
+      gateway: gloo-mesh-gateway
+      istio: ingressgateway

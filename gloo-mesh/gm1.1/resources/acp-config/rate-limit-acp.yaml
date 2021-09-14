@@ -1,0 +1,14 @@
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  namespace: demo-config
+  name: gloo-mesh-gateway-ns-acp
+spec:
+  sourceSelector:
+  - kubeIdentityMatcher:
+      namespaces:
+      - gloo-mesh-gateway
+  destinationSelector:
+  - kubeServiceMatcher:
+      namespaces:
+      - gloo-mesh-gateway

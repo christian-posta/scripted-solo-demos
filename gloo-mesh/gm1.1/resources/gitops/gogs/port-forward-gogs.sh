@@ -1,0 +1,1 @@
+kubectl port-forward -n gogs deploy/gogs 3000

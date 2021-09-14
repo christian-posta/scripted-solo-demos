@@ -1,0 +1,25 @@
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: WasmDeployment
+metadata:
+  labels:
+    app: recommendation
+    app.kubernetes.io/name: recommendation
+  name: recommendation-wasm
+  namespace: demo-config
+spec:
+  filters:
+  - filterContext: SIDECAR_INBOUND
+    wasmImageSource:
+      wasmImageTag: webassemblyhub.io/djannot/myfilter:0.2
+    staticFilterConfig:
+      '@type': type.googleapis.com/google.protobuf.StringValue
+      value: "Gloo Mesh Enterprise"
+  workloadSelector:
+  - kubeWorkloadMatcher:
+      clusters:
+      - cluster-1
+      labels:
+        app: recommendation
+      namespaces:
+      - istioinaction
+

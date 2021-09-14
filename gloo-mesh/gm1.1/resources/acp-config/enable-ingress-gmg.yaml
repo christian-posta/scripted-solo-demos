@@ -1,0 +1,30 @@
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  namespace: demo-config
+  name: gloo-mesh-gateway-to-web-api-acp
+spec:
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+        - name: gloo-mesh-gateway-service-account
+          namespace: gloo-mesh-gateway
+  destinationSelector:
+  - kubeServiceMatcher:
+      namespaces:
+      - istioinaction
+      labels:
+        app: web-api
+---
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  namespace: demo-config
+  name: anon-gmg
+spec:
+  destinationSelector:
+  - kubeServiceMatcher:
+      namespaces:
+      - gloo-mesh-gateway
+      labels:
+        gateway: gloo-mesh-gateway

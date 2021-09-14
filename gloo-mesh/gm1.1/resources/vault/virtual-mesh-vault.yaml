@@ -1,0 +1,30 @@
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: VirtualMesh
+metadata:
+  name: your-virtual-mesh
+  namespace: gloo-mesh
+spec:
+  mtlsConfig:
+    autoRestartPods: true
+    shared:
+      intermediateCertificateAuthority:
+        vault:
+          # Vault path to the CA endpoint
+          caPath: "pki/root/sign-intermediate"
+          # Vault path to the CSR endpoint
+          csrPath: "pki_int/intermediate/generate/exported"
+          # Vault server endpoint
+          server: "http://vault.vault:8200"
+          # Auth mechanism to use
+          kubernetesAuth:
+            role: "gen-int-ca-istio"
+  federation:
+    # federate all Destinations to all external meshes
+    selectors:
+    - {}
+  globalAccessPolicy: ENABLED    
+  meshes:
+  - name: istiod-istio-system-cluster-1 
+    namespace: gloo-mesh
+  - name: istiod-istio-system-cluster-2
+    namespace: gloo-mesh

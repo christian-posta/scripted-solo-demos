@@ -1,0 +1,21 @@
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1alpha1
+kind: WasmDeployment
+metadata:
+  labels:
+    app: bookinfo-wasm
+    app.kubernetes.io/name: bookinfo-policies
+  name: reviews-wasm
+  namespace: gloo-mesh
+spec:
+  filters:
+  - filterContext: SIDECAR_INBOUND
+    wasmImageSource:
+      wasmImageTag: webassemblyhub.io/ilackarms/assemblyscript-test:istio-1.8
+  workloadSelector:
+  - clusters:
+    - cluster-1
+    labels:
+      app: reviews
+      version: v2
+    namespaces:
+    - default
