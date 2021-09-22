@@ -16,7 +16,7 @@ kubectl --context $MGMT_CONTEXT -n gogs exec -it deploy/gogs -- /bin/sh -c 'gosu
 
 
 
-URL="http://gogs.mesh.ceposta.solo.io"
+URL="http://gogs.gloo-mesh.istiodemos.io"
 
 # create a token
 curl -u "ceposta:admin123" -H 'content-type: application/json' -X POST $URL/api/v1/users/ceposta/tokens -d '{"name": "gogs"}'

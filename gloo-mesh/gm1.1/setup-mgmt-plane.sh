@@ -45,9 +45,9 @@ kubectl --context $MGMT_CONTEXT -n gloo-system rollout status deploy/gloo
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo/gloo-mesh-ui-us.yaml
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo/gloo-mesh-ui-vs.yaml
 
-echo "Gloo Mesh read-only UI available on http://dashboard.mesh.ceposta.solo.io/"
+echo "Gloo Mesh read-only UI available on http://dashboard.gloo-mesh.istiodemos.io/"
 
-echo "setting up gitops"
+#echo "setting up gitops"
 #./setup-gitops.sh
 
 kubectl --context $MGMT_CONTEXT create ns demo-config

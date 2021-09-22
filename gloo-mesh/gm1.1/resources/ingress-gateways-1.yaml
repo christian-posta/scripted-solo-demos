@@ -16,7 +16,7 @@ spec:
       k8s:
         service:
           type: LoadBalancer
-          #loadBalancerIP: 34.145.107.78
+          loadBalancerIP: 35.230.58.0
         env:
         - name: ISTIO_META_CLUSTER_ID
           value: "cluster-1"

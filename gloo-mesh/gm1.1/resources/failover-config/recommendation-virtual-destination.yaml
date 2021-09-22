@@ -4,7 +4,7 @@ metadata:
   name: recommendation-global-routing
   namespace: demo-config
 spec:
-  hostname: recommendation.mesh.ceposta.solo.io
+  hostname: recommendation.gloo-mesh.istiodemos.io
   port:
     number: 80
     targetNumber: 8080

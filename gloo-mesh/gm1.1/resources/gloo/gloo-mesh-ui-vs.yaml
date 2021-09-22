@@ -6,7 +6,7 @@ metadata:
 spec:
   virtualHost:
     domains:
-    - 'dashboard.mesh.ceposta.solo.io'
+    - 'dashboard.gloo-mesh.istiodemos.io'
     routes:          
     - matchers:
       - prefix: /

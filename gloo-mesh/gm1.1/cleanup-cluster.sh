@@ -22,3 +22,5 @@ echo "Uninstall Gloo Mesh Gateway"
 kubectl --context $1 delete ns gloo-mesh-gateway
 
 kubectl --context $1 delete ns sleep
+
+kubectl --context $1 delete ns bookinfo

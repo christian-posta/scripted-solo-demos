@@ -6,7 +6,7 @@ metadata:
 spec:
   virtualHost:
     domains:
-    - 'gogs.mesh.ceposta.solo.io'
+    - 'gogs.gloo-mesh.istiodemos.io'
     routes:          
     - matchers:
       - prefix: /

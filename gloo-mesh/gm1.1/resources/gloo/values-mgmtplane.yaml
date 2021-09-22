@@ -7,7 +7,7 @@ gloo:
         httpsPort: 443
         type: LoadBalancer      
         # if we change this on gcloud, we need to update
-        loadBalancerIP: 34.134.94.165
+        loadBalancerIP: 34.70.210.182
 
         # because we want to preserve the client's IP address
         # and disallow hops between cluster for k8s load balancing

@@ -6,7 +6,7 @@ metadata:
 spec:
   virtualHost:
     domains:
-    - 'argo.mesh.ceposta.solo.io'
+    - 'argocd.gloo-mesh.istiodemos.io'
     routes:          
     - matchers:
       - prefix: /

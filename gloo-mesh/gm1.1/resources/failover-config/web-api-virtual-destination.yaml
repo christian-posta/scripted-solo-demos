@@ -4,7 +4,7 @@ metadata:
   name: web-api-global-routing
   namespace: demo-config
 spec:
-  hostname: web-api.mesh.ceposta.solo.io
+  hostname: web-api.gloo-mesh.istiodemos.io
   port:
     number: 80
     targetNumber: 8080

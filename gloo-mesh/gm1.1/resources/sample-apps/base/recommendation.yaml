@@ -34,7 +34,7 @@ spec:
         - name: "LISTEN_ADDR"
           value: "0.0.0.0:8080"
         - name: "UPSTREAM_URIS"
-          value: "http://purchase-history.mesh.ceposta.solo.io"
+          value: "http://purchase-history.gloo-mesh.istiodemos.io"
         - name: "NAME"
           value: "recommendation"
         - name: "MESSAGE"

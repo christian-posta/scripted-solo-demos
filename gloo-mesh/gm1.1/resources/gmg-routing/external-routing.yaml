@@ -20,7 +20,7 @@ spec:
       routeConfig:
       - virtualHost:
           domains:
-          - json-placeholder.mesh.ceposta.solo.io
+          - json-placeholder.gloo-mesh.istiodemos.io
           routes:
           - matchers:
             - uri:
