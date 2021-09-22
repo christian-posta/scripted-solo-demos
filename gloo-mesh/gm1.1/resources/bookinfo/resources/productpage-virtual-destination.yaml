@@ -1,0 +1,26 @@
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: VirtualDestination
+metadata:
+  name: productpage-global-routing
+  namespace: bookinfo-config
+spec:
+  hostname: productpage.gloo-mesh.istiodemos.io
+  port:
+    number: 9080
+    targetNumber: 9080
+    protocol: http
+  localized:
+    outlierDetection:
+      consecutiveErrors: 1
+      maxEjectionPercent: 100
+      interval: 5s
+      baseEjectionTime: 60s
+    destinationSelectors:
+    - kubeServiceMatcher:
+        namespaces:
+        - bookinfo
+        labels:
+          app: productpage
+  virtualMesh:
+    name: your-virtual-mesh
+    namespace: gloo-mesh
