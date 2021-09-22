@@ -1,0 +1,29 @@
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: TrafficPolicy
+metadata:
+  namespace: bookinfo-config
+  name: reviews-split-tp
+spec:
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+        - clusterName: cluster-1
+          name: reviews
+          namespace: bookinfo
+  policy:
+    trafficShift:
+      destinations:    
+        - kubeService:
+            clusterName: cluster-1
+            name: reviews
+            namespace: bookinfo
+            subset:
+              version: v1          
+          weight: 75
+        - kubeService:
+            clusterName: cluster-1
+            name: reviews
+            namespace: bookinfo
+            subset:
+              version: v2          
+          weight: 25
