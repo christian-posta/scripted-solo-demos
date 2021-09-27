@@ -1,0 +1,23 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  namespace: gloo-mesh
+  name: product-reviews-fault
+spec:
+  sourceSelector: 
+  - labels:
+      app: productpage
+    namespaces: 
+      - default  
+    clusters:
+      - cluster-1
+  destinationSelector:
+  - kubeServiceRefs:
+      services:
+      - clusterName: cluster-2
+        name: reviews
+        namespace: default
+  faultInjection:
+    fixedDelay: 500ms
+    percentage: 50
+    

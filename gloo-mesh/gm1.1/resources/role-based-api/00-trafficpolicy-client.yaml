@@ -1,0 +1,21 @@
+apiVersion: networking.mesh.gloo.solo.io/v1alpha2
+kind: TrafficPolicy
+metadata:
+  namespace: gloo-mesh
+  name: simple
+spec:
+  sourceSelector: 
+    labels:
+      app: productpage
+    namespaces: 
+      - default  
+  destinationSelector:
+    serviceRefs:
+      services:
+        - cluster: cluster-2
+          name: reviews
+          namespace: default
+  retries:
+    attempts: 5
+    perTryTimeout: 25ms
+    

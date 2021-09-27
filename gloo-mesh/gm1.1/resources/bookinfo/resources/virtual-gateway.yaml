@@ -1,8 +1,11 @@
 apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
 kind: VirtualGateway
 metadata:
-  name: productpage-gateway
-  namespace: bookinfo-config
+  # TODO::ceposta: Hack until this is fixed: https://github.com/solo-io/gloo-mesh-enterprise/issues/1332
+  #name: productpage-gateway
+  #namespace: bookinfo-config
+  name: demo-gateway
+  namespace: demo-config  
 spec:
   ingressGatewaySelectors:
   - portName: http2
@@ -18,6 +21,20 @@ spec:
   connectionHandlers:
   - http:
       routeConfig:
+      # TODO::ceposta: Hack until this is fixed: https://github.com/solo-io/gloo-mesh-enterprise/issues/1332        
+      - virtualHost:
+          domains:
+          - web-api.gloo-mesh.istiodemos.io
+          routes:
+          - matchers:
+            - uri:
+                prefix: /
+            name: web-api
+            routeAction:
+              destinations:
+              - virtualDestination:                 
+                  name: web-api-global-routing 
+                  namespace: demo-config           
       - virtualHost:
           domains:
           - bookinfo.gloo-mesh.istiodemos.io

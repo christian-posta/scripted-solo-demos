@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GLOO_MESH_VERSION="1.1.3"
+GLOO_MESH_VERSION="1.1.4"
 
 
 SOURCE_DIR=$PWD

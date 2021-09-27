@@ -1,0 +1,42 @@
+apiVersion: rbac.enterprise.mesh.gloo.solo.io/v1alpha1
+kind: Role
+metadata:
+  name: traffic-target-sre-role
+  namespace: gloo-mesh
+spec:
+  trafficPolicyScopes:
+    - trafficPolicyActions:
+        - TRAFFIC_SHIFT
+        - FAULT_INJECTION
+        - RETRIES
+        - REQUEST_TIMEOUT
+        - HEADER_MANIPULATION
+      workloadSelectors:
+        - labels:
+            "app": "productpage"
+          namespaces:
+            - "default"
+          clusters:
+            - "cluster-1"        
+      trafficTargetSelectors:
+      - kubeServiceRefs:
+          services:
+          - clusterName: cluster-2
+            name: reviews
+            namespace: default      
+
+---
+apiVersion: rbac.enterprise.mesh.gloo.solo.io/v1alpha1
+kind: RoleBinding
+metadata:
+  labels:
+    app: gloo-mesh
+  name: traffic-target-sre-role-binding
+  namespace: gloo-mesh
+spec:
+  roleRef:
+    name: traffic-target-sre-role
+    namespace: gloo-mesh
+  subjects:
+    - kind: User
+      name: user-sre
