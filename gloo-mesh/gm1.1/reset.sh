@@ -1,5 +1,6 @@
 source env.sh
 
+kubectl --context $MGMT_CONTEXT delete -f resources/wasm/wasm-deployment.yaml
 kubectl --context $CLUSTER_1 apply -k resources/sample-apps/overlays/cluster1 -n istioinaction
 
 kubectl --context $CLUSTER_2 apply -k resources/sample-apps/overlays/cluster2 -n istioinaction
@@ -15,3 +16,5 @@ kubectl --context $CLUSTER_2 scale deploy/recommendation -n istioinaction --repl
 kubectl --context $CLUSTER_1 scale deploy/purchase-history-v1 -n istioinaction --replicas=1
 kubectl --context $CLUSTER_2 scale deploy/purchase-history-v1 -n istioinaction --replicas=1
 
+kubectl --context $MGMT_CONTEXT delete ns gogs
+./setup-gogs.sh

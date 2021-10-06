@@ -18,3 +18,4 @@ kubectl --context $MGMT_CONTEXT delete ns gloo-system
 kubectl --context $MGMT_CONTEXT delete ns gloo-mesh
 kubectl --context $MGMT_CONTEXT delete ns demo-config
 kubectl --context $MGMT_CONTEXT delete ns bookinfo-config
+kubectl --context $MGMT_CONTEXT delete ns gloo-mesh-gateway

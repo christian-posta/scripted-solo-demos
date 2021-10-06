@@ -12,7 +12,7 @@ read -s
 
 POD=$(kubectl --context $CLUSTER_1 get po -n istio-system | grep istiod | awk '{print $1}')
 rm -f /tmp/pilot-discovery
-run "kubectl --context $CLUSTER_1 cp istio-system/$POD:/usr/local/bin/pilot-discovery /tmp/pilot-discovery && chmod +x /tmp/pilot-discovery"
+run "kubectl --context $CLUSTER_1 cp -c discovery istio-system/$POD:/usr/local/bin/pilot-discovery /tmp/pilot-discovery && chmod +x /tmp/pilot-discovery"
 
 desc "We should see (boring crypto) as the ssl proivder"
 run "goversion -crypto /tmp/pilot-discovery"

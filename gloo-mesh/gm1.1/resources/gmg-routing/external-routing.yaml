@@ -28,4 +28,5 @@ spec:
             routeAction:
               destinations:
               - staticDestination:
-              ## TODO
+                  name: json-placeholder-external-service
+                  namespace: gloo-mesh-gateway

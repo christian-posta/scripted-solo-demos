@@ -5,6 +5,18 @@ metadata:
   namespace: demo-config
 spec:
   externalService:
+    endpoints:
+    - address: jsonplaceholder.typicode.com
+      ports:
+        http: 80    
+    exportTo:
+    - namespaces:
+      - gloo-mesh-gateway
     name: jsonplaceholder
     hosts:
     - jsonplaceholder.typicode.com
+    ports:
+    - name: http
+      number: 80
+      protocol: HTTP    
+
