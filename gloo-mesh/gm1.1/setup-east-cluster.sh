@@ -1,7 +1,5 @@
 #!/bin/bash
 
-GLOO_MESH_VERSION="1.1.5"
-
 SOURCE_DIR=$PWD
 source ./env.sh
 source ./relay-ports.sh
