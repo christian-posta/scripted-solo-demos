@@ -18,7 +18,12 @@ kubectl create namespace gloo-mesh
 kubectl create namespace gloo-mesh-gateway
 
 # Helm Install GM
-helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=false --set metricsBackend.prometheus.enabled=true --set gloo-mesh-ui.relayClientAuthority=enterprise-networking.gloo-mesh 
+if $USING_KIND ; then
+    helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} -f ./resources/gloo-mesh-install/values-kind.yaml
+else
+    helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} -f ./resources/gloo-mesh-install/values.yaml
+fi
+
 
 #
 # helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} --set rbac-webhook.enabled=false --set metricsBackend.prometheus.enabled=true --set gloo-mesh-ui.relayClientAuthority=enterprise-networking.gloo-mesh 
@@ -35,7 +40,13 @@ kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-ceposta.yaml
 source ~/bin/gloo-license-key-env 
 helm repo add glooe http://storage.googleapis.com/gloo-ee-helm
 helm repo update
-helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+
+if $USING_KIND ; then
+    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane-kind.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+
+else 
+    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+fi
 
 kubectl --context $MGMT_CONTEXT -n gloo-system rollout status deploy/gloo
 

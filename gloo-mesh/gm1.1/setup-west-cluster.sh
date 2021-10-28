@@ -30,7 +30,15 @@ kubectl --context $CLUSTER_1 apply -f ./resources/sleep.yaml -n default
 ## Set up gateways for GMG
 kubectl --context $CLUSTER_1 create ns gloo-mesh-gateway
 kubectl --context $CLUSTER_1 label ns gloo-mesh-gateway istio-injection=enabled
-istioctl --context $CLUSTER_1 install -y -f ./resources/ingress-gateways-1.yaml 
+
+if $USING_KIND ; then
+    istioctl --context $CLUSTER_1 install -y -f ./resources/istio/ingress-gateways-1-kind.yaml 
+else
+    istioctl --context $CLUSTER_1 install -y -f ./resources/istio/ingress-gateways-1.yaml 
+fi
+
+
+
 
 helm repo add enterprise-agent https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent
 helm repo update

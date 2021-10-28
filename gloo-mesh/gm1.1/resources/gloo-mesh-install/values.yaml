@@ -1,0 +1,9 @@
+rbac-webhook:
+  enabled: false 
+  
+metricsBackend:
+  prometheus:
+    enabled: true 
+
+gloo-mesh-ui:
+  relayClientAuthority: "enterprise-networking.gloo-mesh"

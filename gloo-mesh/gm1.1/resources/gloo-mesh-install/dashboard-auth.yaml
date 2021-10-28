@@ -1,0 +1,9 @@
+apiVersion: settings.mesh.gloo.solo.io/v1
+kind: Dashboard
+metadata:
+  name: demo-gateway
+  namespace: demo-config
+spec:
+  auth:
+    oidc:
+    
