@@ -60,4 +60,19 @@ echo "Gloo Mesh read-only UI available on http://dashboard.gloo-mesh.istiodemos.
 
 kubectl --context $MGMT_CONTEXT create ns demo-config
 
+## Set up dex
+kubectl create secret generic -n gloo-mesh oauth --from-literal=oidc-client-secret=secretvalue 
 
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+helm install dex --namespace gloo-mesh --version 2.9.0 stable/dex -f ./resources/dex/values.yaml
+
+# set up gloo routing to auth
+kubectl --context $MGMT_CONTEXT apply -f resources/gloo/auth-gloo-vs.yaml
+
+# set up oidc for dashboard
+kubectl --context $MGMT_CONTEXT apply -f resources/gloo-mesh-install/dashboard-auth.yaml
+
+
+# uninstall dex
+# helm uninstall dex --namespace gloo-mesh 

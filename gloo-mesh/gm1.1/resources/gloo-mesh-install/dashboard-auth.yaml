@@ -1,9 +1,21 @@
 apiVersion: settings.mesh.gloo.solo.io/v1
 kind: Dashboard
 metadata:
-  name: demo-gateway
-  namespace: demo-config
+  name: settings
+  namespace: gloo-mesh
 spec:
   auth:
     oidc:
-    
+      session:
+        # NOTE: this is ONLY for testing... do not use in PROD!
+        # Otherwise, all of this oidc exchange should happen over HTTPS 
+        cookieOptions:
+          notSecure: true
+      clientId: gloo
+      clientSecret: 
+        name: oauth
+        namespace: gloo-mesh
+      issuerUrl: http://auth.gloo-mesh.istiodemos.io
+      callbackPath: /callback
+      appUrl: http://dashboard.gloo-mesh.istiodemos.io/
+
