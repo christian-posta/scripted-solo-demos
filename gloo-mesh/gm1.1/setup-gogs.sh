@@ -11,7 +11,7 @@ kubectl --context $MGMT_CONTEXT rollout status -n gogs deploy/gogs
 
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo/gogs-vs.yaml
 
-echo "wait 10s.... sec for gloo to expose the gogs routes"
+echo "wait 5s.... sec for gloo to expose the gogs routes"
 sleep 5s
 
 # create user
@@ -44,6 +44,7 @@ cp $DIR/resources/virtual-mesh-acp.yaml $REPO_FOLDER/demo-config
 cp $DIR/resources/gmg-routing/ratelimit-server-config.yaml $REPO_FOLDER/demo-config
 # TODO::ceposta: Hack until this is fixed: https://github.com/solo-io/gloo-mesh-enterprise/issues/1332
 #cp $DIR/resources/gmg-routing/virtual-gateway-rate-limit.yaml $REPO_FOLDER/demo-config
+cp $DIR/resources/gmg-routing/virtual-gateway.yaml $REPO_FOLDER/demo-config
 cp -r $DIR/resources/failover-config/ $REPO_FOLDER/demo-config
 cp -r $DIR/resources/acp-config/ $REPO_FOLDER/demo-config
 
@@ -52,10 +53,15 @@ cp $DIR/resources/bookinfo/resources/enable-ingress-gmg.yaml $REPO_FOLDER/bookin
 cp $DIR/resources/bookinfo/resources/enable-productpage-reviews.yaml $REPO_FOLDER/bookinfo-config
 cp $DIR/resources/bookinfo/resources/productpage-virtual-destination.yaml $REPO_FOLDER/bookinfo-config
 # TODO::ceposta: Hack until this is fixed: https://github.com/solo-io/gloo-mesh-enterprise/issues/1332
-cp $DIR/resources/bookinfo/resources/virtual-gateway.yaml $REPO_FOLDER/demo-config
+cp $DIR/resources/bookinfo/resources/virtual-gateway.yaml $REPO_FOLDER/bookinfo-config
 cp $DIR/resources/bookinfo/resources/traffic-rules/traffic-v1.yaml $REPO_FOLDER/bookinfo-config
 
-ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo
+if $USING_KIND ; then
+    ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo-kind
+else
+    ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo
+fi
+
 
 pushd $REPO_FOLDER
 git init

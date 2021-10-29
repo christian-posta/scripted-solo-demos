@@ -11,6 +11,15 @@ spec:
   source:
     path: demo-config
     repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git
+  ignoreDifferences:
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: VirtualGateway
+    jsonPointers:
+    - /metadata/labels   
+  - group: networking.mesh.gloo.solo.io 
+    kind: VirtualMesh
+    jsonPointers:
+    - /metadata/labels    
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application

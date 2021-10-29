@@ -6,6 +6,7 @@ kubectl --context $MGMT_CONTEXT apply -f ./resources/virtual-mesh-acp.yaml
 ## Create demo namespace for config
 ## All config for the demos will go into this namespace
 kubectl --context $MGMT_CONTEXT create ns demo-config
+kubectl --context $MGMT_CONTEXT create ns bookinfo-config
 
 kubectl --context $MGMT_CONTEXT apply -f ./resources/gmg-routing/virtual-gateway.yaml
 kubectl --context $MGMT_CONTEXT apply -f ./resources/failover-config
