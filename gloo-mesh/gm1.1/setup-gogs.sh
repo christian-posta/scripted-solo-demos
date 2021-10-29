@@ -9,6 +9,11 @@ kubectl --context $MGMT_CONTEXT create cm custom-gogs -n gogs --from-file resour
 kubectl --context $MGMT_CONTEXT apply -f resources/gitops/gogs/gogs.yaml
 kubectl --context $MGMT_CONTEXT rollout status -n gogs deploy/gogs
 
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo/gogs-vs.yaml
+
+echo "wait 10s.... sec for gloo to expose the gogs routes"
+sleep 5s
+
 # create user
 echo "Creating the user..."
 
@@ -56,6 +61,6 @@ pushd $REPO_FOLDER
 git init
 git add . 
 git commit -m 'initial commit for gloo-mesh-config'
-git remote add origin $URL/ceposta/gloo-mesh-config.git
+git remote add origin http://ceposta:admin123@gogs.gloo-mesh.istiodemos.io/ceposta/gloo-mesh-config.git
 git push -u origin master
 popd

@@ -12,6 +12,12 @@ helm install argo-cd argo/argo-cd --kube-context $MGMT_CONTEXT  -n argocd --vers
 
 kubectl --context $MGMT_CONTEXT rollout status -n argocd deploy/argo-cd-argocd-server 
 
+kubectl --context $MGMT_CONTEXT apply -f ./resources/gloo/argocd-vs.yaml
+kubectl --context $MGMT_CONTEXT apply -f ./resources/admin-binding-argo.yaml
+
+echo "Waiting for gloo edge to publish the argo routes...."
+sleep 5s
+
 echo "Username/Password for Argo:"
 echo "Username: admin"
 PW=$(kubectl --context $MGMT_CONTEXT get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
