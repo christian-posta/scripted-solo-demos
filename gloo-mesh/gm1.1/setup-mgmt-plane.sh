@@ -42,10 +42,10 @@ helm repo add glooe http://storage.googleapis.com/gloo-ee-helm
 helm repo update
 
 if $USING_KIND ; then
-    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane-kind.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane-kind.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set istiodSidecar.createRoleBinding=true --set-string license_key=$GLOO_LICENSE
 
 else 
-    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set-string license_key=$GLOO_LICENSE
+    helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set istiodSidecar.createRoleBinding=true --set-string license_key=$GLOO_LICENSE
 fi
 
 kubectl --context $MGMT_CONTEXT -n gloo-system rollout status deploy/gloo
@@ -73,6 +73,7 @@ kubectl --context $MGMT_CONTEXT apply -f resources/gloo/auth-gloo-vs.yaml
 # set up oidc for dashboard
 kubectl --context $MGMT_CONTEXT apply -f resources/gloo-mesh-install/dashboard-auth.yaml
 
+# set up vault through he gateay
+kubectl --context $MGMT_CONTEXT apply -f resources/gloo/vault-gloo-vs.yaml
 
-# uninstall dex
-# helm uninstall dex --namespace gloo-mesh 
+kubectl create secret generic vault-token --context $MGMT_CONTEXT -n gloo-mesh --from-literal=token=root

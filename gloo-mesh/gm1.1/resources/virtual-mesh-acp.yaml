@@ -7,8 +7,18 @@ spec:
   mtlsConfig:
     autoRestartPods: true
     shared:
-      rootCertificateAuthority:
-        generated: {}
+      intermediateCertificateAuthority:
+        vault:
+          # Vault path to the CA endpoint
+          caPath: "pki/root/sign-intermediate"
+          # Vault path to the CSR endpoint
+          csrPath: "pki_int/intermediate/generate/exported"
+          # Vault server endpoint
+          server: "http://vault.gloo-mesh.istiodemos.io"
+          # Auth mechanism to use
+          tokenSecretRef: 
+            name: vault-token
+            namespace: gloo-mesh
   federation:
     # federate all Destinations to all external meshes
     selectors:

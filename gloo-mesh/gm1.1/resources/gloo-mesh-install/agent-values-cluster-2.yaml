@@ -1,0 +1,17 @@
+global:
+  insecure: false
+istiodSidecar:
+  createRoleBinding: true  
+relay:
+  clientCertSecret:
+    name: relay-client-tls-secret
+    namespace: gloo-mesh
+  cluster: cluster-2
+  rootTlsSecret:
+    name: relay-root-tls-secret
+    namespace: gloo-mesh
+  serverAddress: 172.18.1.1:9900
+  tokenSecret:
+    key: token
+    name: relay-identity-token-secret
+    namespace: gloo-mesh
