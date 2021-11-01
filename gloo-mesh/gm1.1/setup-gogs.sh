@@ -43,7 +43,7 @@ mkdir -p $REPO_FOLDER/demo-config
 cp $DIR/resources/virtual-mesh-acp.yaml $REPO_FOLDER/demo-config
 cp $DIR/resources/gmg-routing/ratelimit-server-config.yaml $REPO_FOLDER/demo-config
 # TODO::ceposta: Hack until this is fixed: https://github.com/solo-io/gloo-mesh-enterprise/issues/1332
-#cp $DIR/resources/gmg-routing/virtual-gateway-rate-limit.yaml $REPO_FOLDER/demo-config
+cp $DIR/resources/gmg-routing/virtual-gateway-rate-limit.yaml $REPO_FOLDER/demo-config
 cp $DIR/resources/gmg-routing/virtual-gateway.yaml $REPO_FOLDER/demo-config
 cp -r $DIR/resources/failover-config/ $REPO_FOLDER/demo-config
 cp -r $DIR/resources/acp-config/ $REPO_FOLDER/demo-config

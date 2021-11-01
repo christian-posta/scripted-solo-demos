@@ -20,6 +20,10 @@ spec:
     kind: VirtualMesh
     jsonPointers:
     - /metadata/labels    
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: RateLimitServerConfig
+    jsonPointers:
+    - /metadata/labels        
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application

@@ -26,8 +26,23 @@ spec:
             - uri:
                 prefix: /
             name: web-api
+            options:
+              rateLimit: 
+                raw: 
+                  rateLimits: 
+                  - actions:
+                    - genericKey:
+                        descriptorValue: per-second
+                ratelimitServerConfigSelector:
+                  namespaces:
+                  - gloo-mesh-gateway              
             routeAction:
               destinations:
               - virtualDestination:                 
                   name: web-api-global-routing 
                   namespace: demo-config
+
+
+
+
+
