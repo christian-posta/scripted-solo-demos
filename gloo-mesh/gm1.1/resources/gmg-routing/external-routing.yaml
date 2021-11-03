@@ -1,7 +1,7 @@
 apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
 kind: VirtualGateway
 metadata:
-  name: demo-gateway
+  name: external-service-gateway
   namespace: demo-config
 spec:
   ingressGatewaySelectors:

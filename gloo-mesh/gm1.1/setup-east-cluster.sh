@@ -31,7 +31,7 @@ kubectl --context $CLUSTER_2 apply -f ./resources/sleep.yaml -n default
 kubectl --context $CLUSTER_2 create ns gloo-mesh-gateway
 kubectl --context $CLUSTER_2 label ns gloo-mesh-gateway istio-injection=enabled
 
-if $USING_KIND ; then
+if [ "$USING_KIND" == "true" ] ; then
     istioctl --context $CLUSTER_2 install -y -f ./resources/istio/ingress-gateways-2-kind.yaml 
 else
     istioctl --context $CLUSTER_2 install -y -f ./resources/istio/ingress-gateways-2.yaml 

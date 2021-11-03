@@ -9,6 +9,8 @@ helm uninstall gloo-edge -n gloo-system --kube-context $MGMT_CONTEXT
 echo "Delete all solo CRDs"
 kubectl --context $MGMT_CONTEXT delete crd $(kubectl --context $MGMT_CONTEXT get crd | grep "solo.io" | awk '{print $1}')
 
+echo "Delete vault"
+helm uninstall vault -n vault --kube-context $MGMT_CONTEXT
 
 # Delete namespaces
 kubectl --context $MGMT_CONTEXT delete ns gloo-fed

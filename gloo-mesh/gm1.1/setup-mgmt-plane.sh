@@ -18,7 +18,7 @@ kubectl create namespace gloo-mesh
 kubectl create namespace gloo-mesh-gateway
 
 # Helm Install GM
-if $USING_KIND ; then
+if [ "$USING_KIND" == "true" ] ; then
     helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} -f ./resources/gloo-mesh-install/values-kind.yaml
 else
     helm install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --kube-context $MGMT_CONTEXT -n gloo-mesh --version=$GLOO_MESH_VERSION --set licenseKey=${GLOO_MESH_LICENSE} -f ./resources/gloo-mesh-install/values.yaml
@@ -41,7 +41,7 @@ source ~/bin/gloo-license-key-env
 helm repo add glooe http://storage.googleapis.com/gloo-ee-helm
 helm repo update
 
-if $USING_KIND ; then
+if [ "$USING_KIND" == "true" ] ; then
     helm install gloo-edge glooe/gloo-ee --kube-context $MGMT_CONTEXT -f ./resources/gloo/values-mgmtplane-kind.yaml --version 1.7.7 --create-namespace --namespace gloo-system --set gloo.crds.create=true --set istiodSidecar.createRoleBinding=true --set-string license_key=$GLOO_LICENSE
 
 else 

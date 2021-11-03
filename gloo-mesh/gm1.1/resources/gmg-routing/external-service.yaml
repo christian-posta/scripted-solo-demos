@@ -2,13 +2,9 @@ apiVersion: discovery.mesh.gloo.solo.io/v1
 kind: Destination
 metadata:
   name: json-placeholder-external-service
-  namespace: demo-config
+  namespace: gloo-mesh-gateway
 spec:
-  externalService:
-    endpoints:
-    - address: jsonplaceholder.typicode.com
-      ports:
-        http: 80    
+  externalService:  
     exportTo:
     - namespaces:
       - gloo-mesh-gateway

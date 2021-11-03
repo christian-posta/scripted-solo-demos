@@ -56,7 +56,7 @@ cp $DIR/resources/bookinfo/resources/productpage-virtual-destination.yaml $REPO_
 cp $DIR/resources/bookinfo/resources/virtual-gateway.yaml $REPO_FOLDER/bookinfo-config
 cp $DIR/resources/bookinfo/resources/traffic-rules/traffic-v1.yaml $REPO_FOLDER/bookinfo-config
 
-if $USING_KIND ; then
+if [ "$USING_KIND" == "true" ] ; then
     ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo-kind
 else
     ln -snf $REPO_FOLDER/ $DIR/resources/gitops/demo-config-repo
