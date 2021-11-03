@@ -47,8 +47,12 @@ helm install enterprise-agent-addons enterprise-agent/enterprise-agent --kube-co
 
 
 
+if [ "$USING_KIND" == "true" ] ; then
+  helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_2 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-2-kind.yaml
+else
+  helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_2 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-2.yaml
+fi
 
-helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_2 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-2.yaml
 
 # secret for vault
 kubectl create secret generic vault-token --context $CLUSTER_2 -n gloo-mesh --from-literal=token=root

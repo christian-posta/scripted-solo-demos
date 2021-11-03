@@ -10,7 +10,7 @@ relay:
   rootTlsSecret:
     name: relay-root-tls-secret
     namespace: gloo-mesh
-  serverAddress: 34.121.180.114:9900
+  serverAddress: 172.18.1.1:9900
   tokenSecret:
     key: token
     name: relay-identity-token-secret

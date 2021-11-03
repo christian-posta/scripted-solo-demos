@@ -47,7 +47,12 @@ helm install enterprise-agent-addons enterprise-agent/enterprise-agent --kube-co
 # upgrade the agent to create role bindings for istio
 #helm upgrade enterprise-agent --kube-context $CLUSTER_1 --namespace gloo-mesh https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent/enterprise-agent-$GLOO_MESH_VERSION.tgz --set istiodSidecar.createRoleBinding=true
 
-helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_1 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-1.yaml
+if [ "$USING_KIND" == "true" ] ; then
+  helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_1 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-1-kind.yaml
+else
+  helm upgrade -n gloo-mesh enterprise-agent enterprise-agent/enterprise-agent --kube-context=$CLUSTER_1 --version=$GLOO_MESH_VERSION -f resources/gloo-mesh-install/agent-values-cluster-1.yaml
+fi
+
 
 # secret for vault
 kubectl create secret generic vault-token --context $CLUSTER_1 -n gloo-mesh --from-literal=token=root

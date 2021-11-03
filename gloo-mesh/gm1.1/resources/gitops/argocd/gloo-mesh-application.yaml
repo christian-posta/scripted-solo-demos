@@ -12,6 +12,18 @@ spec:
     path: demo-config
     repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git
   ignoreDifferences:
+  - group: networking.mesh.gloo.solo.io 
+    kind: TrafficPolicy
+    jsonPointers:
+    - /metadata/labels  
+  - group: networking.mesh.gloo.solo.io 
+    kind: AccessPolicy
+    jsonPointers:
+    - /metadata/labels    
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: VirtualDestination
+    jsonPointers:
+    - /metadata/labels  
   - group: networking.enterprise.mesh.gloo.solo.io 
     kind: VirtualGateway
     jsonPointers:

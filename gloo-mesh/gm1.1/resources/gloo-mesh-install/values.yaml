@@ -7,3 +7,11 @@ metricsBackend:
 
 gloo-mesh-ui:
   relayClientAuthority: "enterprise-networking.gloo-mesh"
+
+enterprise-networking:
+  enterpriseNetworking:
+    enabled: true
+    serviceType: LoadBalancer
+    serviceOverrides:
+      spec:
+        loadBalancerIP: 34.121.180.114  
