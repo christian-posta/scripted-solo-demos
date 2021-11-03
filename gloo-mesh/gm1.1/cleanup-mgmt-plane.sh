@@ -13,6 +13,7 @@ echo "Delete vault"
 helm uninstall vault -n vault --kube-context $MGMT_CONTEXT
 
 # Delete namespaces
+kubectl --context $MGMT_CONTEXT delete ns vault
 kubectl --context $MGMT_CONTEXT delete ns gloo-fed
 kubectl --context $MGMT_CONTEXT delete ns argocd
 kubectl --context $MGMT_CONTEXT delete ns gogs
