@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: json-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: json-server
+  labels:
+    app: json-server
+    prod: stable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: json-server
+        version: v1
+        prod: stable
+  template:
+    metadata:
+      labels:
+        app: json-server
+        version: v1
+        prod: stable
+      annotations:
+    spec:
+      serviceAccountName: json-server
+      containers:
+      - name: json-server
+        volumeMounts: 
+        image: clue/json-server:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: json-server
+  labels:
+    app: json-server
+spec:
+  selector:
+    app: json-server
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80

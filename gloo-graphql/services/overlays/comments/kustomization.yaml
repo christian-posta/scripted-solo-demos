@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+- ../../base
+
+configMapGenerator:
+- name: comments
+  files:
+  - db.json
+
+patchesStrategicMerge:
+- deployment.yaml
+
+patches:
+- target:
+    kind: Deployment
+    name: json-server
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: comments
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: comments
+    - op: replace
+      path: /spec/template/metadata/labels/app
+      value: comments      
+    - op: replace
+      path: /spec/template/spec/serviceAccountName
+      value: comments     
+- target:
+    kind: ServiceAccount
+    name: json-server
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: comments               
+- target:
+    kind: Service
+    name: json-server
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: comments
+    - op: replace
+      path: /metadata/labels/app
+      value: comments
+    - op: replace
+      path: /spec/selector/app
+      value: comments
