@@ -11,6 +11,10 @@ spec:
     name: jsonplaceholder
     hosts:
     - jsonplaceholder.typicode.com
+    endpoints:
+    - address: jsonplaceholder.typicode.com
+      ports:
+        http: 80    
     ports:
     - name: http
       number: 80
