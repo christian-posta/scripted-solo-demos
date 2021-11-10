@@ -1,0 +1,1 @@
+kubectl exec -it deploy/sleep -- curl gateway-proxy.gloo-system/graphql -H 'Content-Type: application/json' -d '{"query":"{posts}"}'

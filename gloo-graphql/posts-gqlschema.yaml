@@ -1,0 +1,38 @@
+apiVersion: graphql.gloo.solo.io/v1alpha1
+kind: GraphQLSchema
+metadata:
+  name: posts-gql
+  namespace: gloo-system
+spec:
+  resolutions:
+  - matcher:
+      fieldMatcher:
+        type: Query
+        field: posts
+    restResolver:
+      requestTransform:
+        headers:
+          ':method':
+            typedProvider:
+              value: GET
+          ':path':
+            typedProvider:
+              value: /data
+      upstreamRef:
+        name: default-posts-8080
+        namespace: gloo-system
+  schema: |
+    schema {
+      query: Query
+    }
+    type Query {
+      posts: [Post!]!
+    }
+    type Post {
+        id: ID!
+        title: String!
+        body: String!
+    }
+        
+  
+  
