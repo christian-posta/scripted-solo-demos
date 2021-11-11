@@ -40,6 +40,8 @@ fi
 
 helm repo add enterprise-agent https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent
 helm repo update
+
+# Install ext-auth and rate limit to gloo-mesh-gateway namespace
 helm install enterprise-agent-addons enterprise-agent/enterprise-agent --kube-context=$CLUSTER_2 --version=$GLOO_MESH_VERSION --namespace gloo-mesh-gateway --set enterpriseAgent.enabled=false --set rate-limiter.enabled=true --set ext-auth-service.enabled=true
 
 # upgrade the agent to create role bindings for istio
