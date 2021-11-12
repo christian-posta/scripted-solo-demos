@@ -1,3 +1,3 @@
 
 # start server
-node index-posts.js
+node index.js
