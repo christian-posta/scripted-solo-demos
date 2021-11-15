@@ -5,11 +5,23 @@ metadata:
   namespace: gloo-system
 spec:
   virtualHost:
+    options:
+      cors:
+        allowCredentials: true
+        allowHeaders:
+        - content-type
+        allowMethods:
+        - GET
+        - POST
+        - OPTIONS
+        allowOrigin:
+        - 'https://studio.apollographql.com'    
     domains:
     - '*'
     routes:
     - matchers:
        - prefix: /graphql
+       
       graphqlSchemaRef:
         name: gql
         namespace: gloo-system

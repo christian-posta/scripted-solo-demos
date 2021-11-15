@@ -4,6 +4,7 @@ metadata:
   name: gql
   namespace: gloo-system
 spec:
+  enableIntrospection: true
   resolutions:
   - matcher:
       fieldMatcher:
