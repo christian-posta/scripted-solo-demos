@@ -61,11 +61,18 @@ echo "Gloo Mesh read-only UI available on http://dashboard.gloo-mesh.istiodemos.
 kubectl --context $MGMT_CONTEXT create ns demo-config
 
 ## Set up dex
-kubectl create secret generic -n gloo-mesh oauth --from-literal=oidc-client-secret=secretvalue 
+kubectl --context $MGMT_CONTEXT create secret generic -n gloo-mesh oauth --from-literal=oidc-client-secret=secretvalue 
 
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
-helm install dex --namespace gloo-mesh --version 2.9.0 stable/dex -f ./resources/dex/values.yaml
+helm install dex --kube-context $MGMT_CONTEXT --namespace gloo-mesh --version 2.9.0 stable/dex -f ./resources/dex/values.yaml
+
+# Patch dex to work around https://github.com/dexidp/dex/issues/2082#issuecomment-818124478
+
+kubectl --context $MGMT_CONTEXT patch -n gloo-mesh deploy/dex --patch '{
+	"spec": { "template": {	"spec": { "containers": [ {	"env": [ {"name": "KUBERNETES_POD_NAMESPACE", "valueFrom": { "fieldRef": {"apiVersion": "v1", "fieldPath": "metadata.namespace"	}}}], "name": "main"}]}}}}'
+
+
 
 # set up gloo routing to auth
 kubectl --context $MGMT_CONTEXT apply -f resources/gloo/auth-gloo-vs.yaml

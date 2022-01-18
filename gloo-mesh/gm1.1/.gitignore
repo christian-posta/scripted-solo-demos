@@ -1,2 +1,4 @@
 scripts/kind/*.yaml
+scripts/kind*.yaml
+scripts/metallb*.yaml
 .DS_Store
