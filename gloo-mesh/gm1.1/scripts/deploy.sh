@@ -59,6 +59,8 @@ EOF
     registry:2
 fi
 
+host_ip=$(hostname -I | awk '{print $1}')
+
 cat << EOF > kind${number}.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -79,6 +81,8 @@ kubeadmConfigPatches:
   apiVersion: kubeadm.k8s.io/v1beta2
   kind: ClusterConfiguration
   apiServer:
+    certSANs:
+    - ${host_ip}
     extraArgs:
       service-account-signing-key-file: /etc/kubernetes/pki/sa.key
       service-account-key-file: /etc/kubernetes/pki/sa.pub
