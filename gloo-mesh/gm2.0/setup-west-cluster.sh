@@ -28,6 +28,7 @@ helm install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set relay.serverAddress=$RELAY_ADDRESS \
   --set relay.authority=gloo-mesh-mgmt-server.gloo-mesh \
   --set cluster=${CLUSTER_1_NAME} \
+  --set istiodSidecar.createRoleBinding=true \
   --version ${GLOO_MESH_VERSION}
 
 echo "Installing sample apps"
