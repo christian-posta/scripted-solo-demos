@@ -4,7 +4,7 @@ metadata:
   name: gloo-mesh-gw-install
 spec:
   hub: gcr.io/istio-enterprise
-  tag: 1.10.4-solo-fips
+  tag: 1.11.5-solo
   profile: empty
   components:
     ingressGateways:

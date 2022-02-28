@@ -1,0 +1,7 @@
+
+glooMeshMgmtServer:
+  enabled: true
+  serviceType: LoadBalancer
+  serviceOverrides:
+    spec:
+      loadBalancerIP: 172.18.1.1

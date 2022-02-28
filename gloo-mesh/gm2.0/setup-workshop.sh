@@ -1,7 +1,15 @@
-export GM_VERSION=2.0.0-beta8
+source ~/bin/gloo-mesh-license-env
+
+export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
+export GM_VERSION=2.0.0-beta10
 export MGMT=mgmt
 export CLUSTER1=cluster1
 export CLUSTER2=cluster2
+
+echo "License Key:"
+echo "${GLOO_MESH_LICENSE_KEY}"
+echo "Press ENTER to continue"
+read -s
 
 ./scripts/deploy.sh 1 mgmt
 ./scripts/deploy.sh 2 cluster1 us-west us-west-1
@@ -306,6 +314,30 @@ pod=$(kubectl --context ${MGMT} -n gloo-mesh get pods -l app=gloo-mesh-mgmt-serv
 kubectl --context mgmt -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
 
 echo "Should be good to go now!"
+
+
+
+kubectl --context ${CLUSTER1} create namespace gloo-mesh-addons
+kubectl --context ${CLUSTER1} label namespace gloo-mesh-addons istio.io/rev=1-12
+kubectl --context ${CLUSTER2} create namespace gloo-mesh-addons
+kubectl --context ${CLUSTER2} label namespace gloo-mesh-addons istio.io/rev=1-12
+
+helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
+  --namespace gloo-mesh-addons \
+  --kube-context=cluster1 \
+  --set glooMeshAgent.enabled=false \
+  --set rate-limiter.enabled=true \
+  --set ext-auth-service.enabled=true \
+  --version ${GM_VERSION}
+
+
+helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
+  --namespace gloo-mesh-addons \
+  --kube-context=cluster2 \
+  --set glooMeshAgent.enabled=false \
+  --set rate-limiter.enabled=true \
+  --set ext-auth-service.enabled=true \
+  --version ${GM_VERSION}
 
 
 

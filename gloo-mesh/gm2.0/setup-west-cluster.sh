@@ -9,6 +9,12 @@ istioctl --context $CLUSTER_1 install -y -f ./resources/istio/istio-control-plan
 # enable peer auth
 kubectl --context $CLUSTER_1 apply -f ./resources/istio/default-peer-authentication.yaml
 
+
+echo "Installing sample apps"
+kubectl --context $CLUSTER_1 create ns istioinaction
+kubectl --context $CLUSTER_1 label ns istioinaction istio-injection=enabled
+kubectl --context $CLUSTER_1 apply -k resources/sample-apps/overlays/cluster1 -n istioinaction
+
 echo "Registering cluster..."
 echo "Using Relay: $RELAY_ADDRESS"
 helm repo add gloo-mesh-agent https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-agent
@@ -31,10 +37,24 @@ helm install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set istiodSidecar.createRoleBinding=true \
   --version ${GLOO_MESH_VERSION}
 
-echo "Installing sample apps"
-kubectl --context $CLUSTER_1 create ns istioinaction
-kubectl --context $CLUSTER_1 label ns istioinaction istio-injection=enabled
-kubectl --context $CLUSTER_1 apply -k resources/sample-apps/overlays/cluster1 -n istioinaction
+
+kubectl --context $CLUSTER_1 create ns gloo-mesh-gateway
+kubectl --context $CLUSTER_1 label ns gloo-mesh-gateway istio-injection=enabled
+
+if [ "$USING_KIND" == "true" ] ; then
+    istioctl --context $CLUSTER_1 install -y -f ./resources/istio/ingress-gateways-1-kind.yaml 
+else
+    istioctl --context $CLUSTER_1 install -y -f ./resources/istio/ingress-gateways-1.yaml 
+fi
+
+# Install components/addons for gloo mesh gateway
+helm repo add enterprise-agent https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent
+helm repo update
+
+# Install ext-auth and rate limit to gloo-mesh-gateway namespace
+helm install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent --kube-context=$CLUSTER_1 --version=$GLOO_MESH_VERSION --namespace gloo-mesh-gateway --set glooMeshAgent.enabled=false --set rate-limiter.enabled=true --set ext-auth-service.enabled=true
+
+
 
 ## Set up demo sleep app
 kubectl --context $CLUSTER_1 create ns sleep

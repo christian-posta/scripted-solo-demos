@@ -5,7 +5,7 @@ metadata:
 spec:
   profile: empty
   hub: gcr.io/istio-enterprise
-  tag: 1.10.4-solo  
+  tag: 1.11.5-solo
   components:
     ingressGateways:
     - name: gloo-mesh-gateway

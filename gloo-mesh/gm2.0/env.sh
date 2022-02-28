@@ -1,5 +1,5 @@
 
-export GLOO_MESH_VERSION="2.0.0-beta8"
+export GLOO_MESH_VERSION="2.0.0-beta10"
 export CLUSTER_1="gloo-mesh-1"
 export CLUSTER_2="gloo-mesh-2"
 export CLUSTER_1_NAME="cluster-1"
