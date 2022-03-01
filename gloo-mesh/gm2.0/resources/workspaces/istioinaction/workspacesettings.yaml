@@ -1,0 +1,11 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: istioinaction
+  namespace: istioinaction
+spec:
+  imports:
+  - name: gateways
+  exportTo:
+  - name: gateways
+  - name: sleep

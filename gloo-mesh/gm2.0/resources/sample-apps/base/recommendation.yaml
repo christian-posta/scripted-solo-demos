@@ -29,10 +29,10 @@ spec:
       - name: recommendation
         image: nicholasjackson/fake-service:v0.22.7
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
         - name: "LISTEN_ADDR"
-          value: "0.0.0.0:8080"
+          value: "0.0.0.0:80"
         - name: "UPSTREAM_URIS"
           value: "http://purchase-history.gloo-mesh.istiodemos.io"
         - name: "NAME"
@@ -55,5 +55,5 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: 8080
-    targetPort: 8080
+    port: 80
+    targetPort: 80
