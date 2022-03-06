@@ -1,0 +1,42 @@
+apiVersion: resilience.policy.gloo.solo.io/v2
+kind: FaultInjectionPolicy
+metadata:
+  name: ratings-fault-injection
+  namespace: bookinfo-backends
+spec:
+  applyToRoutes:
+  - route:
+      labels:
+        fault_injection: "true"
+  config:
+    delay:
+      fixedDelay: 2s
+      percentage: 100
+---
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: ratings
+  namespace: bookinfo-backends
+spec:
+  hosts:
+    - 'ratings.bookinfo-backends.svc.cluster.local'
+  workloadSelectors:
+  - kube:
+      labels:
+        app: reviews
+  http:
+    - name: ratings
+      labels:
+        fault_injection: "true"
+      matchers:
+      - uri:
+          prefix: /
+      forwardTo:
+        destinations:
+          - ref:
+              name: ratings
+              namespace: bookinfo-backends
+            port:
+              number: 9080
+

@@ -1,0 +1,39 @@
+apiVersion: resilience.policy.gloo.solo.io/v2
+kind: RetryTimeoutPolicy
+metadata:
+  name: reviews-request-timeout
+  namespace: bookinfo-backends
+spec:
+  applyToRoutes:
+  - route:
+      labels:
+        request_timeout: "0.5s"
+  config:
+    requestTimeout: 0.5s
+---
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: reviews
+  namespace: bookinfo-backends
+spec:
+  hosts:
+    - 'reviews.bookinfo-backends.svc.cluster.local'
+  workloadSelectors:
+  - kube:
+      labels:
+        app: productpage
+  http:
+    - name: reviews
+      labels:
+        request_timeout: "0.5s"
+      matchers:
+      - uri:
+          prefix: /
+      forwardTo:
+        destinations:
+          - ref:
+              name: reviews
+              namespace: bookinfo-backends
+            port:
+              number: 9080

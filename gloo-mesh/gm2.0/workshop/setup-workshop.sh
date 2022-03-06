@@ -1,28 +1,29 @@
 source ~/bin/gloo-mesh-license-env
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta10
+export GM_VERSION=2.0.0-beta9
 export MGMT=mgmt
 export CLUSTER1=cluster1
 export CLUSTER2=cluster2
 
-echo "License Key:"
-echo "${GLOO_MESH_LICENSE_KEY}"
-echo "Press ENTER to continue"
-read -s
+../scripts/deploy.sh 1 mgmt
+../scripts/deploy.sh 2 cluster1 us-west us-west-1
+../scripts/deploy.sh 3 cluster2 us-west us-west-2
 
-./scripts/deploy.sh 1 mgmt
-./scripts/deploy.sh 2 cluster1 us-west us-west-1
-./scripts/deploy.sh 3 cluster2 us-west us-west-2
+../scripts/check.sh $MGMT kube-system
+../scripts/check.sh $MGMT metallb-system
+../scripts/check.sh $CLUSTER1 kube-system
+../scripts/check.sh $CLUSTER1 metallb-system
+../scripts/check.sh $CLUSTER2 kube-system
+../scripts/check.sh $CLUSTER2 metallb-system
+
 kubectl config use-context ${MGMT}
-
 
 kubectl --context ${CLUSTER1} create ns istio-system
 kubectl --context ${CLUSTER1} create ns istio-gateways
 
 pushd /home/solo/dev/istio/
 
-# Install into cluster1
 helm --kube-context=${CLUSTER1} install istio-base ./istio-1.12.2/manifests/charts/base -n istio-system
 
 helm --kube-context=${CLUSTER1} install istio-1.12.2 ./istio-1.12.2/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
@@ -50,7 +51,6 @@ pilot:
     PILOT_SKIP_VALIDATE_TRUST_DOMAIN: "true"
 EOF
 
-
 kubectl --context ${CLUSTER1} label namespace istio-gateways istio.io/rev=1-12
 
 helm --kube-context=${CLUSTER1} install istio-ingressgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
@@ -60,6 +60,7 @@ gateways:
     namespace: istio-gateways
     labels:
       istio: ingressgateway
+      cluster: cluster1
     injectionTemplate: gateway
     ports:
     - name: http2
@@ -97,8 +98,6 @@ gateways:
       ISTIO_META_REQUESTED_NETWORK_VIEW: "network1"
 EOF
 
-
-# Install into cluster2
 kubectl --context ${CLUSTER2} create ns istio-system
 kubectl --context ${CLUSTER2} create ns istio-gateways
 
@@ -129,7 +128,6 @@ pilot:
     PILOT_SKIP_VALIDATE_TRUST_DOMAIN: "true"
 EOF
 
-
 kubectl --context ${CLUSTER2} label namespace istio-gateways istio.io/rev=1-12
 
 helm --kube-context=${CLUSTER2} install istio-ingressgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
@@ -139,6 +137,7 @@ gateways:
     namespace: istio-gateways
     labels:
       istio: ingressgateway
+      cluster: cluster2
     injectionTemplate: gateway
     ports:
     - name: http2
@@ -178,15 +177,16 @@ EOF
 
 popd
 
-echo "Go check that all of the Istio pods come up correctly... ENTER to continue"
-read -s
+../scripts/check.sh $CLUSTER1 istio-system
+../scripts/check.sh $CLUSTER1 istio-ingress
+../scripts/check.sh $CLUSTER2 istio-system
+../scripts/check.sh $CLUSTER2 istio-ingress
+
 
 export ENDPOINT_HTTP_GW_CLUSTER1=$(kubectl --context ${CLUSTER1} -n istio-gateways get svc istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].*}'):80
 export ENDPOINT_HTTPS_GW_CLUSTER1=$(kubectl --context ${CLUSTER1} -n istio-gateways get svc istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].*}'):443
 export HOST_GW_CLUSTER1=$(echo ${ENDPOINT_HTTP_GW_CLUSTER1} | cut -d: -f1)
 
-
-# deploy bookinfo cluster 1
 kubectl --context ${CLUSTER1} create ns bookinfo-frontends
 kubectl --context ${CLUSTER1} create ns bookinfo-backends
 bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.12.2/samples/bookinfo/platform/kube/bookinfo.yaml
@@ -202,7 +202,6 @@ kubectl --context ${CLUSTER1} -n bookinfo-backends apply -f ${bookinfo_yaml} -l 
 kubectl --context ${CLUSTER1} -n bookinfo-frontends set env deploy/productpage-v1 DETAILS_HOSTNAME=details.bookinfo-backends.svc.cluster.local
 kubectl --context ${CLUSTER1} -n bookinfo-frontends set env deploy/productpage-v1 REVIEWS_HOSTNAME=reviews.bookinfo-backends.svc.cluster.local
 
-# deploy bookinfo cluster 2
 kubectl --context ${CLUSTER2} create ns bookinfo-frontends
 kubectl --context ${CLUSTER2} create ns bookinfo-backends
 bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.12.2/samples/bookinfo/platform/kube/bookinfo.yaml
@@ -218,12 +217,107 @@ kubectl --context ${CLUSTER2} -n bookinfo-backends apply -f ${bookinfo_yaml} -l 
 kubectl --context ${CLUSTER2} -n bookinfo-frontends set env deploy/productpage-v1 DETAILS_HOSTNAME=details.bookinfo-backends.svc.cluster.local
 kubectl --context ${CLUSTER2} -n bookinfo-frontends set env deploy/productpage-v1 REVIEWS_HOSTNAME=reviews.bookinfo-backends.svc.cluster.local
 
+../scripts/check.sh $CLUSTER1 bookinfo-frontends
+../scripts/check.sh $CLUSTER1 bookinfo-backends
+../scripts/check.sh $CLUSTER2 bookinfo-frontends
+../scripts/check.sh $CLUSTER2 bookinfo-backends
 
-echo "Go check bookinfo is up, ENTER to continue"
-read -s
+kubectl --context ${CLUSTER1} create ns httpbin
+
+kubectl --context ${CLUSTER1} apply -n httpbin -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: not-in-mesh
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: not-in-mesh
+  labels:
+    app: not-in-mesh
+    service: not-in-mesh
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: not-in-mesh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: not-in-mesh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: not-in-mesh
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: not-in-mesh
+        version: v1
+    spec:
+      serviceAccountName: not-in-mesh
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: not-in-mesh
+        ports:
+        - containerPort: 80
+EOF
+
+kubectl --context ${CLUSTER1} apply -n httpbin -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: in-mesh
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: in-mesh
+  labels:
+    app: in-mesh
+    service: in-mesh
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: in-mesh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: in-mesh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: in-mesh
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: in-mesh
+        version: v1
+        istio.io/rev: 1-12
+    spec:
+      serviceAccountName: in-mesh
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: in-mesh
+        ports:
+        - containerPort: 80
+EOF
 
 
-# Deploy GM
 
 helm repo add gloo-mesh-enterprise https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise 
 helm repo update
@@ -231,14 +325,17 @@ kubectl --context ${MGMT} create ns gloo-mesh
 helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise \
 --namespace gloo-mesh --kube-context ${MGMT} \
 --version=${GM_VERSION} \
---set licenseKey=${GLOO_MESH_LICENSE_KEY} 
+--set licenseKey=${GLOO_MESH_LICENSE_KEY}
+
 kubectl --context ${MGMT} -n gloo-mesh rollout status deploy/gloo-mesh-mgmt-server
+
+../scripts/check.sh $MGMT gloo-mesh
 
 export ENDPOINT_GLOO_MESH=$(kubectl --context ${MGMT} -n gloo-mesh get svc gloo-mesh-mgmt-server -o jsonpath='{.status.loadBalancer.ingress[0].*}'):9900
 export HOST_GLOO_MESH=$(echo ${ENDPOINT_GLOO_MESH} | cut -d: -f1)
 
+../scripts/check.sh $MGMT gloo-mesh
 
-# register the two clusters
 helm repo add gloo-mesh-agent https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-agent
 helm repo update
 
@@ -270,12 +367,10 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set rate-limiter.enabled=false \
   --set ext-auth-service.enabled=false \
   --set cluster=cluster1 \
-  --set istiodSidecar.createRoleBinding=true \
   --version ${GM_VERSION}
 
-# should add:  
 
-kubectl apply --context ${MGMT} -f- <<EOF
+  kubectl apply --context ${MGMT} -f- <<EOF
 apiVersion: admin.gloo.solo.io/v2
 kind: KubernetesCluster
 metadata:
@@ -303,18 +398,15 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set rate-limiter.enabled=false \
   --set ext-auth-service.enabled=false \
   --set cluster=cluster2 \
-  --set istiodSidecar.createRoleBinding=true \
   --version ${GM_VERSION}
 
-echo "Wait for all GM resources to come up... ENTER to continue"
-read -s
+#echo "check agents enter to cont..."
+../scripts/check.sh $CLUSTER1 gloo-mesh  
+../scripts/check.sh $CLUSTER2 gloo-mesh  
+#read -s
 
-
-pod=$(kubectl --context ${MGMT} -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
+pod=$(kubectl --context mgmt -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
 kubectl --context mgmt -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
-
-echo "Should be good to go now!"
-
 
 
 kubectl --context ${CLUSTER1} create namespace gloo-mesh-addons
@@ -330,7 +422,6 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
 
-
 helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --namespace gloo-mesh-addons \
   --kube-context=cluster2 \
@@ -338,67 +429,3 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --set rate-limiter.enabled=true \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
-
-
-
-kubectl apply --context ${MGMT} -f- <<EOF
-apiVersion: admin.gloo.solo.io/v2
-kind: Workspace
-metadata:
-  name: gateways
-  namespace: gloo-mesh
-spec:
-  workloadClusters:
-  - name: cluster1
-    namespaces:
-    - name: istio-gateways
-    - name: gloo-mesh-addons
-  - name: cluster2
-    namespaces:
-    - name: istio-gateways
-    - name: gloo-mesh-addons
-EOF
-
-
-kubectl apply --context ${MGMT} -f- <<EOF
-apiVersion: admin.gloo.solo.io/v2
-kind: Workspace
-metadata:
-  name: bookinfo
-  namespace: gloo-mesh
-  labels:
-    allow_ingress: "true"
-spec:
-  workloadClusters:
-  - name: cluster1
-    namespaces:
-    - name: bookinfo-frontends
-    - name: bookinfo-backends
-  - name: cluster2
-    namespaces:
-    - name: bookinfo-frontends
-    - name: bookinfo-backends
-EOF
-
-kubectl apply --context ${CLUSTER1} -f- <<EOF
-apiVersion: admin.gloo.solo.io/v2
-kind: WorkspaceSettings
-metadata:
-  name: gateways
-  namespace: istio-gateways
-spec:
-  imports:
-  - selector:
-      allow_ingress: "true"
-EOF
-
-kubectl apply --context ${CLUSTER1} -f- <<EOF
-apiVersion: admin.gloo.solo.io/v2
-kind: WorkspaceSettings
-metadata:
-  name: bookinfo
-  namespace: bookinfo-frontends
-spec:
-  exportTo:
-  - name: gateways
-EOF
