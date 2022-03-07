@@ -14,6 +14,8 @@ spec:
   workloadSelectors: []
   http:
     - name: productpage
+      labels:
+        ratelimited: "true"
       matchers:
       - uri:
           exact: /productpage
@@ -25,11 +27,12 @@ spec:
           exact: /logout
       - uri:
           prefix: /api/v1/products
+      - uri:
+          prefix: /callback
       forwardTo:
         destinations:
           - ref:
               name: productpage
               namespace: bookinfo-frontends
-            kind: VIRTUAL_DESTINATION
             port:
               number: 9080

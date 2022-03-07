@@ -1,7 +1,7 @@
 source ~/bin/gloo-mesh-license-env
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta9
+export GM_VERSION=2.0.0-beta13
 export MGMT=mgmt
 export CLUSTER1=cluster1
 export CLUSTER2=cluster2
@@ -24,10 +24,10 @@ kubectl --context ${CLUSTER1} create ns istio-gateways
 
 pushd /home/solo/dev/istio/
 
-helm --kube-context=${CLUSTER1} install istio-base ./istio-1.12.2/manifests/charts/base -n istio-system
+helm --kube-context=${CLUSTER1} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
 
-helm --kube-context=${CLUSTER1} install istio-1.12.2 ./istio-1.12.2/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
-revision: 1-12
+helm --kube-context=${CLUSTER1} install istio-1.11.7 ./istio-1.11.7/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
+revision: 1-11
 global:
   meshID: mesh1
   multiCluster:
@@ -51,16 +51,15 @@ pilot:
     PILOT_SKIP_VALIDATE_TRUST_DOMAIN: "true"
 EOF
 
-kubectl --context ${CLUSTER1} label namespace istio-gateways istio.io/rev=1-12
+kubectl --context ${CLUSTER1} label namespace istio-gateways istio.io/rev=1-11
 
-helm --kube-context=${CLUSTER1} install istio-ingressgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER1} install istio-ingressgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-ingressgateway
     namespace: istio-gateways
     labels:
       istio: ingressgateway
-      cluster: cluster1
     injectionTemplate: gateway
     ports:
     - name: http2
@@ -71,7 +70,7 @@ gateways:
       targetPort: 8443
 EOF
 
-helm --kube-context=${CLUSTER1} install istio-eastwestgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER1} install istio-eastwestgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-eastwestgateway
@@ -101,10 +100,10 @@ EOF
 kubectl --context ${CLUSTER2} create ns istio-system
 kubectl --context ${CLUSTER2} create ns istio-gateways
 
-helm --kube-context=${CLUSTER2} install istio-base ./istio-1.12.2/manifests/charts/base -n istio-system
+helm --kube-context=${CLUSTER2} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
 
-helm --kube-context=${CLUSTER2} install istio-1.12.2 ./istio-1.12.2/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
-revision: 1-12
+helm --kube-context=${CLUSTER2} install istio-1.11.7 ./istio-1.11.7/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
+revision: 1-11
 global:
   meshID: mesh1
   multiCluster:
@@ -128,16 +127,15 @@ pilot:
     PILOT_SKIP_VALIDATE_TRUST_DOMAIN: "true"
 EOF
 
-kubectl --context ${CLUSTER2} label namespace istio-gateways istio.io/rev=1-12
+kubectl --context ${CLUSTER2} label namespace istio-gateways istio.io/rev=1-11
 
-helm --kube-context=${CLUSTER2} install istio-ingressgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER2} install istio-ingressgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-ingressgateway
     namespace: istio-gateways
     labels:
       istio: ingressgateway
-      cluster: cluster2
     injectionTemplate: gateway
     ports:
     - name: http2
@@ -148,7 +146,7 @@ gateways:
       targetPort: 8443
 EOF
 
-helm --kube-context=${CLUSTER2} install istio-eastwestgateway ./istio-1.12.2/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER2} install istio-eastwestgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-eastwestgateway
@@ -189,9 +187,9 @@ export HOST_GW_CLUSTER1=$(echo ${ENDPOINT_HTTP_GW_CLUSTER1} | cut -d: -f1)
 
 kubectl --context ${CLUSTER1} create ns bookinfo-frontends
 kubectl --context ${CLUSTER1} create ns bookinfo-backends
-bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.12.2/samples/bookinfo/platform/kube/bookinfo.yaml
-kubectl --context ${CLUSTER1} label namespace bookinfo-frontends istio.io/rev=1-12
-kubectl --context ${CLUSTER1} label namespace bookinfo-backends istio.io/rev=1-12
+bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.11.7/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl --context ${CLUSTER1} label namespace bookinfo-frontends istio.io/rev=1-11
+kubectl --context ${CLUSTER1} label namespace bookinfo-backends istio.io/rev=1-11
 # deploy the frontend bookinfo service in the bookinfo-frontends namespace
 kubectl --context ${CLUSTER1} -n bookinfo-frontends apply -f ${bookinfo_yaml} -l 'account in (productpage)'
 kubectl --context ${CLUSTER1} -n bookinfo-frontends apply -f ${bookinfo_yaml} -l 'app in (productpage)'
@@ -204,9 +202,9 @@ kubectl --context ${CLUSTER1} -n bookinfo-frontends set env deploy/productpage-v
 
 kubectl --context ${CLUSTER2} create ns bookinfo-frontends
 kubectl --context ${CLUSTER2} create ns bookinfo-backends
-bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.12.2/samples/bookinfo/platform/kube/bookinfo.yaml
-kubectl --context ${CLUSTER2} label namespace bookinfo-frontends istio.io/rev=1-12
-kubectl --context ${CLUSTER2} label namespace bookinfo-backends istio.io/rev=1-12
+bookinfo_yaml=https://raw.githubusercontent.com/istio/istio/1.11.7/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl --context ${CLUSTER2} label namespace bookinfo-frontends istio.io/rev=1-11
+kubectl --context ${CLUSTER2} label namespace bookinfo-backends istio.io/rev=1-11
 # deploy the frontend bookinfo service in the bookinfo-frontends namespace
 kubectl --context ${CLUSTER2} -n bookinfo-frontends apply -f ${bookinfo_yaml} -l 'account in (productpage)'
 kubectl --context ${CLUSTER2} -n bookinfo-frontends apply -f ${bookinfo_yaml} -l 'app in (productpage)'
@@ -306,7 +304,7 @@ spec:
       labels:
         app: in-mesh
         version: v1
-        istio.io/rev: 1-12
+        istio.io/rev: 1-11
     spec:
       serviceAccountName: in-mesh
       containers:
@@ -325,6 +323,7 @@ kubectl --context ${MGMT} create ns gloo-mesh
 helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise \
 --namespace gloo-mesh --kube-context ${MGMT} \
 --version=${GM_VERSION} \
+--set glooMeshMgmtServer.ports.healthcheck=8091 \
 --set licenseKey=${GLOO_MESH_LICENSE_KEY}
 
 kubectl --context ${MGMT} -n gloo-mesh rollout status deploy/gloo-mesh-mgmt-server
@@ -349,7 +348,7 @@ spec:
   clusterDomain: cluster.local
 EOF
 
-kubectl --context cluster1 create ns gloo-mesh
+kubectl --context ${CLUSTER1} create ns gloo-mesh
 
 kubectl get secret relay-root-tls-secret -n gloo-mesh --context ${MGMT} -o jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt
 kubectl create secret generic relay-root-tls-secret -n gloo-mesh --context cluster1 --from-file ca.crt=ca.crt
@@ -361,7 +360,7 @@ rm token
 
 helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --namespace gloo-mesh \
-  --kube-context=cluster1 \
+  --kube-context=${CLUSTER1} \
   --set relay.serverAddress=${ENDPOINT_GLOO_MESH} \
   --set relay.authority=gloo-mesh-mgmt-server.gloo-mesh \
   --set rate-limiter.enabled=false \
@@ -380,7 +379,7 @@ spec:
   clusterDomain: cluster.local
 EOF
 
-kubectl --context cluster2 create ns gloo-mesh
+kubectl --context ${CLUSTER2} create ns gloo-mesh
 
 kubectl get secret relay-root-tls-secret -n gloo-mesh --context ${MGMT} -o jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt
 kubectl create secret generic relay-root-tls-secret -n gloo-mesh --context cluster2 --from-file ca.crt=ca.crt
@@ -392,7 +391,7 @@ rm token
 
 helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --namespace gloo-mesh \
-  --kube-context=cluster2 \
+  --kube-context=${CLUSTER2} \
   --set relay.serverAddress=${ENDPOINT_GLOO_MESH} \
   --set relay.authority=gloo-mesh-mgmt-server.gloo-mesh \
   --set rate-limiter.enabled=false \
@@ -410,13 +409,13 @@ kubectl --context mgmt -n gloo-mesh debug -it ${pod} --image=curlimages/curl --i
 
 
 kubectl --context ${CLUSTER1} create namespace gloo-mesh-addons
-kubectl --context ${CLUSTER1} label namespace gloo-mesh-addons istio.io/rev=1-12
+kubectl --context ${CLUSTER1} label namespace gloo-mesh-addons istio.io/rev=1-11
 kubectl --context ${CLUSTER2} create namespace gloo-mesh-addons
-kubectl --context ${CLUSTER2} label namespace gloo-mesh-addons istio.io/rev=1-12
+kubectl --context ${CLUSTER2} label namespace gloo-mesh-addons istio.io/rev=1-11
 
 helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --namespace gloo-mesh-addons \
-  --kube-context=cluster1 \
+  --kube-context=${CLUSTER1} \
   --set glooMeshAgent.enabled=false \
   --set rate-limiter.enabled=true \
   --set ext-auth-service.enabled=true \
@@ -424,8 +423,20 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
 
 helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --namespace gloo-mesh-addons \
-  --kube-context=cluster2 \
+  --kube-context=${CLUSTER2} \
   --set glooMeshAgent.enabled=false \
   --set rate-limiter.enabled=true \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
+
+
+# set up keycloak
+
+#kubectl --context ${CLUSTER1} create namespace keycloak
+#cat ./keycloak/keycloak.yaml | kubectl --context ${CLUSTER1} -n keycloak apply -f -
+#kubectl --context ${CLUSTER1} -n keycloak rollout status deploy/keycloak
+
+
+#kubectl --context ${CLUSTER2} create namespace keycloak
+#cat ./keycloak/keycloak.yaml | kubectl --context ${CLUSTER2} -n keycloak apply -f -
+#kubectl --context ${CLUSTER2} -n keycloak rollout status deploy/keycloak

@@ -6,12 +6,16 @@ metadata:
 spec:
   workloads:
     - selector:
-        istio: ingressgateway
+        labels:
+          istio: ingressgateway
   listeners: 
     - http: {}
       port:
-        number: 80
-        name: http
-        protocol: HTTP
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        secretName: tls-secret    
       allowedRouteTables:
         - host: '*'

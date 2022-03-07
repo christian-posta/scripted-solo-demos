@@ -11,7 +11,6 @@ spec:
   virtualGateways:
     - name: north-south-gw
       namespace: istio-gateways
-      cluster: cluster1
   workloadSelectors: []
   http:
     - name: productpage
