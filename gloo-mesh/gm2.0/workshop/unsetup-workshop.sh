@@ -5,6 +5,10 @@ export CLUSTER2=cluster2
 
 kubectl config use-context ${MGMT}
 
+# delete gitops
+kubectl --context ${CLUSTER1} delete ns argocd
+kubectl --context ${CLUSTER1} delete ns gogs
+
 # uninstall istio cluster 1
 helm --kube-context=${CLUSTER1} uninstall istio-base  -n istio-system
 helm --kube-context=${CLUSTER1} uninstall istio-1.11.7 -n istio-system

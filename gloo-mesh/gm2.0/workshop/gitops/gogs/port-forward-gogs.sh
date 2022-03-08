@@ -1,0 +1,1 @@
+kubectl --context cluster1 port-forward -n gogs deploy/gogs 3000

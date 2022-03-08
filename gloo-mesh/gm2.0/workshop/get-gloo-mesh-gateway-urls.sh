@@ -2,15 +2,6 @@
 
 source ./env-workshop.sh
 
-
-# prep certs
-
-
-
-kubectl --context $CLUSTER1 apply -f lab7-virtualgateway.yaml
-kubectl --context $CLUSTER1 apply -f lab7-bookinfo-routetable.yaml
-
-
 export ENDPOINT_HTTPS_GW_CLUSTER1=$(kubectl --context ${CLUSTER1} -n istio-gateways get svc istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].*}'):443
 
 

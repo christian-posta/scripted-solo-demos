@@ -1,7 +1,7 @@
 source ~/bin/gloo-mesh-license-env
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta13
+export GM_VERSION=2.0.0-beta14
 export MGMT=mgmt
 export CLUSTER1=cluster1
 export CLUSTER2=cluster2
@@ -21,6 +21,11 @@ kubectl config use-context ${MGMT}
 
 kubectl --context ${CLUSTER1} create ns istio-system
 kubectl --context ${CLUSTER1} create ns istio-gateways
+
+# create certs for https endpoints
+kubectl --context ${CLUSTER1} -n istio-gateways create secret generic tls-secret \
+--from-file=tls.key=./certs/tls.key \
+--from-file=tls.crt=./certs/tls.crt
 
 pushd /home/solo/dev/istio/
 
@@ -100,6 +105,11 @@ EOF
 kubectl --context ${CLUSTER2} create ns istio-system
 kubectl --context ${CLUSTER2} create ns istio-gateways
 
+# set up secrets for https
+kubectl --context ${CLUSTER2} -n istio-gateways create secret generic tls-secret \
+--from-file=tls.key=./certs/tls.key \
+--from-file=tls.crt=./certs/tls.crt
+
 helm --kube-context=${CLUSTER2} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
 
 helm --kube-context=${CLUSTER2} install istio-1.11.7 ./istio-1.11.7/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
@@ -172,6 +182,15 @@ gateways:
       ISTIO_META_ROUTER_MODE: "sni-dnat"
       ISTIO_META_REQUESTED_NETWORK_VIEW: "network1"
 EOF
+
+
+kubectl --context ${CLUSTER1} create ns sleep
+kubectl --context ${CLUSTER1} label namespace sleep istio.io/rev=1-11
+kubectl --context ${CLUSTER1} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n sleep
+
+kubectl --context ${CLUSTER2} create ns sleep
+kubectl --context ${CLUSTER2} label namespace sleep istio.io/rev=1-11
+kubectl --context ${CLUSTER2} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n sleep
 
 popd
 
@@ -429,14 +448,8 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
 
+# Install workspaces for bootstrap
+kubectl --context $MGMT apply -f ./lab6-workspaces.yaml
 
-# set up keycloak
-
-#kubectl --context ${CLUSTER1} create namespace keycloak
-#cat ./keycloak/keycloak.yaml | kubectl --context ${CLUSTER1} -n keycloak apply -f -
-#kubectl --context ${CLUSTER1} -n keycloak rollout status deploy/keycloak
-
-
-#kubectl --context ${CLUSTER2} create namespace keycloak
-#cat ./keycloak/keycloak.yaml | kubectl --context ${CLUSTER2} -n keycloak apply -f -
-#kubectl --context ${CLUSTER2} -n keycloak rollout status deploy/keycloak
+# Update to use common root cert
+kubectl --context $MGMT apply -f ./lab9-rootcert.yaml
