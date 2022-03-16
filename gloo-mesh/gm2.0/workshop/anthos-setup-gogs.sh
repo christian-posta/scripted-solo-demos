@@ -1,6 +1,6 @@
 
 DIR=$(dirname ${BASH_SOURCE})
-source ./env-workshop.sh
+source ./anthos-env-workshop.sh
 # full API: https://github.com/gogs/docs-api
 
 echo "Setting up GOGS"
@@ -71,8 +71,6 @@ cp $DIR/lab8-faultinjection-routetable-clean.yaml $BOOKINFO_FOLDER/ratings-route
 # we are specifically using the virtual destination route table
 # from lab 10!
 cp $DIR/lab10-virtualdest-failover.yaml $BOOKINFO_FOLDER/virtualdestination.yaml
-cp $DIR/lab10-failoverpolicy-outlier.yaml $BOOKINFO_FOLDER/outlier-policy.yaml
-cp $DIR/lab10-failoverpolicy.yaml $BOOKINFO_FOLDER/failover-policy.yaml
 cp $DIR/lab10-routetable.yaml $BOOKINFO_FOLDER/routetable.yaml
 cp $DIR/lab14-ratelimit-client-server.yaml $BOOKINFO_FOLDER/ratelimit-client-server.yaml
 cp $DIR/lab14-ratelimit-policy.yaml $BOOKINFO_FOLDER/ratelimit-policy.yaml

@@ -1,22 +1,12 @@
+#source ~/bin/temp-gloo-mesh-license-env
 source ~/bin/gloo-mesh-license-env
-source ./env-workshop.sh
+source ./anthos-env-workshop.sh
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta17
+export GM_VERSION=2.0.0-beta15
 
 
-ISTIO_ROOT_DIR="/home/solo/dev/istio/"
-
-../scripts/deploy.sh 1 mgmt
-../scripts/deploy.sh 2 cluster1 us-west us-west-1
-../scripts/deploy.sh 3 cluster2 us-east us-east-2
-
-../scripts/check.sh $MGMT kube-system
-../scripts/check.sh $MGMT metallb-system
-../scripts/check.sh $CLUSTER1 kube-system
-../scripts/check.sh $CLUSTER1 metallb-system
-../scripts/check.sh $CLUSTER2 kube-system
-../scripts/check.sh $CLUSTER2 metallb-system
+ISTIO_ROOT_DIR="/Users/ceposta/dev/istio"
 
 kubectl config use-context ${MGMT}
 
@@ -109,6 +99,7 @@ gateways:
       ISTIO_META_ROUTER_MODE: "sni-dnat"
       ISTIO_META_REQUESTED_NETWORK_VIEW: "network1"
 EOF
+
 
 
 helm --kube-context=${CLUSTER2} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
@@ -424,8 +415,8 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
 ../scripts/check.sh $CLUSTER2 gloo-mesh  
 #read -s
 
-pod=$(kubectl --context mgmt -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
-kubectl --context mgmt -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
+pod=$(kubectl --context ${MGMT} -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
+kubectl --context ${MGMT} -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
 
 
 kubectl --context ${CLUSTER1} create namespace gloo-mesh-addons
