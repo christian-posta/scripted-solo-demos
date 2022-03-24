@@ -1,3 +1,4 @@
+mgmtClusterName: mgmt
 glooMeshMgmtServer:
   enabled: true
   serviceType: LoadBalancer

@@ -1,0 +1,27 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  annotations:
+    meta.helm.sh/release-name: argo-cd
+    meta.helm.sh/release-namespace: argocd
+  labels:
+    discovered_by: kubernetesplugin
+  name: argocd-argo-cd-argocd-server-80
+  namespace: gloo-system
+spec:
+  useHttp2: true
+  discoveryMetadata:
+    labels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/instance: argo-cd
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: argocd-server
+      app.kubernetes.io/part-of: argocd
+      helm.sh/chart: argo-cd-2.17.0
+  kube:
+    selector:
+      app.kubernetes.io/instance: argo-cd
+      app.kubernetes.io/name: argocd-server
+    serviceName: argo-cd-argocd-server
+    serviceNamespace: argocd
+    servicePort: 80

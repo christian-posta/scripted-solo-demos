@@ -5,7 +5,8 @@ metadata:
 spec:
   profile: empty
   hub: gcr.io/istio-enterprise
-  tag: 1.11.5-solo
+  tag: 1.11.4-solo
+  revision: 1-11-4-solo
   components:
     ingressGateways:
     - name: gloo-mesh-gateway
@@ -19,7 +20,7 @@ spec:
           loadBalancerIP: 34.139.213.125      
         env:
         - name: ISTIO_META_CLUSTER_ID
-          value: "cluster-2"
+          value: "cluster2"
   values:
     gateways:
       istio-ingressgateway:

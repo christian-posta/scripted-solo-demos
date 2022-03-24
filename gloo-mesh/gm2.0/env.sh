@@ -1,8 +1,7 @@
 
-export GLOO_MESH_VERSION="2.0.0-beta10"
-export CLUSTER_1="gloo-mesh-1"
-export CLUSTER_2="gloo-mesh-2"
-export CLUSTER_1_NAME="cluster-1"
-export CLUSTER_2_NAME="cluster-2"
-export MGMT_CONTEXT="gloo-mesh-mgmt"
-
+export GLOO_MESH_VERSION="2.0.0-beta21"
+export CLUSTER1="gm-cluster1"
+export CLUSTER2="gm-cluster2"
+export MGMT="gm-mgmt"
+export CLUSTER1_NAME="cluster1"
+export CLUSTER2_NAME="cluster2"

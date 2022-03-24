@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bookinfo-workspace
+  namespace: argocd
+spec:
+  destination:
+    namespace: bookinfo-frontends
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: bookinfo-workspace
+    repoURL: http://gogs.gogs.svc.cluster.local/ceposta/routing-config.git
+
+  
