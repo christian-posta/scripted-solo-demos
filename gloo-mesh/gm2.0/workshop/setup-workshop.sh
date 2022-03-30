@@ -2,7 +2,7 @@ source ~/bin/gloo-mesh-license-env
 source ./env-workshop.sh
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta17
+export GM_VERSION=2.0.0-beta15
 
 
 ISTIO_ROOT_DIR="/home/solo/dev/istio/"

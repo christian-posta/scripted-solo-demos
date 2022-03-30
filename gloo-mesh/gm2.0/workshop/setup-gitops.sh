@@ -1,5 +1,5 @@
 DIR=$(dirname ${BASH_SOURCE})
-source env.sh
+source env-workshop.sh
 
 ./setup-gogs.sh
 ./setup-argocd.sh
