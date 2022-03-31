@@ -63,12 +63,5 @@ kubectl --context $MGMT apply -f ./resources/gloo/gloo-mesh-ui-vs.yaml
 
 echo "Gloo Mesh read-only UI available on http://dashboard.gloo-mesh.istiodemos.io/"
 
-
-# Prep the demo enviornment... should this be done here??
-
-# Install workspaces
-kubectl --context $MGMT apply -f ./resources/workspaces/gateways/workspace.yaml
-kubectl --context $MGMT apply -f ./resources/workspaces/bookinfo/workspace.yaml
-
 # Update to use common root cert
 kubectl --context $MGMT apply -f ./resources/gloo-mesh-install/rootcert.yaml

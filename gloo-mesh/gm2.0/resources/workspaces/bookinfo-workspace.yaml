@@ -1,8 +1,10 @@
 apiVersion: admin.gloo.solo.io/v2
 kind: Workspace
 metadata:
-  name: gateways
+  name: bookinfo
   namespace: gloo-mesh
+  labels:
+    allow-ingress: "true"  
 spec:
   # these will select from the KubernetesCluster objects
   # also note, the workspace only responsibility is to select clusters and namespaces
@@ -14,5 +16,5 @@ spec:
       # we have to use name/wildcards for the namespaces...
       # wondering if we are considering to use labels and selectors here too?
       namespaces:
-      - name: "gloo-mesh-gateway"
-      - name: "istio-east-west"
+      - name: "bookinfo-frontends"
+      - name: "bookinfo-backends"

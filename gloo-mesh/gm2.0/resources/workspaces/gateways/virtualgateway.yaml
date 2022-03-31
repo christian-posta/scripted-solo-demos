@@ -6,7 +6,8 @@ metadata:
 spec:
   workloads:
     - selector:
-        gateway: gloo-mesh-gateway
+        labels:
+          gateway: gloo-mesh-gateway
   listeners: 
     - http: {}
       port:
