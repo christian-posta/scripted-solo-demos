@@ -1,17 +1,20 @@
+USER=${1:-solo}
+BOX=${1:-gmv2}
+
 # UI
-ssh -L 8090:localhost:8090 -C -N -l solo gmv2&
+ssh -L 8090:localhost:8090 -C -N -l $USER $BOX &
 UI_PID="$!"
 
 # Gogs
-ssh -L 3000:localhost:3000 -C -N -l solo gmv2&
+ssh -L 3000:localhost:3000 -C -N -l $USER $BOX &
 GOGS_PID="$!"
 
 # Argo
-ssh -L 8088:localhost:8088 -C -N -l solo gmv2&
+ssh -L 8088:localhost:8088 -C -N -l $USER $BOX &
 ARGO_PID="$!"
 
 # Bookinfo
-ssh -L 8443:172.18.2.1:443 -C -N -l solo gmv2&
+ssh -L 8443:172.18.2.1:443 -C -N -l $USER $BOX &
 BOOK_PID="$!"
 
 function cleanup {
@@ -24,5 +27,5 @@ function cleanup {
 trap cleanup EXIT
 
 
-echo "Port forwarding to remote box gmv2.... press ENTER to end script"
+echo "Port forwarding to remote box gmv2.... press CTRL-C to end script"
 read -s
