@@ -14,6 +14,5 @@ spec:
     labels:
       app: productpage
   ports:
-    - name: http
-      number: 9080
+    - number: 9080
       protocol: HTTP

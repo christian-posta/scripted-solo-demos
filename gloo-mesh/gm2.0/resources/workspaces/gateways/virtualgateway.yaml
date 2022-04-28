@@ -12,7 +12,5 @@ spec:
     - http: {}
       port:
         number: 80
-        name: http
-        protocol: HTTP
       allowedRouteTables:
         - host: '*'

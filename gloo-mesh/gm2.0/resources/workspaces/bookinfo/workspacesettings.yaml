@@ -5,14 +5,15 @@ metadata:
   namespace: bookinfo-frontends
 spec:
   options:
-    gatewaySelector:
-      selector:
-        - selector:
-            labels:
-              gateway: gloo-mesh-gateway
+    eastWestGateways:
+    - selector:
+        labels:
+          gateway: east-west
   exportTo:
-  - name: gateways
-  - name: sleep
-  imports:
-  - selector:
-      gateway-internal: "eastwest"    
+  - workspaces:
+    - name: gateways
+    - name: sleep
+#  importFrom:
+#  - workspaces:
+#    - selector:
+#        gateway-internal: "eastwest"    

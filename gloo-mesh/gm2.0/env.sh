@@ -1,5 +1,5 @@
 
-export GLOO_MESH_VERSION="2.0.0-beta23"
+export GLOO_MESH_VERSION="2.0.0-beta33"
 export CLUSTER1="gm-cluster1"
 export CLUSTER2="gm-cluster2"
 export MGMT="gm-mgmt"

@@ -1,5 +1,5 @@
 USER=${1:-solo}
-BOX=${2:-gmv2}
+BOX=${1:-workshop}
 
 # UI
 ssh -L 8090:localhost:8090 -C -N -l $USER $BOX &
@@ -14,7 +14,7 @@ ssh -L 8088:localhost:8088 -C -N -l $USER $BOX &
 ARGO_PID="$!"
 
 # Bookinfo
-ssh -L 8443:172.18.2.1:443 -C -N -l $USER $BOX &
+ssh -L 8080:172.18.2.1:80 -C -N -l $USER $BOX &
 BOOK_PID="$!"
 
 function cleanup {

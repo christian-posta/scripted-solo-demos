@@ -4,6 +4,7 @@ metadata:
   name: edge-gateway
   namespace: gloo-mesh-gateway
 spec:
-  imports:
-  - selector:
-      allow-ingress: "true"  
+  importFrom:
+  - workspaces:  
+    - selector:
+        allow-ingress: "true"  
