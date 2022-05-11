@@ -1,10 +1,8 @@
 apiVersion: resilience.policy.gloo.solo.io/v2
-kind: OutlierDetectionPolicy
+kind: FailoverPolicy
 metadata:
-  name: outlier-detection
+  name: failover
   namespace: bookinfo-frontends
-  labels:
-    workspace.solo.io/exported: "true"
 spec:
   applyToDestinations:
   - kind: VIRTUAL_DESTINATION
@@ -12,7 +10,5 @@ spec:
       labels:
         failover: "true"
   config:
-    consecutiveErrors: 2
-    interval: 5s
-    baseEjectionTime: 30s
-    maxEjectionPercent: 100
+    localityMappings: []
+

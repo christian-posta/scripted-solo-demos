@@ -4,7 +4,7 @@ metadata:
   name: rate-limit-server
   namespace: bookinfo-frontends
   labels:
-    workspace.solo.io/exported: "true"
+    expose: "true"
 spec:
   destinationServer:
     ref:

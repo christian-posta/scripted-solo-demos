@@ -64,19 +64,17 @@ GATEWAYS_FOLDER="$REPO_FOLDER/gateways-workspace"
 mkdir -p $BOOKINFO_FOLDER
 mkdir -p $GATEWAYS_FOLDER
 
-cp $DIR/lab6-workspacesettings.yaml $BOOKINFO_FOLDER/workspacesettings.yaml
-cp $DIR/lab7-virtualgateway.yaml $GATEWAYS_FOLDER/virtualgateway.yaml
-cp $DIR/lab8-faultinjection-policy.yaml $BOOKINFO_FOLDER/faultinjection-policy.yaml
-cp $DIR/lab8-faultinjection-routetable-clean.yaml $BOOKINFO_FOLDER/ratings-routetable.yaml
-# we are specifically using the virtual destination route table
-# from lab 10!
-cp $DIR/lab10-virtualdest-failover.yaml $BOOKINFO_FOLDER/virtualdestination.yaml
-cp $DIR/lab10-failoverpolicy-outlier.yaml $BOOKINFO_FOLDER/outlier-policy.yaml
-cp $DIR/lab10-failoverpolicy.yaml $BOOKINFO_FOLDER/failover-policy.yaml
-cp $DIR/lab10-routetable.yaml $BOOKINFO_FOLDER/routetable.yaml
-cp $DIR/lab14-ratelimit-client-server.yaml $BOOKINFO_FOLDER/ratelimit-client-server.yaml
-cp $DIR/lab14-ratelimit-policy.yaml $BOOKINFO_FOLDER/ratelimit-policy.yaml
-cp $DIR/lab14-ratelimit-serversettings.yaml $BOOKINFO_FOLDER/ratelimit-serversettings.yaml
+cp $DIR/policies/clean-workspacesettings.yaml $BOOKINFO_FOLDER/workspacesettings.yaml
+cp $DIR/policies/clean-virtualgateway.yaml $GATEWAYS_FOLDER/virtualgateway.yaml
+cp $DIR/policies/clean-faultinjection-policy.yaml $BOOKINFO_FOLDER/faultinjection-policy.yaml
+cp $DIR/policies/clean-faultinjection-routetable-clean.yaml $BOOKINFO_FOLDER/ratings-routetable.yaml
+cp $DIR/policies/clean-virtualdestination.yaml $BOOKINFO_FOLDER/virtualdestination.yaml
+cp $DIR/policies/clean-failoverpolicy-outlier.yaml $BOOKINFO_FOLDER/outlier-policy.yaml
+cp $DIR/policies/clean-failoverpolicy.yaml $BOOKINFO_FOLDER/failover-policy.yaml
+cp $DIR/policies/clean-routetable.yaml $BOOKINFO_FOLDER/routetable.yaml
+cp $DIR/policies/clean-ratelimit-client-server.yaml $BOOKINFO_FOLDER/ratelimit-client-server.yaml
+cp $DIR/policies/clean-ratelimit-policy.yaml $BOOKINFO_FOLDER/ratelimit-policy.yaml
+cp $DIR/policies/clean-ratelimit-serversettings.yaml $BOOKINFO_FOLDER/ratelimit-serversettings.yaml
 
 
 if [ "$USING_KIND" == "true" ] ; then

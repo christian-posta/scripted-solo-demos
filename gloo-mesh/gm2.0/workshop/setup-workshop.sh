@@ -2,7 +2,8 @@ source ~/bin/gloo-mesh-license-env
 source ./env-workshop.sh
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.0-beta15
+export GM_VERSION=2.0.0-rc1
+
 
 
 ISTIO_ROOT_DIR="/home/solo/dev/istio/"
@@ -449,8 +450,4 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
 
-# Install workspaces for bootstrap
-kubectl --context $MGMT apply -f ./lab6-workspaces.yaml
 
-# Update to use common root cert
-kubectl --context $MGMT apply -f ./lab9-rootcert.yaml
