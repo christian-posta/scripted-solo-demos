@@ -1,16 +1,14 @@
 source ~/bin/gloo-mesh-license-env
-source ./env-workshop.sh
+source ./env-workshop-bare.sh
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
 export GM_VERSION=2.0.3
 
-
-
 ISTIO_ROOT_DIR="/home/solo/dev/istio/"
 
-../scripts/deploy.sh 1 mgmt
-../scripts/deploy.sh 2 cluster1 us-west us-west-1
-../scripts/deploy.sh 3 cluster2 us-east us-east-2
+../scripts/deploy.sh 4 bare-mgmt
+../scripts/deploy.sh 5 bare-cluster1 us-west us-west-1
+../scripts/deploy.sh 6 bare-cluster2 us-east us-east-2
 
 ../scripts/check.sh $MGMT kube-system
 ../scripts/check.sh $MGMT metallb-system
@@ -365,7 +363,7 @@ kubectl apply --context ${MGMT} -f- <<EOF
 apiVersion: admin.gloo.solo.io/v2
 kind: KubernetesCluster
 metadata:
-  name: cluster1
+  name: bare-cluster1
   namespace: gloo-mesh
 spec:
   clusterDomain: cluster.local
@@ -396,7 +394,7 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
 apiVersion: admin.gloo.solo.io/v2
 kind: KubernetesCluster
 metadata:
-  name: cluster2
+  name: bare-cluster2
   namespace: gloo-mesh
 spec:
   clusterDomain: cluster.local
@@ -427,8 +425,8 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
 ../scripts/check.sh $CLUSTER2 gloo-mesh  
 #read -s
 
-pod=$(kubectl --context mgmt -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
-kubectl --context mgmt -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
+pod=$(kubectl --context $MGMT -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
+kubectl --context $MGMT -n gloo-mesh debug -it ${pod} --image=curlimages/curl --image-pull-policy=Always -- curl http://localhost:9091/metrics | grep relay_push_clients_connected
 
 
 kubectl --context ${CLUSTER1} create namespace gloo-mesh-addons
@@ -452,4 +450,4 @@ helm upgrade --install gloo-mesh-agent-addons gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=true \
   --version ${GM_VERSION}
 
-
+kubectl --context $MGMT apply -f ./policies/clean-rootcert.yaml
