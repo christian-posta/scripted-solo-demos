@@ -1,0 +1,10 @@
+scripts/kind/*.yaml
+scripts/kind*.yaml
+scripts/metallb*.yaml
+workshop/kind*.yaml
+workshop/metallb*.yaml
+workshop/registries
+.DS_Store
+kind*.yaml
+metallb*.yaml
+resources/sample-resources
