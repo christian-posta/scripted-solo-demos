@@ -1,0 +1,29 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: reviews
+  namespace: bookinfo
+spec:
+  description: "Allow the productpage service to communicate with the reviews service"
+  endpointSelector:
+    matchLabels:
+      app: reviews
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: productpage
+    toPorts:
+    - ports:
+      - port: "9080"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+  - toPorts:
+    - ports:
+      - port: "9080"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/nopathallowed"
