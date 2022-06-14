@@ -1,0 +1,10 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: edge-gateway
+  namespace: gloo-mesh-gateway
+spec:
+  importFrom:
+  - workspaces:  
+    - selector:
+        allow-ingress: "true"  

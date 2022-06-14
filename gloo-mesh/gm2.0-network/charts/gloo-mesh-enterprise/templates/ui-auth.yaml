@@ -1,0 +1,39 @@
+
+# Secret values for auth config
+
+
+{{- $auth := .Values.glooMeshUi.auth }}
+{{- $clientSecretName := $auth.oidc.ClientSecretName | default "dashboard" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $clientSecretName }}
+  namespace: {{ $.Release.Namespace }}
+type: Opaque
+data:
+{{- if $auth.enabled }}
+  oidc-client-secret: {{ $auth.oidc.clientSecret | b64enc | quote }}
+{{- end }}{{/* if $auth.enable */}}
+
+---
+
+# Dashboard Settings CRD
+
+kind: Dashboard
+apiVersion: admin.gloo.solo.io/v2
+metadata:
+  name: {{ $.Values.glooMeshUi.settingsName }}
+  namespace: {{ $.Release.Namespace }}
+  {{ if $auth.enabled }}
+spec:
+  authn:
+{{- if eq $auth.backend "oidc" }}
+    oidc:
+{{ omit $auth.oidc "session" "clientSecret" | toYaml | indent 6 }}
+{{- if eq $auth.oidc.session.backend "redis" }}
+    session:
+      redis:
+{{ $auth.oidc.session.redis | toYaml | indent 8 }}
+{{- end }} {{/* if eq $auth.oidc.session.backend "redis" */}}
+{{- end }} {{/* if eq $auth.backend "oidc" */}}
+{{- end }} {{/* if $auth.enabled */}}

@@ -1,0 +1,11 @@
+apiVersion: v1
+description: Solo.io external auth server Helm chart for Kubernetes
+name: ext-auth-service
+version: %version%
+home: https://solo.io
+sources:
+- https://github.com/solo-io/ext-auth-service
+keywords:
+- kubernetes
+- envoy
+- extauth

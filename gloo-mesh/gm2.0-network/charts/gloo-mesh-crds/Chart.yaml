@@ -1,0 +1,5 @@
+apiVersion: v2
+description: CRDs required by Gloo Mesh management controllers (i.e. discovery and
+  networking).
+name: gloo-mesh-crds
+version: 2.1.0-beta3-60-g0598c469b

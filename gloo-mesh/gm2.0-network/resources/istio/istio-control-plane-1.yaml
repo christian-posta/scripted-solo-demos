@@ -1,0 +1,64 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: controlplane
+  namespace: istio-system
+spec:
+  profile: minimal
+  hub: gcr.io/istio-enterprise
+  tag: 1.11.5-solo
+  revision: 1-11-5-solo
+  values:
+    global:
+      meshID: mesh1
+      network: network1    
+      # needed for annotating istio metrics with cluster
+      multiCluster:
+        clusterName: cluster1  
+    gateways:
+      istio-ingressgateway:
+        name: istio-eastwest-gateway
+        injectionTemplate: gateway
+  meshConfig:
+    trustDomain: cluster1
+    enableAutoMtls: true
+    defaultConfig:
+      envoyAccessLogService:
+        address: enterprise-agent.gloo-mesh:9977    
+      envoyMetricsService:
+        address: enterprise-agent.gloo-mesh:9977      
+      proxyMetadata:
+        GLOO_MESH_CLUSTER_NAME: cluster1        
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+  components:
+    # Istio Gateway feature
+    ingressGateways:
+    - name: istio-eastwest-gateway
+      namespace: istio-east-west
+      enabled: true
+      label:
+        gateway: east-west
+        istio: eastwestgateway
+        topology.istio.io/network: network1
+      k8s:
+        env:
+          - name: ISTIO_META_ROUTER_MODE
+            value: "sni-dnat"
+          - name: ISTIO_META_REQUESTED_NETWORK_VIEW
+            value: "network1" 
+        service:
+          type: NodePort
+          ports:
+            - port: 15443
+              targetPort: 15443
+              name: tls
+            - port: 15017
+              targetPort: 15017
+              name: tcp-webhook
+            - port: 15012
+              targetPort: 15012
+              name: tcp-istiod
+            - port: 15021
+              targetPort: 15021
+              name: tcp-status-port

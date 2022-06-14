@@ -1,0 +1,18 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: VirtualDestination
+metadata:
+  name: productpage
+  namespace: bookinfo-frontends
+  labels:
+    failover: "true"
+    workspace.solo.io/exported: "true"
+spec:
+  hosts:
+  - productpage.gloo-mesh.istiodemos.io
+  services:
+  - namespace: bookinfo-frontends
+    labels:
+      app: productpage
+  ports:
+    - number: 9080
+      protocol: HTTP

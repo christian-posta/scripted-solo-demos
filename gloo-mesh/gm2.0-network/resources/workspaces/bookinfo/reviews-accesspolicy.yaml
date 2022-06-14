@@ -1,0 +1,22 @@
+apiVersion: security.policy.gloo.solo.io/v2
+kind: AccessPolicy
+metadata:
+  name: reviews-access
+  namespace: bookinfo-backends
+spec:
+  applyToDestinations:
+  - port:
+      number: 9080
+    selector:
+      labels:
+        app: reviews
+  config:
+    authn:
+      tlsMode: STRICT
+    authz:
+      allowedClients:
+      - serviceAccountSelector:
+          labels:
+            app: productpage
+      allowedPaths:
+      - /reviews*

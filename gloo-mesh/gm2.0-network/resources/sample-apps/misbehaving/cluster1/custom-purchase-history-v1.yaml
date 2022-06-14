@@ -1,0 +1,16 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: purchase-history-v1
+spec:
+  template:
+    spec:
+      containers:
+      - name: purchase-history
+        env:
+        - name: "ERROR_CODE"
+          value: "500"
+        - name: "ERROR_RATE"
+          value: "1"
+

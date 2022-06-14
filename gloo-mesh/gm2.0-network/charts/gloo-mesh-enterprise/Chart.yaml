@@ -1,0 +1,12 @@
+apiVersion: v2
+dependencies:
+- name: gloo-mesh-crds
+  repository: file:///Users/ilackarms/go/src/github.com/solo-io/gloo-mesh-enterprise/install/helm/gloo-mesh-crds
+  version: 2.1.0-beta3-60-g0598c469b
+- condition: prometheus.enabled
+  name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 14.9.2
+description: Helm chart for Gloo Mesh Enterprise.
+name: gloo-mesh-enterprise
+version: 2.1.0-beta3-60-g0598c469b

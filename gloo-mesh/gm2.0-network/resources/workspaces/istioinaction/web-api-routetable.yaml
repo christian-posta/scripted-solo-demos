@@ -1,0 +1,24 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: web-api
+  namespace: istioinaction
+  labels:
+    workspace.solo.io/exported: "true"
+spec:
+  hosts:
+    - 'web-api.gloo-mesh-istiodemos.io'
+  virtualGateways:
+    - name: edge-gateway
+      workspace: edge-gateway
+  workloadSelectors: []
+  http:
+    - name: web-api
+      matchers:
+      - uri:
+          prefix: /
+      forwardTo:
+        destinations:
+          - ref:
+              name: web-api
+              kind: VirtualDestination

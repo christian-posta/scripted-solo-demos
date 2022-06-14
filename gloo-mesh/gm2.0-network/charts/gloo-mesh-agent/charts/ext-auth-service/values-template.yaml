@@ -1,0 +1,49 @@
+extAuth:
+  # Watch all namespaces by default
+  watchNamespace: ""
+  image:
+    pullPolicy: IfNotPresent
+    registry: gcr.io/gloo-mesh
+    repository: ext-auth-service
+    tag: %version%
+  resources:
+    requests:
+      cpu: 125m
+      memory: 256Mi
+  logLevel: INFO
+  userIdHeader: ""
+  # Provide the server's secret signing key.
+  # If empty, a random key will be generated.
+  signingKey: ""
+  # Set signingKeyFile.enabled to true to mount secret as file rather than pass
+  # the signing key as a environment variable. To ensure maximum security by
+  # default, the file will be limited to 0440 permissions and have the fsGroup
+  # set to match the runAsGroup.
+  signingKeyFile:
+    enabled: false
+    fileMode: 288
+    groupSettingEnabled: true
+    fsGroup: 10101
+    runAsUser: 10101
+    runAsGroup: 10101
+  # Directory in which the server expects Go plugin .so files.
+  pluginDirectory: "/auth-plugins/"
+  # Headers that will be redacted in the server logs.
+  headersToRedact:
+  - authorization
+  # When receiving a termination signal, the pod will wait this amount of seconds
+  # for a request that it can use to notify Envoy that it should fail the health check
+  # for this endpoint. If no request is received within this interval, the server will
+  # shutdown gracefully. The interval should be greater than the active health check
+  # interval configured in Envoy for this service.
+  healthCheckFailTimeout: 15
+  healthCheckHttpPath: /healthcheck
+  service:
+    type: ClusterIP
+    grpcPort: 8083
+    debugPort: 9091
+    healthPort: 8082
+    # Only relevant if the service is of NodePort type
+    grpcNodePort: 32000
+    debugNodePort: 32001
+    healthNodePort: 32002

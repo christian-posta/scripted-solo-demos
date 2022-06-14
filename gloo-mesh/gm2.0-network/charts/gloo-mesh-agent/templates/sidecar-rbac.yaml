@@ -1,0 +1,19 @@
+{{- $istiodSidecar := $.Values.istiodSidecar}}
+
+
+{{- if $istiodSidecar.createRoleBinding }}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: istiod-agent
+  labels:
+    app: istiod-agent
+subjects:
+  - kind: ServiceAccount
+    name: {{ $istiodSidecar.istiodServiceAccount.name }}
+    namespace: {{ $istiodSidecar.istiodServiceAccount.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: gloo-mesh-agent
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

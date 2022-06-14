@@ -1,0 +1,16 @@
+apiVersion: v2
+dependencies:
+- name: gloo-mesh-crds
+  repository: file:///Users/ilackarms/go/src/github.com/solo-io/gloo-mesh-enterprise/install/helm/gloo-mesh-crds
+  version: 2.1.0-beta3-60-g0598c469b
+- condition: rate-limiter.enabled
+  name: rate-limiter
+  repository: https://storage.googleapis.com/rate-limiter-helm
+  version: 0.6.1
+- condition: ext-auth-service.enabled
+  name: ext-auth-service
+  repository: https://storage.googleapis.com/ext-auth-service-helm
+  version: 0.20.2
+description: Helm chart for the Gloo Mesh Enterprise Agent.
+name: gloo-mesh-agent
+version: 2.1.0-beta3-60-g0598c469b

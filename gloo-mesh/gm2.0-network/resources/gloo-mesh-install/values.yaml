@@ -1,0 +1,7 @@
+mgmtClusterName: mgmt
+glooMeshMgmtServer:
+  enabled: true
+  serviceType: LoadBalancer
+  serviceOverrides:
+    spec:
+      loadBalancerIP: 34.121.180.114

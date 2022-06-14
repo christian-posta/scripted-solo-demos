@@ -1,0 +1,19 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: bookinfo
+  namespace: bookinfo-frontends
+spec:
+  options:
+    eastWestGateways:
+    - selector:
+        labels:
+          gateway: east-west
+  exportTo:
+  - workspaces:
+    - name: gateways
+    - name: sleep
+#  importFrom:
+#  - workspaces:
+#    - selector:
+#        gateway-internal: "eastwest"    

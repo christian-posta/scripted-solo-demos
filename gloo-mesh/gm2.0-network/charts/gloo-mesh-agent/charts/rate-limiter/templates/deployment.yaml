@@ -1,0 +1,143 @@
+{{- $rateLimiter := $.Values.rateLimiter}}
+{{- $rateLimiterImage := $rateLimiter.image }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rate-limiter
+  {{- include "rate-limiter.extraLabels" . | nindent 4 }}
+  name: rate-limiter
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: rate-limiter
+      rate-limiter: rate-limiter
+  template:
+    metadata:
+      labels:
+        app: rate-limiter
+        rate-limiter: rate-limiter
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+        {{- include "rate-limiter.extraTemplateAnnotations" . | nindent 8 }}
+    spec:
+      serviceAccountName: rate-limiter
+      containers:
+      - image: {{ printf "%v/%v:%v" $rateLimiterImage.registry $rateLimiterImage.repository $rateLimiterImage.tag | quote }}
+        imagePullPolicy: {{ $rateLimiterImage.pullPolicy }}
+        name: rate-limiter
+        env:
+        - name: LOG_LEVEL
+          value: {{ $rateLimiter.logLevel }}
+        - name: START_STATS_SERVER
+          value: "true"
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        {{- if $rateLimiter.watchNamespace }}
+        - name: WATCH_NAMESPACE
+          value: "{{ $rateLimiter.watchNamespace }}"
+        {{- end }}
+        - name: RL_PORT_GRPC
+          value: "{{ $rateLimiter.ports.grpc }}"
+        - name: READY_PORT_HTTP
+          value: "{{ $rateLimiter.ports.ready }}"
+        - name: DEBUG_PORT
+          value: "{{ $rateLimiter.ports.debug }}"
+        - name: REDIS_URL
+          value: {{ .Values.redis.hostname }}:{{ .Values.redis.service.port }}
+        - name: REDIS_SOCKET_TYPE
+          value: {{ .Values.redis.service.socket }}
+        {{- if .Values.redis.certs.enabled }}
+        - name: REDIS_CA_CERT
+          value: {{ .Values.redis.certs.mountPoint }}/{{ .Values.redis.certs.caCert }}
+        {{- end }}
+        {{- if .Values.redis.auth.enabled }}
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.auth.secretName }}
+              key:  {{ .Values.redis.auth.passwordKey }}
+        - name: REDIS_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.auth.secretName }}
+              key:  {{ .Values.redis.auth.usernameKey }}
+        {{- end}}
+        - name: READY_PATH_HTTP
+          value: "{{ $rateLimiter.readyPath }}"
+        readinessProbe:
+          httpGet:
+            port: {{ $rateLimiter.ports.ready }}
+            path: {{ $rateLimiter.readyPath }}
+          initialDelaySeconds: 1
+          periodSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        {{- if .Values.redis.certs.enabled }}
+        volumeMounts:
+          - mountPath: {{ .Values.redis.certs.mountPoint }}
+            name: tls-volume
+        {{- end }}          
+{{- if $rateLimiter.resources }}
+        resources:
+{{ toYaml $rateLimiter.resources | indent 10}}
+{{- else}}
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+{{- end}}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      {{- if .Values.redis.certs.enabled }}
+      volumes:
+      - name: tls-volume
+        secret:
+          secretName: {{ .Values.redis.certs.secretName }}
+      {{- end }}
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: rate-limiter
+  {{- include "rate-limiter.extraLabels" . | nindent 4 }}
+  name: rate-limiter
+  namespace: {{ $.Release.Namespace }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rate-limiter
+  {{- include "rate-limiter.extraLabels" . | nindent 4 }}
+  name: rate-limiter
+  namespace: {{ $.Release.Namespace }}
+spec:
+  selector:
+    app: rate-limiter
+    rate-limiter: rate-limiter
+  type: ClusterIP
+  ports:
+  - name: grpc
+    port: {{ $rateLimiter.ports.grpc }}
+  - name: ready
+    port: {{ $rateLimiter.ports.ready }}
+  - name: debug
+    port: {{ $rateLimiter.ports.debug }}
+
+
+

@@ -1,0 +1,12 @@
+dependencies:
+- name: gloo-mesh-crds
+  repository: file:///Users/ilackarms/go/src/github.com/solo-io/gloo-mesh-enterprise/install/helm/gloo-mesh-crds
+  version: 2.1.0-beta3-60-g0598c469b
+- name: rate-limiter
+  repository: https://storage.googleapis.com/rate-limiter-helm
+  version: 0.6.1
+- name: ext-auth-service
+  repository: https://storage.googleapis.com/ext-auth-service-helm
+  version: 0.20.2
+digest: sha256:402e9732b875a1236aec1344994cb05440ecb67367d4f9c15042dd5c355b5312
+generated: "2022-06-13T18:41:19.346241-04:00"

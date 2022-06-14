@@ -1,0 +1,52 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ext-auth-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: ext-auth-service
+  {{- include "ext-auth-service.extraLabels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - extauth.solo.io
+  resources:
+  - authconfigs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extauth.solo.io
+  resources:
+  - authconfigs/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ext-auth-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: ext-auth-service
+  {{- include "ext-auth-service.extraLabels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: ext-auth-service
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: ext-auth-service
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,9 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: KubernetesCluster
+metadata:
+  name: cluster1
+  namespace: gloo-mesh
+  labels:
+    env: beta
+spec:
+  clusterDomain: cluster.local

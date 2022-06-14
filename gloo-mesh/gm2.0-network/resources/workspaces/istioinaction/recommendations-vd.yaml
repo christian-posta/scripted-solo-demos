@@ -1,0 +1,18 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: VirtualDestination
+metadata:
+  name: recommendation
+  namespace: istioinaction
+  labels:
+    workspace.solo.io/exported: "true"
+spec:
+  hosts:
+  - 'recommendation.gloo-mesh.istiodemos.io'
+  services:
+  - namespace: istioinaction
+    labels:
+      app: recommendation
+  ports:
+    - name: http
+      number: 80
+      protocol: HTTP

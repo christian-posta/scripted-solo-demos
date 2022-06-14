@@ -1,0 +1,18 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: auth-gloo-vs
+  namespace: gloo-system
+spec:   
+  virtualHost:
+    domains:
+    - 'auth.gloo-mesh.istiodemos.io'
+    routes:
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: gloo-mesh-dex-32000
+            namespace: gloo-system
+              

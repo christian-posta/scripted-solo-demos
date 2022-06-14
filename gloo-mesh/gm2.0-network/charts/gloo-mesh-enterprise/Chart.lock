@@ -1,0 +1,9 @@
+dependencies:
+- name: gloo-mesh-crds
+  repository: file:///Users/ilackarms/go/src/github.com/solo-io/gloo-mesh-enterprise/install/helm/gloo-mesh-crds
+  version: 2.1.0-beta3-60-g0598c469b
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 14.9.2
+digest: sha256:deeee16fb54ff3ebcff4aab12bbe0d766bbae45962f5d1d590d3a0e714265498
+generated: "2022-06-13T18:41:26.041627-04:00"

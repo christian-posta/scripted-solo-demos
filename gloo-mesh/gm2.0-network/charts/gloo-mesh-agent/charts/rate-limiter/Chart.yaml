@@ -1,0 +1,11 @@
+apiVersion: v1
+description: Solo.io rate limit server Helm chart for Kubernetes
+home: https://solo.io
+keywords:
+- kubernetes
+- envoy
+- rate-limiting
+name: rate-limiter
+sources:
+- https://github.com/solo-io/rate-limiter
+version: 0.6.1

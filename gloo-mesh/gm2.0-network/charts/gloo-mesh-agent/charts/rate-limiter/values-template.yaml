@@ -1,0 +1,43 @@
+rateLimiter:
+  logLevel: INFO
+  # Watch all namespaces by default
+  watchNamespace: ""
+  image:
+    pullPolicy: IfNotPresent
+    registry: gcr.io/gloo-mesh
+    repository: rate-limiter
+    tag: %version%
+  resources:
+    requests:
+      cpu: 125m
+      memory: 256Mi
+  ports:
+    grpc: 8083
+    ready: 8084
+    debug: 9091
+  readyPath: /ready
+  installClusterRoles: true  # If true, use ClusterRoles.  If false, use Roles.
+redis:
+  image:
+    pullPolicy: IfNotPresent
+    registry: docker.io
+    repository: redis
+    tag: 6.2.6
+  service:
+    port: 6379
+    name: redis
+    socket: tcp # Values may be 'unix', 'tcp', or 'tls'
+  hostname: redis  # The hostname clients should use for dialing Redis
+  auth:
+    enabled: false  # If true, will use Redis AUTH
+    secretName: redis-secrets  # Name of the secre that contains the username and password 
+    passwordKey: redis-password # Key that contains the password
+    usernameKey: redis-username  # Key that contains the username.  Use 'default' if Redis doesn't have an explicit username
+  enabled: true # When true, Redis will be installed
+  certs:
+    enabled: false # When true, rate-limiter (and Redis, if enabled) will use an explicit cacert  
+    mountPoint: "/etc/tls" # mount point for the certs
+    caCert: "redis.crt" # File name that contains the ca cert
+    signingKey: "redis.key"  # File name that contains the signing key (relevant to Redis only)
+    secretName: "redis-certs-keys"
+

@@ -1,0 +1,17 @@
+# ConfigMap containing envoy yaml
+
+{{- if $.Values.glooMeshUi.enabled }}---
+# ConfigMap dashboard-envoy
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: dashboard
+    configmap: dashboard-envoy
+  name: dashboard-envoy
+  namespace: {{ .Release.Namespace }}
+data:
+  config.yaml: |2-
+
+    {{ .Files.Get "files/envoy.yaml" | indent 4 }}
+{{- end }}
