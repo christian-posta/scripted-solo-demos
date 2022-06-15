@@ -37,12 +37,12 @@ const typeDefs = gql`
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
     Query: {
-      posts: async (_, { id }, { dataSources }) => {
+      posts: async (_, __, { dataSources }) => {
         return dataSources.postsAPI.getPosts();
       },   
     },
     Post: {
-      user: async (parent, { id }, { dataSources }) => {
+      user: async (parent, _, { dataSources }) => {
         return dataSources.usersAPI.getUserById(parent.userId)
       },   
     },

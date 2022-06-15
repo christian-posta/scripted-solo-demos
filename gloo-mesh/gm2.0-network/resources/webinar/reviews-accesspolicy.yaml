@@ -17,6 +17,6 @@ spec:
       allowedClients:
       - serviceAccountSelector:
           labels:
-            app: productpage
+            account: productpage
       allowedPaths:
       - /reviews*

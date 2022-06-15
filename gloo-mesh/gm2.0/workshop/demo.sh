@@ -53,3 +53,4 @@ desc "We should be able to call the gateway successfully now for bookinfo produc
 run "kubectl --context $CLUSTER1 get svc -n istio-gateways"
 run "curl -k https://$GATEWAY_IP/productpage"
 
+

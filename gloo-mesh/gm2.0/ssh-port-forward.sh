@@ -1,5 +1,5 @@
 USER=${1:-solo}
-BOX=${1:-workshop}
+BOX=${2:-workshop}
 
 # UI
 ssh -L 8090:localhost:8090 -C -N -l $USER $BOX &
