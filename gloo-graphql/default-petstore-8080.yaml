@@ -1,0 +1,726 @@
+apiVersion: graphql.gloo.solo.io/v1alpha1
+kind: GraphQLSchema
+metadata:
+  creationTimestamp: "2021-11-21T22:48:41Z"
+  generation: 1
+  name: default-petstore-8080
+  namespace: gloo-system
+  resourceVersion: "3681"
+  selfLink: /apis/graphql.gloo.solo.io/v1alpha1/namespaces/gloo-system/graphqlschemas/default-petstore-8080
+  uid: bd78d908-f8e6-4ed3-aa79-c5b93799dd9c
+spec:
+  enableIntrospection: true
+  resolutions:
+  - matcher:
+      fieldMatcher:
+        field: logoutUser
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            typedProvider:
+              value: /v3/user/logout
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: findPetsByStatus
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            typedProvider:
+              value: /v3/pet/findByStatus
+        queryParams:
+          status:
+            graphqlArg:
+              argName: status
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: updatePet
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: PUT
+          :path:
+            typedProvider:
+              value: /v3/pet
+        outgoingBody:
+          node:
+            keyValues:
+            - key: name
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: name
+                    required: true
+            - key: photoUrls
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: photoUrls
+                    required: true
+            - key: status
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: status
+            - key: tags
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: tags
+            - key: category
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: category
+            - key: id
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: id
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: placeOrder
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            typedProvider:
+              value: /v3/store/order
+        outgoingBody:
+          node:
+            keyValues:
+            - key: complete
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: complete
+            - key: id
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: id
+            - key: petId
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: petId
+            - key: quantity
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: quantity
+            - key: shipDate
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: shipDate
+            - key: status
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: orderInput
+                    path:
+                    - key: status
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: updateUser
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: PUT
+          :path:
+            graphqlArg:
+              argName: username
+            providerTemplate: /v3/user/{}
+        outgoingBody:
+          node:
+            keyValues:
+            - key: phone
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: phone
+            - key: userStatus
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: userStatus
+            - key: username
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: username
+            - key: email
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: email
+            - key: firstName
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: firstName
+            - key: id
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: id
+            - key: lastName
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: lastName
+            - key: password
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: password
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: uploadFile
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            graphqlArg:
+              argName: petId
+            providerTemplate: /v3/pet/{}/uploadImage
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: findPetsByTags
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            typedProvider:
+              value: /v3/pet/findByTags
+        queryParams:
+          tags:
+            graphqlArg:
+              argName: tags
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: getPetById
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            graphqlArg:
+              argName: petId
+            providerTemplate: /v3/pet/{}
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: updatePetWithForm
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            graphqlArg:
+              argName: petId
+            providerTemplate: /v3/pet/{}
+        outgoingBody:
+          node:
+            keyValues:
+            - key: status
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: bodyInput
+                    path:
+                    - key: status
+            - key: name
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: bodyInput
+                    path:
+                    - key: name
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: createUsersWithArrayInput
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            typedProvider:
+              value: /v3/user/createWithArray
+        outgoingBody:
+          valueProvider:
+            graphqlArg:
+              argName: userCreateWithArrayInput
+              path:
+              - all: true
+              required: true
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: loginUser
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            typedProvider:
+              value: /v3/user/login
+        queryParams:
+          password:
+            graphqlArg:
+              argName: password
+          username:
+            graphqlArg:
+              argName: username
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: getUserByName
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            graphqlArg:
+              argName: username
+            providerTemplate: /v3/user/{}
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: getInventory
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            typedProvider:
+              value: /v3/store/inventory
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: createUser
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            typedProvider:
+              value: /v3/user
+        outgoingBody:
+          node:
+            keyValues:
+            - key: phone
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: phone
+            - key: userStatus
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: userStatus
+            - key: username
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: username
+            - key: email
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: email
+            - key: firstName
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: firstName
+            - key: id
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: id
+            - key: lastName
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: lastName
+            - key: password
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: userInput
+                    path:
+                    - key: password
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: createUsersWithListInput
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            typedProvider:
+              value: /v3/user/createWithList
+        outgoingBody:
+          valueProvider:
+            graphqlArg:
+              argName: userCreateWithListInput
+              path:
+              - all: true
+              required: true
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: deletePet
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: DELETE
+          :path:
+            graphqlArg:
+              argName: petId
+            providerTemplate: /v3/pet/{}
+          api_key:
+            graphqlArg:
+              argName: apiKey
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: deleteOrder
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: DELETE
+          :path:
+            graphqlArg:
+              argName: orderId
+            providerTemplate: /v3/store/order/{}
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: getOrderById
+        type: Query
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: GET
+          :path:
+            graphqlArg:
+              argName: orderId
+            providerTemplate: /v3/store/order/{}
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: deleteUser
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: DELETE
+          :path:
+            graphqlArg:
+              argName: username
+            providerTemplate: /v3/user/{}
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  - matcher:
+      fieldMatcher:
+        field: addPet
+        type: Mutation
+    restResolver:
+      requestTransform:
+        headers:
+          :method:
+            typedProvider:
+              value: POST
+          :path:
+            typedProvider:
+              value: /v3/pet
+        outgoingBody:
+          node:
+            keyValues:
+            - key: name
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: name
+                    required: true
+            - key: photoUrls
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: photoUrls
+                    required: true
+            - key: status
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: status
+            - key: tags
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: tags
+            - key: category
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: category
+            - key: id
+              value:
+                valueProvider:
+                  graphqlArg:
+                    argName: petInput
+                    path:
+                    - key: id
+      upstreamRef:
+        name: default-petstore-8080
+        namespace: gloo-system
+  schema: "\"\"\"A User who is purchasing from the pet store\"\"\"\ninput UserInput
+    {\n  password: String\n  phone: String\n\n  \"\"\"User Status\"\"\"\n  userStatus:
+    Int\n  username: String\n  email: String\n  firstName: String\n  id: Int\n  lastName:
+    String\n}\n\ntype Query {\n  \"\"\"\n  Returns a single pet\n  \n  Equivalent
+    to GET /pet/{petId}\n  \"\"\"\n  getPetById(\n    \"\"\"ID of pet to return\"\"\"\n
+    \   petId: Int!\n  ): Pet\n\n  \"\"\"\n  Logs user into the system\n  \n  Equivalent
+    to GET /user/login\n  \"\"\"\n  loginUser(\n    \"\"\"The user name for login\"\"\"\n
+    \   username: String!\n\n    \"\"\"The password for login in clear text\"\"\"\n
+    \   password: String!\n  ): String\n\n  \"\"\"\n  Get user by user name\n  \n
+    \ Equivalent to GET /user/{username}\n  \"\"\"\n  getUserByName(\n    \"\"\"The
+    name that needs to be fetched. Use user1 for testing.\"\"\"\n    username: String!\n
+    \ ): User\n\n  \"\"\"\n  Returns a map of status codes to quantities\n  \n  Equivalent
+    to GET /store/inventory\n  \"\"\"\n  getInventory: JSON\n\n  \"\"\"\n  For valid
+    response try integer IDs with value <= 5 or > 10. Other values will generated
+    exceptions\n  \n  Equivalent to GET /store/order/{orderId}\n  \"\"\"\n  getOrderById(\n
+    \   \"\"\"ID of pet that needs to be fetched\"\"\"\n    orderId: Int!\n  ): Order\n\n
+    \ \"\"\"\n  Logs out current logged in user session\n  \n  Equivalent to GET /user/logout\n
+    \ \"\"\"\n  logoutUser: JSON\n\n  \"\"\"\n  Multiple status values can be provided
+    with comma separated strings\n  \n  Equivalent to GET /pet/findByStatus\n  \"\"\"\n
+    \ findPetsByStatus(\n    \"\"\"Status values that need to be considered for filter\"\"\"\n
+    \   status: [Status3ListItem]!\n  ): [Pet]\n\n  \"\"\"\n  Multiple tags can be
+    provided with comma separated strings. Use tag1, tag2, tag3 for testing.\n  \n
+    \ Equivalent to GET /pet/findByTags\n  \"\"\"\n  findPetsByTags(\n    \"\"\"Tags
+    to filter by\"\"\"\n    tags: [String]!\n  ): [Pet]\n}\n\nenum Status {\n  available\n
+    \ pending\n  sold\n}\n\n\"\"\"A tag for a pet\"\"\"\ninput TagInput {\n  name:
+    String\n  id: Int\n}\n\ntype Category {\n  name: String\n  id: Int\n}\n\ntype
+    User {\n  \"\"\"User Status\"\"\"\n  userStatus: Int\n  username: String\n  email:
+    String\n  firstName: String\n  id: Int\n  lastName: String\n  password: String\n
+    \ phone: String\n}\n\ntype Mutation {\n  \"\"\"\n  Creates list of users with
+    given input array\n  \n  Equivalent to POST /user/createWithArray\n  \"\"\"\n
+    \ createUsersWithArrayInput(userCreateWithArrayInput: [UserInput]!): JSON\n\n
+    \ \"\"\"\n  Deletes a pet\n  \n  Equivalent to DELETE /pet/{petId}\n  \"\"\"\n
+    \ deletePet(\n    apiKey: String\n\n    \"\"\"Pet id to delete\"\"\"\n    petId:
+    Int!\n  ): JSON\n\n  \"\"\"\n  Creates list of users with given input array\n
+    \ \n  Equivalent to POST /user/createWithList\n  \"\"\"\n  createUsersWithListInput(userCreateWithListInput:
+    [UserInput]!): JSON\n\n  \"\"\"\n  For valid response try integer IDs with value
+    < 1000. Anything above 1000 or nonintegers will generate API errors\n  \n  Equivalent
+    to DELETE /store/order/{orderId}\n  \"\"\"\n  deleteOrder(\n    \"\"\"ID of the
+    order that needs to be deleted\"\"\"\n    orderId: String!\n  ): JSON\n\n  \"\"\"\n
+    \ uploads an image\n  \n  Equivalent to POST /pet/{petId}/uploadImage\n  \"\"\"\n
+    \ uploadFile(\n    \"\"\"ID of pet to update\"\"\"\n    petId: Int!\n\n    \"\"\"String
+    represents payload of content type 'multipart/form-data'\"\"\"\n    multipartFormDataInput:
+    String\n  ): ApiResponse\n\n  \"\"\"\n  Place an order for a pet\n  \n  Equivalent
+    to POST /store/order\n  \"\"\"\n  placeOrder(\n    \"\"\"An order for a pets from
+    the pet store\"\"\"\n    orderInput: OrderInput!\n  ): Order\n\n  \"\"\"\n  Add
+    a new pet to the store\n  \n  Equivalent to POST /pet\n  \"\"\"\n  addPet(\n    \"\"\"A
+    pet for sale in the pet store\"\"\"\n    petInput: PetInput!\n  ): JSON\n\n  \"\"\"\n
+    \ This can only be done by the logged in user.\n  \n  Equivalent to PUT /user/{username}\n
+    \ \"\"\"\n  updateUser(\n    \"\"\"name that need to be deleted\"\"\"\n    username:
+    String!\n\n    \"\"\"A User who is purchasing from the pet store\"\"\"\n    userInput:
+    UserInput!\n  ): JSON\n\n  \"\"\"\n  Updates a pet in the store with form data\n
+    \ \n  Equivalent to POST /pet/{petId}\n  \"\"\"\n  updatePetWithForm(\n    \"\"\"ID
+    of pet that needs to be updated\"\"\"\n    petId: Int!\n    bodyInput: BodyInput\n
+    \ ): JSON\n\n  \"\"\"\n  This can only be done by the logged in user.\n  \n  Equivalent
+    to POST /user\n  \"\"\"\n  createUser(\n    \"\"\"A User who is purchasing from
+    the pet store\"\"\"\n    userInput: UserInput!\n  ): JSON\n\n  \"\"\"\n  This
+    can only be done by the logged in user.\n  \n  Equivalent to DELETE /user/{username}\n
+    \ \"\"\"\n  deleteUser(\n    \"\"\"The name that needs to be deleted\"\"\"\n    username:
+    String!\n  ): JSON\n\n  \"\"\"\n  Update an existing pet\n  \n  Equivalent to
+    PUT /pet\n  \"\"\"\n  updatePet(\n    \"\"\"A pet for sale in the pet store\"\"\"\n
+    \   petInput: PetInput!\n  ): JSON\n}\n\n\"\"\"A pet for sale in the pet store\"\"\"\ninput
+    PetInput {\n  tags: [TagInput]\n\n  \"\"\"A category for a pet\"\"\"\n  category:
+    CategoryInput\n  id: Int\n  name: String!\n  photoUrls: [String]!\n\n  \"\"\"pet
+    status in the store\"\"\"\n  status: Status\n}\n\nenum Status2 {\n  approved\n
+    \ delivered\n  placed\n}\n\n\"\"\"A category for a pet\"\"\"\ninput CategoryInput
+    {\n  name: String\n  id: Int\n}\n\ntype Tag {\n  id: Int\n  name: String\n}\n\ntype
+    Order {\n  petId: Int\n  quantity: Int\n  shipDate: String\n\n  \"\"\"Order Status\"\"\"\n
+    \ status: Status2\n  complete: Boolean\n  id: Int\n}\n\nenum Status3ListItem {\n
+    \ available\n  pending\n  sold\n}\n\n\"\"\"\nThe `JSON` scalar type represents
+    JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).\n\"\"\"\nscalar
+    JSON\n\ntype ApiResponse {\n  message: String\n  type: String\n  code: Int\n}\n\ntype
+    Pet {\n  name: String!\n  photoUrls: [String]!\n\n  \"\"\"pet status in the store\"\"\"\n
+    \ status: Status\n  tags: [Tag]\n\n  \"\"\"A category for a pet\"\"\"\n  category:
+    Category\n  id: Int\n}\n\n\"\"\"An order for a pets from the pet store\"\"\"\ninput
+    OrderInput {\n  \"\"\"Order Status\"\"\"\n  status: Status2\n  complete: Boolean\n
+    \ id: Int\n  petId: Int\n  quantity: Int\n  shipDate: String\n}\n\ninput BodyInput
+    {\n  \"\"\"Updated name of the pet\"\"\"\n  name: String\n\n  \"\"\"Updated status
+    of the pet\"\"\"\n  status: String\n}"

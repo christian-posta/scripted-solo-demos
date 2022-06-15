@@ -5,6 +5,17 @@ metadata:
   namespace: gloo-system
 spec:
   virtualHost:
+    options:
+      cors:
+        allowCredentials: true
+        allowHeaders:
+        - apollo-query-plan-experimental
+        - content-type
+        - x-apollo-tracing
+        allowMethods:
+        - POST
+        allowOriginRegex:
+        - \*  
     domains:
     - '*'
     routes:

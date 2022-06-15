@@ -1,0 +1,19 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      - exact: /all-posts
+      options:
+        prefixRewrite: /data
+      routeAction:
+        single:
+          upstream:
+            name: default-posts-8080
+            namespace: gloo-system
