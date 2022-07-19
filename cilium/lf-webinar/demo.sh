@@ -98,9 +98,8 @@ read -s
 tmux send-keys -t 1 C-l
 tmux send-keys -t 1 "kubectl exec -it ds/cilium -n kube-system -- bash" 
 
-
+desc "We should clean up cilium network policy.... press Enter to continue"
 read -s
-desc "Clean up NetworkPolicy for the moment"
 run "kubectl delete ciliumnetworkpolicy helloworld-cnp"
 
 backtotop
