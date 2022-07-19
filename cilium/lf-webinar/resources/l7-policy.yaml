@@ -1,18 +1,23 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: reviews
-  namespace: bookinfo
+  name: helloworld-cnp
+  namespace: default
 spec:
   description: "Allow the productpage service to communicate with the reviews service"
   endpointSelector:
     matchLabels:
-      app: reviews
+      app: helloworld
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: productpage
+        app: sleep
+        k8s:io.kubernetes.pod.namespace: default
     toPorts:
     - ports:
-      - port: "9080"
+      - port: "5000"
         protocol: TCP
+      rules:
+        http:
+        - method: "GET"        
+          path: "/hello"
