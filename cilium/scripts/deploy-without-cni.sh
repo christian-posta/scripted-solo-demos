@@ -79,6 +79,9 @@ nodes:
   extraPortMappings:
   - containerPort: 6443
     hostPort: 70${twodigits}
+- role: worker
+- role: worker
+- role: worker
 networking:
   disableDefaultCNI: true
   serviceSubnet: "10.$(echo $twodigits | sed 's/^0*//').0.0/16"
@@ -114,7 +117,7 @@ containerdConfigPatches:
     endpoint = ["http://gcr:${cache_port}"]
 EOF
 
-kind create cluster --name kind${number} --config kind${number}.yaml
+kind create cluster --name kind${number} --config kind${number}.yaml --image  kindest/node:v1.19.11
 
 ipkind=$(docker inspect kind${number}-control-plane | jq -r '.[0].NetworkSettings.Networks[].IPAddress')
 networkkind=$(echo ${ipkind} | awk -F. '{ print $1"."$2 }')
