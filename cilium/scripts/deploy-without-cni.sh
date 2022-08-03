@@ -79,9 +79,6 @@ nodes:
   extraPortMappings:
   - containerPort: 6443
     hostPort: 70${twodigits}
-- role: worker
-- role: worker
-- role: worker
 networking:
   disableDefaultCNI: true
   serviceSubnet: "10.$(echo $twodigits | sed 's/^0*//').0.0/16"
