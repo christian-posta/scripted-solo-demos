@@ -47,11 +47,3 @@ echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-t
 echo ""
 echo ""
 
-# we can't see the ip-cache with kubectl now because of the "outage" we triggered. So we use docker/crictl instead:
-# kubectl exec -n kube-system -ti $AGENT_POD -c cilium-agent --  cilium map get cilium_ipcache
-echo "Current ip cache:"
-docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache'
-echo ""
-echo "Specifically, note the identity of the sleep-v2 pod's IP:"
-docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache' | grep $ip
-echo "and compare to above ip cache and identity."
