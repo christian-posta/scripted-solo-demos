@@ -75,6 +75,15 @@ kubectl --context gm-cluster1 -n bookinfo-frontends debug -i -q ${product_pod} -
 details_pod=$(kubectl --context gm-cluster1 -n bookinfo-backends get pods -l app=details -o jsonpath='{.items[0].metadata.name}')
 kubectl --context gm-cluster1 -n bookinfo-backends debug -i -q ${details_pod} --image=curlimages/curl --image-pull-policy=Always -- curl --max-time 5 http://reviews:9080/reviews/0
 
+
+
+product_pod=$(kubectl --context cluster1 -n bookinfo-frontends get pods -l app=productpage -o jsonpath='{.items[0].metadata.name}')
+kubectl --context cluster1 -n bookinfo-frontends debug -i -q ${product_pod} --image=curlimages/curl --image-pull-policy=Always -- curl --max-time 5 http://reviews.bookinfo-backends:9080/reviews/0
+
+
+details_pod=$(kubectl --context cluster1 -n bookinfo-backends get pods -l app=details -o jsonpath='{.items[0].metadata.name}')
+kubectl --context cluster1 -n bookinfo-backends debug -i -q ${details_pod} --image=curlimages/curl --image-pull-policy=Always -- curl --max-time 5 http://reviews:9080/reviews/0
+
 Apply:
 
 cat resources/webinar/reviews-auth-policy.yaml
