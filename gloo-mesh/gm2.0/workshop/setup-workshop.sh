@@ -5,7 +5,7 @@ export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
 #export GM_VERSION=2.1.0-beta5
 # How to enable the Cilium components in the UI
 # window.localStorage.setItem('cilium-enabled', 'true')
-export GM_VERSION=2.1.0-beta13
+export GM_VERSION=2.1.0-rc2
 
 
 
