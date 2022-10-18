@@ -1,0 +1,7 @@
+scripts/kind/*.yaml
+scripts/kind*.yaml
+scripts/metallb*.yaml
+.DS_Store
+kind*.yaml
+metallb*.yaml
+resources/sample-resources

@@ -1,0 +1,21 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: bookinfo-reviews-ap
+  namespace: bookinfo-backends
+spec:
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster1/ns/bookinfo-frontends/sa/bookinfo-productpage
+        - cluster2/ns/bookinfo-frontends/sa/bookinfo-productpage
+    to:
+    - operation:
+        paths:
+        - /reviews*
+        ports:
+        - "9080"
+  selector:
+    matchLabels:
+      app: reviews

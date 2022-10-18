@@ -1,0 +1,18 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: bookinfo-reviews-cnp
+  namespace: bookinfo-backends
+spec:
+  endpointSelector:
+    matchLabels:
+      any:app: reviews
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.cilium.k8s.policy.serviceaccount: bookinfo-productpage
+        k8s:io.kubernetes.pod.namespace: bookinfo-frontends
+    toPorts:
+    - ports:
+      - port: "9080"
+        protocol: ANY
