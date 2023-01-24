@@ -87,6 +87,8 @@ fi
 pushd $REPO_FOLDER
 git init
 git add . 
+git config user.email "ceposta@apache.org"
+git config user.name "ceposta"
 git commit -m 'initial commit for gloo-mesh-config'
 git remote add origin http://ceposta:admin123@localhost:3000/ceposta/routing-config.git
 git push -u origin master
