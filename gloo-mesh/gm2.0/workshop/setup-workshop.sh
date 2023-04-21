@@ -2,15 +2,21 @@ source ~/bin/gloo-mesh-license-env
 source ./env-workshop.sh
 
 export GLOO_MESH_LICENSE_KEY=${GLOO_MESH_LICENSE}
-export GM_VERSION=2.0.3
+#export GM_VERSION=2.1.0-beta5
+# How to enable the Cilium components in the UI
+# window.localStorage.setItem('cilium-enabled', 'true')
+export GM_VERSION=2.1.0-rc2
 
 
 
+# NOTE: for this demo, and revisions, we are
+# assuming **** Istio 1.11.7 ****
 ISTIO_ROOT_DIR="/home/solo/dev/istio/"
 
-../scripts/deploy.sh 1 mgmt
-../scripts/deploy.sh 2 cluster1 us-west us-west-1
-../scripts/deploy.sh 3 cluster2 us-east us-east-2
+
+../scripts/deploy-with-cilium.sh 1 mgmt
+../scripts/deploy-with-cilium.sh 2 cluster1 us-west us-west-1
+../scripts/deploy-with-cilium.sh 3 cluster2 us-east us-east-2
 
 ../scripts/check.sh $MGMT kube-system
 ../scripts/check.sh $MGMT metallb-system
@@ -38,9 +44,9 @@ kubectl --context ${CLUSTER2} -n istio-gateways create secret generic tls-secret
 
 pushd "$ISTIO_ROOT_DIR"
 
-helm --kube-context=${CLUSTER1} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
+helm --kube-context=${CLUSTER1} install istio-base ./latest/manifests/charts/base -n istio-system
 
-helm --kube-context=${CLUSTER1} install istio-1.11.7 ./istio-1.11.7/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
+helm --kube-context=${CLUSTER1} install istio-1.11.7 ./latest/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
 revision: 1-11
 global:
   meshID: mesh1
@@ -67,7 +73,7 @@ EOF
 
 kubectl --context ${CLUSTER1} label namespace istio-gateways istio.io/rev=1-11
 
-helm --kube-context=${CLUSTER1} install istio-ingressgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER1} install istio-ingressgateway ./latest/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-ingressgateway
@@ -84,7 +90,7 @@ gateways:
       targetPort: 8443
 EOF
 
-helm --kube-context=${CLUSTER1} install istio-eastwestgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER1} install istio-eastwestgateway ./latest/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-eastwestgateway
@@ -112,9 +118,9 @@ gateways:
 EOF
 
 
-helm --kube-context=${CLUSTER2} install istio-base ./istio-1.11.7/manifests/charts/base -n istio-system
+helm --kube-context=${CLUSTER2} install istio-base ./latest/manifests/charts/base -n istio-system
 
-helm --kube-context=${CLUSTER2} install istio-1.11.7 ./istio-1.11.7/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
+helm --kube-context=${CLUSTER2} install istio-1.11.7 ./latest/manifests/charts/istio-control/istio-discovery -n istio-system --values - <<EOF
 revision: 1-11
 global:
   meshID: mesh1
@@ -141,7 +147,7 @@ EOF
 
 kubectl --context ${CLUSTER2} label namespace istio-gateways istio.io/rev=1-11
 
-helm --kube-context=${CLUSTER2} install istio-ingressgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER2} install istio-ingressgateway ./latest/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-ingressgateway
@@ -158,7 +164,7 @@ gateways:
       targetPort: 8443
 EOF
 
-helm --kube-context=${CLUSTER2} install istio-eastwestgateway ./istio-1.11.7/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
+helm --kube-context=${CLUSTER2} install istio-eastwestgateway ./latest/manifests/charts/gateways/istio-ingress -n istio-gateways --values - <<EOF
 gateways:
   istio-ingressgateway:
     name: istio-eastwestgateway
@@ -188,13 +194,13 @@ EOF
 
 kubectl --context ${CLUSTER1} create ns sleep
 kubectl --context ${CLUSTER1} label namespace sleep istio.io/rev=1-11
-kubectl --context ${CLUSTER1} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n sleep
-kubectl --context ${CLUSTER1} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n gloo-mesh-addons
+kubectl --context ${CLUSTER1} apply -f ./latest/samples/sleep/sleep.yaml -n sleep
+kubectl --context ${CLUSTER1} apply -f ./latest/samples/sleep/sleep.yaml -n gloo-mesh-addons
 
 kubectl --context ${CLUSTER2} create ns sleep
 kubectl --context ${CLUSTER2} label namespace sleep istio.io/rev=1-11
-kubectl --context ${CLUSTER2} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n sleep
-kubectl --context ${CLUSTER2} apply -f ./istio-1.11.7/samples/sleep/sleep.yaml -n gloo-mesh-addons
+kubectl --context ${CLUSTER2} apply -f ./latest/samples/sleep/sleep.yaml -n sleep
+kubectl --context ${CLUSTER2} apply -f ./latest/samples/sleep/sleep.yaml -n gloo-mesh-addons
 
 popd
 

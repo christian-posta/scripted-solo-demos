@@ -1,0 +1,16 @@
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-helloworld
+  namespace: default
+spec:
+  action: DENY
+  selector:
+    matchLabels:
+      app: helloworld
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/hello"]      
