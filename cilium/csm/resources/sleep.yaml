@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sleep-v1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sleep-v2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sleep-v1
+  labels:
+    app: sleep
+    service: sleep
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: sleep
+    version: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sleep-v2
+  labels:
+    app: sleep
+    service: sleep
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: sleep
+    version: v2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sleep-v1
+spec:
+  replicas: 15
+  selector:
+    matchLabels:
+      app: sleep
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: sleep
+        version: v1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - helloworld
+              topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 0
+      serviceAccountName: sleep-v1
+      containers:
+      - name: sleep
+        image: docker.io/curlimages/curl
+        command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sleep-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sleep
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: sleep
+        version: v2
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - helloworld
+              topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 0
+      serviceAccountName: sleep-v2
+      containers:
+      - name: sleep
+        image: docker.io/curlimages/curl
+        command: ["/bin/sleep", "3650d"]
+        imagePullPolicy: IfNotPresent
