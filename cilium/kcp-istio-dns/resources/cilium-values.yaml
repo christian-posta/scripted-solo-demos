@@ -1,0 +1,22 @@
+cluster:
+  id: 1
+  name: ek8s-test
+tunnel: disabled
+eni:
+  enabled: true
+ipam:
+  mode: eni
+nodeinit:
+  enabled: true
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+kubeProxyReplacement: strict
+egressMasqueradeInterfaces: eth0
+k8sServiceHost:
+k8sServicePort: 443
+hostRouting: false
+socketLB:
+  hostNamespaceOnly: true
