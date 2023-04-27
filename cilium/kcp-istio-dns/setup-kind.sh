@@ -1,3 +1,5 @@
-../scripts/deploy-multi-without-cni.sh 1 cluster1
 
-kubectl config use-context cluster1
+NUMBER=${1:-1}
+
+../scripts/deploy-multi-without-cni-no-kp.sh $NUMBER "cluster$NUMBER"
+kubectl config use-context "cluster$NUMBER"

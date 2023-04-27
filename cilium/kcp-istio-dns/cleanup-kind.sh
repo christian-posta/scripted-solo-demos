@@ -1,5 +1,7 @@
 
-kubectl config delete-cluster kind-kind1
-kubectl config delete-context cluster1
-kind delete cluster --name kind1
+NUMBER=${1:-1}
+
+kubectl config delete-cluster kind-kind$NUMBER
+kubectl config delete-context cluster$NUMBER
+kind delete cluster --name kind$NUMBER
 

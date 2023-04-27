@@ -24,7 +24,23 @@ Return to the sleep pod, and try to curl again....
 
 > curl -v address.internal
 
-Again, it should not work. NOW we should apply the CNI with hostNamespaceOnly
+Again, it should not work. 
+
+If we want we can verify that Istio CP correctly picked up the service-entry:
+
+> istioctl pc clusters deploy/sleep-v2 | grep address.internal
+
+We can also confirm what hostnames are in the DNS proxy by querying the "name discovery service" in the control plane 
+
+> PROXY_ID=$(istioctl proxy-status | grep sleep-v1 | awk '{print $1}')
+> kubectl -n istio-system exec deploy/istiod -- curl -Ls "localhost:8080/debug/ndsz?proxyID=$PROXY_ID" | jq
+
+We should see the "address.internal" hostname entry in there... this means Istio DEFINITELY should see the hostname in the DNS proxy and should be able to resolve it.... but it doesn't... so there's something fishy going on with the CNI. Let's investigate.
+
+
+
+
+NOW we should apply the CNI with hostNamespaceOnly
 
 
 > ./reset-cni.sh
