@@ -1,0 +1,16 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: httpbin
+  namespace: httpbin
+spec:
+  importFrom:
+  - workspaces:
+    - name: bookinfo
+    resources:
+    - kind: SERVICE
+  options:
+    serviceIsolation:
+      enabled: true
+
+

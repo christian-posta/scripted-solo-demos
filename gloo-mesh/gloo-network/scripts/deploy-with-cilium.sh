@@ -123,6 +123,8 @@ kubectl config set-cluster kind-kind${number} --server=https://${myip}:70${twodi
 
 helm repo add cilium https://helm.cilium.io/
 
+
+## running
 helm --kube-context kind-kind${number} install cilium cilium/cilium --version 1.11.6 \
    --namespace kube-system \
    --set prometheus.enabled=true \
@@ -140,6 +142,10 @@ helm --kube-context kind-kind${number} install cilium cilium/cilium --version 1.
    --set bpf.masquerade=false \
    --set image.pullPolicy=IfNotPresent \
    --set ipam.mode=kubernetes
+
+### end running
+
+
 
 kubectl --context kind-kind${number} -n kube-system scale deploy/cilium-operator --replicas=1
 

@@ -42,6 +42,56 @@ kubectl --context ${CLUSTER1} -n bookinfo-frontends set env deploy/productpage-v
 kubectl --context ${CLUSTER1} -n bookinfo-backends set env deploy/reviews-v1 CLUSTER_NAME=${CLUSTER1}
 kubectl --context ${CLUSTER1} -n bookinfo-backends set env deploy/reviews-v2 CLUSTER_NAME=${CLUSTER1}
 
+kubectl --context ${CLUSTER1} create ns httpbin
+kubectl apply --context ${CLUSTER1} -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: not-in-mesh
+  namespace: httpbin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: not-in-mesh
+  namespace: httpbin
+  labels:
+    app: not-in-mesh
+    service: not-in-mesh
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: not-in-mesh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: not-in-mesh
+  namespace: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: not-in-mesh
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: not-in-mesh
+        version: v1
+    spec:
+      serviceAccountName: not-in-mesh
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: not-in-mesh
+        ports:
+        - containerPort: 80
+EOF
+
 
 
 ### Deploy Sample app to cluster 2
@@ -70,18 +120,17 @@ kubectl --context ${CLUSTER2} -n bookinfo-backends set env deploy/reviews-v3 CLU
 helm repo add gloo-mesh-enterprise https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise 
 helm repo update
 kubectl --context ${MGMT} create ns gloo-mesh 
-helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise \
---namespace gloo-mesh --kube-context ${MGMT} \
---version=${GM_VERSION} \
---set glooMeshMgmtServer.ports.healthcheck=8091 \
---set legacyMetricsPipeline.enabled=false \
---set telemetryGateway.enabled=true \
---set telemetryGateway.service.type=LoadBalancer \
---set glooMeshUi.serviceType=LoadBalancer \
---set glooNetwork.enabled=true \
---set mgmtClusterName=mgmt \
---set global.cluster=mgmt \
---set licenseKey=${GLOO_MESH_LICENSE_KEY}
+helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise --namespace gloo-mesh --kube-context ${MGMT} --version=${GM_VERSION} \
+  --set glooMeshMgmtServer.ports.healthcheck=8091 \
+  --set legacyMetricsPipeline.enabled=true \
+  --set glooMeshUi.serviceType=LoadBalancer \
+  --set glooNetwork.enabled=true \
+  --set mgmtClusterName=mgmt \
+  --set global.cluster=mgmt \
+  --set licenseKey=${GLOO_MESH_LICENSE_KEY}
+#--set telemetryGateway.enabled=true \
+#--set telemetryGateway.service.type=LoadBalancer \
+
 kubectl --context ${MGMT} -n gloo-mesh rollout status deploy/gloo-mesh-mgmt-server
 
 
@@ -129,9 +178,10 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=false \
   --set glooMeshPortalServer.enabled=false \
   --set cluster=cluster1 \
-  --set telemetryCollector.enabled=true \
-  --set telemetryCollector.config.exporters.otlp.endpoint=\"${ENDPOINT_TELEMETRY_GATEWAY}\" \
-  --version ${GM_VERSION}
+  --version ${GM_VERSION}  
+#  --set telemetryCollector.enabled=true \
+#  --set telemetryCollector.config.exporters.otlp.endpoint=\"${ENDPOINT_TELEMETRY_GATEWAY}\" \
+  
 
 
 ### Register cluster 2
@@ -165,16 +215,17 @@ helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
   --set ext-auth-service.enabled=false \
   --set glooMeshPortalServer.enabled=false \
   --set cluster=cluster2 \
-  --set telemetryCollector.enabled=true \
-  --set telemetryCollector.config.exporters.otlp.endpoint=\"${ENDPOINT_TELEMETRY_GATEWAY}\" \
-  --version ${GM_VERSION}
+  --version ${GM_VERSION}  
+#  --set telemetryCollector.enabled=true \
+#  --set telemetryCollector.config.exporters.otlp.endpoint=\"${ENDPOINT_TELEMETRY_GATEWAY}\" \
+
 
 
 
   ### CHeck registration happened correctly:
 
-echo "Pause to let clients connect"
-sleep 10
+echo "Pause (60s) to let clients connect"
+sleep 60
 
 pod=$(kubectl --context ${MGMT} -n gloo-mesh get pods -l app=gloo-mesh-mgmt-server -o jsonpath='{.items[0].metadata.name}')
 kubectl --context ${MGMT} -n gloo-mesh debug -q -i ${pod} --image=curlimages/curl -- curl -s http://localhost:9091/metrics | grep relay_push_clients_connected
@@ -210,6 +261,30 @@ kind: WorkspaceSettings
 metadata:
   name: bookinfo
   namespace: bookinfo-frontends
+spec:
+  {}
+EOF
+
+
+kubectl apply --context ${MGMT} -f - <<EOF
+apiVersion: admin.gloo.solo.io/v2
+kind: Workspace
+metadata:
+  name: httpbin
+  namespace: gloo-mesh
+spec:
+  workloadClusters:
+  - name: cluster1
+    namespaces:
+    - name: httpbin
+EOF
+
+kubectl apply --context ${CLUSTER1} -f - <<EOF
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: httpbin
+  namespace: httpbin
 spec:
   {}
 EOF
