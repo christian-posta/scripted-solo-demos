@@ -21,6 +21,6 @@ kubectl label namespace default istio-injection=enabled
 
 # Add sleep
 
-kubectl apply -f resources/sleep.yaml -n default
-kubectl apply -f resources/httpbin.yaml -n default
+kubectl apply -f ./samples/ -n default
+
 
