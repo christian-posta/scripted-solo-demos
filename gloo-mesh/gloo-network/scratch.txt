@@ -1,0 +1,72 @@
+#### from the working lab
+
+helm repo add gloo-mesh-enterprise https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise
+helm repo update
+kubectl --context ${MGMT} create ns gloo-mesh
+helm upgrade --install gloo-mesh-enterprise gloo-mesh-enterprise/gloo-mesh-enterprise \
+--namespace gloo-mesh --kube-context ${MGMT} \
+--version=2.3.0 \
+--set glooMeshMgmtServer.ports.healthcheck=8091 \
+--set legacyMetricsPipeline.enabled=false \
+--set telemetryGateway.enabled=true \
+--set telemetryGateway.service.type=LoadBalancer \
+--set glooMeshUi.serviceType=LoadBalancer \
+--set mgmtClusterName=mgmt \
+--set global.cluster=mgmt \
+--set licenseKey=${GLOO_MESH_LICENSE_KEY}
+
+helm upgrade --install gloo-mesh-agent gloo-mesh-agent/gloo-mesh-agent \
+  --namespace gloo-mesh \
+  --kube-context=${CLUSTER1} \
+  --set relay.serverAddress=${ENDPOINT_GLOO_MESH} \
+  --set relay.authority=gloo-mesh-mgmt-server.gloo-mesh \
+  --set rate-limiter.enabled=false \
+  --set ext-auth-service.enabled=false \
+  --set glooMeshPortalServer.enabled=false \
+  --set cluster=cluster1 \
+  --set telemetryCollector.enabled=true \
+  --set telemetryCollector.config.exporters.otlp.endpoint=\"${ENDPOINT_TELEMETRY_GATEWAY}\" \
+  --version 2.3.0
+
+## end  
+
+kubectl --context ${MGMT} -n gloo-mesh rollout status deploy/gloo-mesh-mgmt-server
+    --namespace kube-system \
+    --set nodeinit.enabled=true \
+    --set nodeinit.reconfigureKubelet=true \
+    --set nodeinit.removeCbrBridge=true \
+    --set cni.binPath=/home/kubernetes/bin \
+    --set gke.enabled=true \
+    --set ipam.mode=kubernetes \
+    --set ipv4NativeRoutingCIDR=$NATIVE_CIDR \
+    --set prometheus.enabled=true \
+    --set operator.prometheus.enabled=true \
+    --set hubble.enabled=true \
+    --set hubble.metrics.enabled="{dns:destinationContext=pod;sourceContext=pod,drop:destinationContext=pod;sourceContext=pod,tcp:destinationContext=pod;sourceContext=pod,flow:destinationContext=pod;sourceContext=pod,port-distribution:destinationContext=pod;sourceContext=pod}" \
+    --set image.pullPolicy=IfNotPresent \
+    --set customCalls.enabled=true \
+    --wait --timeout 30s   
+
+
+helm --kube-context kind-kind${number} install cilium cilium/cilium --version 1.12.0 \
+   --namespace kube-system \
+   --set prometheus.enabled=true \
+   --set operator.prometheus.enabled=true \
+   --set hubble.enabled=true \
+   --set hubble.metrics.enabled="{dns:destinationContext=pod|ip;sourceContext=pod|ip,drop:destinationContext=pod|ip;sourceContext=pod|ip,tcp:destinationContext=pod|ip;sourceContext=pod|ip,flow:destinationContext=pod|ip;sourceContext=pod|ip,port-distribution:destinationContext=pod|ip;sourceContext=pod|ip}" \
+   --set hubble.relay.enabled=true \
+   --set hubble.ui.enabled=true \
+   --set kubeProxyReplacement=partial \
+   --set hostServices.enabled=false \
+   --set hostServices.protocols="tcp" \
+   --set externalIPs.enabled=true \
+   --set nodePort.enabled=true \
+   --set hostPort.enabled=true \
+   --set bpf.masquerade=false \
+   --set image.pullPolicy=IfNotPresent \
+   --set ipam.mode=kubernetes
+
+    cilium install --context ${CLUSTER1} --helm-set version=1.12.1 --helm-set hubble.enabled=true --helm-set hubble.metrics.enabled="{dns:destinationContext=pod|ip;sourceContext=pod|ip,drop:destinationContext=pod|ip;sourceContext=pod|ip,tcp:destinationContext=pod|ip;sourceContext=pod|ip,flow:destinationContext=pod|ip;sourceContext=pod|ip,port-distribution:destinationContext=pod|ip;sourceContext=pod|ip}"
+
+    
+cilium install --context ${CLUSTER2} --helm-set version=1.12.1 --helm-set hubble.enabled=true --helm-set hubble.metrics.enabled="{dns:destinationContext=pod|ip;sourceContext=pod|ip,drop:destinationContext=pod|ip;sourceContext=pod|ip,tcp:destinationContext=pod|ip;sourceContext=pod|ip,flow:destinationContext=pod|ip;sourceContext=pod|ip,port-distribution:destinationContext=pod|ip;sourceContext=pod|ip}"
