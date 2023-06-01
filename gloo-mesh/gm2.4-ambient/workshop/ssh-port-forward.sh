@@ -17,8 +17,12 @@ ssh -L 8088:localhost:8088 -C -N -l $USER $BOX &
 ARGO_PID="$!"
 
 # Bookinfo
-ssh -L 8443:172.18.2.1:443 -C -N -l $USER $BOX &
+ssh -L 8443:172.18.102.1:443 -C -N -l $USER $BOX &
 BOOK_PID="$!"
+
+#Kiali
+ssh -L 20001:localhost:20001 -C -N -l $USER $BOX &
+KIALI_PID="$!"
 
 function cleanup {
   kill -9 $UI_PID
@@ -26,6 +30,7 @@ function cleanup {
   kill -9 $GOGS_PID
   kill -9 $ARGO_PID
   kill -9 $BOOK_PID
+  kill -9 $KIALI_PID
 }
 
 trap cleanup EXIT
