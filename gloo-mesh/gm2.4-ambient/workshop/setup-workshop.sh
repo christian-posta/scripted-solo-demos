@@ -778,7 +778,7 @@ EOF
 kubectl --context ${CLUSTER1} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
  kubectl --context ${CLUSTER1} apply -f gateway-api.yaml
 
-ubectl --context ${CLUSTER2} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
+kubectl --context ${CLUSTER2} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
  kubectl --context ${CLUSTER2} apply -f gateway-api.yaml
 
 
