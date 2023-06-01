@@ -1,0 +1,1 @@
+kubectl --context cluster1 port-forward -n argocd deploy/argo-cd-argocd-server   8088:8080

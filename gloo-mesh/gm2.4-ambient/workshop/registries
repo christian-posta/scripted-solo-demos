@@ -1,0 +1,5 @@
+docker https://registry-1.docker.io
+us-docker https://us-docker.pkg.dev
+us-central1-docker https://us-central1-docker.pkg.dev
+quay https://quay.io
+gcr https://gcr.io
