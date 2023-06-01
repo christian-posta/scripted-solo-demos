@@ -776,9 +776,10 @@ EOF
 ### install gateway CRDs
 
 kubectl --context ${CLUSTER1} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
-  { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.6.1" | kubectl --context ${CLUSTER1} apply -f -; }
-kubectl --context ${CLUSTER2} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
-  { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.6.1" | kubectl --context ${CLUSTER2} apply -f -; }
+ kubectl --context ${CLUSTER1} apply -f gateway-api.yaml
+
+ubectl --context ${CLUSTER2} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
+ kubectl --context ${CLUSTER2} apply -f gateway-api.yaml
 
 
 #### Install kiali
