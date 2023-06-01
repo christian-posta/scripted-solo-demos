@@ -48,3 +48,52 @@ NOW we should apply the CNI with hostNamespaceOnly
 
 
 Now if you go back to the sleep pod and curl for address.internal, you should see it resolve to the IP address listed in the service entry, although it won't eventually connect to anything. That's okay.
+
+
+### My notes
+
+use this to copy a pcap file out of a debug ephemeral container in a pod after using termshark:
+
+kubectl cp default/sleep-v1-54fc88fc49-cgb4n:/root/.cache/termshark/pcaps/cap1.pcap -c debugger-mmf9z  ./cap1.pcap
+
+
+Port forward Hubble:
+
+UI:
+> kubectl port-forward -n kube-system svc/hubble-ui --address 0.0.0.0 --address :: 12000:80
+or
+> cilium hubble ui
+
+Viewing it from desktop:
+
+> ssh -L 12000:localhost:12000 -C -N -l solo cilium
+
+Relay:
+> kubectl port-forward -n kube-system svc/hubble-relay --address 0.0.0.0 --address :: 4245:80
+or
+> cilium hubble port-forward
+
+Cluster-wide flows: 
+
+> hubble observe -f --server localhost:4245
+
+Per Agent (log in to the specific agent and run hubble observe, or cilium monitor)
+
+
+Show ebpf chains on TC:
+
+tc filter show dev lxc00aa ingress
+
+
+## Need to install termshark?
+
+First install go..
+
+> apt install golang-go
+
+Then install termshark
+> apt install -y tshark
+> go install github.com/gcla/termshark/v2/cmd/termshark@v2.4.0
+
+## Using nsenter on kubernets
+kubectl krew install nsenter
