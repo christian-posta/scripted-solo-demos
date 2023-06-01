@@ -67,7 +67,8 @@ mkdir -p $GATEWAYS_FOLDER
 cp $DIR/policies/clean-workspacesettings.yaml $BOOKINFO_FOLDER/workspacesettings.yaml
 cp $DIR/policies/clean-virtualgateway.yaml $GATEWAYS_FOLDER/virtualgateway.yaml
 cp $DIR/policies/clean-faultinjection-policy.yaml $BOOKINFO_FOLDER/faultinjection-policy.yaml
-cp $DIR/policies/clean-faultinjection-routetable-clean.yaml $BOOKINFO_FOLDER/ratings-routetable.yaml
+# let's not create this in the initial commit because it will force a waypoint proxy
+#cp $DIR/policies/clean-faultinjection-routetable-clean.yaml $BOOKINFO_FOLDER/ratings-routetable.yaml
 cp $DIR/policies/clean-virtualdestination.yaml $BOOKINFO_FOLDER/virtualdestination.yaml
 cp $DIR/policies/clean-failoverpolicy-outlier.yaml $BOOKINFO_FOLDER/outlier-policy.yaml
 cp $DIR/policies/clean-failoverpolicy.yaml $BOOKINFO_FOLDER/failover-policy.yaml
@@ -93,3 +94,7 @@ git commit -m 'initial commit for gloo-mesh-config'
 git remote add origin http://ceposta:admin123@localhost:3000/ceposta/routing-config.git
 git push -u origin master
 popd
+
+# put the ratings routetable there...
+# we can commit it and it will generate a waypoint proxy
+cp $DIR/policies/clean-ratings-fault-routetable.yaml $BOOKINFO_FOLDER/ratings-routetable.yaml

@@ -11,7 +11,10 @@ export GM_VERSION=v2.3.0-rc2
 
 # NOTE: for this demo, and revisions, we are
 # assuming **** Istio 1.11.7 ****
-ISTIO_ROOT_DIR="/home/solo/dev/istio/"
+ISTIO_ROOT_DIR="/home/solo/dev/istio/latest"
+
+#This how to download istio: 
+#curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.18.0-alpha.0 sh -
 
 
 ../scripts/deploy.sh 1 mgmt
@@ -776,3 +779,7 @@ kubectl --context ${CLUSTER1} get crd gateways.gateway.networking.k8s.io &> /dev
   { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.6.1" | kubectl --context ${CLUSTER1} apply -f -; }
 kubectl --context ${CLUSTER2} get crd gateways.gateway.networking.k8s.io &> /dev/null || \
   { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.6.1" | kubectl --context ${CLUSTER2} apply -f -; }
+
+
+#### Install kiali
+kubectl apply -f $ISTIO_ROOT_DIR/samples/addons --context $CLUSTER1
