@@ -31,5 +31,3 @@ desc "*** What happens if there is churn in the cluster and an IP assigned to sl
 read -s
 
 run "./run-test.sh"
-
-desc "remember, the identity of sleep-v1 is $IDENTITY_ID"
