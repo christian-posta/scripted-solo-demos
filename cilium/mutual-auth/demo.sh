@@ -33,14 +33,44 @@ run "cat ./resources/helloworld-v2-policy.yaml"
 run "kubectl apply -f ./resources/helloworld-v2-policy.yaml"
 
 desc "Verify that only v1 to v1 traffic is allowed and no other"
+desc ""
+desc "(You can fire up termshark to see the mTLS handshake that underpins Mutual Auth"
+read -s 
+
+SLEEP_ON_NODE=$(kubectl get pod -l app=sleep,version=v1 -o=jsonpath='{.items[0].spec.nodeName}')
+CILIUM_AGENT_POD=$(kubectl get po -n kube-system -o wide | grep cilium | grep $SLEEP_ON_NODE | awk '{ print $1 }')
+
+echo "$SLEEP_ON_NODE"
+echo "$CILIUM_AGENT_POD"
+
+SOURCE_DIR=$PWD
+tmux split-window -v -d -c $SOURCE_DIR
+tmux select-pane -t 0
+tmux send-keys -t 1 C-l
+tmux send-keys -t 1 "kubectl debug -it ${CILIUM_AGENT_POD} -n kube-system --image=nicolaka/netshoot --image-pull-policy=Always -- tshark -i eth0 -Y 'ssl.handshake'" C-m
+
+desc "We can also check hubble in another term... 'cilium hubble ui'"
+read -s
+# You can use the following commands to do in another window
+# SLEEP_ON_NODE=$(kubectl get pod -l app=sleep,version=v1 -o=jsonpath='{.items[0].spec.nodeName}')
+# CILIUM_AGENT_POD=$(k get po -n kube-system -o wide | grep cilium | grep $SLEEP_ON_NODE | awk '{ print $1 }')
+# kubectl debug -it ${CILIUM_AGENT_POD} -n kube-system --image=nicolaka/netshoot --image-pull-policy=Always -- bash
+
+desc "Let's make some calls..."
+read -s
+
 run "./call-combinations.sh"
 
 
 desc "Note the network policy is enforced!"
 read -s
 
+tmux send-keys -t 1 C-c
+tmux send-keys -t 1 "exit" C-m
+
+
 backtotop
-desc "*** Check the cilium identities ***"
+desc "*** Check the Cilium identities ***"
 read -s
 
 run "kubectl get ciliumidentities | grep default"
@@ -58,4 +88,6 @@ run "kubectl exec -n kube-system ds/cilium -c cilium-agent -- cilium map get cil
 backtotop
 desc "*** Can this identity mapping get confused? ***"
 read -s
+
+
 
