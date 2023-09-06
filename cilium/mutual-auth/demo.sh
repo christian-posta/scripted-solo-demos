@@ -38,7 +38,7 @@ desc "(You can fire up termshark to see the mTLS handshake that underpins Mutual
 read -s 
 
 SLEEP_ON_NODE=$(kubectl get pod -l app=sleep,version=v1 -o=jsonpath='{.items[0].spec.nodeName}')
-CILIUM_AGENT_POD=$(kubectl get po -n kube-system -o wide | grep cilium | grep $SLEEP_ON_NODE | awk '{ print $1 }')
+CILIUM_AGENT_POD=$(kubectl get po -n kube-system -o wide | grep 'cilium-[^o]' | grep $SLEEP_ON_NODE | awk '{ print $1 }')
 
 echo "$SLEEP_ON_NODE"
 echo "$CILIUM_AGENT_POD"
@@ -83,6 +83,13 @@ IDENTITY_ID=$(kubectl get ciliumendpoints.cilium.io -l app=sleep,version=v1 -o j
 
 run "kubectl get ciliumidentity $IDENTITY_ID -o yaml"
 
+run "kubectl exec -n kube-system ds/cilium -c cilium-agent -- cilium map get cilium_ipcache | grep $IDENTITY_ID"
+
+backtotop
+desc "Lets scale up the number of sleep-v1 instances"
+
+run "kubectl scale deploy/sleep-v1 --replicas=15"
+run "kubectl wait pods -n default -l app=sleep,version=v1 --for condition=Ready"
 run "kubectl exec -n kube-system ds/cilium -c cilium-agent -- cilium map get cilium_ipcache | grep $IDENTITY_ID"
 
 backtotop

@@ -43,7 +43,7 @@ kind: Deployment
 metadata:
   name: sleep-v1
 spec:
-  replicas: 15
+  replicas: 1
   selector:
     matchLabels:
       app: sleep
