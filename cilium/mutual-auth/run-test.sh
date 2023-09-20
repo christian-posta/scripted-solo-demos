@@ -42,8 +42,8 @@ done
 # but will succeed because the ip-cache is not up to date.
 echo ""
 echo "Trying to curl from sleep-v2 to helloworld-v1. running:"
-echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 10
-(kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 10 && echo "Connection success.")|| echo "Connection Failed."
+echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 5
+(kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 5 && echo "Connection success.")|| echo "Connection Failed."
 echo ""
 echo ""
 

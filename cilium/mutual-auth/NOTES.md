@@ -25,17 +25,20 @@ kubectl debug -it ${CILIUM_AGENT_POD} -n kube-system --image=nicolaka/netshoot -
 
 Steps to demo:
 
+Prep:
 * Set up kind cluters 
 * ./setup-kind.sh
 * ./setup-istio-images.sh
 * ./00-isntall-cni.sh
 * ./10-install-sample-apps.sh
+
+
+Demo:
 * ./demo.sh
 * ./demo-wrong-identity.sh
 
 
-If you want to show Istio defense in depth:
-
+Defense in depth:
 * ./15-reset-test.sh
 * ./20-install-istio-ambient.sh
 * ./25-configure-istio-authz.sh

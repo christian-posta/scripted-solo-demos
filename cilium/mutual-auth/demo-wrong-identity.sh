@@ -20,8 +20,8 @@ desc "Let's simulate a network issue between the node which runs helloworld-v1 a
 run "docker exec $NODEV1 iptables -t mangle -I INPUT -p tcp -s $API_SERVER -j DROP"
 run "docker exec $NODEV1 iptables -t mangle -I INPUT -p tcp -s $API_SERVEREP -j DROP"
 
-desc "Lets check out iptables rules"
-run "docker exec -it $NODEV1 iptables -t mangle -L INPUT"
+#desc "Lets check out iptables rules"
+#run "docker exec -it $NODEV1 iptables -t mangle -L INPUT"
 
 desc "We are now dropping traffic from the API server to the node with helloworld-v1 running on it"
 read -s
