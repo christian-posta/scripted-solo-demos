@@ -11,6 +11,7 @@ helm repo update
 helm install cilium cilium/cilium --version $VERSION \
   --namespace kube-system \
   --set ipam.mode=kubernetes \
+  --set cni.exclusive=false \
   --set socketLB.enabled=false \
   --set externalIPs.enabled=true \
   --set bpf.masquerade=false \
@@ -24,4 +25,5 @@ helm install cilium cilium/cilium --version $VERSION \
   --set encryption.type=wireguard \
   --set authentication.mutual.spire.enabled=true \
   --set authentication.mutual.spire.install.enabled=true
+
 

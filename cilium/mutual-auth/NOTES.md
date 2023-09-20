@@ -22,12 +22,22 @@ CILIUM_AGENT_POD=$(k get po -n kube-system -o wide | grep cilium | grep $SLEEP_O
 kubectl debug -it ${CILIUM_AGENT_POD} -n kube-system --image=nicolaka/netshoot --image-pull-policy=Always -- tshark -i eth0 -Y 'ssl.handshake'
 
 
-SOURCE_DIR=$PWD
-tmux split-window -v -d -c $SOURCE_DIR
-tmux select-pane -t 0
-tmux send-keys -t 1 C-l
-tmux send-keys -t 1 "kubectl logs -n autoroute-operator -f $POD" C-m
+
+Steps to demo:
+
+* Set up kind cluters 
+* ./setup-kind.sh
+* ./setup-istio-images.sh
+* ./00-isntall-cni.sh
+* ./10-install-sample-apps.sh
+* ./demo.sh
+* ./demo-wrong-identity.sh
 
 
-tmux send-keys -t 1 C-c
-tmux send-keys -t 1 "exit" C-m
+If you want to show Istio defense in depth:
+
+* ./15-reset-test.sh
+* ./20-install-istio-ambient.sh
+* ./25-configure-istio-authz.sh
+* ./call-combinations.sh
+* ./demo-wrong-identity.sh
