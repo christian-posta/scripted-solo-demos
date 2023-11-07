@@ -12,7 +12,4 @@ spec:
         io.cilium.k8s.policy.serviceaccount: sleep-v2
     authentication:
       mode: required        
-    toPorts:
-    - ports:
-      - port: "5000"
-        protocol: TCP
+

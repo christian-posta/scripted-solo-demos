@@ -44,9 +44,6 @@ spec:
   - from:
     - source:
         principals: ["cluster.local/ns/default/sa/sleep-v1"]
-    to:
-    - operation:
-        methods: ["GET"]
 EOF
 
 kubectl apply -f - <<EOF
@@ -65,7 +62,4 @@ spec:
   - from:
     - source:
         principals: ["cluster.local/ns/default/sa/sleep-v2"]
-    to:
-    - operation:
-        methods: ["GET"]
 EOF

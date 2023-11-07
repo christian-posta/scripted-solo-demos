@@ -8,28 +8,33 @@ pod=$(kubectl -n kube-system get pods -l k8s-app=cilium -o jsonpath='{.items[0].
 
 
 backtotop
-desc "-----==== Understanding identity in Cilium ====-----"
+desc "-----==== Mutual Authentication in Cilium is eventually consistent ====-----"
 read -s
 
 
 desc "We have v1 and v2 of each sleep and helloworld services"
 run "kubectl get po -n default"
 
+
+desc "At the moment, these workloads can call each other"
+desc "Let's make some calls..."
+read -s
+
+run "./call-combinations.sh"
+
+backtotop
 desc "We only want sleep-v1 to call helloworld-v1"
 desc "and sleep-v2 to call helloworld-v2"
 desc "We CANNOT allow sleep-v2 to call helloworld-v1, it"
 desc "would be a regulatory violation in our demo"
 read -s
 
-
-backtotop
 desc "*** Set up network policy to enforce our policies ***"
 read -s
 
 run "cat ./resources/helloworld-v1-policy.yaml"
-run "kubectl apply -f ./resources/helloworld-v1-policy.yaml"
-
 run "cat ./resources/helloworld-v2-policy.yaml"
+run "kubectl apply -f ./resources/helloworld-v1-policy.yaml"
 run "kubectl apply -f ./resources/helloworld-v2-policy.yaml"
 
 desc "Verify that only v1 to v1 traffic is allowed and no other"
@@ -38,7 +43,7 @@ desc "(You can fire up termshark to see the mTLS handshake that underpins Mutual
 read -s 
 
 SLEEP_ON_NODE=$(kubectl get pod -l app=sleep,version=v1 -o=jsonpath='{.items[0].spec.nodeName}')
-CILIUM_AGENT_POD=$(kubectl get po -n kube-system -o wide | grep 'cilium-[^o]' | grep $SLEEP_ON_NODE | awk '{ print $1 }')
+CILIUM_AGENT_POD=$(kubectl get po -n kube-system -o wide | grep 'cilium-[^o]' | grep $SLEEP_ON_NODE\\s | awk '{ print $1 }')
 
 echo "$SLEEP_ON_NODE"
 echo "$CILIUM_AGENT_POD"
@@ -66,6 +71,7 @@ desc "Note the network policy is enforced!"
 read -s
 
 tmux send-keys -t 1 C-c
+sleep 1
 tmux send-keys -t 1 "exit" C-m
 
 
