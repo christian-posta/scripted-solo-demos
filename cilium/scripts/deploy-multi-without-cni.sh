@@ -117,30 +117,31 @@ containerdConfigPatches:
     endpoint = ["http://gcr:${cache_port}"]
 EOF
 
-kind create cluster --name kind${number} --config kind${number}.yaml --image  kindest/node:v1.19.11
+kind create cluster --name kind${number} --config kind${number}.yaml --image  kindest/node:v1.23.17
 
 ipkind=$(docker inspect kind${number}-control-plane | jq -r '.[0].NetworkSettings.Networks[].IPAddress')
 networkkind=$(echo ${ipkind} | awk -F. '{ print $1"."$2 }')
 
 kubectl config set-cluster kind-kind${number} --server=https://${myip}:70${twodigits} --insecure-skip-tls-verify=true
 
-kubectl --context=kind-kind${number} apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-kubectl --context=kind-kind${number} apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-kubectl --context=kind-kind${number} create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+## set up metallb
+curl -s https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml | sed 's/Fail/Ignore/' | kubectl --context=kind-kind${number} apply -f -
 
 cat << EOF > metallb${number}.yaml
-apiVersion: v1
-kind: ConfigMap
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
 metadata:
+  name: first-pool
   namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - ${networkkind}.0${twodigits}.1-${networkkind}.0${twodigits}.254
+spec:
+  addresses:
+  - ${networkkind}.1${twodigits}.1-${networkkind}.1${twodigits}.254
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: empty
+  namespace: metallb-system
 EOF
 
 kubectl --context=kind-kind${number} apply -f metallb${number}.yaml
