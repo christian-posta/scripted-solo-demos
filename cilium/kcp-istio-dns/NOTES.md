@@ -52,9 +52,9 @@ Now if you go back to the sleep pod and curl for address.internal, you should se
 
 ### My notes
 
-use this to copy a pcap file out of a debug ephemeral container in a pod after using termshark:
+#### use this to copy a pcap file out of a debug ephemeral container in a pod after using termshark:
 
-kubectl cp default/sleep-v1-54fc88fc49-cgb4n:/root/.cache/termshark/pcaps/cap1.pcap -c debugger-mmf9z  ./cap1.pcap
+kubectl cp kube-system/cilium-vx2sh:/root/.cache/termshark/pcaps/cap1.pcap -c debugger-l67rk  ./cap1.pcap
 
 
 Port forward Hubble:
@@ -97,3 +97,11 @@ Then install termshark
 
 ## Using nsenter on kubernets
 kubectl krew install nsenter
+
+
+## Uninstall ebpf state
+kubectl apply -f hack-cilium-cleanup-ebpf-ds.yaml
+
+after it runs.. might error out... so delete it:
+
+kubectl delete -f hack-cilium-cleanup-ebpf-ds.yaml
