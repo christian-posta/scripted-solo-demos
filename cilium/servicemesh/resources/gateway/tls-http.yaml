@@ -1,0 +1,33 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-tls-gateway
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - name: https-1
+    protocol: HTTPS
+    port: 443
+    hostname: "demo.helloworld.com"
+    tls:
+      certificateRefs:
+      - kind: Secret
+        name: helloworld-gw-cert
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: https-helloworld
+spec:
+  parentRefs:
+  - name: my-tls-gateway
+  hostnames:
+  - "demo.helloworld.com"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /hello
+    backendRefs:
+    - name: helloworld-v1
+      port: 5000
