@@ -1,0 +1,38 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-splitting-gateway
+  namespace: default
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - protocol: HTTP
+    port: 80
+    name: web-gw
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-helloworld-splitting
+spec:
+  parentRefs:
+  - name: my-splitting-gateway
+    namespace: default
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /hello
+    backendRefs:
+    - kind: Service
+      name: helloworld-v1
+      port: 5000
+      weight: 50
+    - kind: Service
+      name: helloworld-v2
+      port: 5000
+      weight: 50

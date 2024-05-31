@@ -1,0 +1,94 @@
+{{- if and .Values.global.glooRbac.create (index .Values "gateway-portal-web-server" "enabled") }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ include "gloo.roleKind" . }}
+metadata:
+  name: gateway-portal-control-plane{{ include "gloo.rbacNameSuffix" . }}
+  {{- if .Values.global.glooRbac.namespaced }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+  labels:
+    app: gateway-portal
+rules: # These rules match the Portal resource rules used in GME for portal server, mesh management, and the mesh agent.
+- apiGroups:
+  - apimanagement.gloo.solo.io
+  resources:
+  - apidocs
+  verbs:
+  - '*'
+- apiGroups:
+  - apimanagement.gloo.solo.io
+  resources:
+  - apidocs/status
+  - apiproducts/status
+  - apischemadiscoveries/status
+  - graphqlresolvermaps/status
+  - graphqlschemas/status
+  - graphqlstitchedschemas/status
+  - portalgroups/status
+  - portals/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - apimanagement.gloo.solo.io
+  resources:
+  - apiproducts
+  - apischemadiscoveries
+  - graphqlresolvermaps
+  - graphqlschemas
+  - graphqlstitchedschemas
+  - portalgroups
+  - portals
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - internal.gloo.solo.io
+  resources:
+  - portalconfigs/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - internal.gloo.solo.io
+  resources:
+  - portalconfigs
+  verbs:
+  - '*'
+- apiGroups:
+    - apiextensions.k8s.io
+  resources:
+    - customresourcedefinitions
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - apps
+  resources:
+    - replicasets
+  verbs:
+    - get
+    - list
+    - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ include "gloo.roleKind" . }}Binding
+metadata:
+  name: gateway-portal-control-plane-binding{{ include "gloo.rbacNameSuffix" . }}
+  {{- if .Values.global.glooRbac.namespaced }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+  labels:
+    app: gateway-portal
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: {{ include "gloo.roleKind" . }}
+  name: gateway-portal-control-plane{{ include "gloo.rbacNameSuffix" . }}
+subjects:
+- kind: ServiceAccount
+  name: gloo
+  namespace: {{ .Release.Namespace }}
+---
+{{- end }}

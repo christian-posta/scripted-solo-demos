@@ -1,0 +1,538 @@
+########################################################################
+###                                                                  ###
+###                        Gloo                                      ###
+###                                                                  ###
+########################################################################
+
+license_key: ""
+create_license_secret: true
+
+gloo:
+  # disable gloo gateway resources, as we are not yet ready to integrate with GlooEE
+  kubeGateway:
+    enabled: false
+  redis:
+    aclPrefix: 'user default +@all allkeys on >'
+    deployment:
+      name: redis
+      image:
+        tag: "7.0.11"
+        repository: redis
+        registry: docker.io
+      staticPort: 6379
+      runAsUser: 999
+      runAsGroup: 999
+      fsGroup: 999
+      enablePodSecurityContext: true
+      initContainer:
+        image:
+          tag: "1.28"
+          repository: busybox
+          registry: docker.io
+    service:
+      port: 6379
+      name: redis
+      db: 0
+    cert:
+      enabled: false
+  license_secret_name: license
+  settings:
+    integrations:
+      knative:
+        proxy:
+          image:
+            repository: gloo-ee-envoy-wrapper
+  gloo:
+    deployment:
+      image:
+        repository: gloo-ee
+  gatewayProxies:
+    gatewayProxy:
+      podTemplate:
+        image:
+          repository: gloo-ee-envoy-wrapper
+      service:
+        extraAnnotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: /metrics
+          prometheus.io/port: "8081"
+        extraPorts:
+          - containerPort: 8081
+            name: stats
+            protocol: TCP
+  gateway:
+    updateValues: true
+    certGenJob:
+      image:
+        repository: certgen
+    cleanupJob:
+      image:
+        repository: kubectl
+    rolloutJob:
+      image:
+        repository: kubectl
+  ingressProxy:
+    deployment:
+      image:
+        repository: gloo-ee-envoy-wrapper
+  discovery:
+    deployment:
+      image:
+        repository: discovery-ee
+redis:
+  aclPrefix: 'user default +@all allkeys on >'
+  deployment:
+    name: redis
+    image:
+      tag: 7.2.4-alpine
+      repository: redis
+      registry: docker.io
+    staticPort: 6379
+    runAsUser: 999
+    runAsGroup: 999
+    fsGroup: 999
+    enablePodSecurityContext: true
+    initContainer:
+      image:
+        tag: "1.28"
+        repository: busybox
+        registry: docker.io
+  service:
+    port: 6379
+    name: redis
+    db: 0
+  cert:
+    enabled: false
+
+########################################################################
+###                                                                  ###
+###                        Observability                             ###
+###                                                                  ###
+########################################################################
+
+observability:
+  enabled: true
+  deployment:
+    name: observability
+    image:
+      repository: observability-ee
+    runAsUser: 10101
+  customGrafana:
+    enabled: false
+
+########################################################################
+###                                                                  ###
+###                        GLOBAL                                    ###
+###                                                                  ###
+########################################################################
+
+global:
+  image:
+    pullPolicy: IfNotPresent
+    registry: quay.io/solo-io
+    fips: false
+  glooRbac:
+    create: true
+  extensions:
+    ########################################################################
+    ###                                                                  ###
+    ###                        Rate Limit                                ###
+    ###                                                                  ###
+    ########################################################################
+    rateLimit:
+      # setting to false will disable rate limiting
+      enabled: true
+      serverUpstreamName: rate-limit
+      deployment:
+        name: "rate-limit"
+        image:
+          repository: rate-limit-ee
+        glooAddress: gloo
+        glooPort: 9977
+        dynamodb:
+          region: us-east-2
+          tableName: rate-limits
+          consistentReads: true
+          batchSize: 100
+        aerospike:
+          namespace: solo-namespace
+          set: ratelimiter
+          port: 3000
+          batchSize: 5000
+          commitLevel: 1
+          tls:
+            version: "1.3"
+            insecure: false
+        runAsUser: 10101
+      service:
+        port: 18081
+        name: rate-limit
+    ########################################################################
+    ###                                                                  ###
+    ###                        Caching                                   ###
+    ###                                                                  ###
+    ########################################################################
+    caching:
+      enabled: false
+      name: caching-service
+      deployment:
+        name: "caching-service"
+        image:
+          repository: caching-ee
+        glooAddress: gloo
+        glooPort: 9977
+        runAsUser: 10101
+      service:
+        httpPort: 8085
+
+    ########################################################################
+    ###                                                                  ###
+    ###                           Extauth                                ###
+    ###                                                                  ###
+    ########################################################################
+    extAuth:
+      enabled: true
+      standaloneDeployment: true
+      # This defaults to an empty string, to ensure backwards compatibility with `standaloneDeployment`
+      # which also controls the name of the Upstream
+      serverUpstreamName: ""
+      transportApiVersion: V3
+      envoySidecar: false
+      serviceName: ext-auth
+      userIdHeader: x-user-id
+      deployment:
+        name: "extauth"
+        image:
+          repository: extauth-ee
+        port: 8083
+        runAsUser: 10101
+        fsGroup: 10101
+        glooPort: 9977
+      service:
+        port: 8083
+        name: extauth
+      signingKey:
+        name: extauth-signing-key
+        signing-key: ""
+    glooRedis:
+      enableAcl: true
+  glooMtls:
+    enabled: false
+    envoy:
+      image:
+        repository: gloo-ee-envoy-wrapper
+    sds:
+      image:
+          repository: sds-ee
+  glooStats:
+    enabled: true
+    routePrefixRewrite: /stats/prometheus
+  graphql:
+    changeValidation:
+      rejectBreaking: false
+      rules:
+        dangerousToBreaking: false
+        deprecatedFieldRemovalDangerous: false
+        ignoreDescriptionChanges: false
+        ignoreUnreachable: false
+  extraSpecs: true
+  extraCustomResources: true
+  extauthCustomYaml: false
+########################################################################
+###                                                                  ###
+###                        Prometheus                                ###
+###                                                                  ###
+########################################################################
+
+prometheus:
+  # setting to false will disable prometheus, removing it from gloo's chart dependencies
+  enabled: true
+  # setting these name overrides ensures that the pods get deleted when `glooctl uninstall` is run
+  nameOverride: glooe-prometheus
+  pushgateway:
+    enabled: false
+  alertmanager:
+    enabled: false
+  nodeExporter:
+    enabled: false
+  kube-state-metrics:
+    fullnameOverride: glooe-prometheus-kube-state-metrics-v2
+  server:
+    fullnameOverride: glooe-prometheus-server
+    persistentVolume:
+      size: 16Gi
+    global:
+      scrape_interval: 10s
+      evaluation_interval: 10s
+    strategy:
+      type: Recreate
+  ## Prometheus server ConfigMap entries
+  serverFiles:
+    prometheus.yml:
+      scrape_configs:
+        - job_name: kube-state-metrics
+          kubernetes_sd_configs:
+          - role: service
+          relabel_configs:
+          - action: keep
+            source_labels:
+            - __meta_kubernetes_service_label_app_kubernetes_io_name
+            regex: kube-state-metrics
+        - job_name: kubernetes-service-endpoints
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - action: keep
+              regex: true
+              source_labels:
+                - __meta_kubernetes_service_labelpresent_gloo
+            - action: keep
+              regex: true
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape
+            - action: replace
+              regex: (https?)
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scheme
+              target_label: __scheme__
+            - action: replace
+              regex: (.+)
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_path
+              target_label: __metrics_path__
+            - action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              source_labels:
+                - __address__
+                - __meta_kubernetes_service_annotation_prometheus_io_port
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_namespace
+              target_label: kubernetes_namespace
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_service_name
+              target_label: kubernetes_name
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_pod_node_name
+              target_label: kubernetes_node
+        - job_name: kubernetes-service-endpoints-slow
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - action: keep
+              regex: true
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+            - action: replace
+              regex: (https?)
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scheme
+              target_label: __scheme__
+            - action: replace
+              regex: (.+)
+              source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_path
+              target_label: __metrics_path__
+            - action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              source_labels:
+                - __address__
+                - __meta_kubernetes_service_annotation_prometheus_io_port
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_namespace
+              target_label: kubernetes_namespace
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_service_name
+              target_label: kubernetes_name
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_pod_node_name
+              target_label: kubernetes_node
+          scrape_interval: 5m
+          scrape_timeout: 30s
+        - job_name: kubernetes-pods
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              regex: true
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+            - action: replace
+              regex: (https?)
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+              target_label: __scheme__
+            - action: replace
+              regex: (.+)
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_path
+              target_label: __metrics_path__
+            - action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              source_labels:
+                - __address__
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_namespace
+              target_label: kubernetes_namespace
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_pod_name
+              target_label: kubernetes_pod_name
+            - action: drop
+              regex: Pending|Succeeded|Failed
+              source_labels:
+                - __meta_kubernetes_pod_phase
+        - job_name: kubernetes-pods-slow
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              regex: true
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+            - action: replace
+              regex: (https?)
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+              target_label: __scheme__
+            - action: replace
+              regex: (.+)
+              source_labels:
+                - __meta_kubernetes_pod_annotation_prometheus_io_path
+              target_label: __metrics_path__
+            - action: replace
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              replacement: $1:$2
+              source_labels:
+                - __address__
+                - __meta_kubernetes_pod_annotation_prometheus_io_port
+              target_label: __address__
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_namespace
+              target_label: kubernetes_namespace
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_pod_name
+              target_label: kubernetes_pod_name
+            - action: drop
+              regex: Pending|Succeeded|Failed
+              source_labels:
+                - __meta_kubernetes_pod_phase
+          scrape_interval: 5m
+          scrape_timeout: 30s
+########################################################################
+###                                                                  ###
+###                        Grafana                                   ###
+###                                                                  ###
+########################################################################
+
+grafana:
+  # setting to false will disable grafana, removing it from gloo's chart dependencies
+  defaultInstallationEnabled: true
+  adminUser: admin
+  adminPassword: admin
+  persistence:
+    enabled: true
+    size: 100Mi
+  rbac:
+    create: false
+    pspEnabled: false
+  # setting these name overrides ensures that the pods get deleted when `glooctl uninstall` is run
+  nameOverride: glooe-grafana
+  fullnameOverride: glooe-grafana
+  initChownData:
+    enabled: false
+  securityContext:
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
+  datasources:
+    datasources.yaml:
+      # config file version
+      apiVersion: 1
+      # list of datasources to insert/update depending
+      # what's available in the database
+      datasources:
+        # <string, required> name of the datasource. Required
+        - name: gloo
+          # <string, required> datasource type. Required
+          type: prometheus
+          access: proxy
+          url: http://glooe-prometheus-server:80
+          isDefault: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "gloo"
+          orgId: 1
+          folder: "gloo"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/gloo
+  dashboardsConfigMaps:
+    gloo: glooe-grafana-custom-dashboards-v2
+  testFramework:
+    enabled: false
+########################################################################
+###                                                                  ###
+###                        Gloo Fed                                  ###
+###                                                                  ###
+########################################################################
+
+gloo-fed:
+  # gloo-fed and gloo-ee both create a 'license' secret by default. When using gloo-fed as a
+  # subchart of gloo-ee we need to prevent the license secret from being created again.
+  create_license_secret: false
+########################################################################
+###                    Gateway Portal Web Server                     ###
+########################################################################
+
+gateway-portal-web-server:
+  # The subchart's enablement field
+  enabled: false
+  # When the portal-web-server is enabled, we want the related CRDs and the server to get installed and deployed by default.
+  installEnterpriseCrds: true
+  # This installs the deployment, service, and RBAC for the gateway-portal-web-server
+  glooPortalServer:
+    enabled: true
+    # On portal server startup, it requires the K8S_MEM_LIMIT environment variable to be set, else a warning is logged.
+    # This is similar to GME's setup, where the K8S_MEM_LIMIT is used to set the memory limit based off the k8s memory limits.
+    env:
+    - name: K8S_MEM_LIMIT
+      valueFrom:
+        resourceFieldRef:
+          divisor: "1"
+          resource: limits.memory
+    # We do not support Redis as the apiKeyStorage for the portal server, so we're explicitly disabling it (although this is the default value).
+    apiKeyStorage:
+      redis:
+        enabled: false
+  # Enable feature gate to install experimental CRs. Currently, we enable the installation of the ApiProducts CRD which
+  # is used to attach portal metadata to k8s gateway routes.
+  featureGates:
+    ApiProducts: true

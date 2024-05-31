@@ -1,0 +1,2730 @@
+|Option|Type|Default Value|Description|
+|------|----|-----------|-------------|
+|settings.watchNamespaces[]|string||whitelist of namespaces for Gloo Edge to watch for services and CRDs. Empty list means all namespaces|
+|settings.writeNamespace|string||namespace where intermediary CRDs will be written to, e.g. Upstreams written by Gloo Edge Discovery.|
+|settings.integrations.knative.enabled|bool||enabled knative components|
+|settings.integrations.knative.version|string||the version of knative installed to the cluster. if using version < 0.8.0, Gloo Edge will use Knative's ClusterIngress API for configuration rather than the namespace-scoped Ingress|
+|settings.integrations.knative.proxy.image.tag|string||The image tag for the container.|
+|settings.integrations.knative.proxy.image.repository|string||The image repository (name) for the container.|
+|settings.integrations.knative.proxy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|settings.integrations.knative.proxy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|settings.integrations.knative.proxy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|settings.integrations.knative.proxy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|settings.integrations.knative.proxy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|settings.integrations.knative.proxy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|settings.integrations.knative.proxy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|settings.integrations.knative.proxy.httpPort|int||HTTP port for the proxy|
+|settings.integrations.knative.proxy.httpsPort|int||HTTPS port for the proxy|
+|settings.integrations.knative.proxy.tracing|string||tracing configuration|
+|settings.integrations.knative.proxy.runAsUser|float64||Explicitly set the user ID for the pod to run as. Default is 10101|
+|settings.integrations.knative.proxy.loopBackAddress|string||Name on which to bind the loop-back interface for this instance of Envoy. Defaults to 127.0.0.1, but other common values may be localhost or ::1|
+|settings.integrations.knative.proxy.stats|bool||Controls whether or not Envoy stats are enabled|
+|settings.integrations.knative.proxy.extraClusterIngressProxyLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the cluster ingress proxy deployment.|
+|settings.integrations.knative.proxy.extraClusterIngressProxyAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the cluster ingress proxy deployment.|
+|settings.integrations.knative.proxy.internal.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.internal.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.internal.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.replicas|int||number of instances to deploy|
+|settings.integrations.knative.proxy.customEnv[].name|string|||
+|settings.integrations.knative.proxy.customEnv[].value|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.name|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.key|string|||
+|settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|settings.integrations.knative.proxy.restartPolicy|string||restart policy to use when the pod exits|
+|settings.integrations.knative.proxy.priorityClassName|string||name of a defined priority class|
+|settings.integrations.knative.proxy.nodeName|string||name of node to run on|
+|settings.integrations.knative.proxy.nodeSelector.NAME|string||label selector for nodes|
+|settings.integrations.knative.proxy.tolerations[].key|string|||
+|settings.integrations.knative.proxy.tolerations[].operator|string|||
+|settings.integrations.knative.proxy.tolerations[].value|string|||
+|settings.integrations.knative.proxy.tolerations[].effect|string|||
+|settings.integrations.knative.proxy.tolerations[].tolerationSeconds|int64|||
+|settings.integrations.knative.proxy.affinity.NAME|interface|||
+|settings.integrations.knative.proxy.hostAliases[]|interface|||
+|settings.integrations.knative.proxy.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|settings.integrations.knative.proxy.resources.limits.memory|string||amount of memory|
+|settings.integrations.knative.proxy.resources.limits.cpu|string||amount of CPUs|
+|settings.integrations.knative.proxy.resources.requests.memory|string||amount of memory|
+|settings.integrations.knative.proxy.resources.requests.cpu|string||amount of CPUs|
+|settings.integrations.knative.proxy.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.service.type|string||K8s service type|
+|settings.integrations.knative.proxy.service.extraAnnotations.NAME|string||extra annotations to add to the service|
+|settings.integrations.knative.proxy.service.loadBalancerIP|string||IP address of the load balancer|
+|settings.integrations.knative.proxy.service.httpPort|int||HTTP port for the knative/ingress proxy service|
+|settings.integrations.knative.proxy.service.httpsPort|int||HTTPS port for the knative/ingress proxy service|
+|settings.integrations.knative.proxy.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.proxy.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|settings.integrations.knative.requireIngressClass|bool||only serve traffic for Knative Ingress objects with the annotation 'networking.knative.dev/ingress.class: gloo.ingress.networking.knative.dev'.|
+|settings.integrations.knative.extraKnativeInternalLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the knative internal deployment.|
+|settings.integrations.knative.extraKnativeInternalAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the knative internal deployment.|
+|settings.integrations.knative.extraKnativeExternalLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the knative external deployment.|
+|settings.integrations.knative.extraKnativeExternalAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the knative external deployment.|
+|settings.integrations.consul.datacenter|string||Datacenter to use. If not provided, the default agent datacenter is used.|
+|settings.integrations.consul.username|string||Username to use for HTTP Basic Authentication.|
+|settings.integrations.consul.password|string||Password to use for HTTP Basic Authentication.|
+|settings.integrations.consul.token|string||Token is used to provide a per-request ACL token which overrides the agent's default token.|
+|settings.integrations.consul.caFile|string||caFile is the optional path to the CA certificate used for Consul communication, defaults to the system bundle if not specified.|
+|settings.integrations.consul.caPath|string||caPath is the optional path to a directory of CA certificates to use for Consul communication, defaults to the system bundle if not specified.|
+|settings.integrations.consul.certFile|string||CertFile is the optional path to the certificate for Consul communication. If this is set then you need to also set KeyFile.|
+|settings.integrations.consul.keyFile|string||KeyFile is the optional path to the private key for Consul communication. If this is set then you need to also set CertFile.|
+|settings.integrations.consul.insecureSkipVerify|bool||InsecureSkipVerify if set to true will disable TLS host verification.|
+|settings.integrations.consul.waitTime|string||WaitTime limits how long a watches for Consul resources will block. If not provided, the agent default values will be used.|
+|settings.integrations.consul.serviceDiscovery.dataCenters[]|string||Use this parameter to restrict the data centers that will be considered when discovering and routing to services. If not provided, Gloo Edge will use all available data centers.|
+|settings.integrations.consul.httpAddress|string||The address of the Consul HTTP server. Used by service discovery and key-value storage (if-enabled). Defaults to the value of the standard CONSUL_HTTP_ADDR env if set, otherwise to 127.0.0.1:8500.|
+|settings.integrations.consul.dnsAddress|string||The address of the DNS server used to resolve hostnames in the Consul service address. Used by service discovery (required when Consul service instances are stored as DNS names). Defaults to 127.0.0.1:8600. (the default Consul DNS server)|
+|settings.integrations.consul.dnsPollingInterval|string||The polling interval for the DNS server. If there is a Consul service address with a hostname instead of an IP, Gloo Edge will resolve the hostname with the configured frequency to update endpoints with any changes to DNS resolution. Defaults to 5s.|
+|settings.integrations.consulUpstreamDiscovery.useTlsTagging|bool||Allow Gloo Edge to automatically apply tls to consul services that are tagged the tlsTagName value. Requires RootCaResourceNamespace and RootCaResourceName to be set if true.|
+|settings.integrations.consulUpstreamDiscovery.tlsTagName|string||The tag Gloo Edge should use to identify consul services that ought to use TLS. If splitTlsServices is true, then this tag is also used to sort serviceInstances into the tls upstream. Defaults to 'glooUseTls'.|
+|settings.integrations.consulUpstreamDiscovery.splitTlsServices|bool||If true, then create two upstreams to be created when a consul service contains the tls tag; one with TLS and one without.|
+|settings.integrations.consulUpstreamDiscovery.rootCa.namespace|string||The namespace of this resource.|
+|settings.integrations.consulUpstreamDiscovery.rootCa.name|string||The name of this resource.|
+|settings.create|bool||create a Settings CRD which provides bootstrap configuration to Gloo Edge controllers|
+|settings.extensions|interface|||
+|settings.singleNamespace|bool||Enable to use install namespace as WatchNamespace and WriteNamespace|
+|settings.invalidConfigPolicy.replaceInvalidRoutes|bool||Rather than pausing configuration updates, in the event of an invalid Route defined on a virtual service or route table, Gloo Edge will serve the route with a predefined direct response action. This allows valid routes to be updated when other routes are invalid.|
+|settings.invalidConfigPolicy.invalidRouteResponseCode|int64||the response code for the direct response|
+|settings.invalidConfigPolicy.invalidRouteResponseBody|string||the response body for the direct response|
+|settings.linkerd|bool||Enable automatic Linkerd integration in Gloo Edge|
+|settings.disableProxyGarbageCollection|bool||Set this option to determine the state of an Envoy listener when the corresponding Proxy resource has no routes. If false (default), Gloo Edge will propagate the state of the Proxy to Envoy, resetting the listener to a clean slate with no routes. If true, Gloo Edge will keep serving the routes from the last applied valid configuration.|
+|settings.regexMaxProgramSize|uint32||Set this field to specify the RE2 default max program size which is a rough estimate of how complex the compiled regex is to evaluate. If not specified, this defaults to 1024.|
+|settings.disableKubernetesDestinations|bool||Enable or disable Gloo Edge to scan Kubernetes services in the cluster and create in-memory Upstream resources to represent them. These resources enable Gloo Edge to route requests to a Kubernetes service. Note that if you have a large number of services in your cluster and you do not restrict the namespaces that Gloo Edge watches, the API snapshot increases which can have a negative impact on the Gloo Edge translation time. In addition, load balancing is done in kube-proxy which can have further performance impacts. Using Gloo Upstreams as a routing destination bypasses kube-proxy as the request is routed to the pod directly. Alternatively, you can use [Kubernetes](https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options/kubernetes/kubernetes.proto.sk/) Upstream resources as a routing destination to forward requests to the pod directly. For more information, see the [docs](https://docs.solo.io/gloo-edge/latest/guides/traffic_management/destination_types/kubernetes_services/).|
+|settings.aws.enableCredentialsDiscovery|bool||Enable AWS credentials discovery in Envoy for lambda requests. If enableServiceAccountCredentials is also set, it will take precedence as only one may be enabled in Gloo Edge|
+|settings.aws.enableServiceAccountCredentials|bool||Use ServiceAccount credentials to authenticate lambda requests. If enableCredentialsDiscovery is also set, this will take precedence as only one may be enabled in Gloo Edge|
+|settings.aws.stsCredentialsRegion|string||Regional endpoint to use for AWS STS requests. If empty will default to global sts endpoint.|
+|settings.aws.propagateOriginalRouting|bool||Send downstream path and method as x-envoy-original-path and x-envoy-original-method headers on the request to AWS lambda.|
+|settings.aws.credential_refresh_delay.seconds|int32||The value of this duration in seconds.|
+|settings.aws.credential_refresh_delay.nanos|int32||The value of this duration in nanoseconds.|
+|settings.aws.fallbackToFirstFunction|bool||It will use the first function which if discovery is enabled the first function is the first function name alphabetically from the last discovery run. Defaults to false.|
+|settings.rateLimit|interface||Partial config for Gloo Edge Enterprise’s rate-limiting service, based on Envoy’s rate-limit service; supports Envoy’s rate-limit service API. (reference here: https://github.com/lyft/ratelimit#configuration) Configure rate-limit descriptors here, which define the limits for requests based on their descriptors. Configure rate-limits (composed of actions, which define how request characteristics get translated into descriptors) on the VirtualHost or its routes.|
+|settings.ratelimitServer|interface||External Ratelimit Server configuration for Gloo Edge Open Sources’s rate-limiting service, based on Envoy’s rate-limit service; supports Envoy’s rate-limit service API. (reference here: https://docs.solo.io/gloo-edge/main/guides/security/rate_limiting/)|
+|settings.circuitBreakers.maxConnections|uint32||Set this field to specify the maximum number of connections that Envoy will make to the upstream cluster. If not specified, the default is 1024.|
+|settings.circuitBreakers.maxPendingRequests|uint32||Set this field to specfify the maximum number of pending requests that Envoy will allow to the upstream cluster. If not specified, the default is 1024.|
+|settings.circuitBreakers.maxRequests|uint32||Set this field to specfify the maximum number of parallel requests that Envoy will make to the upstream cluster. If not specified, the default is 1024.|
+|settings.circuitBreakers.maxRetries|uint32||Set this field to specify the maximum number of parallel retries that Envoy will allow to the upstream cluster. If not specified, the default is 3.|
+|settings.enableRestEds|bool||Whether or not to use rest xds for all EDS by default. Defaults to false.|
+|settings.devMode|bool||Whether or not to enable dev mode. Defaults to false. Setting to true at install time will expose the gloo dev admin endpoint on port 10010. Not recommended for production.|
+|settings.secretOptions.sources[].vault.address|string||Address of the Vault server. This should be a complete URL such as http://solo.io and include port if necessary (vault's default port is 8200).|
+|settings.secretOptions.sources[].vault.rootKey|string||All keys stored in Vault will begin with this Vault this can be used to run multiple instances of Gloo against the same Vault cluster defaults to gloo.|
+|settings.secretOptions.sources[].vault.pathPrefix|string||Optional. The name of a Vault Secrets Engine to which Vault should route traffic. For more info see https://learn.hashicorp.com/tutorials/vault/getting-started-secrets-engines. Defaults to 'secret'.|
+|settings.secretOptions.sources[].vault.tlsConfig.caCert|string||Path to a PEM-encoded CA cert file to use to verify the Vault server SSL certificate.|
+|settings.secretOptions.sources[].vault.tlsConfig.caPath|string||Path to a directory of PEM-encoded CA cert files to verify the Vault server SSL certificate.|
+|settings.secretOptions.sources[].vault.tlsConfig.clientCert|string||Path to the certificate for Vault communication.|
+|settings.secretOptions.sources[].vault.tlsConfig.clientKey|string||Path to the private key for Vault communication.|
+|settings.secretOptions.sources[].vault.tlsConfig.tlsServerName|string||If set, it is used to set the SNI host when connecting via TLS.|
+|settings.secretOptions.sources[].vault.tlsConfig.insecure|bool||Disables TLS verification when set to true.|
+|settings.secretOptions.sources[].vault.accessToken|string||Vault token to use for authentication. Only one of accessToken or aws may be set.|
+|settings.secretOptions.sources[].vault.aws.vaultRole|string||The Vault role we are trying to authenticate to. This is not necessarily the same as the AWS role to which the Vault role is configured.|
+|settings.secretOptions.sources[].vault.aws.region|string||The AWS region to use for the login attempt.|
+|settings.secretOptions.sources[].vault.aws.iamServerIdHeader|string||The IAM Server ID Header required to be included in the request.|
+|settings.secretOptions.sources[].vault.aws.mountPath|string||The Vault path on which the AWS auth is mounted.|
+|settings.secretOptions.sources[].vault.aws.accessKeyID|string||Optional. The Access Key ID as provided by the security credentials on the AWS IAM resource. In cases such as receiving temporary credentials through assumed roles with AWS Security Token Service (STS) or IAM Roles for Service Accounts (IRSA), this field can be omitted. https://developer.hashicorp.com/vault/docs/auth/aws#iam-authentication-inferences.|
+|settings.secretOptions.sources[].vault.aws.secretAccessKey|string||Optional. The Secret Access Key as provided by the security credentials on the AWS IAM resource. In cases such as receiving temporary credentials through assumed roles with AWS Security Token Service (STS) or IAM Roles for Service Accounts (IRSA), this field can be omitted. https://developer.hashicorp.com/vault/docs/auth/aws#iam-authentication-inferences.|
+|settings.secretOptions.sources[].vault.aws.sessionToken|string||The Session Token as provided by the security credentials on the AWS IAM resource.|
+|settings.secretOptions.sources[].vault.aws.leaseIncrement|uint32||The time increment, in seconds, used in renewing the lease of the Vault token. See: https://developer.hashicorp.com/vault/docs/concepts/lease#lease-durations-and-renewal. Defaults to 0, which causes the default TTL to be used.|
+|settings.secretOptions.sources[].directory.directory|string||Directory to read secrets from.|
+|settings.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|license_key|string||Your Gloo Edge license key.|
+|create_license_secret|bool|true|Create a secret for the license specified in 'license_key'. Set to 'false' if you use 'license_secret_name' instead.|
+|gloo.license_secret_name|string|license|The name of a secret that contains your Gloo Edge license key. Set 'create_license_key' to 'false' to disable use of the default license secret.|
+|gloo.redis.deployment.initContainer.image.tag|string|1.28|The image tag for the container.|
+|gloo.redis.deployment.initContainer.image.repository|string|busybox|The image repository (name) for the container.|
+|gloo.redis.deployment.initContainer.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.redis.deployment.initContainer.image.registry|string|docker.io|The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.redis.deployment.initContainer.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.redis.deployment.initContainer.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.redis.deployment.initContainer.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.redis.deployment.initContainer.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.redis.deployment.initContainer.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.redis.deployment.initContainer.securityContext.capabilities.add[]|string|||
+|gloo.redis.deployment.initContainer.securityContext.capabilities.drop[]|string|||
+|gloo.redis.deployment.initContainer.securityContext.privileged|bool|||
+|gloo.redis.deployment.initContainer.securityContext.seLinuxOptions.user|string|||
+|gloo.redis.deployment.initContainer.securityContext.seLinuxOptions.role|string|||
+|gloo.redis.deployment.initContainer.securityContext.seLinuxOptions.type|string|||
+|gloo.redis.deployment.initContainer.securityContext.seLinuxOptions.level|string|||
+|gloo.redis.deployment.initContainer.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.redis.deployment.initContainer.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.redis.deployment.initContainer.securityContext.windowsOptions.runAsUserName|string|||
+|gloo.redis.deployment.initContainer.securityContext.windowsOptions.hostProcess|bool|||
+|gloo.redis.deployment.initContainer.securityContext.runAsUser|int64|||
+|gloo.redis.deployment.initContainer.securityContext.runAsGroup|int64|||
+|gloo.redis.deployment.initContainer.securityContext.runAsNonRoot|bool|||
+|gloo.redis.deployment.initContainer.securityContext.readOnlyRootFilesystem|bool|||
+|gloo.redis.deployment.initContainer.securityContext.allowPrivilegeEscalation|bool|||
+|gloo.redis.deployment.initContainer.securityContext.procMount|string|||
+|gloo.redis.deployment.initContainer.securityContext.seccompProfile.type|string|||
+|gloo.redis.deployment.initContainer.securityContext.seccompProfile.localhostProfile|string|||
+|gloo.redis.deployment.initContainer.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.redis.deployment.name|string|redis||
+|gloo.redis.deployment.staticPort|uint|6379||
+|gloo.redis.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod , this value is not applied.|
+|gloo.redis.deployment.runAsGroup|float64||Explicitly set the group ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod, this value is not applied.|
+|gloo.redis.deployment.fsGroup|float64||Explicitly set the fsGroup ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod, this value is not applied.|
+|gloo.redis.deployment.floatingUserId|bool|false|set to true to allow the cluster to dynamically assign a user ID. If podSecurityContext is defined, this value is not applied.|
+|gloo.redis.deployment.extraRedisLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the redis deployment.|
+|gloo.redis.deployment.enablePodSecurityContext|bool|true|Whether or not to render the pod security context. Default is true.|
+|gloo.redis.deployment.podSecurityContext.seLinuxOptions.user|string|||
+|gloo.redis.deployment.podSecurityContext.seLinuxOptions.role|string|||
+|gloo.redis.deployment.podSecurityContext.seLinuxOptions.type|string|||
+|gloo.redis.deployment.podSecurityContext.seLinuxOptions.level|string|||
+|gloo.redis.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.redis.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.redis.deployment.podSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.redis.deployment.podSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.redis.deployment.podSecurityContext.runAsUser|int64|||
+|gloo.redis.deployment.podSecurityContext.runAsGroup|int64|||
+|gloo.redis.deployment.podSecurityContext.runAsNonRoot|bool|||
+|gloo.redis.deployment.podSecurityContext.supplementalGroups[]|int64|||
+|gloo.redis.deployment.podSecurityContext.fsGroup|int64|||
+|gloo.redis.deployment.podSecurityContext.sysctls[].name|string|||
+|gloo.redis.deployment.podSecurityContext.sysctls[].value|string|||
+|gloo.redis.deployment.podSecurityContext.fsGroupChangePolicy|string|||
+|gloo.redis.deployment.podSecurityContext.seccompProfile.type|string|||
+|gloo.redis.deployment.podSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.redis.deployment.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.redis.deployment.replicas|int||number of instances to deploy|
+|gloo.redis.deployment.customEnv[].name|string|||
+|gloo.redis.deployment.customEnv[].value|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.redis.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.redis.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.redis.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.redis.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.redis.deployment.nodeName|string||name of node to run on|
+|gloo.redis.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.redis.deployment.tolerations[].key|string|||
+|gloo.redis.deployment.tolerations[].operator|string|||
+|gloo.redis.deployment.tolerations[].value|string|||
+|gloo.redis.deployment.tolerations[].effect|string|||
+|gloo.redis.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.redis.deployment.affinity.NAME|interface|||
+|gloo.redis.deployment.hostAliases[]|interface|||
+|gloo.redis.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.redis.deployment.resources.limits.memory|string||amount of memory|
+|gloo.redis.deployment.resources.limits.cpu|string||amount of CPUs|
+|gloo.redis.deployment.resources.requests.memory|string||amount of memory|
+|gloo.redis.deployment.resources.requests.cpu|string||amount of CPUs|
+|gloo.redis.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.redis.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.redis.deployment.redisContainerSecurityContext.capabilities.add[]|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.capabilities.drop[]|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.privileged|bool|||
+|gloo.redis.deployment.redisContainerSecurityContext.seLinuxOptions.user|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.seLinuxOptions.role|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.seLinuxOptions.type|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.seLinuxOptions.level|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.redis.deployment.redisContainerSecurityContext.runAsUser|int64|||
+|gloo.redis.deployment.redisContainerSecurityContext.runAsGroup|int64|||
+|gloo.redis.deployment.redisContainerSecurityContext.runAsNonRoot|bool|||
+|gloo.redis.deployment.redisContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|gloo.redis.deployment.redisContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|gloo.redis.deployment.redisContainerSecurityContext.procMount|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.seccompProfile.type|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.redis.deployment.redisContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.redis.deployment.image.tag|string|7.0.11|The image tag for the container.|
+|gloo.redis.deployment.image.repository|string|redis|The image repository (name) for the container.|
+|gloo.redis.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.redis.deployment.image.registry|string|docker.io|The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.redis.deployment.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.redis.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.redis.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.redis.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.redis.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.redis.service.port|uint|6379|This is the port set for the redis service.|
+|gloo.redis.service.name|string|redis|This is the name of the redis service. If there is an external service, this can be used to set the endpoint of the external service.  Set redis.disabled if setting the value of the redis service.|
+|gloo.redis.service.db|uint|0|This is the db number of the redis service, can be any int from 0 to 15, this field ignored when using clustered redis or when ClientSideShardingEnabled is true |
+|gloo.redis.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.redis.tlsEnabled|bool|false|Enables tls for redis. Default is false.|
+|gloo.redis.cert.enabled|bool|false|If set to true, a secret for redis will be created, and cert.crt and cert.key will be required. If redis.disabled is not set the socket type is set to tsl. If redis.disabled is set, then only a secret will be created containing the cert and key. The secret is mounted to the rate-limiter and redis deployments with the cert and key. Default is false.|
+|gloo.redis.cert.crt|string||TLS certificate. If CACert is not provided, this will be used as the CA cert as well as the TLS cert for the redis server.|
+|gloo.redis.cert.key|string||TLS certificate key.|
+|gloo.redis.cert.cacrt|string||Optional. CA certificate.|
+|gloo.redis.cert.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.redis.clientSideShardingEnabled|bool|false|If set to true, Envoy will be used as a Redis proxy and load balance requests between redis instances scaled via replicas. Default is false.|
+|gloo.redis.disabled|bool|false|If set to true, Redis service creation will be blocked. When set to `true` when `global.extensions.glooRedis.enableAcl` is set to `true` as well, the `redis` secret will not be created. The client you will have to create the secret to provide the password, the key used for the password is `redis-password`. Default is false.|
+|gloo.redis.clustered|bool|false|If true, we create the correct client to handle clustered redis. Default is false|
+|gloo.redis.aclPrefix|string|user default +@all allkeys on >|The ACL policy for the default redis user. This is the prefix only, and if overridden, should end with < to signal the password.|
+|gloo.namespace.create|bool||create the installation namespace|
+|gloo.kubeGateway.enabled|bool|false|Enable the Gloo Gateway Kubernetes Gateway API controller.|
+|gloo.settings.watchNamespaces[]|string||whitelist of namespaces for Gloo Edge to watch for services and CRDs. Empty list means all namespaces|
+|gloo.settings.writeNamespace|string||namespace where intermediary CRDs will be written to, e.g. Upstreams written by Gloo Edge Discovery.|
+|gloo.settings.integrations.knative.enabled|bool||enabled knative components|
+|gloo.settings.integrations.knative.version|string||the version of knative installed to the cluster. if using version < 0.8.0, Gloo Edge will use Knative's ClusterIngress API for configuration rather than the namespace-scoped Ingress|
+|gloo.settings.integrations.knative.proxy.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|gloo.settings.integrations.knative.proxy.image.repository|string|gloo-ee-envoy-wrapper|The image repository (name) for the container.|
+|gloo.settings.integrations.knative.proxy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.settings.integrations.knative.proxy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.settings.integrations.knative.proxy.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.settings.integrations.knative.proxy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.settings.integrations.knative.proxy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.settings.integrations.knative.proxy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.settings.integrations.knative.proxy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.settings.integrations.knative.proxy.httpPort|int||HTTP port for the proxy|
+|gloo.settings.integrations.knative.proxy.httpsPort|int||HTTPS port for the proxy|
+|gloo.settings.integrations.knative.proxy.tracing|string||tracing configuration|
+|gloo.settings.integrations.knative.proxy.runAsUser|float64||Explicitly set the user ID for the pod to run as. Default is 10101|
+|gloo.settings.integrations.knative.proxy.loopBackAddress|string||Name on which to bind the loop-back interface for this instance of Envoy. Defaults to 127.0.0.1, but other common values may be localhost or ::1|
+|gloo.settings.integrations.knative.proxy.stats|bool||Controls whether or not Envoy stats are enabled|
+|gloo.settings.integrations.knative.proxy.extraClusterIngressProxyLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the cluster ingress proxy deployment.|
+|gloo.settings.integrations.knative.proxy.extraClusterIngressProxyAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the cluster ingress proxy deployment.|
+|gloo.settings.integrations.knative.proxy.internal.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.internal.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.internal.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.replicas|int||number of instances to deploy|
+|gloo.settings.integrations.knative.proxy.customEnv[].name|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].value|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.settings.integrations.knative.proxy.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.settings.integrations.knative.proxy.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.settings.integrations.knative.proxy.priorityClassName|string||name of a defined priority class|
+|gloo.settings.integrations.knative.proxy.nodeName|string||name of node to run on|
+|gloo.settings.integrations.knative.proxy.nodeSelector.NAME|string||label selector for nodes|
+|gloo.settings.integrations.knative.proxy.tolerations[].key|string|||
+|gloo.settings.integrations.knative.proxy.tolerations[].operator|string|||
+|gloo.settings.integrations.knative.proxy.tolerations[].value|string|||
+|gloo.settings.integrations.knative.proxy.tolerations[].effect|string|||
+|gloo.settings.integrations.knative.proxy.tolerations[].tolerationSeconds|int64|||
+|gloo.settings.integrations.knative.proxy.affinity.NAME|interface|||
+|gloo.settings.integrations.knative.proxy.hostAliases[]|interface|||
+|gloo.settings.integrations.knative.proxy.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.settings.integrations.knative.proxy.resources.limits.memory|string||amount of memory|
+|gloo.settings.integrations.knative.proxy.resources.limits.cpu|string||amount of CPUs|
+|gloo.settings.integrations.knative.proxy.resources.requests.memory|string||amount of memory|
+|gloo.settings.integrations.knative.proxy.resources.requests.cpu|string||amount of CPUs|
+|gloo.settings.integrations.knative.proxy.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.service.type|string||K8s service type|
+|gloo.settings.integrations.knative.proxy.service.extraAnnotations.NAME|string||extra annotations to add to the service|
+|gloo.settings.integrations.knative.proxy.service.loadBalancerIP|string||IP address of the load balancer|
+|gloo.settings.integrations.knative.proxy.service.httpPort|int||HTTP port for the knative/ingress proxy service|
+|gloo.settings.integrations.knative.proxy.service.httpsPort|int||HTTPS port for the knative/ingress proxy service|
+|gloo.settings.integrations.knative.proxy.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.proxy.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.settings.integrations.knative.requireIngressClass|bool||only serve traffic for Knative Ingress objects with the annotation 'networking.knative.dev/ingress.class: gloo.ingress.networking.knative.dev'.|
+|gloo.settings.integrations.knative.extraKnativeInternalLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the knative internal deployment.|
+|gloo.settings.integrations.knative.extraKnativeInternalAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the knative internal deployment.|
+|gloo.settings.integrations.knative.extraKnativeExternalLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the knative external deployment.|
+|gloo.settings.integrations.knative.extraKnativeExternalAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the knative external deployment.|
+|gloo.settings.integrations.consul.datacenter|string||Datacenter to use. If not provided, the default agent datacenter is used.|
+|gloo.settings.integrations.consul.username|string||Username to use for HTTP Basic Authentication.|
+|gloo.settings.integrations.consul.password|string||Password to use for HTTP Basic Authentication.|
+|gloo.settings.integrations.consul.token|string||Token is used to provide a per-request ACL token which overrides the agent's default token.|
+|gloo.settings.integrations.consul.caFile|string||caFile is the optional path to the CA certificate used for Consul communication, defaults to the system bundle if not specified.|
+|gloo.settings.integrations.consul.caPath|string||caPath is the optional path to a directory of CA certificates to use for Consul communication, defaults to the system bundle if not specified.|
+|gloo.settings.integrations.consul.certFile|string||CertFile is the optional path to the certificate for Consul communication. If this is set then you need to also set KeyFile.|
+|gloo.settings.integrations.consul.keyFile|string||KeyFile is the optional path to the private key for Consul communication. If this is set then you need to also set CertFile.|
+|gloo.settings.integrations.consul.insecureSkipVerify|bool||InsecureSkipVerify if set to true will disable TLS host verification.|
+|gloo.settings.integrations.consul.waitTime|string||WaitTime limits how long a watches for Consul resources will block. If not provided, the agent default values will be used.|
+|gloo.settings.integrations.consul.serviceDiscovery.dataCenters[]|string||Use this parameter to restrict the data centers that will be considered when discovering and routing to services. If not provided, Gloo Edge will use all available data centers.|
+|gloo.settings.integrations.consul.httpAddress|string||The address of the Consul HTTP server. Used by service discovery and key-value storage (if-enabled). Defaults to the value of the standard CONSUL_HTTP_ADDR env if set, otherwise to 127.0.0.1:8500.|
+|gloo.settings.integrations.consul.dnsAddress|string||The address of the DNS server used to resolve hostnames in the Consul service address. Used by service discovery (required when Consul service instances are stored as DNS names). Defaults to 127.0.0.1:8600. (the default Consul DNS server)|
+|gloo.settings.integrations.consul.dnsPollingInterval|string||The polling interval for the DNS server. If there is a Consul service address with a hostname instead of an IP, Gloo Edge will resolve the hostname with the configured frequency to update endpoints with any changes to DNS resolution. Defaults to 5s.|
+|gloo.settings.integrations.consulUpstreamDiscovery.useTlsTagging|bool||Allow Gloo Edge to automatically apply tls to consul services that are tagged the tlsTagName value. Requires RootCaResourceNamespace and RootCaResourceName to be set if true.|
+|gloo.settings.integrations.consulUpstreamDiscovery.tlsTagName|string||The tag Gloo Edge should use to identify consul services that ought to use TLS. If splitTlsServices is true, then this tag is also used to sort serviceInstances into the tls upstream. Defaults to 'glooUseTls'.|
+|gloo.settings.integrations.consulUpstreamDiscovery.splitTlsServices|bool||If true, then create two upstreams to be created when a consul service contains the tls tag; one with TLS and one without.|
+|gloo.settings.integrations.consulUpstreamDiscovery.rootCa.namespace|string||The namespace of this resource.|
+|gloo.settings.integrations.consulUpstreamDiscovery.rootCa.name|string||The name of this resource.|
+|gloo.settings.create|bool||create a Settings CRD which provides bootstrap configuration to Gloo Edge controllers|
+|gloo.settings.extensions|interface|||
+|gloo.settings.singleNamespace|bool||Enable to use install namespace as WatchNamespace and WriteNamespace|
+|gloo.settings.invalidConfigPolicy.replaceInvalidRoutes|bool||Rather than pausing configuration updates, in the event of an invalid Route defined on a virtual service or route table, Gloo Edge will serve the route with a predefined direct response action. This allows valid routes to be updated when other routes are invalid.|
+|gloo.settings.invalidConfigPolicy.invalidRouteResponseCode|int64||the response code for the direct response|
+|gloo.settings.invalidConfigPolicy.invalidRouteResponseBody|string||the response body for the direct response|
+|gloo.settings.linkerd|bool||Enable automatic Linkerd integration in Gloo Edge|
+|gloo.settings.disableProxyGarbageCollection|bool||Set this option to determine the state of an Envoy listener when the corresponding Proxy resource has no routes. If false (default), Gloo Edge will propagate the state of the Proxy to Envoy, resetting the listener to a clean slate with no routes. If true, Gloo Edge will keep serving the routes from the last applied valid configuration.|
+|gloo.settings.regexMaxProgramSize|uint32||Set this field to specify the RE2 default max program size which is a rough estimate of how complex the compiled regex is to evaluate. If not specified, this defaults to 1024.|
+|gloo.settings.disableKubernetesDestinations|bool||Enable or disable Gloo Edge to scan Kubernetes services in the cluster and create in-memory Upstream resources to represent them. These resources enable Gloo Edge to route requests to a Kubernetes service. Note that if you have a large number of services in your cluster and you do not restrict the namespaces that Gloo Edge watches, the API snapshot increases which can have a negative impact on the Gloo Edge translation time. In addition, load balancing is done in kube-proxy which can have further performance impacts. Using Gloo Upstreams as a routing destination bypasses kube-proxy as the request is routed to the pod directly. Alternatively, you can use [Kubernetes](https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options/kubernetes/kubernetes.proto.sk/) Upstream resources as a routing destination to forward requests to the pod directly. For more information, see the [docs](https://docs.solo.io/gloo-edge/latest/guides/traffic_management/destination_types/kubernetes_services/).|
+|gloo.settings.aws.enableCredentialsDiscovery|bool||Enable AWS credentials discovery in Envoy for lambda requests. If enableServiceAccountCredentials is also set, it will take precedence as only one may be enabled in Gloo Edge|
+|gloo.settings.aws.enableServiceAccountCredentials|bool||Use ServiceAccount credentials to authenticate lambda requests. If enableCredentialsDiscovery is also set, this will take precedence as only one may be enabled in Gloo Edge|
+|gloo.settings.aws.stsCredentialsRegion|string||Regional endpoint to use for AWS STS requests. If empty will default to global sts endpoint.|
+|gloo.settings.aws.propagateOriginalRouting|bool||Send downstream path and method as x-envoy-original-path and x-envoy-original-method headers on the request to AWS lambda.|
+|gloo.settings.aws.credential_refresh_delay.seconds|int32||The value of this duration in seconds.|
+|gloo.settings.aws.credential_refresh_delay.nanos|int32||The value of this duration in nanoseconds.|
+|gloo.settings.aws.fallbackToFirstFunction|bool||It will use the first function which if discovery is enabled the first function is the first function name alphabetically from the last discovery run. Defaults to false.|
+|gloo.settings.rateLimit|interface||Partial config for Gloo Edge Enterprise’s rate-limiting service, based on Envoy’s rate-limit service; supports Envoy’s rate-limit service API. (reference here: https://github.com/lyft/ratelimit#configuration) Configure rate-limit descriptors here, which define the limits for requests based on their descriptors. Configure rate-limits (composed of actions, which define how request characteristics get translated into descriptors) on the VirtualHost or its routes.|
+|gloo.settings.ratelimitServer|interface||External Ratelimit Server configuration for Gloo Edge Open Sources’s rate-limiting service, based on Envoy’s rate-limit service; supports Envoy’s rate-limit service API. (reference here: https://docs.solo.io/gloo-edge/main/guides/security/rate_limiting/)|
+|gloo.settings.circuitBreakers.maxConnections|uint32||Set this field to specify the maximum number of connections that Envoy will make to the upstream cluster. If not specified, the default is 1024.|
+|gloo.settings.circuitBreakers.maxPendingRequests|uint32||Set this field to specfify the maximum number of pending requests that Envoy will allow to the upstream cluster. If not specified, the default is 1024.|
+|gloo.settings.circuitBreakers.maxRequests|uint32||Set this field to specfify the maximum number of parallel requests that Envoy will make to the upstream cluster. If not specified, the default is 1024.|
+|gloo.settings.circuitBreakers.maxRetries|uint32||Set this field to specify the maximum number of parallel retries that Envoy will allow to the upstream cluster. If not specified, the default is 3.|
+|gloo.settings.enableRestEds|bool||Whether or not to use rest xds for all EDS by default. Defaults to false.|
+|gloo.settings.devMode|bool||Whether or not to enable dev mode. Defaults to false. Setting to true at install time will expose the gloo dev admin endpoint on port 10010. Not recommended for production.|
+|gloo.settings.secretOptions.sources[].vault.address|string||Address of the Vault server. This should be a complete URL such as http://solo.io and include port if necessary (vault's default port is 8200).|
+|gloo.settings.secretOptions.sources[].vault.rootKey|string||All keys stored in Vault will begin with this Vault this can be used to run multiple instances of Gloo against the same Vault cluster defaults to gloo.|
+|gloo.settings.secretOptions.sources[].vault.pathPrefix|string||Optional. The name of a Vault Secrets Engine to which Vault should route traffic. For more info see https://learn.hashicorp.com/tutorials/vault/getting-started-secrets-engines. Defaults to 'secret'.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.caCert|string||Path to a PEM-encoded CA cert file to use to verify the Vault server SSL certificate.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.caPath|string||Path to a directory of PEM-encoded CA cert files to verify the Vault server SSL certificate.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.clientCert|string||Path to the certificate for Vault communication.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.clientKey|string||Path to the private key for Vault communication.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.tlsServerName|string||If set, it is used to set the SNI host when connecting via TLS.|
+|gloo.settings.secretOptions.sources[].vault.tlsConfig.insecure|bool||Disables TLS verification when set to true.|
+|gloo.settings.secretOptions.sources[].vault.accessToken|string||Vault token to use for authentication. Only one of accessToken or aws may be set.|
+|gloo.settings.secretOptions.sources[].vault.aws.vaultRole|string||The Vault role we are trying to authenticate to. This is not necessarily the same as the AWS role to which the Vault role is configured.|
+|gloo.settings.secretOptions.sources[].vault.aws.region|string||The AWS region to use for the login attempt.|
+|gloo.settings.secretOptions.sources[].vault.aws.iamServerIdHeader|string||The IAM Server ID Header required to be included in the request.|
+|gloo.settings.secretOptions.sources[].vault.aws.mountPath|string||The Vault path on which the AWS auth is mounted.|
+|gloo.settings.secretOptions.sources[].vault.aws.accessKeyID|string||Optional. The Access Key ID as provided by the security credentials on the AWS IAM resource. In cases such as receiving temporary credentials through assumed roles with AWS Security Token Service (STS) or IAM Roles for Service Accounts (IRSA), this field can be omitted. https://developer.hashicorp.com/vault/docs/auth/aws#iam-authentication-inferences.|
+|gloo.settings.secretOptions.sources[].vault.aws.secretAccessKey|string||Optional. The Secret Access Key as provided by the security credentials on the AWS IAM resource. In cases such as receiving temporary credentials through assumed roles with AWS Security Token Service (STS) or IAM Roles for Service Accounts (IRSA), this field can be omitted. https://developer.hashicorp.com/vault/docs/auth/aws#iam-authentication-inferences.|
+|gloo.settings.secretOptions.sources[].vault.aws.sessionToken|string||The Session Token as provided by the security credentials on the AWS IAM resource.|
+|gloo.settings.secretOptions.sources[].vault.aws.leaseIncrement|uint32||The time increment, in seconds, used in renewing the lease of the Vault token. See: https://developer.hashicorp.com/vault/docs/concepts/lease#lease-durations-and-renewal. Defaults to 0, which causes the default TTL to be used.|
+|gloo.settings.secretOptions.sources[].directory.directory|string||Directory to read secrets from.|
+|gloo.settings.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gloo.deployment.xdsPort|int||port where gloo serves xDS API to Envoy.|
+|gloo.gloo.deployment.restXdsPort|uint32||port where gloo serves REST xDS API to Envoy.|
+|gloo.gloo.deployment.validationPort|int||port where gloo serves gRPC Proxy Validation to Gateway.|
+|gloo.gloo.deployment.proxyDebugPort|int||port where gloo serves gRPC Proxy contents to glooctl.|
+|gloo.gloo.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo.gloo.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo.gloo.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo.gloo.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo.gloo.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo.gloo.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo.gloo.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo.gloo.deployment.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container. If a SecurityContext is defined for the container, this value is not applied for the container.|
+|gloo.gloo.deployment.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101. If a SecurityContext is defined for the pod or container, this value is not applied for the pod/container.|
+|gloo.gloo.deployment.externalTrafficPolicy|string||Set the external traffic policy on the gloo service.|
+|gloo.gloo.deployment.extraGlooLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the primary gloo deployment.|
+|gloo.gloo.deployment.extraGlooAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the primary gloo deployment.|
+|gloo.gloo.deployment.livenessProbeEnabled|bool||Set to true to enable a liveness probe for Gloo Edge (default is false).|
+|gloo.gloo.deployment.ossImageTag|string|1.17.0-beta26|Used for debugging. The version of Gloo OSS that the current version of Gloo Enterprise was built with.|
+|gloo.gloo.deployment.podSecurityContext.seLinuxOptions.user|string|||
+|gloo.gloo.deployment.podSecurityContext.seLinuxOptions.role|string|||
+|gloo.gloo.deployment.podSecurityContext.seLinuxOptions.type|string|||
+|gloo.gloo.deployment.podSecurityContext.seLinuxOptions.level|string|||
+|gloo.gloo.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gloo.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gloo.deployment.podSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gloo.deployment.podSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gloo.deployment.podSecurityContext.runAsUser|int64|||
+|gloo.gloo.deployment.podSecurityContext.runAsGroup|int64|||
+|gloo.gloo.deployment.podSecurityContext.runAsNonRoot|bool|||
+|gloo.gloo.deployment.podSecurityContext.supplementalGroups[]|int64|||
+|gloo.gloo.deployment.podSecurityContext.fsGroup|int64|||
+|gloo.gloo.deployment.podSecurityContext.sysctls[].name|string|||
+|gloo.gloo.deployment.podSecurityContext.sysctls[].value|string|||
+|gloo.gloo.deployment.podSecurityContext.fsGroupChangePolicy|string|||
+|gloo.gloo.deployment.podSecurityContext.seccompProfile.type|string|||
+|gloo.gloo.deployment.podSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gloo.deployment.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gloo.deployment.replicas|int||number of instances to deploy|
+|gloo.gloo.deployment.customEnv[].name|string|||
+|gloo.gloo.deployment.customEnv[].value|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.gloo.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.gloo.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.gloo.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gloo.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.gloo.deployment.nodeName|string||name of node to run on|
+|gloo.gloo.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gloo.deployment.tolerations[].key|string|||
+|gloo.gloo.deployment.tolerations[].operator|string|||
+|gloo.gloo.deployment.tolerations[].value|string|||
+|gloo.gloo.deployment.tolerations[].effect|string|||
+|gloo.gloo.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.gloo.deployment.affinity.NAME|interface|||
+|gloo.gloo.deployment.hostAliases[]|interface|||
+|gloo.gloo.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gloo.deployment.resources.limits.memory|string||amount of memory|
+|gloo.gloo.deployment.resources.limits.cpu|string||amount of CPUs|
+|gloo.gloo.deployment.resources.requests.memory|string||amount of memory|
+|gloo.gloo.deployment.resources.requests.cpu|string||amount of CPUs|
+|gloo.gloo.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gloo.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|gloo.gloo.deployment.image.repository|string|gloo-ee|The image repository (name) for the container.|
+|gloo.gloo.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gloo.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gloo.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gloo.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gloo.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gloo.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gloo.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gloo.deployment.glooContainerSecurityContext.capabilities.add[]|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.capabilities.drop[]|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.privileged|bool|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seLinuxOptions.user|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seLinuxOptions.role|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seLinuxOptions.type|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seLinuxOptions.level|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gloo.deployment.glooContainerSecurityContext.runAsUser|int64|||
+|gloo.gloo.deployment.glooContainerSecurityContext.runAsGroup|int64|||
+|gloo.gloo.deployment.glooContainerSecurityContext.runAsNonRoot|bool|||
+|gloo.gloo.deployment.glooContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|gloo.gloo.deployment.glooContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|gloo.gloo.deployment.glooContainerSecurityContext.procMount|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seccompProfile.type|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gloo.deployment.glooContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gloo.serviceAccount.extraAnnotations.NAME|string||extra annotations to add to the service account|
+|gloo.gloo.serviceAccount.disableAutomount|bool||disable automounting the service account to the gateway proxy. not mounting the token hardens the proxy container, but may interfere with service mesh integrations|
+|gloo.gloo.serviceAccount.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gloo.splitLogOutput|bool||Set to true to send debug/info/warning logs to stdout, error/fatal/panic to stderr. Set to false to send all logs to stdout|
+|gloo.gloo.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gloo.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info|
+|gloo.gloo.disableLeaderElection|bool||Set to true to disable leader election, and ensure all running replicas are considered the leader. Do not enable this with multiple replicas of Gloo|
+|gloo.gloo.headerSecretRefNsMatchesUs|bool||Set to true to require that secrets sent in headers via headerSecretRefs come from the same namespace as the destination upstream. Default: false|
+|gloo.gloo.podDisruptionBudget.minAvailable|string||Corresponds directly with the _minAvailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _maxUnavailable_.|
+|gloo.gloo.podDisruptionBudget.maxUnavailable|string||Corresponds directly with the _maxUnavailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _minAvailable_.|
+|gloo.discovery.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|gloo.discovery.deployment.image.repository|string|discovery-ee|The image repository (name) for the container.|
+|gloo.discovery.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.discovery.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.discovery.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.discovery.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.discovery.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.discovery.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.discovery.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.discovery.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo.discovery.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo.discovery.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo.discovery.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo.discovery.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo.discovery.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo.discovery.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo.discovery.deployment.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.discovery.deployment.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.discovery.deployment.fsGroup|float64||Explicitly set the group ID for volume ownership. Default is 10101|
+|gloo.discovery.deployment.extraDiscoveryLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the gloo edge discovery deployment.|
+|gloo.discovery.deployment.extraDiscoveryAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the gloo edge discovery deployment.|
+|gloo.discovery.deployment.enablePodSecurityContext|bool||Whether or not to render the pod security context. Default is true|
+|gloo.discovery.deployment.replicas|int||number of instances to deploy|
+|gloo.discovery.deployment.customEnv[].name|string|||
+|gloo.discovery.deployment.customEnv[].value|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.discovery.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.discovery.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.discovery.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.discovery.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.discovery.deployment.nodeName|string||name of node to run on|
+|gloo.discovery.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.discovery.deployment.tolerations[].key|string|||
+|gloo.discovery.deployment.tolerations[].operator|string|||
+|gloo.discovery.deployment.tolerations[].value|string|||
+|gloo.discovery.deployment.tolerations[].effect|string|||
+|gloo.discovery.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.discovery.deployment.affinity.NAME|interface|||
+|gloo.discovery.deployment.hostAliases[]|interface|||
+|gloo.discovery.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.discovery.deployment.resources.limits.memory|string||amount of memory|
+|gloo.discovery.deployment.resources.limits.cpu|string||amount of CPUs|
+|gloo.discovery.deployment.resources.requests.memory|string||amount of memory|
+|gloo.discovery.deployment.resources.requests.cpu|string||amount of CPUs|
+|gloo.discovery.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.discovery.fdsMode|string||mode for function discovery (blacklist or whitelist). See more info in the settings docs|
+|gloo.discovery.udsOptions.enabled|bool||Enable upstream discovery service. Defaults to true.|
+|gloo.discovery.udsOptions.watchLabels.NAME|string||Map of labels to watch. Only services which match all of the selectors specified here will be discovered by UDS.|
+|gloo.discovery.fdsOptions.graphqlEnabled|bool||Enable GraphQL schema generation on the function discovery service. Defaults to true.|
+|gloo.discovery.enabled|bool||enable Discovery features|
+|gloo.discovery.serviceAccount.extraAnnotations.NAME|string||extra annotations to add to the service account|
+|gloo.discovery.serviceAccount.disableAutomount|bool||disable automounting the service account to the gateway proxy. not mounting the token hardens the proxy container, but may interfere with service mesh integrations|
+|gloo.discovery.serviceAccount.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.discovery.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info.|
+|gloo.gateway.enabled|bool||enable Gloo Edge API Gateway features|
+|gloo.gateway.validation.enabled|bool||enable Gloo Edge API Gateway validation hook (default true)|
+|gloo.gateway.validation.alwaysAcceptResources|bool||unless this is set this to false in order to ensure validation webhook rejects invalid resources. by default, validation webhook will only log and report metrics for invalid resource admission without rejecting them outright.|
+|gloo.gateway.validation.allowWarnings|bool||set this to false in order to ensure validation webhook rejects resources that would have warning status or rejected status, rather than just rejected.|
+|gloo.gateway.validation.serverEnabled|bool||By providing the validation field (parent of this object) the user is implicitly opting into validation. This field allows the user to opt out of the validation server, while still configuring pre-existing fields such as warn_route_short_circuiting and disable_transformation_validation.|
+|gloo.gateway.validation.disableTransformationValidation|bool||set this to true to disable transformation validation. This may bring signifigant performance benefits if using many transformations, at the cost of possibly incorrect transformations being sent to Envoy. When using this value make sure to pre-validate transformations.|
+|gloo.gateway.validation.warnRouteShortCircuiting|bool||Write a warning to route resources if validation produced a route ordering warning (defaults to false). By setting to true, this means that Gloo Edge will start assigning warnings to resources that would result in route short-circuiting within a virtual host.|
+|gloo.gateway.validation.secretName|string||Name of the Kubernetes Secret containing TLS certificates used by the validation webhook server. This secret will be created by the certGen Job if the certGen Job is enabled.|
+|gloo.gateway.validation.failurePolicy|string||failurePolicy defines how unrecognized errors from the Gateway validation endpoint are handled - allowed values are 'Ignore' or 'Fail'. Defaults to Ignore |
+|gloo.gateway.validation.webhook.enabled|bool||enable validation webhook (default true)|
+|gloo.gateway.validation.webhook.disableHelmHook|bool||do not create the webhook as helm hook (default false)|
+|gloo.gateway.validation.webhook.timeoutSeconds|int||the timeout for the webhook, defaults to 10|
+|gloo.gateway.validation.webhook.extraAnnotations.NAME|string||extra annotations to add to the webhook|
+|gloo.gateway.validation.webhook.skipDeleteValidationResources[]|string||resource types in this list will not use webhook valdaition for DELETEs. Use '*' to skip validation for all resources. Valid values are 'virtualservices', 'routetables','upstreams', 'secrets', 'ratelimitconfigs', and '*'. Invalid values will be accepted but will not be used.|
+|gloo.gateway.validation.webhook.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gateway.validation.validationServerGrpcMaxSizeBytes|int||gRPC max message size in bytes for the gloo validation server|
+|gloo.gateway.validation.livenessProbeEnabled|bool||Set to true to enable a liveness probe for the gateway (default is false). You must also set the 'Probes' value to true.|
+|gloo.gateway.certGenJob.image.tag|string|1.17.0-beta26|The image tag for the container.|
+|gloo.gateway.certGenJob.image.repository|string|certgen|The image repository (name) for the container.|
+|gloo.gateway.certGenJob.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gateway.certGenJob.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gateway.certGenJob.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gateway.certGenJob.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gateway.certGenJob.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gateway.certGenJob.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gateway.certGenJob.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gateway.certGenJob.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gateway.certGenJob.priorityClassName|string||name of a defined priority class|
+|gloo.gateway.certGenJob.nodeName|string||name of node to run on|
+|gloo.gateway.certGenJob.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gateway.certGenJob.tolerations[].key|string|||
+|gloo.gateway.certGenJob.tolerations[].operator|string|||
+|gloo.gateway.certGenJob.tolerations[].value|string|||
+|gloo.gateway.certGenJob.tolerations[].effect|string|||
+|gloo.gateway.certGenJob.tolerations[].tolerationSeconds|int64|||
+|gloo.gateway.certGenJob.affinity.NAME|interface|||
+|gloo.gateway.certGenJob.hostAliases[]|interface|||
+|gloo.gateway.certGenJob.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gateway.certGenJob.activeDeadlineSeconds|int||Deadline in seconds for Kubernetes jobs.|
+|gloo.gateway.certGenJob.backoffLimit|int||Specifies the number of retries before marking this job failed. In kubernetes, defaults to 6|
+|gloo.gateway.certGenJob.completions|int||Specifies the desired number of successfully finished pods the job should be run with.|
+|gloo.gateway.certGenJob.manualSelector|bool||Controls generation of pod labels and pod selectors.|
+|gloo.gateway.certGenJob.parallelism|int||Specifies the maximum desired number of pods the job should run at any given time.|
+|gloo.gateway.certGenJob.ttlSecondsAfterFinished|int||Clean up the finished job after this many seconds. Defaults to 300 for the rollout jobs and 60 for the rest.|
+|gloo.gateway.certGenJob.extraPodLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the job.|
+|gloo.gateway.certGenJob.extraPodAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the job.|
+|gloo.gateway.certGenJob.kubeResourceOverride.NAME|interface||override fields in the gateway-certgen job.|
+|gloo.gateway.certGenJob.mtlsKubeResourceOverride.NAME|interface||override fields in the gloo-mtls-certgen job.|
+|gloo.gateway.certGenJob.enabled|bool||enable the job that generates the certificates for the validating webhook at install time (default true)|
+|gloo.gateway.certGenJob.setTtlAfterFinished|bool||Set ttlSecondsAfterFinished on the job. Defaults to true|
+|gloo.gateway.certGenJob.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.gateway.certGenJob.forceRotation|bool||If true, will create new certs even if the old one are still valid.|
+|gloo.gateway.certGenJob.rotationDuration|string||Time duration string indicating the (environment-specific) expected time for all pods to pick up a secret update via SDS. This is only applicable to the mTLS certgen job and cron job. If this duration is too short, secret changes may not have time to propagate to all pods, and some requests may be dropped during cert rotation. Since we do 2 secret updates during a cert rotation, the certgen job is expected to run for at least twice this amount of time. If activeDeadlineSeconds is set on the job, make sure it is at least twice as long as the rotation duration, otherwise the certgen job might time out.|
+|gloo.gateway.certGenJob.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.gateway.certGenJob.resources.limits.memory|string||amount of memory|
+|gloo.gateway.certGenJob.resources.limits.cpu|string||amount of CPUs|
+|gloo.gateway.certGenJob.resources.requests.memory|string||amount of memory|
+|gloo.gateway.certGenJob.resources.requests.cpu|string||amount of CPUs|
+|gloo.gateway.certGenJob.runOnUpdate|bool||enable to run the job also on pre-upgrade|
+|gloo.gateway.certGenJob.cron.enabled|bool||enable the cronjob|
+|gloo.gateway.certGenJob.cron.schedule|string||Cron job scheduling|
+|gloo.gateway.certGenJob.cron.mtlsKubeResourceOverride.NAME|interface||override fields in the gloo-mtls-certgen cronjob.|
+|gloo.gateway.certGenJob.cron.validationWebhookKubeResourceOverride.NAME|interface||override fields in the gateway-certgen cronjob.|
+|gloo.gateway.rolloutJob.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gateway.rolloutJob.priorityClassName|string||name of a defined priority class|
+|gloo.gateway.rolloutJob.nodeName|string||name of node to run on|
+|gloo.gateway.rolloutJob.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gateway.rolloutJob.tolerations[].key|string|||
+|gloo.gateway.rolloutJob.tolerations[].operator|string|||
+|gloo.gateway.rolloutJob.tolerations[].value|string|||
+|gloo.gateway.rolloutJob.tolerations[].effect|string|||
+|gloo.gateway.rolloutJob.tolerations[].tolerationSeconds|int64|||
+|gloo.gateway.rolloutJob.affinity.NAME|interface|||
+|gloo.gateway.rolloutJob.hostAliases[]|interface|||
+|gloo.gateway.rolloutJob.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gateway.rolloutJob.activeDeadlineSeconds|int||Deadline in seconds for Kubernetes jobs.|
+|gloo.gateway.rolloutJob.backoffLimit|int||Specifies the number of retries before marking this job failed. In kubernetes, defaults to 6|
+|gloo.gateway.rolloutJob.completions|int||Specifies the desired number of successfully finished pods the job should be run with.|
+|gloo.gateway.rolloutJob.manualSelector|bool||Controls generation of pod labels and pod selectors.|
+|gloo.gateway.rolloutJob.parallelism|int||Specifies the maximum desired number of pods the job should run at any given time.|
+|gloo.gateway.rolloutJob.ttlSecondsAfterFinished|int||Clean up the finished job after this many seconds. Defaults to 300 for the rollout jobs and 60 for the rest.|
+|gloo.gateway.rolloutJob.extraPodLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the job.|
+|gloo.gateway.rolloutJob.extraPodAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the job.|
+|gloo.gateway.rolloutJob.enabled|bool||Enable the job that applies default Gloo Edge custom resources at install and upgrade time (default true).|
+|gloo.gateway.rolloutJob.image.tag|string|1.17.0-beta26|The image tag for the container.|
+|gloo.gateway.rolloutJob.image.repository|string|kubectl|The image repository (name) for the container.|
+|gloo.gateway.rolloutJob.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gateway.rolloutJob.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gateway.rolloutJob.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gateway.rolloutJob.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gateway.rolloutJob.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gateway.rolloutJob.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gateway.rolloutJob.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gateway.rolloutJob.resources.limits.memory|string||amount of memory|
+|gloo.gateway.rolloutJob.resources.limits.cpu|string||amount of CPUs|
+|gloo.gateway.rolloutJob.resources.requests.memory|string||amount of memory|
+|gloo.gateway.rolloutJob.resources.requests.cpu|string||amount of CPUs|
+|gloo.gateway.rolloutJob.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.gateway.rolloutJob.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.gateway.rolloutJob.timeout|int||Time to wait in seconds until the job has completed. If it exceeds this limit, it is deemed to have failed. Defaults to 120|
+|gloo.gateway.cleanupJob.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gateway.cleanupJob.priorityClassName|string||name of a defined priority class|
+|gloo.gateway.cleanupJob.nodeName|string||name of node to run on|
+|gloo.gateway.cleanupJob.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gateway.cleanupJob.tolerations[].key|string|||
+|gloo.gateway.cleanupJob.tolerations[].operator|string|||
+|gloo.gateway.cleanupJob.tolerations[].value|string|||
+|gloo.gateway.cleanupJob.tolerations[].effect|string|||
+|gloo.gateway.cleanupJob.tolerations[].tolerationSeconds|int64|||
+|gloo.gateway.cleanupJob.affinity.NAME|interface|||
+|gloo.gateway.cleanupJob.hostAliases[]|interface|||
+|gloo.gateway.cleanupJob.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gateway.cleanupJob.activeDeadlineSeconds|int||Deadline in seconds for Kubernetes jobs.|
+|gloo.gateway.cleanupJob.backoffLimit|int||Specifies the number of retries before marking this job failed. In kubernetes, defaults to 6|
+|gloo.gateway.cleanupJob.completions|int||Specifies the desired number of successfully finished pods the job should be run with.|
+|gloo.gateway.cleanupJob.manualSelector|bool||Controls generation of pod labels and pod selectors.|
+|gloo.gateway.cleanupJob.parallelism|int||Specifies the maximum desired number of pods the job should run at any given time.|
+|gloo.gateway.cleanupJob.ttlSecondsAfterFinished|int||Clean up the finished job after this many seconds. Defaults to 300 for the rollout jobs and 60 for the rest.|
+|gloo.gateway.cleanupJob.extraPodLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the job.|
+|gloo.gateway.cleanupJob.extraPodAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the job.|
+|gloo.gateway.cleanupJob.enabled|bool||Enable the job that removes Gloo Edge custom resources when Gloo Edge is uninstalled (default true).|
+|gloo.gateway.cleanupJob.image.tag|string|1.17.0-beta26|The image tag for the container.|
+|gloo.gateway.cleanupJob.image.repository|string|kubectl|The image repository (name) for the container.|
+|gloo.gateway.cleanupJob.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gateway.cleanupJob.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gateway.cleanupJob.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gateway.cleanupJob.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gateway.cleanupJob.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gateway.cleanupJob.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gateway.cleanupJob.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gateway.cleanupJob.resources.limits.memory|string||amount of memory|
+|gloo.gateway.cleanupJob.resources.limits.cpu|string||amount of CPUs|
+|gloo.gateway.cleanupJob.resources.requests.memory|string||amount of memory|
+|gloo.gateway.cleanupJob.resources.requests.cpu|string||amount of CPUs|
+|gloo.gateway.cleanupJob.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.gateway.cleanupJob.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.gateway.updateValues|bool|true|if true, will use a provided helm helper 'gloo.updatevalues' to update values during template render - useful for plugins/extensions|
+|gloo.gateway.proxyServiceAccount.extraAnnotations.NAME|string||extra annotations to add to the service account|
+|gloo.gateway.proxyServiceAccount.disableAutomount|bool||disable automounting the service account to the gateway proxy. not mounting the token hardens the proxy container, but may interfere with service mesh integrations|
+|gloo.gateway.proxyServiceAccount.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gateway.readGatewaysFromAllNamespaces|bool||if true, read Gateway custom resources from all watched namespaces rather than just the namespace of the Gateway controller|
+|gloo.gateway.isolateVirtualHostsBySslConfig|bool||if true, Added support for the envoy.filters.listener.tls_inspector listener_filter when using the gateway.isolateVirtualHostsBySslConfig=true global setting.|
+|gloo.gateway.compressedProxySpec|bool||if true, enables compression for the Proxy CRD spec|
+|gloo.gateway.persistProxySpec|bool||Enable writing Proxy CRD to etcd. Disabled by default for performance.|
+|gloo.gateway.translateEmptyGateways|bool||If true, the gateways will be translated into Envoy listeners even if no VirtualServices exist.|
+|gloo.gateway.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.kind.deployment.replicas|int||number of instances to deploy|
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].name|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].value|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.gatewayProxies.NAME.kind.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gatewayProxies.NAME.kind.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.gatewayProxies.NAME.kind.deployment.nodeName|string||name of node to run on|
+|gloo.gatewayProxies.NAME.kind.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gatewayProxies.NAME.kind.deployment.tolerations[].key|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.tolerations[].operator|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.tolerations[].value|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.tolerations[].effect|string|||
+|gloo.gatewayProxies.NAME.kind.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.gatewayProxies.NAME.kind.deployment.affinity.NAME|interface|||
+|gloo.gatewayProxies.NAME.kind.deployment.hostAliases[]|interface|||
+|gloo.gatewayProxies.NAME.kind.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gatewayProxies.NAME.kind.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.kind.daemonSet.hostPort|bool||whether or not to enable host networking on the pod. Only relevant when running as a DaemonSet|
+|gloo.gatewayProxies.NAME.kind.daemonSet.hostNetwork|bool|||
+|gloo.gatewayProxies.NAME.namespace|string||Namespace in which to deploy this gateway proxy. Defaults to the value of Settings.WriteNamespace|
+|gloo.gatewayProxies.NAME.podTemplate.httpPort|int||HTTP port for the gateway service target port.|
+|gloo.gatewayProxies.NAME.podTemplate.httpsPort|int||HTTPS port for the gateway service target port.|
+|gloo.gatewayProxies.NAME.podTemplate.extraPorts[]|interface||extra ports for the gateway pod.|
+|gloo.gatewayProxies.NAME.podTemplate.extraAnnotations.NAME|string||extra annotations to add to the pod.|
+|gloo.gatewayProxies.NAME.podTemplate.nodeName|string||name of node to run on.|
+|gloo.gatewayProxies.NAME.podTemplate.nodeSelector.NAME|string||label selector for nodes.|
+|gloo.gatewayProxies.NAME.podTemplate.tolerations[].key|string|||
+|gloo.gatewayProxies.NAME.podTemplate.tolerations[].operator|string|||
+|gloo.gatewayProxies.NAME.podTemplate.tolerations[].value|string|||
+|gloo.gatewayProxies.NAME.podTemplate.tolerations[].effect|string|||
+|gloo.gatewayProxies.NAME.podTemplate.tolerations[].tolerationSeconds|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.probes|bool||Set to true to enable a readiness probe (default is false). Then, you can also enable a liveness probe.|
+|gloo.gatewayProxies.NAME.podTemplate.livenessProbeEnabled|bool||Set to true to enable a liveness probe (default is false).|
+|gloo.gatewayProxies.NAME.podTemplate.resources.limits.memory|string||amount of memory|
+|gloo.gatewayProxies.NAME.podTemplate.resources.limits.cpu|string||amount of CPUs|
+|gloo.gatewayProxies.NAME.podTemplate.resources.requests.memory|string||amount of memory|
+|gloo.gatewayProxies.NAME.podTemplate.resources.requests.cpu|string||amount of CPUs|
+|gloo.gatewayProxies.NAME.podTemplate.disableNetBind|bool||don't add the NET_BIND_SERVICE capability to the pod. This means that the gateway proxy will not be able to bind to ports below 1024. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.NAME.podTemplate.runUnprivileged|bool||run Envoy as an unprivileged user. If a SecurityContext is defined for the pod or container, this value is not applied for the pod/container.|
+|gloo.gatewayProxies.NAME.podTemplate.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.NAME.podTemplate.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101. If a SecurityContext is defined for the pod or container, this value is not applied for the pod/container.|
+|gloo.gatewayProxies.NAME.podTemplate.fsGroup|float64||Explicitly set the group ID for volume ownership. Default is 10101. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.NAME.podTemplate.gracefulShutdown.enabled|bool||Enable grace period before shutdown to finish current requests while Envoy health checks fail to e.g. notify external load balancers. *NOTE:* This will not have any effect if you have not defined health checks via the health check filter|
+|gloo.gatewayProxies.NAME.podTemplate.gracefulShutdown.sleepTimeSeconds|int||Time (in seconds) for the preStop hook to wait before allowing Envoy to terminate|
+|gloo.gatewayProxies.NAME.podTemplate.terminationGracePeriodSeconds|int||Time in seconds to wait for the pod to terminate gracefully. See [kubernetes docs](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#istio-lifecycle) for more info.|
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.exec.command[]|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.path|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.port|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.port|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.host|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.scheme|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.httpHeaders[].name|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.httpGet.httpHeaders[].value|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.tcpSocket.port|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.tcpSocket.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.tcpSocket.port|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.tcpSocket.host|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.grpc.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.grpc.service|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.initialDelaySeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.timeoutSeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.periodSeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.successThreshold|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.failureThreshold|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customReadinessProbe.terminationGracePeriodSeconds|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.exec.command[]|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.path|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.port|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.port|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.host|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.scheme|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.httpHeaders[].name|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.httpGet.httpHeaders[].value|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.tcpSocket.port|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.tcpSocket.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.tcpSocket.port|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.tcpSocket.host|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.grpc.port|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.grpc.service|string|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.initialDelaySeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.timeoutSeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.periodSeconds|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.successThreshold|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.failureThreshold|int32|||
+|gloo.gatewayProxies.NAME.podTemplate.customLivenessProbe.terminationGracePeriodSeconds|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.extraGatewayProxyLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the gloo edge gateway-proxy deployment.|
+|gloo.gatewayProxies.NAME.podTemplate.extraContainers[]|interface||Extra [containers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of containers on the gateway proxy deployment.|
+|gloo.gatewayProxies.NAME.podTemplate.extraInitContainers[]|interface||Extra [initContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the gateway proxy deployment.|
+|gloo.gatewayProxies.NAME.podTemplate.enablePodSecurityContext|bool||Whether or not to render the pod security context. Default is true.|
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seLinuxOptions.user|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seLinuxOptions.role|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seLinuxOptions.type|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seLinuxOptions.level|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.runAsUser|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.runAsGroup|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.runAsNonRoot|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.supplementalGroups[]|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.fsGroup|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.sysctls[].name|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.sysctls[].value|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.fsGroupChangePolicy|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seccompProfile.type|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gatewayProxies.NAME.podTemplate.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gatewayProxies.NAME.podTemplate.image.tag|string||The image tag for the container.|
+|gloo.gatewayProxies.NAME.podTemplate.image.repository|string||The image repository (name) for the container.|
+|gloo.gatewayProxies.NAME.podTemplate.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gatewayProxies.NAME.podTemplate.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gatewayProxies.NAME.podTemplate.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gatewayProxies.NAME.podTemplate.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gatewayProxies.NAME.podTemplate.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gatewayProxies.NAME.podTemplate.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gatewayProxies.NAME.podTemplate.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.capabilities.add[]|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.capabilities.drop[]|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.privileged|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seLinuxOptions.user|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seLinuxOptions.role|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seLinuxOptions.type|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seLinuxOptions.level|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.runAsUser|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.runAsGroup|int64|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.runAsNonRoot|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.procMount|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seccompProfile.type|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gatewayProxies.NAME.podTemplate.glooContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gatewayProxies.NAME.configMap.data.NAME|string|||
+|gloo.gatewayProxies.NAME.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.customStaticLayer|interface||Configure the static layer for global overrides to Envoy behavior, as defined in the Envoy bootstrap YAML. You cannot use this setting to set overload or upstream layers. For more info, see the Envoy docs. https://www.envoyproxy.io/docs/envoy/latest/configuration/operations/runtime#config-runtime|
+|gloo.gatewayProxies.NAME.globalDownstreamMaxConnections|uint32||the number of concurrent connections needed. limit used to protect against exhausting file descriptors on host machine|
+|gloo.gatewayProxies.NAME.healthyPanicThreshold|int8||the percentage of healthy hosts required to load balance based on health status of hosts|
+|gloo.gatewayProxies.NAME.service.type|string||gateway [service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types). default is `LoadBalancer`|
+|gloo.gatewayProxies.NAME.service.httpPort|int||HTTP port for the gateway service|
+|gloo.gatewayProxies.NAME.service.httpsPort|int||HTTPS port for the gateway service|
+|gloo.gatewayProxies.NAME.service.httpNodePort|int||HTTP nodeport for the gateway service if using type NodePort|
+|gloo.gatewayProxies.NAME.service.httpsNodePort|int||HTTPS nodeport for the gateway service if using type NodePort|
+|gloo.gatewayProxies.NAME.service.clusterIP|string||static clusterIP (or `None`) when `gatewayProxies[].gatewayProxy.service.type` is `ClusterIP`|
+|gloo.gatewayProxies.NAME.service.extraAnnotations.NAME|string|||
+|gloo.gatewayProxies.NAME.service.externalTrafficPolicy|string|||
+|gloo.gatewayProxies.NAME.service.name|string||Custom name override for the service resource of the proxy|
+|gloo.gatewayProxies.NAME.service.httpsFirst|bool||List HTTPS port before HTTP|
+|gloo.gatewayProxies.NAME.service.loadBalancerIP|string||IP address of the load balancer|
+|gloo.gatewayProxies.NAME.service.loadBalancerSourceRanges[]|string||List of IP CIDR ranges that are allowed to access the load balancer|
+|gloo.gatewayProxies.NAME.service.customPorts[]|interface||List of custom port to expose in the Envoy proxy. Each element follows conventional port syntax (port, targetPort, protocol, name)|
+|gloo.gatewayProxies.NAME.service.externalIPs[]|string||externalIPs is a list of IP addresses for which nodes in the cluster will also accept traffic for this service|
+|gloo.gatewayProxies.NAME.service.configDumpService.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.antiAffinity|bool||configure anti affinity such that pods are preferably not co-located|
+|gloo.gatewayProxies.NAME.affinity.NAME|interface|||
+|gloo.gatewayProxies.NAME.topologySpreadConstraints[]|interface||configure topologySpreadConstraints for gateway proxy pods|
+|gloo.gatewayProxies.NAME.tracing.provider.NAME|interface|||
+|gloo.gatewayProxies.NAME.tracing.cluster[].NAME|interface|||
+|gloo.gatewayProxies.NAME.gatewaySettings.enabled|bool||enable/disable default gateways|
+|gloo.gatewayProxies.NAME.gatewaySettings.disableGeneratedGateways|bool||set to true to disable the gateway generation for a gateway proxy|
+|gloo.gatewayProxies.NAME.gatewaySettings.disableHttpGateway|bool||Set to true to disable http gateway generation.|
+|gloo.gatewayProxies.NAME.gatewaySettings.disableHttpsGateway|bool||Set to true to disable https gateway generation.|
+|gloo.gatewayProxies.NAME.gatewaySettings.ipv4Only|bool||set to true if your network allows ipv4 addresses only. Sets the Gateway spec's bindAddress to 0.0.0.0 instead of ::|
+|gloo.gatewayProxies.NAME.gatewaySettings.useProxyProto|bool||use proxy protocol|
+|gloo.gatewayProxies.NAME.gatewaySettings.httpHybridGateway.NAME|interface||custom yaml to use for hybrid gateway settings for the http gateway|
+|gloo.gatewayProxies.NAME.gatewaySettings.httpsHybridGateway.NAME|interface||custom yaml to use for hybrid gateway settings for the https gateway|
+|gloo.gatewayProxies.NAME.gatewaySettings.customHttpGateway.NAME|interface||custom yaml to use for http gateway settings|
+|gloo.gatewayProxies.NAME.gatewaySettings.customHttpsGateway.NAME|interface||custom yaml to use for https gateway settings|
+|gloo.gatewayProxies.NAME.gatewaySettings.accessLoggingService.NAME|interface||custom yaml to use for access logging service (https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options/als/als.proto.sk/)|
+|gloo.gatewayProxies.NAME.gatewaySettings.options.NAME|interface||custom options for http(s) gateways (https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options.proto.sk/#listeneroptions)|
+|gloo.gatewayProxies.NAME.gatewaySettings.httpGatewayKubeOverride.NAME|interface|||
+|gloo.gatewayProxies.NAME.gatewaySettings.httpsGatewayKubeOverride.NAME|interface|||
+|gloo.gatewayProxies.NAME.gatewaySettings.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.extraEnvoyArgs[]|string||Envoy container args, (e.g. https://www.envoyproxy.io/docs/envoy/latest/operations/cli)|
+|gloo.gatewayProxies.NAME.extraContainersHelper|string|||
+|gloo.gatewayProxies.NAME.extraInitContainersHelper|string|||
+|gloo.gatewayProxies.NAME.extraVolumes[].NAME|interface|||
+|gloo.gatewayProxies.NAME.extraVolumeHelper|string|||
+|gloo.gatewayProxies.NAME.extraListenersHelper|string|||
+|gloo.gatewayProxies.NAME.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo.gatewayProxies.NAME.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo.gatewayProxies.NAME.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo.gatewayProxies.NAME.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo.gatewayProxies.NAME.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo.gatewayProxies.NAME.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo.gatewayProxies.NAME.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo.gatewayProxies.NAME.readConfig|bool||expose a read-only subset of the Envoy admin api|
+|gloo.gatewayProxies.NAME.readConfigMulticluster|bool||expose a read-only subset of the Envoy admin api to gloo-fed|
+|gloo.gatewayProxies.NAME.extraProxyVolumeMounts[].NAME|interface|||
+|gloo.gatewayProxies.NAME.extraProxyVolumeMountHelper|string||name of custom made named template allowing for extra volume mounts on the proxy container|
+|gloo.gatewayProxies.NAME.loopBackAddress|string||Name on which to bind the loop-back interface for this instance of Envoy. Defaults to 127.0.0.1, but other common values may be localhost or ::1|
+|gloo.gatewayProxies.NAME.failover.enabled|bool||(Enterprise Only): Configure this proxy for failover|
+|gloo.gatewayProxies.NAME.failover.port|uint||(Enterprise Only): Port to use for failover Gateway Bind port, and service. Default is 15443|
+|gloo.gatewayProxies.NAME.failover.nodePort|uint||(Enterprise Only): Optional NodePort for failover Service|
+|gloo.gatewayProxies.NAME.failover.secretName|string||(Enterprise Only): Secret containing downstream Ssl Secrets Default is failover-downstream|
+|gloo.gatewayProxies.NAME.failover.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.disabled|bool||Skips creation of this gateway proxy. Used to turn off gateway proxies created by preceding configurations|
+|gloo.gatewayProxies.NAME.envoyApiVersion|string||Version of the Envoy API to use for the xDS transport and resources. Default is V3|
+|gloo.gatewayProxies.NAME.envoyBootstrapExtensions[].NAME|interface||List of bootstrap extensions to add to Envoy bootstrap config. Examples include Wasm Service (https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extensions-wasm-v3-wasmservice).|
+|gloo.gatewayProxies.NAME.envoyOverloadManager.NAME|interface||Overload Manager definition for Envoy bootstrap config. If enabled, a list of Resource Monitors MUST be defined in order to produce a valid Envoy config (https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#overload-manager).|
+|gloo.gatewayProxies.NAME.envoyStaticClusters[].NAME|interface||List of extra static clusters to be added to Envoy bootstrap config. https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.apiVersion|string||accepts autoscaling/v1, autoscaling/v2beta2 or autoscaling/v2. Note: autoscaling/v2beta2 is deprecated as of Kubernetes 1.26.|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.minReplicas|int32||minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.maxReplicas|int32||maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas.|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.targetCPUUtilizationPercentage|int32||target average CPU utilization (represented as a percentage of requested CPU) over all the pods. Used only with apiVersion autoscaling/v1|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.metrics[].NAME|interface||metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used). Used only with apiVersion autoscaling/v2beta2|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.behavior.NAME|interface||behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). Used only with apiVersion autoscaling/v2beta2|
+|gloo.gatewayProxies.NAME.horizontalPodAutoscaler.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.podDisruptionBudget.minAvailable|string||Corresponds directly with the _minAvailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _maxUnavailable_.|
+|gloo.gatewayProxies.NAME.podDisruptionBudget.maxUnavailable|string||Corresponds directly with the _maxUnavailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _minAvailable_.|
+|gloo.gatewayProxies.NAME.podDisruptionBudget.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.NAME.istioMetaMeshId|string||ISTIO_META_MESH_ID Environment Variable. Defaults to "cluster.local"|
+|gloo.gatewayProxies.NAME.istioMetaClusterId|string||ISTIO_META_CLUSTER_ID Environment Variable. Defaults to "Kubernetes"|
+|gloo.gatewayProxies.NAME.istioDiscoveryAddress|string||discoveryAddress field of the PROXY_CONFIG environment variable. Defaults to "istiod.istio-system.svc:15012"|
+|gloo.gatewayProxies.NAME.envoyLogLevel|string||Level at which the pod should log. Options include "trace", "info", "debug", "warn", "error", "critical" and "off". Default level is info|
+|gloo.gatewayProxies.NAME.envoyStatsConfig.NAME|interface||Envoy statistics configuration, such as tagging. For more info, see https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#config-metrics-v3-statsconfig|
+|gloo.gatewayProxies.NAME.xdsServiceAddress|string||The k8s service name for the xds server. Defaults to gloo.|
+|gloo.gatewayProxies.NAME.xdsServicePort|uint32||The k8s service port for the xds server. Defaults to the value from .Values.gloo.deployment.xdsPort, but can be overridden to use, for example, xds-relay.|
+|gloo.gatewayProxies.NAME.tcpKeepaliveTimeSeconds|uint32||The amount of time in seconds for connections to be idle before sending keep-alive probes. Defaults to 60. See here: https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-tcpkeepalive|
+|gloo.gatewayProxies.NAME.disableCoreDumps|bool||If set to true, Envoy will not generate core dumps in the event of a crash. Defaults to false|
+|gloo.gatewayProxies.NAME.disableExtauthSidecar|bool||If set to true, this gateway proxy will not come up with an extauth sidecar container when global.extAuth.envoySidecar is enabled. This setting has no effect otherwise. Defaults to false|
+|gloo.gatewayProxies.NAME.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.replicas|int||number of instances to deploy|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].name|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.nodeName|string||name of node to run on|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.tolerations[].key|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.tolerations[].operator|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.tolerations[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.tolerations[].effect|string|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.affinity.NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.hostAliases[]|interface|||
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.gatewayProxies.gatewayProxy.kind.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.kind.daemonSet.hostPort|bool||whether or not to enable host networking on the pod. Only relevant when running as a DaemonSet|
+|gloo.gatewayProxies.gatewayProxy.kind.daemonSet.hostNetwork|bool|||
+|gloo.gatewayProxies.gatewayProxy.namespace|string||Namespace in which to deploy this gateway proxy. Defaults to the value of Settings.WriteNamespace|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.httpPort|int||HTTP port for the gateway service target port.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.httpsPort|int||HTTPS port for the gateway service target port.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.extraPorts[]|interface||extra ports for the gateway pod.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.extraAnnotations.NAME|string||extra annotations to add to the pod.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.nodeName|string||name of node to run on.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.nodeSelector.NAME|string||label selector for nodes.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.tolerations[].key|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.tolerations[].operator|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.tolerations[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.tolerations[].effect|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.tolerations[].tolerationSeconds|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.probes|bool||Set to true to enable a readiness probe (default is false). Then, you can also enable a liveness probe.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.livenessProbeEnabled|bool||Set to true to enable a liveness probe (default is false).|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.resources.limits.memory|string||amount of memory|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.resources.limits.cpu|string||amount of CPUs|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.resources.requests.memory|string||amount of memory|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.resources.requests.cpu|string||amount of CPUs|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.disableNetBind|bool||don't add the NET_BIND_SERVICE capability to the pod. This means that the gateway proxy will not be able to bind to ports below 1024. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.runUnprivileged|bool||run Envoy as an unprivileged user. If a SecurityContext is defined for the pod or container, this value is not applied for the pod/container.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101. If a SecurityContext is defined for the pod or container, this value is not applied for the pod/container.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.fsGroup|float64||Explicitly set the group ID for volume ownership. Default is 10101. If podSecurityContext is defined, this value is not applied.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.gracefulShutdown.enabled|bool||Enable grace period before shutdown to finish current requests while Envoy health checks fail to e.g. notify external load balancers. *NOTE:* This will not have any effect if you have not defined health checks via the health check filter|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.gracefulShutdown.sleepTimeSeconds|int||Time (in seconds) for the preStop hook to wait before allowing Envoy to terminate|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.terminationGracePeriodSeconds|int||Time in seconds to wait for the pod to terminate gracefully. See [kubernetes docs](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#istio-lifecycle) for more info.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.exec.command[]|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.path|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.port|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.port|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.host|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.scheme|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.httpHeaders[].name|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.httpGet.httpHeaders[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.tcpSocket.port|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.tcpSocket.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.tcpSocket.port|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.tcpSocket.host|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.grpc.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.grpc.service|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.initialDelaySeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.timeoutSeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.periodSeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.successThreshold|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.failureThreshold|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customReadinessProbe.terminationGracePeriodSeconds|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.exec.command[]|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.path|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.port|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.port|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.host|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.scheme|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.httpHeaders[].name|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.httpGet.httpHeaders[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.tcpSocket.port|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.tcpSocket.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.tcpSocket.port|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.tcpSocket.host|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.grpc.port|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.grpc.service|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.initialDelaySeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.timeoutSeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.periodSeconds|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.successThreshold|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.failureThreshold|int32|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.customLivenessProbe.terminationGracePeriodSeconds|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.extraGatewayProxyLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the gloo edge gateway-proxy deployment.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.extraContainers[]|interface||Extra [containers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of containers on the gateway proxy deployment.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.extraInitContainers[]|interface||Extra [initContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the gateway proxy deployment.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.enablePodSecurityContext|bool||Whether or not to render the pod security context. Default is true.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seLinuxOptions.user|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seLinuxOptions.role|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seLinuxOptions.type|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seLinuxOptions.level|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.runAsUser|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.runAsGroup|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.runAsNonRoot|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.supplementalGroups[]|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.fsGroup|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.sysctls[].name|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.sysctls[].value|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.fsGroupChangePolicy|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seccompProfile.type|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.repository|string|gloo-ee-envoy-wrapper|The image repository (name) for the container.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.capabilities.add[]|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.capabilities.drop[]|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.privileged|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seLinuxOptions.user|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seLinuxOptions.role|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seLinuxOptions.type|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seLinuxOptions.level|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.runAsUser|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.runAsGroup|int64|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.runAsNonRoot|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.procMount|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seccompProfile.type|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo.gatewayProxies.gatewayProxy.podTemplate.glooContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo.gatewayProxies.gatewayProxy.configMap.data.NAME|string|||
+|gloo.gatewayProxies.gatewayProxy.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.customStaticLayer|interface||Configure the static layer for global overrides to Envoy behavior, as defined in the Envoy bootstrap YAML. You cannot use this setting to set overload or upstream layers. For more info, see the Envoy docs. https://www.envoyproxy.io/docs/envoy/latest/configuration/operations/runtime#config-runtime|
+|gloo.gatewayProxies.gatewayProxy.globalDownstreamMaxConnections|uint32||the number of concurrent connections needed. limit used to protect against exhausting file descriptors on host machine|
+|gloo.gatewayProxies.gatewayProxy.healthyPanicThreshold|int8||the percentage of healthy hosts required to load balance based on health status of hosts|
+|gloo.gatewayProxies.gatewayProxy.service.type|string||gateway [service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types). default is `LoadBalancer`|
+|gloo.gatewayProxies.gatewayProxy.service.httpPort|int||HTTP port for the gateway service|
+|gloo.gatewayProxies.gatewayProxy.service.httpsPort|int||HTTPS port for the gateway service|
+|gloo.gatewayProxies.gatewayProxy.service.httpNodePort|int||HTTP nodeport for the gateway service if using type NodePort|
+|gloo.gatewayProxies.gatewayProxy.service.httpsNodePort|int||HTTPS nodeport for the gateway service if using type NodePort|
+|gloo.gatewayProxies.gatewayProxy.service.clusterIP|string||static clusterIP (or `None`) when `gatewayProxies[].gatewayProxy.service.type` is `ClusterIP`|
+|gloo.gatewayProxies.gatewayProxy.service.extraAnnotations.NAME|string|||
+|gloo.gatewayProxies.gatewayProxy.service.extraAnnotations.prometheus.io/path|string|/metrics||
+|gloo.gatewayProxies.gatewayProxy.service.extraAnnotations.prometheus.io/port|string|8081||
+|gloo.gatewayProxies.gatewayProxy.service.extraAnnotations.prometheus.io/scrape|string|true||
+|gloo.gatewayProxies.gatewayProxy.service.externalTrafficPolicy|string|||
+|gloo.gatewayProxies.gatewayProxy.service.name|string||Custom name override for the service resource of the proxy|
+|gloo.gatewayProxies.gatewayProxy.service.httpsFirst|bool||List HTTPS port before HTTP|
+|gloo.gatewayProxies.gatewayProxy.service.loadBalancerIP|string||IP address of the load balancer|
+|gloo.gatewayProxies.gatewayProxy.service.loadBalancerSourceRanges[]|string||List of IP CIDR ranges that are allowed to access the load balancer|
+|gloo.gatewayProxies.gatewayProxy.service.customPorts[]|interface||List of custom port to expose in the Envoy proxy. Each element follows conventional port syntax (port, targetPort, protocol, name)|
+|gloo.gatewayProxies.gatewayProxy.service.externalIPs[]|string||externalIPs is a list of IP addresses for which nodes in the cluster will also accept traffic for this service|
+|gloo.gatewayProxies.gatewayProxy.service.configDumpService.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.antiAffinity|bool||configure anti affinity such that pods are preferably not co-located|
+|gloo.gatewayProxies.gatewayProxy.affinity.NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.topologySpreadConstraints[]|interface||configure topologySpreadConstraints for gateway proxy pods|
+|gloo.gatewayProxies.gatewayProxy.tracing.provider.NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.tracing.cluster[].NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.enabled|bool||enable/disable default gateways|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.disableGeneratedGateways|bool||set to true to disable the gateway generation for a gateway proxy|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.disableHttpGateway|bool||Set to true to disable http gateway generation.|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.disableHttpsGateway|bool||Set to true to disable https gateway generation.|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.ipv4Only|bool||set to true if your network allows ipv4 addresses only. Sets the Gateway spec's bindAddress to 0.0.0.0 instead of ::|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.useProxyProto|bool||use proxy protocol|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.httpHybridGateway.NAME|interface||custom yaml to use for hybrid gateway settings for the http gateway|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.httpsHybridGateway.NAME|interface||custom yaml to use for hybrid gateway settings for the https gateway|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.customHttpGateway.NAME|interface||custom yaml to use for http gateway settings|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.customHttpsGateway.NAME|interface||custom yaml to use for https gateway settings|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.accessLoggingService.NAME|interface||custom yaml to use for access logging service (https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options/als/als.proto.sk/)|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.options.NAME|interface||custom options for http(s) gateways (https://docs.solo.io/gloo-edge/latest/reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options.proto.sk/#listeneroptions)|
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.httpGatewayKubeOverride.NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.httpsGatewayKubeOverride.NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.gatewaySettings.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.extraEnvoyArgs[]|string||Envoy container args, (e.g. https://www.envoyproxy.io/docs/envoy/latest/operations/cli)|
+|gloo.gatewayProxies.gatewayProxy.extraContainersHelper|string|||
+|gloo.gatewayProxies.gatewayProxy.extraInitContainersHelper|string|||
+|gloo.gatewayProxies.gatewayProxy.extraVolumes[].NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.extraVolumeHelper|string|||
+|gloo.gatewayProxies.gatewayProxy.extraListenersHelper|string|||
+|gloo.gatewayProxies.gatewayProxy.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo.gatewayProxies.gatewayProxy.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo.gatewayProxies.gatewayProxy.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo.gatewayProxies.gatewayProxy.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo.gatewayProxies.gatewayProxy.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo.gatewayProxies.gatewayProxy.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo.gatewayProxies.gatewayProxy.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo.gatewayProxies.gatewayProxy.readConfig|bool||expose a read-only subset of the Envoy admin api|
+|gloo.gatewayProxies.gatewayProxy.readConfigMulticluster|bool||expose a read-only subset of the Envoy admin api to gloo-fed|
+|gloo.gatewayProxies.gatewayProxy.extraProxyVolumeMounts[].NAME|interface|||
+|gloo.gatewayProxies.gatewayProxy.extraProxyVolumeMountHelper|string||name of custom made named template allowing for extra volume mounts on the proxy container|
+|gloo.gatewayProxies.gatewayProxy.loopBackAddress|string||Name on which to bind the loop-back interface for this instance of Envoy. Defaults to 127.0.0.1, but other common values may be localhost or ::1|
+|gloo.gatewayProxies.gatewayProxy.failover.enabled|bool||(Enterprise Only): Configure this proxy for failover|
+|gloo.gatewayProxies.gatewayProxy.failover.port|uint||(Enterprise Only): Port to use for failover Gateway Bind port, and service. Default is 15443|
+|gloo.gatewayProxies.gatewayProxy.failover.nodePort|uint||(Enterprise Only): Optional NodePort for failover Service|
+|gloo.gatewayProxies.gatewayProxy.failover.secretName|string||(Enterprise Only): Secret containing downstream Ssl Secrets Default is failover-downstream|
+|gloo.gatewayProxies.gatewayProxy.failover.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.disabled|bool||Skips creation of this gateway proxy. Used to turn off gateway proxies created by preceding configurations|
+|gloo.gatewayProxies.gatewayProxy.envoyApiVersion|string||Version of the Envoy API to use for the xDS transport and resources. Default is V3|
+|gloo.gatewayProxies.gatewayProxy.envoyBootstrapExtensions[].NAME|interface||List of bootstrap extensions to add to Envoy bootstrap config. Examples include Wasm Service (https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extensions-wasm-v3-wasmservice).|
+|gloo.gatewayProxies.gatewayProxy.envoyOverloadManager.NAME|interface||Overload Manager definition for Envoy bootstrap config. If enabled, a list of Resource Monitors MUST be defined in order to produce a valid Envoy config (https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/overload/v3/overload.proto#overload-manager).|
+|gloo.gatewayProxies.gatewayProxy.envoyStaticClusters[].NAME|interface||List of extra static clusters to be added to Envoy bootstrap config. https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/cluster.proto#envoy-v3-api-msg-config-cluster-v3-cluster|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.apiVersion|string||accepts autoscaling/v1, autoscaling/v2beta2 or autoscaling/v2. Note: autoscaling/v2beta2 is deprecated as of Kubernetes 1.26.|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.minReplicas|int32||minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down.|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.maxReplicas|int32||maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up. It cannot be less that minReplicas.|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.targetCPUUtilizationPercentage|int32||target average CPU utilization (represented as a percentage of requested CPU) over all the pods. Used only with apiVersion autoscaling/v1|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.metrics[].NAME|interface||metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used). Used only with apiVersion autoscaling/v2beta2|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.behavior.NAME|interface||behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). Used only with apiVersion autoscaling/v2beta2|
+|gloo.gatewayProxies.gatewayProxy.horizontalPodAutoscaler.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.podDisruptionBudget.minAvailable|string||Corresponds directly with the _minAvailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _maxUnavailable_.|
+|gloo.gatewayProxies.gatewayProxy.podDisruptionBudget.maxUnavailable|string||Corresponds directly with the _maxUnavailable_ field in the [PodDisruptionBudgetSpec](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/#PodDisruptionBudgetSpec). This value is mutually exclusive with _minAvailable_.|
+|gloo.gatewayProxies.gatewayProxy.podDisruptionBudget.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.gatewayProxies.gatewayProxy.istioMetaMeshId|string||ISTIO_META_MESH_ID Environment Variable. Defaults to "cluster.local"|
+|gloo.gatewayProxies.gatewayProxy.istioMetaClusterId|string||ISTIO_META_CLUSTER_ID Environment Variable. Defaults to "Kubernetes"|
+|gloo.gatewayProxies.gatewayProxy.istioDiscoveryAddress|string||discoveryAddress field of the PROXY_CONFIG environment variable. Defaults to "istiod.istio-system.svc:15012"|
+|gloo.gatewayProxies.gatewayProxy.envoyLogLevel|string||Level at which the pod should log. Options include "trace", "info", "debug", "warn", "error", "critical" and "off". Default level is info|
+|gloo.gatewayProxies.gatewayProxy.envoyStatsConfig.NAME|interface||Envoy statistics configuration, such as tagging. For more info, see https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/stats.proto#config-metrics-v3-statsconfig|
+|gloo.gatewayProxies.gatewayProxy.xdsServiceAddress|string||The k8s service name for the xds server. Defaults to gloo.|
+|gloo.gatewayProxies.gatewayProxy.xdsServicePort|uint32||The k8s service port for the xds server. Defaults to the value from .Values.gloo.deployment.xdsPort, but can be overridden to use, for example, xds-relay.|
+|gloo.gatewayProxies.gatewayProxy.tcpKeepaliveTimeSeconds|uint32||The amount of time in seconds for connections to be idle before sending keep-alive probes. Defaults to 60. See here: https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/address.proto#envoy-v3-api-msg-config-core-v3-tcpkeepalive|
+|gloo.gatewayProxies.gatewayProxy.disableCoreDumps|bool||If set to true, Envoy will not generate core dumps in the event of a crash. Defaults to false|
+|gloo.gatewayProxies.gatewayProxy.disableExtauthSidecar|bool||If set to true, this gateway proxy will not come up with an extauth sidecar container when global.extAuth.envoySidecar is enabled. This setting has no effect otherwise. Defaults to false|
+|gloo.gatewayProxies.gatewayProxy.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.ingress.enabled|bool|||
+|gloo.ingress.deployment.image.tag|string||The image tag for the container.|
+|gloo.ingress.deployment.image.repository|string||The image repository (name) for the container.|
+|gloo.ingress.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.ingress.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.ingress.deployment.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.ingress.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.ingress.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.ingress.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.ingress.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.ingress.deployment.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.ingress.deployment.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.ingress.deployment.extraIngressLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the ingress deployment.|
+|gloo.ingress.deployment.extraIngressAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the ingress deployment.|
+|gloo.ingress.deployment.stats|bool||Controls whether or not Envoy stats are enabled|
+|gloo.ingress.deployment.replicas|int||number of instances to deploy|
+|gloo.ingress.deployment.customEnv[].name|string|||
+|gloo.ingress.deployment.customEnv[].value|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.ingress.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.ingress.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.ingress.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.ingress.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.ingress.deployment.nodeName|string||name of node to run on|
+|gloo.ingress.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.ingress.deployment.tolerations[].key|string|||
+|gloo.ingress.deployment.tolerations[].operator|string|||
+|gloo.ingress.deployment.tolerations[].value|string|||
+|gloo.ingress.deployment.tolerations[].effect|string|||
+|gloo.ingress.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.ingress.deployment.affinity.NAME|interface|||
+|gloo.ingress.deployment.hostAliases[]|interface|||
+|gloo.ingress.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.ingress.deployment.resources.limits.memory|string||amount of memory|
+|gloo.ingress.deployment.resources.limits.cpu|string||amount of CPUs|
+|gloo.ingress.deployment.resources.requests.memory|string||amount of memory|
+|gloo.ingress.deployment.resources.requests.cpu|string||amount of CPUs|
+|gloo.ingress.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.ingress.requireIngressClass|bool||only serve traffic for Ingress objects with the Ingress Class annotation 'kubernetes.io/ingress.class'. By default the annotation value must be set to 'gloo', however this can be overriden via customIngressClass.|
+|gloo.ingress.customIngressClass|bool||Only relevant when requireIngressClass is set to true. Setting this value will cause the Gloo Edge Ingress Controller to process only those Ingress objects which have their ingress class set to this value (e.g. 'kubernetes.io/ingress.class=SOMEVALUE').|
+|gloo.ingressProxy.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|gloo.ingressProxy.deployment.image.repository|string|gloo-ee-envoy-wrapper|The image repository (name) for the container.|
+|gloo.ingressProxy.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.ingressProxy.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.ingressProxy.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.ingressProxy.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.ingressProxy.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.ingressProxy.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.ingressProxy.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.ingressProxy.deployment.httpPort|int||HTTP port for the ingress container|
+|gloo.ingressProxy.deployment.httpsPort|int||HTTPS port for the ingress container|
+|gloo.ingressProxy.deployment.extraPorts[]|interface|||
+|gloo.ingressProxy.deployment.extraAnnotations.NAME|string|||
+|gloo.ingressProxy.deployment.floatingUserId|bool||If true, allows the cluster to dynamically assign a user ID for the processes running in the container.|
+|gloo.ingressProxy.deployment.runAsUser|float64||Explicitly set the user ID for the pod to run as. Default is 10101|
+|gloo.ingressProxy.deployment.extraIngressProxyLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the ingress proxy deployment.|
+|gloo.ingressProxy.deployment.stats|bool||Controls whether or not Envoy stats are enabled|
+|gloo.ingressProxy.deployment.replicas|int||number of instances to deploy|
+|gloo.ingressProxy.deployment.customEnv[].name|string|||
+|gloo.ingressProxy.deployment.customEnv[].value|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.ingressProxy.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.ingressProxy.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.ingressProxy.deployment.priorityClassName|string||name of a defined priority class|
+|gloo.ingressProxy.deployment.nodeName|string||name of node to run on|
+|gloo.ingressProxy.deployment.nodeSelector.NAME|string||label selector for nodes|
+|gloo.ingressProxy.deployment.tolerations[].key|string|||
+|gloo.ingressProxy.deployment.tolerations[].operator|string|||
+|gloo.ingressProxy.deployment.tolerations[].value|string|||
+|gloo.ingressProxy.deployment.tolerations[].effect|string|||
+|gloo.ingressProxy.deployment.tolerations[].tolerationSeconds|int64|||
+|gloo.ingressProxy.deployment.affinity.NAME|interface|||
+|gloo.ingressProxy.deployment.hostAliases[]|interface|||
+|gloo.ingressProxy.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.ingressProxy.deployment.resources.limits.memory|string||amount of memory|
+|gloo.ingressProxy.deployment.resources.limits.cpu|string||amount of CPUs|
+|gloo.ingressProxy.deployment.resources.requests.memory|string||amount of memory|
+|gloo.ingressProxy.deployment.resources.requests.cpu|string||amount of CPUs|
+|gloo.ingressProxy.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.ingressProxy.configMap.data.NAME|string|||
+|gloo.ingressProxy.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.ingressProxy.tracing|string|||
+|gloo.ingressProxy.loopBackAddress|string||Name on which to bind the loop-back interface for this instance of Envoy. Defaults to 127.0.0.1, but other common values may be localhost or ::1|
+|gloo.ingressProxy.label|string||Value for label gloo. Use a unique value to use several ingress proxy instances in the same cluster. Default is ingress-proxy|
+|gloo.ingressProxy.service.type|string||K8s service type|
+|gloo.ingressProxy.service.extraAnnotations.NAME|string||extra annotations to add to the service|
+|gloo.ingressProxy.service.loadBalancerIP|string||IP address of the load balancer|
+|gloo.ingressProxy.service.httpPort|int||HTTP port for the knative/ingress proxy service|
+|gloo.ingressProxy.service.httpsPort|int||HTTPS port for the knative/ingress proxy service|
+|gloo.ingressProxy.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.k8s.clusterName|string||cluster name to use when referencing services.|
+|gloo.accessLogger.image.tag|string||The image tag for the container.|
+|gloo.accessLogger.image.repository|string||The image repository (name) for the container.|
+|gloo.accessLogger.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo.accessLogger.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo.accessLogger.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo.accessLogger.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo.accessLogger.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo.accessLogger.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo.accessLogger.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo.accessLogger.port|uint|||
+|gloo.accessLogger.serviceName|string|||
+|gloo.accessLogger.enabled|bool|||
+|gloo.accessLogger.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo.accessLogger.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo.accessLogger.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo.accessLogger.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo.accessLogger.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo.accessLogger.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo.accessLogger.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo.accessLogger.runAsUser|float64||Explicitly set the user ID for the processes in the container to run as. Default is 10101.|
+|gloo.accessLogger.fsGroup|float64||Explicitly set the group ID for volume ownership. Default is 10101|
+|gloo.accessLogger.extraAccessLoggerLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the access logger deployment.|
+|gloo.accessLogger.extraAccessLoggerAnnotations.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.annotations data of the access logger deployment.|
+|gloo.accessLogger.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.accessLogger.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo.accessLogger.replicas|int||number of instances to deploy|
+|gloo.accessLogger.customEnv[].name|string|||
+|gloo.accessLogger.customEnv[].value|string|||
+|gloo.accessLogger.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo.accessLogger.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.accessLogger.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo.accessLogger.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo.accessLogger.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo.accessLogger.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo.accessLogger.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo.accessLogger.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo.accessLogger.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo.accessLogger.restartPolicy|string||restart policy to use when the pod exits|
+|gloo.accessLogger.priorityClassName|string||name of a defined priority class|
+|gloo.accessLogger.nodeName|string||name of node to run on|
+|gloo.accessLogger.nodeSelector.NAME|string||label selector for nodes|
+|gloo.accessLogger.tolerations[].key|string|||
+|gloo.accessLogger.tolerations[].operator|string|||
+|gloo.accessLogger.tolerations[].value|string|||
+|gloo.accessLogger.tolerations[].effect|string|||
+|gloo.accessLogger.tolerations[].tolerationSeconds|int64|||
+|gloo.accessLogger.affinity.NAME|interface|||
+|gloo.accessLogger.hostAliases[]|interface|||
+|gloo.accessLogger.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo.accessLogger.resources.limits.memory|string||amount of memory|
+|gloo.accessLogger.resources.limits.cpu|string||amount of CPUs|
+|gloo.accessLogger.resources.requests.memory|string||amount of memory|
+|gloo.accessLogger.resources.requests.cpu|string||amount of CPUs|
+|gloo.accessLogger.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|redis.deployment.initContainer.image.tag|string|1.28|The image tag for the container.|
+|redis.deployment.initContainer.image.repository|string|busybox|The image repository (name) for the container.|
+|redis.deployment.initContainer.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|redis.deployment.initContainer.image.registry|string|docker.io|The image hostname prefix and registry, such as quay.io/solo-io.|
+|redis.deployment.initContainer.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|redis.deployment.initContainer.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|redis.deployment.initContainer.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|redis.deployment.initContainer.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|redis.deployment.initContainer.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|redis.deployment.initContainer.securityContext.capabilities.add[]|string|||
+|redis.deployment.initContainer.securityContext.capabilities.drop[]|string|||
+|redis.deployment.initContainer.securityContext.privileged|bool|||
+|redis.deployment.initContainer.securityContext.seLinuxOptions.user|string|||
+|redis.deployment.initContainer.securityContext.seLinuxOptions.role|string|||
+|redis.deployment.initContainer.securityContext.seLinuxOptions.type|string|||
+|redis.deployment.initContainer.securityContext.seLinuxOptions.level|string|||
+|redis.deployment.initContainer.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|redis.deployment.initContainer.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|redis.deployment.initContainer.securityContext.windowsOptions.runAsUserName|string|||
+|redis.deployment.initContainer.securityContext.windowsOptions.hostProcess|bool|||
+|redis.deployment.initContainer.securityContext.runAsUser|int64|||
+|redis.deployment.initContainer.securityContext.runAsGroup|int64|||
+|redis.deployment.initContainer.securityContext.runAsNonRoot|bool|||
+|redis.deployment.initContainer.securityContext.readOnlyRootFilesystem|bool|||
+|redis.deployment.initContainer.securityContext.allowPrivilegeEscalation|bool|||
+|redis.deployment.initContainer.securityContext.procMount|string|||
+|redis.deployment.initContainer.securityContext.seccompProfile.type|string|||
+|redis.deployment.initContainer.securityContext.seccompProfile.localhostProfile|string|||
+|redis.deployment.initContainer.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|redis.deployment.name|string|redis||
+|redis.deployment.staticPort|uint|6379||
+|redis.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod , this value is not applied.|
+|redis.deployment.runAsGroup|float64||Explicitly set the group ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod, this value is not applied.|
+|redis.deployment.fsGroup|float64||Explicitly set the fsGroup ID for the container to run as in the podSecurityContext. Default is 999. If a podSecurityContext is defined for the pod, this value is not applied.|
+|redis.deployment.floatingUserId|bool|false|set to true to allow the cluster to dynamically assign a user ID. If podSecurityContext is defined, this value is not applied.|
+|redis.deployment.extraRedisLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the redis deployment.|
+|redis.deployment.enablePodSecurityContext|bool|true|Whether or not to render the pod security context. Default is true.|
+|redis.deployment.podSecurityContext.seLinuxOptions.user|string|||
+|redis.deployment.podSecurityContext.seLinuxOptions.role|string|||
+|redis.deployment.podSecurityContext.seLinuxOptions.type|string|||
+|redis.deployment.podSecurityContext.seLinuxOptions.level|string|||
+|redis.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|redis.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|redis.deployment.podSecurityContext.windowsOptions.runAsUserName|string|||
+|redis.deployment.podSecurityContext.windowsOptions.hostProcess|bool|||
+|redis.deployment.podSecurityContext.runAsUser|int64|||
+|redis.deployment.podSecurityContext.runAsGroup|int64|||
+|redis.deployment.podSecurityContext.runAsNonRoot|bool|||
+|redis.deployment.podSecurityContext.supplementalGroups[]|int64|||
+|redis.deployment.podSecurityContext.fsGroup|int64|||
+|redis.deployment.podSecurityContext.sysctls[].name|string|||
+|redis.deployment.podSecurityContext.sysctls[].value|string|||
+|redis.deployment.podSecurityContext.fsGroupChangePolicy|string|||
+|redis.deployment.podSecurityContext.seccompProfile.type|string|||
+|redis.deployment.podSecurityContext.seccompProfile.localhostProfile|string|||
+|redis.deployment.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|redis.deployment.replicas|int||number of instances to deploy|
+|redis.deployment.customEnv[].name|string|||
+|redis.deployment.customEnv[].value|string|||
+|redis.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|redis.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|redis.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|redis.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|redis.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|redis.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|redis.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|redis.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|redis.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|redis.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|redis.deployment.priorityClassName|string||name of a defined priority class|
+|redis.deployment.nodeName|string||name of node to run on|
+|redis.deployment.nodeSelector.NAME|string||label selector for nodes|
+|redis.deployment.tolerations[].key|string|||
+|redis.deployment.tolerations[].operator|string|||
+|redis.deployment.tolerations[].value|string|||
+|redis.deployment.tolerations[].effect|string|||
+|redis.deployment.tolerations[].tolerationSeconds|int64|||
+|redis.deployment.affinity.NAME|interface|||
+|redis.deployment.hostAliases[]|interface|||
+|redis.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|redis.deployment.resources.limits.memory|string||amount of memory|
+|redis.deployment.resources.limits.cpu|string||amount of CPUs|
+|redis.deployment.resources.requests.memory|string||amount of memory|
+|redis.deployment.resources.requests.cpu|string||amount of CPUs|
+|redis.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|redis.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|redis.deployment.redisContainerSecurityContext.capabilities.add[]|string|||
+|redis.deployment.redisContainerSecurityContext.capabilities.drop[]|string|||
+|redis.deployment.redisContainerSecurityContext.privileged|bool|||
+|redis.deployment.redisContainerSecurityContext.seLinuxOptions.user|string|||
+|redis.deployment.redisContainerSecurityContext.seLinuxOptions.role|string|||
+|redis.deployment.redisContainerSecurityContext.seLinuxOptions.type|string|||
+|redis.deployment.redisContainerSecurityContext.seLinuxOptions.level|string|||
+|redis.deployment.redisContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|redis.deployment.redisContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|redis.deployment.redisContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|redis.deployment.redisContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|redis.deployment.redisContainerSecurityContext.runAsUser|int64|||
+|redis.deployment.redisContainerSecurityContext.runAsGroup|int64|||
+|redis.deployment.redisContainerSecurityContext.runAsNonRoot|bool|||
+|redis.deployment.redisContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|redis.deployment.redisContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|redis.deployment.redisContainerSecurityContext.procMount|string|||
+|redis.deployment.redisContainerSecurityContext.seccompProfile.type|string|||
+|redis.deployment.redisContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|redis.deployment.redisContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|redis.deployment.image.tag|string|7.2.4-alpine|The image tag for the container.|
+|redis.deployment.image.repository|string|redis|The image repository (name) for the container.|
+|redis.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|redis.deployment.image.registry|string|docker.io|The image hostname prefix and registry, such as quay.io/solo-io.|
+|redis.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|redis.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|redis.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|redis.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|redis.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|redis.service.port|uint|6379|This is the port set for the redis service.|
+|redis.service.name|string|redis|This is the name of the redis service. If there is an external service, this can be used to set the endpoint of the external service.  Set redis.disabled if setting the value of the redis service.|
+|redis.service.db|uint|0|This is the db number of the redis service, can be any int from 0 to 15, this field ignored when using clustered redis or when ClientSideShardingEnabled is true |
+|redis.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|redis.tlsEnabled|bool|false|Enables tls for redis. Default is false.|
+|redis.cert.enabled|bool|false|If set to true, a secret for redis will be created, and cert.crt and cert.key will be required. If redis.disabled is not set the socket type is set to tsl. If redis.disabled is set, then only a secret will be created containing the cert and key. The secret is mounted to the rate-limiter and redis deployments with the cert and key. Default is false.|
+|redis.cert.crt|string||TLS certificate. If CACert is not provided, this will be used as the CA cert as well as the TLS cert for the redis server.|
+|redis.cert.key|string||TLS certificate key.|
+|redis.cert.cacrt|string||Optional. CA certificate.|
+|redis.cert.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|redis.clientSideShardingEnabled|bool|false|If set to true, Envoy will be used as a Redis proxy and load balance requests between redis instances scaled via replicas. Default is false.|
+|redis.disabled|bool|false|If set to true, Redis service creation will be blocked. When set to `true` when `global.extensions.glooRedis.enableAcl` is set to `true` as well, the `redis` secret will not be created. The client you will have to create the secret to provide the password, the key used for the password is `redis-password`. Default is false.|
+|redis.clustered|bool|false|If true, we create the correct client to handle clustered redis. Default is false|
+|redis.aclPrefix|string|user default +@all allkeys on >|The ACL policy for the default redis user. This is the prefix only, and if overridden, should end with < to signal the password.|
+|observability.enabled|bool|true|if true, deploy observability service (default true)|
+|observability.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|observability.deployment.image.repository|string|observability-ee|The image repository (name) for the container.|
+|observability.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|observability.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|observability.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|observability.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|observability.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|observability.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|observability.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|observability.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|observability.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|observability.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|observability.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|observability.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|observability.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|observability.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|observability.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as. Default is 10101|
+|observability.deployment.floatingUserId|bool|false|set to true to allow the cluster to dynamically assign a user ID|
+|observability.deployment.extraObservabilityLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the Observability deployment.|
+|observability.deployment.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info|
+|observability.deployment.replicas|int||number of instances to deploy|
+|observability.deployment.customEnv[].name|string|||
+|observability.deployment.customEnv[].value|string|||
+|observability.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|observability.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|observability.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|observability.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|observability.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|observability.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|observability.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|observability.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|observability.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|observability.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|observability.deployment.priorityClassName|string||name of a defined priority class|
+|observability.deployment.nodeName|string||name of node to run on|
+|observability.deployment.nodeSelector.NAME|string||label selector for nodes|
+|observability.deployment.tolerations[].key|string|||
+|observability.deployment.tolerations[].operator|string|||
+|observability.deployment.tolerations[].value|string|||
+|observability.deployment.tolerations[].effect|string|||
+|observability.deployment.tolerations[].tolerationSeconds|int64|||
+|observability.deployment.affinity.NAME|interface|||
+|observability.deployment.hostAliases[]|interface|||
+|observability.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|observability.deployment.resources.limits.memory|string||amount of memory|
+|observability.deployment.resources.limits.cpu|string||amount of CPUs|
+|observability.deployment.resources.requests.memory|string||amount of memory|
+|observability.deployment.resources.requests.cpu|string||amount of CPUs|
+|observability.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.customGrafana.enabled|bool|false|Set to true to indicate that the observability pod should talk to a custom grafana instance|
+|observability.customGrafana.username|string||Set this and the 'password' field to authenticate to the custom grafana instance using basic auth|
+|observability.customGrafana.password|string||Set this and the 'username' field to authenticate to the custom grafana instance using basic auth|
+|observability.customGrafana.apiKey|string||Authenticate to the custom grafana instance using this api key|
+|observability.customGrafana.url|string||The URL for the custom grafana instance|
+|observability.customGrafana.caBundle|string||The Certificate Authority used to verify the server certificates.|
+|observability.customGrafana.dataSource|string||The data source for Gloo-generated dashboards to point to; defaults to null (ie Grafana's default data source)'|
+|observability.customGrafana.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.upstreamDashboardTemplate|string||Provide a custom dashboard template to use when generating per-upstream dashboards. The only variables available for use in this template are: {{.Uid}} and {{.EnvoyClusterName}}. Recommended to use Helm's --set-file to provide this value.|
+|observability.rbac.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.serviceAccount.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.configMap.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|observability.secret.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|rbac.create|bool|false||
+|grafana|interface|||
+|prometheus|interface|||
+|gateway-portal-web-server|interface|||
+|tags.NAME|string|||
+|gloo-fed.global.image.tag|string||The image tag for the container.|
+|gloo-fed.global.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.global.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.global.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.global.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.global.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.global.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.global.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.global.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.global.extensions|interface|||
+|gloo-fed.global.glooRbac.create|bool||create rbac rules for the gloo-system service account|
+|gloo-fed.global.glooRbac.namespaced|bool||use Roles instead of ClusterRoles|
+|gloo-fed.global.glooRbac.nameSuffix|string||When nameSuffix is nonempty, append '-$nameSuffix' to the names of Gloo Edge RBAC resources; e.g. when nameSuffix is 'foo', the role 'gloo-resource-reader' will become 'gloo-resource-reader-foo'|
+|gloo-fed.global.glooStats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo-fed.global.glooStats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo-fed.global.glooStats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo-fed.global.glooStats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo-fed.global.glooStats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo-fed.global.glooStats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo-fed.global.glooStats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo-fed.global.glooMtls.enabled|bool||Enables internal mtls authentication|
+|gloo-fed.global.glooMtls.sds.image.tag|string||The image tag for the container.|
+|gloo-fed.global.glooMtls.sds.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.global.glooMtls.sds.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.global.glooMtls.sds.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.global.glooMtls.sds.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.global.glooMtls.sds.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.global.glooMtls.sds.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.global.glooMtls.sds.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.global.glooMtls.sds.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.global.glooMtls.sds.securityContext.capabilities.add[]|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.capabilities.drop[]|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.privileged|bool|||
+|gloo-fed.global.glooMtls.sds.securityContext.seLinuxOptions.user|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.seLinuxOptions.role|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.seLinuxOptions.type|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.seLinuxOptions.level|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.windowsOptions.runAsUserName|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.windowsOptions.hostProcess|bool|||
+|gloo-fed.global.glooMtls.sds.securityContext.runAsUser|int64|||
+|gloo-fed.global.glooMtls.sds.securityContext.runAsGroup|int64|||
+|gloo-fed.global.glooMtls.sds.securityContext.runAsNonRoot|bool|||
+|gloo-fed.global.glooMtls.sds.securityContext.readOnlyRootFilesystem|bool|||
+|gloo-fed.global.glooMtls.sds.securityContext.allowPrivilegeEscalation|bool|||
+|gloo-fed.global.glooMtls.sds.securityContext.procMount|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.seccompProfile.type|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.seccompProfile.localhostProfile|string|||
+|gloo-fed.global.glooMtls.sds.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo-fed.global.glooMtls.sds.logLevel|string||Log level for sds.  Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info.|
+|gloo-fed.global.glooMtls.envoy.image.tag|string||The image tag for the container.|
+|gloo-fed.global.glooMtls.envoy.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.global.glooMtls.envoy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.global.glooMtls.envoy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.global.glooMtls.envoy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.global.glooMtls.envoy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.global.glooMtls.envoy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.global.glooMtls.envoy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.global.glooMtls.envoy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.global.glooMtls.envoy.securityContext.capabilities.add[]|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.capabilities.drop[]|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.privileged|bool|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seLinuxOptions.user|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seLinuxOptions.role|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seLinuxOptions.type|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seLinuxOptions.level|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.windowsOptions.runAsUserName|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.windowsOptions.hostProcess|bool|||
+|gloo-fed.global.glooMtls.envoy.securityContext.runAsUser|int64|||
+|gloo-fed.global.glooMtls.envoy.securityContext.runAsGroup|int64|||
+|gloo-fed.global.glooMtls.envoy.securityContext.runAsNonRoot|bool|||
+|gloo-fed.global.glooMtls.envoy.securityContext.readOnlyRootFilesystem|bool|||
+|gloo-fed.global.glooMtls.envoy.securityContext.allowPrivilegeEscalation|bool|||
+|gloo-fed.global.glooMtls.envoy.securityContext.procMount|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seccompProfile.type|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.seccompProfile.localhostProfile|string|||
+|gloo-fed.global.glooMtls.envoy.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo-fed.global.glooMtls.istioProxy.image.tag|string||The image tag for the container.|
+|gloo-fed.global.glooMtls.istioProxy.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.global.glooMtls.istioProxy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.global.glooMtls.istioProxy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.global.glooMtls.istioProxy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.global.glooMtls.istioProxy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.global.glooMtls.istioProxy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.global.glooMtls.istioProxy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.global.glooMtls.istioProxy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.global.glooMtls.istioProxy.securityContext.capabilities.add[]|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.capabilities.drop[]|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.privileged|bool|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seLinuxOptions.user|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seLinuxOptions.role|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seLinuxOptions.type|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seLinuxOptions.level|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.windowsOptions.runAsUserName|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.windowsOptions.hostProcess|bool|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.runAsUser|int64|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.runAsGroup|int64|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.runAsNonRoot|bool|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.readOnlyRootFilesystem|bool|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.allowPrivilegeEscalation|bool|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.procMount|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seccompProfile.type|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.seccompProfile.localhostProfile|string|||
+|gloo-fed.global.glooMtls.istioProxy.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo-fed.global.glooMtls.istioProxy.logLevel|string||Log level for istio-proxy. Options include "info", "debug", "warning", and "error". Default level is info Default is 'warning'.|
+|gloo-fed.global.glooMtls.envoySidecarResources.limits.memory|string||amount of memory|
+|gloo-fed.global.glooMtls.envoySidecarResources.limits.cpu|string||amount of CPUs|
+|gloo-fed.global.glooMtls.envoySidecarResources.requests.memory|string||amount of memory|
+|gloo-fed.global.glooMtls.envoySidecarResources.requests.cpu|string||amount of CPUs|
+|gloo-fed.global.glooMtls.sdsResources.limits.memory|string||amount of memory|
+|gloo-fed.global.glooMtls.sdsResources.limits.cpu|string||amount of CPUs|
+|gloo-fed.global.glooMtls.sdsResources.requests.memory|string||amount of memory|
+|gloo-fed.global.glooMtls.sdsResources.requests.cpu|string||amount of CPUs|
+|gloo-fed.global.istioSDS.enabled|bool||Enables SDS cert-rotator sidecar for istio mTLS cert rotation|
+|gloo-fed.global.istioSDS.customSidecars[]|interface||Override the default Istio sidecar in gateway-proxy with a custom container. Ignored if IstioSDS.enabled is false|
+|gloo-fed.global.istioIntegration.labelInstallNamespace|bool||If creating a namespace for Gloo, include the 'istio-injection: enabled' label (or 'istio.io/rev=' if 'istioSidecarRevTag' field is also set) to allow Istio sidecar injection for Gloo pods. Be aware that Istio's default injection behavior will auto-inject a sidecar into all pods in such a marked namespace. Disabling this behavior in Istio's configs or using gloo's global.istioIntegration.disableAutoinjection flag is recommended.|
+|gloo-fed.global.istioIntegration.whitelistDiscovery|bool||Annotate the discovery pod for Istio sidecar injection to ensure that it gets a sidecar even when namespace-wide auto-injection is disabled. Generally only needed for FDS is enabled.|
+|gloo-fed.global.istioIntegration.disableAutoinjection|bool||Annotate all pods (excluding those whitelisted by other config values) to with an explicit 'do not inject' annotation to prevent Istio from adding sidecars to all pods. It's recommended that this be set to true, as some pods do not immediately work with an Istio sidecar without extra manual configuration.|
+|gloo-fed.global.istioIntegration.enableIstioSidecarOnGateway|bool||Enable Istio sidecar injection on the gateway-proxy deployment. Ignored if LabelInstallNamespace is not 'true'. Ignored if disableAutoinjection is 'true'.|
+|gloo-fed.global.istioIntegration.istioSidecarRevTag|string||Value of revision tag for Istio sidecar injection on the gateway-proxy and discovery deployments (when enabled with LabelInstallNamespace, WhitelistDiscovery or EnableIstioSidecarOnGateway). If set, applies the label 'istio.io/rev:<rev>' instead of 'sidecar.istio.io/inject' or 'istio-injection:enabled'. Ignored if disableAutoinjection is 'true'.|
+|gloo-fed.global.istioIntegration.appendXForwardedHost|bool||Enable appending the X-Forwarded-Host header with the Istio-provided value. Default: true.|
+|gloo-fed.global.istioIntegration.enableAutoMtls|bool||Enables Istio auto mtls configuration for Gloo Edge upstreams. Defaults to false.|
+|gloo-fed.global.extraSpecs|bool||Add additional specs to include in the settings manifest, as defined by a helm partial. Defaults to false in open source, and true in enterprise.|
+|gloo-fed.global.extauthCustomYaml|bool||Inject whatever yaml exists in .Values.global.extensions.extAuth into settings.spec.extauth, instead of structured yaml (which is enterprise only). Defaults to true in open source, and false in enterprise|
+|gloo-fed.global.console|interface||Configuration options for the Enterprise Console (UI).|
+|gloo-fed.global.graphql|interface||(Enterprise Only): GraphQL configuration options.|
+|gloo-fed.global.configMaps[].name|string||Name of the ConfigMap to create (required).|
+|gloo-fed.global.configMaps[].namespace|string||Namespace in which to create the ConfigMap. If empty, defaults to Gloo Edge install namespace.|
+|gloo-fed.global.configMaps[].data.NAME|string||Key-value pairs of ConfigMap data.|
+|gloo-fed.global.extraCustomResources|bool||Add additional custom resources to create, as defined by a helm partial. Defaults to false in open source, and true in enterprise.|
+|gloo-fed.global.console.readOnly|bool||If true, then custom resources can only be viewed in read-only mode in the UI. If false, then resources can be created, updated, and deleted via the UI (default false).|
+|gloo-fed.global.console.apiExplorerEnabled|bool||Whether the GraphQL API Explorer is enabled (default true).|
+|gloo-fed.enabled|bool||If true, deploy federation service (default true).|
+|gloo-fed.create_license_secret|bool|false|Create a secret for the license specified in 'license_key'. Set to 'false' if you use 'license_secret_name' instead.|
+|gloo-fed.license_secret_name|string||The name of a secret that contains your Gloo Edge license key. Set 'create_license_key' to 'false' to disable use of the default license secret.|
+|gloo-fed.license_key|string||Your Gloo Edge license key.|
+|gloo-fed.enableMultiClusterRbac|bool|||
+|gloo-fed.glooFedApiserver.enable|bool|||
+|gloo-fed.glooFedApiserver.replicas|int|||
+|gloo-fed.glooFedApiserver.image.tag|string||The image tag for the container.|
+|gloo-fed.glooFedApiserver.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.glooFedApiserver.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.glooFedApiserver.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.glooFedApiserver.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.glooFedApiserver.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.glooFedApiserver.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.glooFedApiserver.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.port|int|||
+|gloo-fed.glooFedApiserver.healthCheckPort|int|||
+|gloo-fed.glooFedApiserver.resources.limits.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.resources.requests.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.resources.requests.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo-fed.glooFedApiserver.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo-fed.glooFedApiserver.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo-fed.glooFedApiserver.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo-fed.glooFedApiserver.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo-fed.glooFedApiserver.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo-fed.glooFedApiserver.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo-fed.glooFedApiserver.floatingUserId|bool|||
+|gloo-fed.glooFedApiserver.runAsUser|float64|||
+|gloo-fed.glooFedApiserver.console.image.tag|string||The image tag for the container.|
+|gloo-fed.glooFedApiserver.console.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.glooFedApiserver.console.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.glooFedApiserver.console.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.glooFedApiserver.console.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.glooFedApiserver.console.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.glooFedApiserver.console.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.console.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.glooFedApiserver.console.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.console.port|int|||
+|gloo-fed.glooFedApiserver.console.resources.limits.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.console.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.console.resources.requests.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.console.resources.requests.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.envoy.image.tag|string||The image tag for the container.|
+|gloo-fed.glooFedApiserver.envoy.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.glooFedApiserver.envoy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.glooFedApiserver.envoy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.glooFedApiserver.envoy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.glooFedApiserver.envoy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.glooFedApiserver.envoy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.envoy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.glooFedApiserver.envoy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.glooFedApiserver.envoy.resources.limits.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.envoy.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.envoy.resources.requests.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.envoy.resources.requests.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.envoy.bootstrapConfig.configMapName|string|||
+|gloo-fed.glooFedApiserver.namespaceRestrictedMode|bool||If true:  Convert the ClusterRole used in apiserver to Role.  Useful in single-namespace deployments of gloo-ee where permissions can be more restrictive--recommended to not set in a multi-cluster deployment.  Default is false.|
+|gloo-fed.glooFedApiserver.replicas|int||number of instances to deploy|
+|gloo-fed.glooFedApiserver.customEnv[].name|string|||
+|gloo-fed.glooFedApiserver.customEnv[].value|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo-fed.glooFedApiserver.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo-fed.glooFedApiserver.restartPolicy|string||restart policy to use when the pod exits|
+|gloo-fed.glooFedApiserver.priorityClassName|string||name of a defined priority class|
+|gloo-fed.glooFedApiserver.nodeName|string||name of node to run on|
+|gloo-fed.glooFedApiserver.nodeSelector.NAME|string||label selector for nodes|
+|gloo-fed.glooFedApiserver.tolerations[].key|string|||
+|gloo-fed.glooFedApiserver.tolerations[].operator|string|||
+|gloo-fed.glooFedApiserver.tolerations[].value|string|||
+|gloo-fed.glooFedApiserver.tolerations[].effect|string|||
+|gloo-fed.glooFedApiserver.tolerations[].tolerationSeconds|int64|||
+|gloo-fed.glooFedApiserver.affinity.NAME|interface|||
+|gloo-fed.glooFedApiserver.hostAliases[]|interface|||
+|gloo-fed.glooFedApiserver.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo-fed.glooFedApiserver.resources.limits.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.resources.requests.memory|string||amount of memory|
+|gloo-fed.glooFedApiserver.resources.requests.cpu|string||amount of CPUs|
+|gloo-fed.glooFedApiserver.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo-fed.glooFed.image.tag|string||The image tag for the container.|
+|gloo-fed.glooFed.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.glooFed.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.glooFed.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.glooFed.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.glooFed.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.glooFed.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.glooFed.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.glooFed.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.glooFed.replicas|int|||
+|gloo-fed.glooFed.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|gloo-fed.glooFed.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|gloo-fed.glooFed.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|gloo-fed.glooFed.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|gloo-fed.glooFed.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|gloo-fed.glooFed.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|gloo-fed.glooFed.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|gloo-fed.glooFed.retries.clusterWatcherRemote.type|string||The type of delay to use when retrying. Must be either 'backoff' (for exponential backoff) or 'fixed' (for fixed intervals).|
+|gloo-fed.glooFed.retries.clusterWatcherRemote.delay|string||The delay between retries. For exponential backoff, this is the delay for the initial retry. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherRemote.maxDelay|string||The maximum delay between retries. This can be used to cap the retry interval when exponential backoff is used. If set to 0, there will be no maximum delay. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherRemote.maxJitter|string||The maximum amount of random jitter to add between retries. If this value is greater than 0, retries will be done with a random amount of jitter, up to maxJitter. If this value is 0, then no randomness will be added to retries. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherRemote.attempts|uint||The maximum number of attempts to make. Set to 0 to retry forever.|
+|gloo-fed.glooFed.retries.clusterWatcherLocal.type|string||The type of delay to use when retrying. Must be either 'backoff' (for exponential backoff) or 'fixed' (for fixed intervals).|
+|gloo-fed.glooFed.retries.clusterWatcherLocal.delay|string||The delay between retries. For exponential backoff, this is the delay for the initial retry. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherLocal.maxDelay|string||The maximum delay between retries. This can be used to cap the retry interval when exponential backoff is used. If set to 0, there will be no maximum delay. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherLocal.maxJitter|string||The maximum amount of random jitter to add between retries. If this value is greater than 0, retries will be done with a random amount of jitter, up to maxJitter. If this value is 0, then no randomness will be added to retries. This must be a [Duration string](https://pkg.go.dev/time#Duration.String), e.g. '100ms' or '1m5s'.|
+|gloo-fed.glooFed.retries.clusterWatcherLocal.attempts|uint||The maximum number of attempts to make. Set to 0 to retry forever.|
+|gloo-fed.glooFed.roleRules[].verbs[]|string|||
+|gloo-fed.glooFed.roleRules[].apiGroups[]|string|||
+|gloo-fed.glooFed.roleRules[].resources[]|string|||
+|gloo-fed.glooFed.roleRules[].resourceNames[]|string|||
+|gloo-fed.glooFed.roleRules[].nonResourceURLs[]|string|||
+|gloo-fed.glooFed.volumes[].name|string|||
+|gloo-fed.glooFed.volumes[].hostPath.path|string|||
+|gloo-fed.glooFed.volumes[].hostPath.type|string|||
+|gloo-fed.glooFed.volumes[].emptyDir.medium|string|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit|int64|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit|int32|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit|bool|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit[]|uint|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit[]|int32|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit[]|string|||
+|gloo-fed.glooFed.volumes[].emptyDir.sizeLimit[]|string|||
+|gloo-fed.glooFed.volumes[].gcePersistentDisk.pdName|string|||
+|gloo-fed.glooFed.volumes[].gcePersistentDisk.fsType|string|||
+|gloo-fed.glooFed.volumes[].gcePersistentDisk.partition|int32|||
+|gloo-fed.glooFed.volumes[].gcePersistentDisk.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].awsElasticBlockStore.volumeID|string|||
+|gloo-fed.glooFed.volumes[].awsElasticBlockStore.fsType|string|||
+|gloo-fed.glooFed.volumes[].awsElasticBlockStore.partition|int32|||
+|gloo-fed.glooFed.volumes[].awsElasticBlockStore.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].gitRepo.repository|string|||
+|gloo-fed.glooFed.volumes[].gitRepo.revision|string|||
+|gloo-fed.glooFed.volumes[].gitRepo.directory|string|||
+|gloo-fed.glooFed.volumes[].secret.secretName|string|||
+|gloo-fed.glooFed.volumes[].secret.items[].key|string|||
+|gloo-fed.glooFed.volumes[].secret.items[].path|string|||
+|gloo-fed.glooFed.volumes[].secret.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].secret.defaultMode|int32|||
+|gloo-fed.glooFed.volumes[].secret.optional|bool|||
+|gloo-fed.glooFed.volumes[].nfs.server|string|||
+|gloo-fed.glooFed.volumes[].nfs.path|string|||
+|gloo-fed.glooFed.volumes[].nfs.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].iscsi.targetPortal|string|||
+|gloo-fed.glooFed.volumes[].iscsi.iqn|string|||
+|gloo-fed.glooFed.volumes[].iscsi.lun|int32|||
+|gloo-fed.glooFed.volumes[].iscsi.iscsiInterface|string|||
+|gloo-fed.glooFed.volumes[].iscsi.fsType|string|||
+|gloo-fed.glooFed.volumes[].iscsi.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].iscsi.portals[]|string|||
+|gloo-fed.glooFed.volumes[].iscsi.chapAuthDiscovery|bool|||
+|gloo-fed.glooFed.volumes[].iscsi.chapAuthSession|bool|||
+|gloo-fed.glooFed.volumes[].iscsi.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].iscsi.initiatorName|string|||
+|gloo-fed.glooFed.volumes[].glusterfs.endpoints|string|||
+|gloo-fed.glooFed.volumes[].glusterfs.path|string|||
+|gloo-fed.glooFed.volumes[].glusterfs.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].persistentVolumeClaim.claimName|string|||
+|gloo-fed.glooFed.volumes[].persistentVolumeClaim.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].rbd.monitors[]|string|||
+|gloo-fed.glooFed.volumes[].rbd.image|string|||
+|gloo-fed.glooFed.volumes[].rbd.fsType|string|||
+|gloo-fed.glooFed.volumes[].rbd.pool|string|||
+|gloo-fed.glooFed.volumes[].rbd.user|string|||
+|gloo-fed.glooFed.volumes[].rbd.keyring|string|||
+|gloo-fed.glooFed.volumes[].rbd.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].rbd.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].flexVolume.driver|string|||
+|gloo-fed.glooFed.volumes[].flexVolume.fsType|string|||
+|gloo-fed.glooFed.volumes[].flexVolume.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].flexVolume.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].flexVolume.options.NAME|string|||
+|gloo-fed.glooFed.volumes[].cinder.volumeID|string|||
+|gloo-fed.glooFed.volumes[].cinder.fsType|string|||
+|gloo-fed.glooFed.volumes[].cinder.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].cinder.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].cephfs.monitors[]|string|||
+|gloo-fed.glooFed.volumes[].cephfs.path|string|||
+|gloo-fed.glooFed.volumes[].cephfs.user|string|||
+|gloo-fed.glooFed.volumes[].cephfs.secretFile|string|||
+|gloo-fed.glooFed.volumes[].cephfs.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].cephfs.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].flocker.datasetName|string|||
+|gloo-fed.glooFed.volumes[].flocker.datasetUUID|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].path|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].fieldRef.apiVersion|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].fieldRef.fieldPath|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.containerName|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.resource|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor|int64|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor|int32|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor|bool|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor[]|uint|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor[]|int32|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.volumes[].downwardAPI.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].downwardAPI.defaultMode|int32|||
+|gloo-fed.glooFed.volumes[].fc.targetWWNs[]|string|||
+|gloo-fed.glooFed.volumes[].fc.lun|int32|||
+|gloo-fed.glooFed.volumes[].fc.fsType|string|||
+|gloo-fed.glooFed.volumes[].fc.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].fc.wwids[]|string|||
+|gloo-fed.glooFed.volumes[].azureFile.secretName|string|||
+|gloo-fed.glooFed.volumes[].azureFile.shareName|string|||
+|gloo-fed.glooFed.volumes[].azureFile.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].configMap.name|string|||
+|gloo-fed.glooFed.volumes[].configMap.items[].key|string|||
+|gloo-fed.glooFed.volumes[].configMap.items[].path|string|||
+|gloo-fed.glooFed.volumes[].configMap.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].configMap.defaultMode|int32|||
+|gloo-fed.glooFed.volumes[].configMap.optional|bool|||
+|gloo-fed.glooFed.volumes[].vsphereVolume.volumePath|string|||
+|gloo-fed.glooFed.volumes[].vsphereVolume.fsType|string|||
+|gloo-fed.glooFed.volumes[].vsphereVolume.storagePolicyName|string|||
+|gloo-fed.glooFed.volumes[].vsphereVolume.storagePolicyID|string|||
+|gloo-fed.glooFed.volumes[].quobyte.registry|string|||
+|gloo-fed.glooFed.volumes[].quobyte.volume|string|||
+|gloo-fed.glooFed.volumes[].quobyte.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].quobyte.user|string|||
+|gloo-fed.glooFed.volumes[].quobyte.group|string|||
+|gloo-fed.glooFed.volumes[].quobyte.tenant|string|||
+|gloo-fed.glooFed.volumes[].azureDisk.diskName|string|||
+|gloo-fed.glooFed.volumes[].azureDisk.diskURI|string|||
+|gloo-fed.glooFed.volumes[].azureDisk.cachingMode|string|||
+|gloo-fed.glooFed.volumes[].azureDisk.fsType|string|||
+|gloo-fed.glooFed.volumes[].azureDisk.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].azureDisk.kind|string|||
+|gloo-fed.glooFed.volumes[].photonPersistentDisk.pdID|string|||
+|gloo-fed.glooFed.volumes[].photonPersistentDisk.fsType|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].secret.name|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].secret.items[].key|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].secret.items[].path|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].secret.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].projected.sources[].secret.optional|bool|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].path|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].fieldRef.apiVersion|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].fieldRef.fieldPath|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.containerName|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.resource|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor|int64|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor|int32|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor|bool|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor[]|uint|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor[]|int32|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].downwardAPI.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].projected.sources[].configMap.name|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].configMap.items[].key|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].configMap.items[].path|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].configMap.items[].mode|int32|||
+|gloo-fed.glooFed.volumes[].projected.sources[].configMap.optional|bool|||
+|gloo-fed.glooFed.volumes[].projected.sources[].serviceAccountToken.audience|string|||
+|gloo-fed.glooFed.volumes[].projected.sources[].serviceAccountToken.expirationSeconds|int64|||
+|gloo-fed.glooFed.volumes[].projected.sources[].serviceAccountToken.path|string|||
+|gloo-fed.glooFed.volumes[].projected.defaultMode|int32|||
+|gloo-fed.glooFed.volumes[].portworxVolume.volumeID|string|||
+|gloo-fed.glooFed.volumes[].portworxVolume.fsType|string|||
+|gloo-fed.glooFed.volumes[].portworxVolume.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].scaleIO.gateway|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.system|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.sslEnabled|bool|||
+|gloo-fed.glooFed.volumes[].scaleIO.protectionDomain|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.storagePool|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.storageMode|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.volumeName|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.fsType|string|||
+|gloo-fed.glooFed.volumes[].scaleIO.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].storageos.volumeName|string|||
+|gloo-fed.glooFed.volumes[].storageos.volumeNamespace|string|||
+|gloo-fed.glooFed.volumes[].storageos.fsType|string|||
+|gloo-fed.glooFed.volumes[].storageos.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].storageos.secretRef.name|string|||
+|gloo-fed.glooFed.volumes[].csi.driver|string|||
+|gloo-fed.glooFed.volumes[].csi.readOnly|bool|||
+|gloo-fed.glooFed.volumes[].csi.fsType|string|||
+|gloo-fed.glooFed.volumes[].csi.volumeAttributes.NAME|string|||
+|gloo-fed.glooFed.volumes[].csi.nodePublishSecretRef.name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.generateName|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.namespace|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.selfLink|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.uid|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.resourceVersion|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.generation|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp|uint64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|uint8|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.creationTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp|uint64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|uint8|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionTimestamp[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.deletionGracePeriodSeconds|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.labels.NAME|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.annotations.NAME|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].apiVersion|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].kind|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].uid|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].controller|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.ownerReferences[].blockOwnerDeletion|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.finalizers[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].manager|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].operation|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].apiVersion|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time|uint64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|uint8|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|int|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].time[][]|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].fieldsType|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].fieldsV1.-[]|uint8|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.metadata.managedFields[].subresource|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.accessModes[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.selector.matchLabels.NAME|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.selector.matchExpressions[].key|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.selector.matchExpressions[].operator|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.selector.matchExpressions[].values[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME|int32|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME[]|uint|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME[]|int32|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.limits.NAME[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME|int64|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME|int32|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME|bool|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME[]|uint|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME[]|int32|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.requests.NAME[]|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.resources.claims[].name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.volumeName|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.storageClassName|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.volumeMode|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSource.apiGroup|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSource.kind|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSource.name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSourceRef.apiGroup|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSourceRef.kind|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSourceRef.name|string|||
+|gloo-fed.glooFed.volumes[].ephemeral.volumeClaimTemplate.spec.dataSourceRef.namespace|string|||
+|gloo-fed.glooFed.glooFed.securityContext.capabilities.add[]|string|||
+|gloo-fed.glooFed.glooFed.securityContext.capabilities.drop[]|string|||
+|gloo-fed.glooFed.glooFed.securityContext.privileged|bool|||
+|gloo-fed.glooFed.glooFed.securityContext.seLinuxOptions.user|string|||
+|gloo-fed.glooFed.glooFed.securityContext.seLinuxOptions.role|string|||
+|gloo-fed.glooFed.glooFed.securityContext.seLinuxOptions.type|string|||
+|gloo-fed.glooFed.glooFed.securityContext.seLinuxOptions.level|string|||
+|gloo-fed.glooFed.glooFed.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo-fed.glooFed.glooFed.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo-fed.glooFed.glooFed.securityContext.windowsOptions.runAsUserName|string|||
+|gloo-fed.glooFed.glooFed.securityContext.windowsOptions.hostProcess|bool|||
+|gloo-fed.glooFed.glooFed.securityContext.runAsUser|int64|||
+|gloo-fed.glooFed.glooFed.securityContext.runAsGroup|int64|||
+|gloo-fed.glooFed.glooFed.securityContext.runAsNonRoot|bool|||
+|gloo-fed.glooFed.glooFed.securityContext.readOnlyRootFilesystem|bool|||
+|gloo-fed.glooFed.glooFed.securityContext.allowPrivilegeEscalation|bool|||
+|gloo-fed.glooFed.glooFed.securityContext.procMount|string|||
+|gloo-fed.glooFed.glooFed.securityContext.seccompProfile.type|string|||
+|gloo-fed.glooFed.glooFed.securityContext.seccompProfile.localhostProfile|string|||
+|gloo-fed.glooFed.glooFed.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo-fed.glooFed.glooFed.volumeMounts[].name|string|||
+|gloo-fed.glooFed.glooFed.volumeMounts[].readOnly|bool|||
+|gloo-fed.glooFed.glooFed.volumeMounts[].mountPath|string|||
+|gloo-fed.glooFed.glooFed.volumeMounts[].subPath|string|||
+|gloo-fed.glooFed.glooFed.volumeMounts[].mountPropagation|string|||
+|gloo-fed.glooFed.glooFed.volumeMounts[].subPathExpr|string|||
+|gloo-fed.glooFed.podSecurityContext.seLinuxOptions.user|string|||
+|gloo-fed.glooFed.podSecurityContext.seLinuxOptions.role|string|||
+|gloo-fed.glooFed.podSecurityContext.seLinuxOptions.type|string|||
+|gloo-fed.glooFed.podSecurityContext.seLinuxOptions.level|string|||
+|gloo-fed.glooFed.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|gloo-fed.glooFed.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|gloo-fed.glooFed.podSecurityContext.windowsOptions.runAsUserName|string|||
+|gloo-fed.glooFed.podSecurityContext.windowsOptions.hostProcess|bool|||
+|gloo-fed.glooFed.podSecurityContext.runAsUser|int64|||
+|gloo-fed.glooFed.podSecurityContext.runAsGroup|int64|||
+|gloo-fed.glooFed.podSecurityContext.runAsNonRoot|bool|||
+|gloo-fed.glooFed.podSecurityContext.supplementalGroups[]|int64|||
+|gloo-fed.glooFed.podSecurityContext.fsGroup|int64|||
+|gloo-fed.glooFed.podSecurityContext.sysctls[].name|string|||
+|gloo-fed.glooFed.podSecurityContext.sysctls[].value|string|||
+|gloo-fed.glooFed.podSecurityContext.fsGroupChangePolicy|string|||
+|gloo-fed.glooFed.podSecurityContext.seccompProfile.type|string|||
+|gloo-fed.glooFed.podSecurityContext.seccompProfile.localhostProfile|string|||
+|gloo-fed.glooFed.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|gloo-fed.glooFed.replicas|int||number of instances to deploy|
+|gloo-fed.glooFed.customEnv[].name|string|||
+|gloo-fed.glooFed.customEnv[].value|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|gloo-fed.glooFed.customEnv[].valueFrom.secretKeyRef.name|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.secretKeyRef.key|string|||
+|gloo-fed.glooFed.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|gloo-fed.glooFed.restartPolicy|string||restart policy to use when the pod exits|
+|gloo-fed.glooFed.priorityClassName|string||name of a defined priority class|
+|gloo-fed.glooFed.nodeName|string||name of node to run on|
+|gloo-fed.glooFed.nodeSelector.NAME|string||label selector for nodes|
+|gloo-fed.glooFed.tolerations[].key|string|||
+|gloo-fed.glooFed.tolerations[].operator|string|||
+|gloo-fed.glooFed.tolerations[].value|string|||
+|gloo-fed.glooFed.tolerations[].effect|string|||
+|gloo-fed.glooFed.tolerations[].tolerationSeconds|int64|||
+|gloo-fed.glooFed.affinity.NAME|interface|||
+|gloo-fed.glooFed.hostAliases[]|interface|||
+|gloo-fed.glooFed.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|gloo-fed.glooFed.resources.limits.memory|string||amount of memory|
+|gloo-fed.glooFed.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.glooFed.resources.requests.memory|string||amount of memory|
+|gloo-fed.glooFed.resources.requests.cpu|string||amount of CPUs|
+|gloo-fed.glooFed.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|gloo-fed.rbac.create|bool|||
+|gloo-fed.rbacWebhook.image.tag|string||The image tag for the container.|
+|gloo-fed.rbacWebhook.image.repository|string||The image repository (name) for the container.|
+|gloo-fed.rbacWebhook.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|gloo-fed.rbacWebhook.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|gloo-fed.rbacWebhook.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|gloo-fed.rbacWebhook.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|gloo-fed.rbacWebhook.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|gloo-fed.rbacWebhook.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|gloo-fed.rbacWebhook.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|gloo-fed.rbacWebhook.resources.limits.memory|string||amount of memory|
+|gloo-fed.rbacWebhook.resources.limits.cpu|string||amount of CPUs|
+|gloo-fed.rbacWebhook.resources.requests.memory|string||amount of memory|
+|gloo-fed.rbacWebhook.resources.requests.cpu|string||amount of CPUs|
+|global.image.tag|string||The image tag for the container.|
+|global.image.repository|string||The image repository (name) for the container.|
+|global.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.image.registry|string|quay.io/solo-io|The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.image.fips|bool|false|[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.extensions|interface|||
+|global.glooRbac.create|bool|true|create rbac rules for the gloo-system service account|
+|global.glooRbac.namespaced|bool||use Roles instead of ClusterRoles|
+|global.glooRbac.nameSuffix|string||When nameSuffix is nonempty, append '-$nameSuffix' to the names of Gloo Edge RBAC resources; e.g. when nameSuffix is 'foo', the role 'gloo-resource-reader' will become 'gloo-resource-reader-foo'|
+|global.glooStats.enabled|bool|true|Controls whether or not Envoy stats are enabled|
+|global.glooStats.routePrefixRewrite|string|/stats/prometheus|The Envoy stats endpoint to which the metrics are written|
+|global.glooStats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|global.glooStats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|global.glooStats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|global.glooStats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|global.glooStats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|global.glooMtls.enabled|bool|false|Enables internal mtls authentication|
+|global.glooMtls.sds.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|global.glooMtls.sds.image.repository|string|sds-ee|The image repository (name) for the container.|
+|global.glooMtls.sds.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.glooMtls.sds.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.glooMtls.sds.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.glooMtls.sds.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.glooMtls.sds.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.glooMtls.sds.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.glooMtls.sds.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.glooMtls.sds.securityContext.capabilities.add[]|string|||
+|global.glooMtls.sds.securityContext.capabilities.drop[]|string|||
+|global.glooMtls.sds.securityContext.privileged|bool|||
+|global.glooMtls.sds.securityContext.seLinuxOptions.user|string|||
+|global.glooMtls.sds.securityContext.seLinuxOptions.role|string|||
+|global.glooMtls.sds.securityContext.seLinuxOptions.type|string|||
+|global.glooMtls.sds.securityContext.seLinuxOptions.level|string|||
+|global.glooMtls.sds.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|global.glooMtls.sds.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|global.glooMtls.sds.securityContext.windowsOptions.runAsUserName|string|||
+|global.glooMtls.sds.securityContext.windowsOptions.hostProcess|bool|||
+|global.glooMtls.sds.securityContext.runAsUser|int64|||
+|global.glooMtls.sds.securityContext.runAsGroup|int64|||
+|global.glooMtls.sds.securityContext.runAsNonRoot|bool|||
+|global.glooMtls.sds.securityContext.readOnlyRootFilesystem|bool|||
+|global.glooMtls.sds.securityContext.allowPrivilegeEscalation|bool|||
+|global.glooMtls.sds.securityContext.procMount|string|||
+|global.glooMtls.sds.securityContext.seccompProfile.type|string|||
+|global.glooMtls.sds.securityContext.seccompProfile.localhostProfile|string|||
+|global.glooMtls.sds.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|global.glooMtls.sds.logLevel|string||Log level for sds.  Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info.|
+|global.glooMtls.envoy.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|global.glooMtls.envoy.image.repository|string|gloo-ee-envoy-wrapper|The image repository (name) for the container.|
+|global.glooMtls.envoy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.glooMtls.envoy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.glooMtls.envoy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.glooMtls.envoy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.glooMtls.envoy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.glooMtls.envoy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.glooMtls.envoy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.glooMtls.envoy.securityContext.capabilities.add[]|string|||
+|global.glooMtls.envoy.securityContext.capabilities.drop[]|string|||
+|global.glooMtls.envoy.securityContext.privileged|bool|||
+|global.glooMtls.envoy.securityContext.seLinuxOptions.user|string|||
+|global.glooMtls.envoy.securityContext.seLinuxOptions.role|string|||
+|global.glooMtls.envoy.securityContext.seLinuxOptions.type|string|||
+|global.glooMtls.envoy.securityContext.seLinuxOptions.level|string|||
+|global.glooMtls.envoy.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|global.glooMtls.envoy.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|global.glooMtls.envoy.securityContext.windowsOptions.runAsUserName|string|||
+|global.glooMtls.envoy.securityContext.windowsOptions.hostProcess|bool|||
+|global.glooMtls.envoy.securityContext.runAsUser|int64|||
+|global.glooMtls.envoy.securityContext.runAsGroup|int64|||
+|global.glooMtls.envoy.securityContext.runAsNonRoot|bool|||
+|global.glooMtls.envoy.securityContext.readOnlyRootFilesystem|bool|||
+|global.glooMtls.envoy.securityContext.allowPrivilegeEscalation|bool|||
+|global.glooMtls.envoy.securityContext.procMount|string|||
+|global.glooMtls.envoy.securityContext.seccompProfile.type|string|||
+|global.glooMtls.envoy.securityContext.seccompProfile.localhostProfile|string|||
+|global.glooMtls.envoy.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|global.glooMtls.istioProxy.image.tag|string||The image tag for the container.|
+|global.glooMtls.istioProxy.image.repository|string||The image repository (name) for the container.|
+|global.glooMtls.istioProxy.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.glooMtls.istioProxy.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.glooMtls.istioProxy.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.glooMtls.istioProxy.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.glooMtls.istioProxy.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.glooMtls.istioProxy.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.glooMtls.istioProxy.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.glooMtls.istioProxy.securityContext.capabilities.add[]|string|||
+|global.glooMtls.istioProxy.securityContext.capabilities.drop[]|string|||
+|global.glooMtls.istioProxy.securityContext.privileged|bool|||
+|global.glooMtls.istioProxy.securityContext.seLinuxOptions.user|string|||
+|global.glooMtls.istioProxy.securityContext.seLinuxOptions.role|string|||
+|global.glooMtls.istioProxy.securityContext.seLinuxOptions.type|string|||
+|global.glooMtls.istioProxy.securityContext.seLinuxOptions.level|string|||
+|global.glooMtls.istioProxy.securityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|global.glooMtls.istioProxy.securityContext.windowsOptions.gmsaCredentialSpec|string|||
+|global.glooMtls.istioProxy.securityContext.windowsOptions.runAsUserName|string|||
+|global.glooMtls.istioProxy.securityContext.windowsOptions.hostProcess|bool|||
+|global.glooMtls.istioProxy.securityContext.runAsUser|int64|||
+|global.glooMtls.istioProxy.securityContext.runAsGroup|int64|||
+|global.glooMtls.istioProxy.securityContext.runAsNonRoot|bool|||
+|global.glooMtls.istioProxy.securityContext.readOnlyRootFilesystem|bool|||
+|global.glooMtls.istioProxy.securityContext.allowPrivilegeEscalation|bool|||
+|global.glooMtls.istioProxy.securityContext.procMount|string|||
+|global.glooMtls.istioProxy.securityContext.seccompProfile.type|string|||
+|global.glooMtls.istioProxy.securityContext.seccompProfile.localhostProfile|string|||
+|global.glooMtls.istioProxy.securityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|global.glooMtls.istioProxy.logLevel|string||Log level for istio-proxy. Options include "info", "debug", "warning", and "error". Default level is info Default is 'warning'.|
+|global.glooMtls.envoySidecarResources.limits.memory|string||amount of memory|
+|global.glooMtls.envoySidecarResources.limits.cpu|string||amount of CPUs|
+|global.glooMtls.envoySidecarResources.requests.memory|string||amount of memory|
+|global.glooMtls.envoySidecarResources.requests.cpu|string||amount of CPUs|
+|global.glooMtls.sdsResources.limits.memory|string||amount of memory|
+|global.glooMtls.sdsResources.limits.cpu|string||amount of CPUs|
+|global.glooMtls.sdsResources.requests.memory|string||amount of memory|
+|global.glooMtls.sdsResources.requests.cpu|string||amount of CPUs|
+|global.istioSDS.enabled|bool||Enables SDS cert-rotator sidecar for istio mTLS cert rotation|
+|global.istioSDS.customSidecars[]|interface||Override the default Istio sidecar in gateway-proxy with a custom container. Ignored if IstioSDS.enabled is false|
+|global.istioIntegration.labelInstallNamespace|bool||If creating a namespace for Gloo, include the 'istio-injection: enabled' label (or 'istio.io/rev=' if 'istioSidecarRevTag' field is also set) to allow Istio sidecar injection for Gloo pods. Be aware that Istio's default injection behavior will auto-inject a sidecar into all pods in such a marked namespace. Disabling this behavior in Istio's configs or using gloo's global.istioIntegration.disableAutoinjection flag is recommended.|
+|global.istioIntegration.whitelistDiscovery|bool||Annotate the discovery pod for Istio sidecar injection to ensure that it gets a sidecar even when namespace-wide auto-injection is disabled. Generally only needed for FDS is enabled.|
+|global.istioIntegration.disableAutoinjection|bool||Annotate all pods (excluding those whitelisted by other config values) to with an explicit 'do not inject' annotation to prevent Istio from adding sidecars to all pods. It's recommended that this be set to true, as some pods do not immediately work with an Istio sidecar without extra manual configuration.|
+|global.istioIntegration.enableIstioSidecarOnGateway|bool||Enable Istio sidecar injection on the gateway-proxy deployment. Ignored if LabelInstallNamespace is not 'true'. Ignored if disableAutoinjection is 'true'.|
+|global.istioIntegration.istioSidecarRevTag|string||Value of revision tag for Istio sidecar injection on the gateway-proxy and discovery deployments (when enabled with LabelInstallNamespace, WhitelistDiscovery or EnableIstioSidecarOnGateway). If set, applies the label 'istio.io/rev:<rev>' instead of 'sidecar.istio.io/inject' or 'istio-injection:enabled'. Ignored if disableAutoinjection is 'true'.|
+|global.istioIntegration.appendXForwardedHost|bool||Enable appending the X-Forwarded-Host header with the Istio-provided value. Default: true.|
+|global.istioIntegration.enableAutoMtls|bool||Enables Istio auto mtls configuration for Gloo Edge upstreams. Defaults to false.|
+|global.extraSpecs|bool|true|Add additional specs to include in the settings manifest, as defined by a helm partial. Defaults to false in open source, and true in enterprise.|
+|global.extauthCustomYaml|bool|false|Inject whatever yaml exists in .Values.global.extensions.extAuth into settings.spec.extauth, instead of structured yaml (which is enterprise only). Defaults to true in open source, and false in enterprise|
+|global.console|interface||Configuration options for the Enterprise Console (UI).|
+|global.graphql|interface||(Enterprise Only): GraphQL configuration options.|
+|global.configMaps[].name|string||Name of the ConfigMap to create (required).|
+|global.configMaps[].namespace|string||Namespace in which to create the ConfigMap. If empty, defaults to Gloo Edge install namespace.|
+|global.configMaps[].data.NAME|string||Key-value pairs of ConfigMap data.|
+|global.extraCustomResources|bool|true|Add additional custom resources to create, as defined by a helm partial. Defaults to false in open source, and true in enterprise.|
+|global.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|global.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|global.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|global.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|global.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|global.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|global.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|global.stats.serviceMonitor.releaseLabel|string||The release label used for the Pod/Service Monitor (default prom)|
+|global.stats.podMonitor.releaseLabel|string||The release label used for the Pod/Service Monitor (default prom)|
+|global.extensions.extAuth.enabled|bool|true|if true, deploy ExtAuth service (default true)|
+|global.extensions.extAuth.userIdHeader|string|x-user-id||
+|global.extensions.extAuth.deployment.name|string|extauth||
+|global.extensions.extAuth.deployment.glooAddress|string|||
+|global.extensions.extAuth.deployment.glooPort|uint|9977|Sets the port of the gloo xDS server in the ratelimit sidecar envoy bootstrap config|
+|global.extensions.extAuth.deployment.port|uint|8083||
+|global.extensions.extAuth.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|global.extensions.extAuth.deployment.image.repository|string|extauth-ee|The image repository (name) for the container.|
+|global.extensions.extAuth.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.extensions.extAuth.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.extensions.extAuth.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.extensions.extAuth.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.extensions.extAuth.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.extensions.extAuth.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.extensions.extAuth.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.extensions.extAuth.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|global.extensions.extAuth.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|global.extensions.extAuth.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|global.extensions.extAuth.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|global.extensions.extAuth.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|global.extensions.extAuth.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|global.extensions.extAuth.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|global.extensions.extAuth.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as. Default is 10101|
+|global.extensions.extAuth.deployment.livenessProbeEnabled|bool||Set to true to enable a liveness probe for ExtAuth (default is false).|
+|global.extensions.extAuth.deployment.fsGroup|float64||Explicitly set the group ID for volume ownership. Default is 10101|
+|global.extensions.extAuth.deployment.floatingUserId|bool|false|set to true to allow the cluster to dynamically assign a user ID|
+|global.extensions.extAuth.deployment.extraExtAuthLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the ExtAuth deployment.|
+|global.extensions.extAuth.deployment.extraVolume[].NAME|interface||custom defined yaml for allowing extra volume on the extauth container|
+|global.extensions.extAuth.deployment.extraVolumeMount[].NAME|interface||custom defined yaml for allowing extra volume mounts on the extauth container|
+|global.extensions.extAuth.deployment.podDisruptionBudget.minAvailable|int32||An eviction is allowed if at least "minAvailable" pods selected by "selector" will still be available after the eviction, i.e. even in the absence of the evicted pod. So for example you can prevent all voluntary evictions by specifying "100%".|
+|global.extensions.extAuth.deployment.podDisruptionBudget.maxUnavailable|int32||An eviction is allowed if at most "maxUnavailable" pods selected by "selector" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with "minAvailable".|
+|global.extensions.extAuth.deployment.redis.certs[].secretName|string||This is the name to the Opaque kubernetes secret containing the cert. The secret data key names should be 'ca.crt', 'tls.crt', and 'tls.key'.|
+|global.extensions.extAuth.deployment.redis.certs[].mountPath|string||Path used to mount the secret. This should be a unique path, for each secret.|
+|global.extensions.extAuth.deployment.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info|
+|global.extensions.extAuth.deployment.logToFileLocation|string||If set, the extauth pod will log to this file instead of stdout|
+|global.extensions.extAuth.deployment.replicas|int||number of instances to deploy|
+|global.extensions.extAuth.deployment.customEnv[].name|string|||
+|global.extensions.extAuth.deployment.customEnv[].value|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|global.extensions.extAuth.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|global.extensions.extAuth.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|global.extensions.extAuth.deployment.priorityClassName|string||name of a defined priority class|
+|global.extensions.extAuth.deployment.nodeName|string||name of node to run on|
+|global.extensions.extAuth.deployment.nodeSelector.NAME|string||label selector for nodes|
+|global.extensions.extAuth.deployment.tolerations[].key|string|||
+|global.extensions.extAuth.deployment.tolerations[].operator|string|||
+|global.extensions.extAuth.deployment.tolerations[].value|string|||
+|global.extensions.extAuth.deployment.tolerations[].effect|string|||
+|global.extensions.extAuth.deployment.tolerations[].tolerationSeconds|int64|||
+|global.extensions.extAuth.deployment.affinity.NAME|interface|||
+|global.extensions.extAuth.deployment.hostAliases[]|interface|||
+|global.extensions.extAuth.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|global.extensions.extAuth.deployment.resources.limits.memory|string||amount of memory|
+|global.extensions.extAuth.deployment.resources.limits.cpu|string||amount of CPUs|
+|global.extensions.extAuth.deployment.resources.requests.memory|string||amount of memory|
+|global.extensions.extAuth.deployment.resources.requests.cpu|string||amount of CPUs|
+|global.extensions.extAuth.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.extAuth.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.extAuth.service.port|uint|8083||
+|global.extensions.extAuth.service.name|string|extauth||
+|global.extensions.extAuth.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.extAuth.signingKey.name|string|extauth-signing-key||
+|global.extensions.extAuth.signingKey.signing-key|string|||
+|global.extensions.extAuth.tlsEnabled|bool|false|if true, have extauth terminate TLS itself (whereas Gloo mTLS mode runs an Envoy and SDS sidecars to do TLS termination and cert rotation)|
+|global.extensions.extAuth.secretName|string||the name of the tls secret used to secure connections to the extauth service|
+|global.extensions.extAuth.certPath|string||location of tls termination cert, if omitted defaults to /etc/envoy/ssl/tls.crt|
+|global.extensions.extAuth.keyPath|string||location of tls termination key, if omitted defaults to /etc/envoy/ssl/tls.key|
+|global.extensions.extAuth.plugins.NAME.image.tag|string||The image tag for the container.|
+|global.extensions.extAuth.plugins.NAME.image.repository|string||The image repository (name) for the container.|
+|global.extensions.extAuth.plugins.NAME.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.extensions.extAuth.plugins.NAME.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.extensions.extAuth.plugins.NAME.image.pullPolicy|string||The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.extensions.extAuth.plugins.NAME.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.extensions.extAuth.plugins.NAME.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.extensions.extAuth.plugins.NAME.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.extensions.extAuth.plugins.NAME.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.extensions.extAuth.envoySidecar|bool|false|if true, deploy ExtAuth as a sidecar with envoy (defaults to false)|
+|global.extensions.extAuth.standaloneDeployment|bool|true|if true, create a standalone ExtAuth deployment (defaults to true)|
+|global.extensions.extAuth.serverUpstreamName|string||if set, this is the name of the upstream that we define in Settings to use as the target cluster in the ext_authz http filter. If not set, the name 'extauth' (if 'standaloneDeployment' is true) or 'extauth-sidecar' (if 'standaloneDeployment' is false) will be used.|
+|global.extensions.extAuth.transportApiVersion|string|V3|Determines the API version for the ext_authz transport protocol that will be used by Envoy to communicate with the auth server. Defaults to 'V3''|
+|global.extensions.extAuth.serviceName|string|ext-auth||
+|global.extensions.extAuth.requestTimeout|string||Timeout for the ext auth service to respond (defaults to 200ms)|
+|global.extensions.extAuth.headersToRedact|string||Space separated list of headers to redact from the logs. To avoid the default redactions, specify '-' as the value|
+|global.extensions.extAuth.secret.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.extAuth.upstream.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.extAuth.requestBody.maxRequestBytes|uint32||Sets the maximum size of a message body that the filter will hold in memory, returning 413 and *not* initiating the authorization process when reaching the maximum (defaults to 4KB)|
+|global.extensions.extAuth.requestBody.allowPartialMessage|bool||if true, Envoy will buffer the message until max_request_bytes is reached, dispatch the authorization request, and not return an error|
+|global.extensions.extAuth.requestBody.packAsBytes|bool||if true, Envoy will send the body sent to the external authorization service with raw bytes|
+|global.extensions.extAuth.affinity.NAME|interface||Affinity rules to be applied. If unset, require extAuth pods to be scheduled on nodes with already-running gateway-proxy pods|
+|global.extensions.extAuth.antiAffinity.NAME|interface||Anti-affinity rules to be applied|
+|global.extensions.extAuth.namedExtAuth.NAME.namespace|string||The namespace of this resource.|
+|global.extensions.extAuth.namedExtAuth.NAME.name|string||The name of this resource.|
+|global.extensions.rateLimit.enabled|bool|true|if true, deploy rate limit service (default true)|
+|global.extensions.rateLimit.serverUpstreamName|string|rate-limit|if set, this is the name of the upstream that we define in Settings to use as the target cluster in the rate_limit http filter. Default is rate-limit.|
+|global.extensions.rateLimit.deployment.name|string|rate-limit||
+|global.extensions.rateLimit.deployment.glooAddress|string|gloo||
+|global.extensions.rateLimit.deployment.glooPort|uint|9977|Sets the port of the gloo xDS server in the ratelimit sidecar envoy bootstrap config|
+|global.extensions.rateLimit.deployment.dynamodb.region|string|us-east-2|aws region to run DynamoDB requests in|
+|global.extensions.rateLimit.deployment.dynamodb.secretName|string||name of the aws secret in gloo's installation namespace that has aws creds (if provided, uses DynamoDB to back rate-limiting service instead of Redis)|
+|global.extensions.rateLimit.deployment.dynamodb.tableName|string|rate-limits|DynamoDB table name used to back rate limit service (default rate-limits)|
+|global.extensions.rateLimit.deployment.dynamodb.consistentReads|bool|true|if true, reads from DynamoDB will be strongly consistent (default false)|
+|global.extensions.rateLimit.deployment.dynamodb.batchSize|uint8|100|batch size for get requests to DynamoDB (max 100, default 100)|
+|global.extensions.rateLimit.deployment.aerospike.address|string||The IP address or hostname of the Aerospike database. The address must be reachable from Gloo Edge, such as in a virtual machine with a public IP address or in a pod in the cluster. By setting this value, you also enable Aerospike database as the backing storage for the rate limit service.|
+|global.extensions.rateLimit.deployment.aerospike.namespace|string|solo-namespace|The Aerospike namespace of the database.|
+|global.extensions.rateLimit.deployment.aerospike.set|string|ratelimiter|The Aerospike name of the database set.|
+|global.extensions.rateLimit.deployment.aerospike.port|int|3000|The port of the `rateLimit.deployment.aerospike.address`.|
+|global.extensions.rateLimit.deployment.aerospike.batchSize|int|5000|The size of the batch, which is the number of keys sent in the request.|
+|global.extensions.rateLimit.deployment.aerospike.commitLevel|int|1|The level of guaranteed consistency for transaction commits on the Aerospike server. For possible values, see the [Aerospike commit policy](https://github.com/aerospike/aerospike-client-go/blob/master/commit_policy.go).|
+|global.extensions.rateLimit.deployment.aerospike.readModeSC|int|0|The read mode for strong consistency (SC) options. For possible values, see the [Aerospike read mode SC](https://github.com/aerospike/aerospike-client-go/blob/master/read_mode_sc.go).|
+|global.extensions.rateLimit.deployment.aerospike.readModeAP|int|0|The read mode for availability (AP). For possible values, see the [Aerospike read mode AP](https://github.com/aerospike/aerospike-client-go/blob/master/read_mode_ap.go).|
+|global.extensions.rateLimit.deployment.aerospike.tls.name|string||The subject name of the TLS authority. For more information, see the [Aerospike docs](https://docs.aerospike.com/reference/configuration#tls-name). To enable TLS, you must provide at least this value and the `certSecretName` value.|
+|global.extensions.rateLimit.deployment.aerospike.tls.version|string|1.3|The TLS version. Versions 1.0, 1.1, 1.2, and 1.3 are supported.|
+|global.extensions.rateLimit.deployment.aerospike.tls.insecure|bool|false|The TLS insecure setting. If set to `true`, the authority of the certificate on the client's end is not authenticated. You might use insecure mode in non-production environments when the certificate is not known.|
+|global.extensions.rateLimit.deployment.aerospike.tls.certSecretName|string||The name of the `kubernetes.io/tls` secret that has the `tls.crt` and `tls.key` data. To enable TLS, you must provide at least this value and the `name` value.|
+|global.extensions.rateLimit.deployment.aerospike.tls.rootCASecretName|string||The secret name for the Opaque root CA that sets the key as `tls.crt`.|
+|global.extensions.rateLimit.deployment.aerospike.tls.curveGroups[]|string||The TLS identifier for an elliptic curve. For more information, see [TLS supported groups](https://www.iana.org/assignments/tls-parameters/tls-parameters.xml#tls-parameters-8).|
+|global.extensions.rateLimit.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|global.extensions.rateLimit.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|global.extensions.rateLimit.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|global.extensions.rateLimit.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|global.extensions.rateLimit.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|global.extensions.rateLimit.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|global.extensions.rateLimit.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|global.extensions.rateLimit.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as in the podSecurityContext. Default is 10101. If podSecurityContext is defined, this value is not applied.|
+|global.extensions.rateLimit.deployment.livenessProbeEnabled|bool||Set to true to enable a liveness probe for RateLimit (default is false).|
+|global.extensions.rateLimit.deployment.floatingUserId|bool|false|set to true to allow the cluster to dynamically assign a user ID in the podSecurityContext. If podSecurityContext is defined, this value is not applied.|
+|global.extensions.rateLimit.deployment.extraRateLimitLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the rateLimit deployment.|
+|global.extensions.rateLimit.deployment.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info.|
+|global.extensions.rateLimit.deployment.podDisruptionBudget.minAvailable|int32||An eviction is allowed if at least "minAvailable" pods selected by "selector" will still be available after the eviction, i.e. even in the absence of the evicted pod. So for example you can prevent all voluntary evictions by specifying "100%".|
+|global.extensions.rateLimit.deployment.podDisruptionBudget.maxUnavailable|int32||An eviction is allowed if at most "maxUnavailable" pods selected by "selector" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with "minAvailable".|
+|global.extensions.rateLimit.deployment.podSecurityContext.seLinuxOptions.user|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.seLinuxOptions.role|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.seLinuxOptions.type|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.seLinuxOptions.level|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.windowsOptions.runAsUserName|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.windowsOptions.hostProcess|bool|||
+|global.extensions.rateLimit.deployment.podSecurityContext.runAsUser|int64|||
+|global.extensions.rateLimit.deployment.podSecurityContext.runAsGroup|int64|||
+|global.extensions.rateLimit.deployment.podSecurityContext.runAsNonRoot|bool|||
+|global.extensions.rateLimit.deployment.podSecurityContext.supplementalGroups[]|int64|||
+|global.extensions.rateLimit.deployment.podSecurityContext.fsGroup|int64|||
+|global.extensions.rateLimit.deployment.podSecurityContext.sysctls[].name|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.sysctls[].value|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.fsGroupChangePolicy|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.seccompProfile.type|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.seccompProfile.localhostProfile|string|||
+|global.extensions.rateLimit.deployment.podSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|global.extensions.rateLimit.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.rateLimit.deployment.replicas|int||number of instances to deploy|
+|global.extensions.rateLimit.deployment.customEnv[].name|string|||
+|global.extensions.rateLimit.deployment.customEnv[].value|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|global.extensions.rateLimit.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|global.extensions.rateLimit.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|global.extensions.rateLimit.deployment.priorityClassName|string||name of a defined priority class|
+|global.extensions.rateLimit.deployment.nodeName|string||name of node to run on|
+|global.extensions.rateLimit.deployment.nodeSelector.NAME|string||label selector for nodes|
+|global.extensions.rateLimit.deployment.tolerations[].key|string|||
+|global.extensions.rateLimit.deployment.tolerations[].operator|string|||
+|global.extensions.rateLimit.deployment.tolerations[].value|string|||
+|global.extensions.rateLimit.deployment.tolerations[].effect|string|||
+|global.extensions.rateLimit.deployment.tolerations[].tolerationSeconds|int64|||
+|global.extensions.rateLimit.deployment.affinity.NAME|interface|||
+|global.extensions.rateLimit.deployment.hostAliases[]|interface|||
+|global.extensions.rateLimit.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|global.extensions.rateLimit.deployment.resources.limits.memory|string||amount of memory|
+|global.extensions.rateLimit.deployment.resources.limits.cpu|string||amount of CPUs|
+|global.extensions.rateLimit.deployment.resources.requests.memory|string||amount of memory|
+|global.extensions.rateLimit.deployment.resources.requests.cpu|string||amount of CPUs|
+|global.extensions.rateLimit.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.capabilities.add[]|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.capabilities.drop[]|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.privileged|bool|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seLinuxOptions.user|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seLinuxOptions.role|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seLinuxOptions.type|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seLinuxOptions.level|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.windowsOptions.gmsaCredentialSpecName|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.windowsOptions.gmsaCredentialSpec|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.windowsOptions.runAsUserName|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.windowsOptions.hostProcess|bool|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.runAsUser|int64|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.runAsGroup|int64|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.runAsNonRoot|bool|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.readOnlyRootFilesystem|bool|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.allowPrivilegeEscalation|bool|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.procMount|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seccompProfile.type|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.seccompProfile.localhostProfile|string|||
+|global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext.mergePolicy|string||How to combine the defined security policy with the default security policy. Valid values are "", "no-merge", and "helm-merge". If defined as an empty string or "no-merge", use the defined security context as is.  If "helm-merge", merge this security context with the default security context according to the logic of [the helm 'merge' function](https://helm.sh/docs/chart_template_guide/function_list/#merge-mustmerge). This is intended to be used to modify a field in a security context, while using all other default values. Please note that due to how helm's 'merge' function works, you can not override a 'true' value with a 'false' value, and for that case you will need to define the entire security context and set this values to false. Default value is "".|
+|global.extensions.rateLimit.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|global.extensions.rateLimit.deployment.image.repository|string|rate-limit-ee|The image repository (name) for the container.|
+|global.extensions.rateLimit.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.extensions.rateLimit.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.extensions.rateLimit.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.extensions.rateLimit.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.extensions.rateLimit.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.extensions.rateLimit.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.extensions.rateLimit.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.extensions.rateLimit.service.port|uint|18081||
+|global.extensions.rateLimit.service.name|string|rate-limit||
+|global.extensions.rateLimit.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.rateLimit.upstream.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.rateLimit.customRateLimit|interface|||
+|global.extensions.rateLimit.beforeAuth|bool|false|If true, rate limiting checks occur before auth (default false). If gloo.settings.ratelimitServer is set, this value will be ignored.|
+|global.extensions.rateLimit.affinity.NAME|interface||Affinity rules to be applied|
+|global.extensions.rateLimit.antiAffinity.NAME|interface||Anti-affinity rules to be applied|
+|global.extensions.extProc|interface||Global configuration for External Processing filter.|
+|global.extensions.caching.enabled|bool|false|if true, deploy caching service (default false)|
+|global.extensions.caching.name|string|caching-service|name for the service,omitempty|
+|global.extensions.caching.deployment.name|string|caching-service||
+|global.extensions.caching.deployment.image.tag|string|Version number, ex. 1.8.0|The image tag for the container.|
+|global.extensions.caching.deployment.image.repository|string|caching-ee|The image repository (name) for the container.|
+|global.extensions.caching.deployment.image.digest|string||The hash digest of the container's image, ie. sha256:12345....|
+|global.extensions.caching.deployment.image.registry|string||The image hostname prefix and registry, such as quay.io/solo-io.|
+|global.extensions.caching.deployment.image.pullPolicy|string|IfNotPresent|The image pull policy for the container. For default values, see the Kubernetes docs: https://kubernetes.io/docs/concepts/containers/images/#imagepullpolicy-defaulting|
+|global.extensions.caching.deployment.image.pullSecret|string||The image pull secret to use for the container, in the same namespace as the container pod.|
+|global.extensions.caching.deployment.image.variant|string||Specifies the version of the data-plane containers to deploy. Can take the values 'standard', 'fips', 'distroless', 'fips-distroless'. Defaults to standard. (The 'fips' and 'fips-distroless' variants are an Enterprise-only feature)|
+|global.extensions.caching.deployment.image.fipsDigest|string||[Deprecated] Use 'variant=fips' and 'digest=...' instead. The hash digest of the container's fips image, ie. sha256:12345....  Only consumed if fips=true|
+|global.extensions.caching.deployment.image.fips|bool||[Deprecated] Use 'variant=fips' instead. If true, deploys a version of the data-plane containers that is built with FIPS-compliant crypto libraries. (Enterprise-only feature)|
+|global.extensions.caching.deployment.stats.enabled|bool||Controls whether or not Envoy stats are enabled|
+|global.extensions.caching.deployment.stats.routePrefixRewrite|string||The Envoy stats endpoint to which the metrics are written|
+|global.extensions.caching.deployment.stats.setDatadogAnnotations|bool||Sets the default datadog annotations|
+|global.extensions.caching.deployment.stats.enableStatsRoute|bool||Enables an additional route to the stats cluster defaulting to /stats|
+|global.extensions.caching.deployment.stats.statsPrefixRewrite|string||The Envoy stats endpoint with general metrics for the additional stats route|
+|global.extensions.caching.deployment.stats.serviceMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Service Monitor. Requires that 'enabled' is also true|
+|global.extensions.caching.deployment.stats.podMonitorEnabled|bool||Whether or not to expose an http-monitoring port that can be scraped by a Prometheus Pod Monitor. Requires that 'enabled' is also true|
+|global.extensions.caching.deployment.glooAddress|string|gloo||
+|global.extensions.caching.deployment.runAsUser|float64||Explicitly set the user ID for the container to run as. Default is 10101|
+|global.extensions.caching.deployment.floatingUserId|bool||set to true to allow the cluster to dynamically assign a user ID|
+|global.extensions.caching.deployment.affinity.NAME|interface||Affinity rules to be applied|
+|global.extensions.caching.deployment.antiAffinity.NAME|interface||Anti-affinity rules to be applied|
+|global.extensions.caching.deployment.extraCachingLabels.NAME|string||Optional extra key-value pairs to add to the spec.template.metadata.labels data of the Caching deployment.|
+|global.extensions.caching.deployment.logLevel|string||Level at which the pod should log. Options include "info", "debug", "warn", "error", "panic" and "fatal". Default level is info|
+|global.extensions.caching.deployment.podDisruptionBudget.minAvailable|int32||An eviction is allowed if at least "minAvailable" pods selected by "selector" will still be available after the eviction, i.e. even in the absence of the evicted pod. So for example you can prevent all voluntary evictions by specifying "100%".|
+|global.extensions.caching.deployment.podDisruptionBudget.maxUnavailable|int32||An eviction is allowed if at most "maxUnavailable" pods selected by "selector" are unavailable after the eviction, i.e. even in absence of the evicted pod. For example, one can prevent all voluntary evictions by specifying 0. This is a mutually exclusive setting with "minAvailable".|
+|global.extensions.caching.deployment.replicas|int||number of instances to deploy|
+|global.extensions.caching.deployment.customEnv[].name|string|||
+|global.extensions.caching.deployment.customEnv[].value|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.fieldRef.apiVersion|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.fieldRef.fieldPath|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.containerName|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.resource|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int64|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|int32|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor|bool|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|uint|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|int32|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.resourceFieldRef.divisor[]|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.configMapKeyRef.name|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.configMapKeyRef.key|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.configMapKeyRef.optional|bool|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.secretKeyRef.name|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.secretKeyRef.key|string|||
+|global.extensions.caching.deployment.customEnv[].valueFrom.secretKeyRef.optional|bool|||
+|global.extensions.caching.deployment.restartPolicy|string||restart policy to use when the pod exits|
+|global.extensions.caching.deployment.priorityClassName|string||name of a defined priority class|
+|global.extensions.caching.deployment.nodeName|string||name of node to run on|
+|global.extensions.caching.deployment.nodeSelector.NAME|string||label selector for nodes|
+|global.extensions.caching.deployment.tolerations[].key|string|||
+|global.extensions.caching.deployment.tolerations[].operator|string|||
+|global.extensions.caching.deployment.tolerations[].value|string|||
+|global.extensions.caching.deployment.tolerations[].effect|string|||
+|global.extensions.caching.deployment.tolerations[].tolerationSeconds|int64|||
+|global.extensions.caching.deployment.affinity.NAME|interface|||
+|global.extensions.caching.deployment.hostAliases[]|interface|||
+|global.extensions.caching.deployment.initContainers[]|interface||[InitContainers](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#containers) to be added to the array of initContainers on the deployment.|
+|global.extensions.caching.deployment.resources.limits.memory|string||amount of memory|
+|global.extensions.caching.deployment.resources.limits.cpu|string||amount of CPUs|
+|global.extensions.caching.deployment.resources.requests.memory|string||amount of memory|
+|global.extensions.caching.deployment.resources.requests.cpu|string||amount of CPUs|
+|global.extensions.caching.deployment.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.caching.upstream.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.caching.service.type|string||K8s service type|
+|global.extensions.caching.service.extraAnnotations.NAME|string||extra annotations to add to the service|
+|global.extensions.caching.service.loadBalancerIP|string||IP address of the load balancer|
+|global.extensions.caching.service.httpPort|int|8085|HTTP port for the knative/ingress proxy service|
+|global.extensions.caching.service.httpsPort|int||HTTPS port for the knative/ingress proxy service|
+|global.extensions.caching.service.kubeResourceOverride.NAME|interface||override fields in the generated resource by specifying the yaml structure to override under the top-level key.|
+|global.extensions.glooRedis.enableAcl|bool|true|Whether to include the ACL policy on redis install. Set to `true` if you want to provide an external redis endpoint. If `redis.disabled` is set to `true`, you will have to create the redis secret, `redis`, to provide the password. The secret uses the key, `redis-password`, for the password value. Defaults to true.|
+|global.extensions.dataPlanePerProxy|bool||If set to true, a distinct set of data-plane resources (ratelimit, extauth, redis, caching) will be created for each enabled gateway proxy and each gateway proxy will exclusively use its associated data-plane resources. Eg: If there are two gateway proxies defined, gw-ingress and gw-internal, two sets of data-plane resources will be created (ie: ratelimit-gw-ingress, extauth-gw-ingress, redis-gw-ingress and caching-gw-ingress to be used solely by gw-ingress and ratelimit-gw-internal, extauth-gw-internal, redis-gw-internal and caching-gw-internal to be used solely by gw-internal). This is useful in cases where it's desirable to completely isolate the data-planes across proxies. One such case is when proxies receive dramatically different levels of traffic. In that case, one might want to isolate the lower trafficked proxy's data-plane in order to prevent latency from competition for resources, while also allocating additional resources to the higher trafficked proxy's components. There may also be security reasons to want isolated data-planes. On the other hand, when set to false, only one set of data-plane resources (ie ratelimit, extauth, caching, redis) will be created and used by all proxies. Note that when set to true, each proxy will have to be manually configured to use the uniquely-named per-proxy services, including in the case where there is only one proxy enabled. Defaults to false.|
+|global.graphql.changeValidation.rejectBreaking|bool|false|Whether to reject breaking GraphQL schema updates (default false).|
+|global.graphql.changeValidation.rules.dangerousToBreaking|bool|false|Whether the RULE_DANGEROUS_TO_BREAKING processing rule is enabled (default false).|
+|global.graphql.changeValidation.rules.deprecatedFieldRemovalDangerous|bool|false|Whether the RULE_DEPRECATED_FIELD_REMOVAL_DANGEROUS processing rule is enabled (default false).|
+|global.graphql.changeValidation.rules.ignoreDescriptionChanges|bool|false|Whether the RULE_IGNORE_DESCRIPTION_CHANGES processing rule is enabled (default false).|
+|global.graphql.changeValidation.rules.ignoreUnreachable|bool|false|Whether the RULE_IGNORE_UNREACHABLE processing rule is enabled (default false).|
