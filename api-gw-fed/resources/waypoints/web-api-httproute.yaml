@@ -13,6 +13,11 @@ spec:
         add:
         - name: Traversed-Waypoint
           value: web-api-gloo-waypoint
+    - type: RequestHeaderModifier
+      requestHeaderModifier:
+        add:
+        - name: jwt
+          value: dummy-jwt
     backendRefs:
     - name: web-api
       port: 8080

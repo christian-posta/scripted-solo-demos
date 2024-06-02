@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: purchase-history
+  namespace: purchase-history
+spec:
+  parentRefs:
+  - name: purchase-history-gloo-waypoint
+  rules:
+  - filters:
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+        - name: Traversed-Waypoint
+          value: purchase-history-gloo-waypoint
+    backendRefs:
+    - name: purchase-history-v1
+      port: 8080
+      weight: 100
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualHostOption
+metadata:
+  name: purchase-history-vh-options
+  namespace: purchase-history
+spec:
+  targetRef:
+    kind: Gateway
+    group: gateway.networking.k8s.io
+    name: purchase-history-gloo-waypoint
+    namespace: purchase-history
+  options:
+    ratelimit: 
+      localRatelimit:
+        maxTokens: 3
+        tokensPerFill: 3
+        fillInterval: 30s
