@@ -45,6 +45,8 @@ spec:
           value: "web-api"
         - name: "MESSAGE"
           value: "Hello From Web API"
+        - name: "LOG_LEVEL"
+          value: "debug"
 
 ---
 # Service to expose web frontend

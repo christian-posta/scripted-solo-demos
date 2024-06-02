@@ -1,0 +1,34 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: recommendation-gloo-waypoint
+  namespace: recommendation
+  annotations:
+    gateway.gloo.solo.io/gateway-parameters-name: "gloo-waypoint-params"
+spec:
+  gatewayClassName: gloo-waypoint
+  listeners:
+  - name: proxy
+    port: 15088
+    protocol: istio.io/PROXY
+  # TODO zTunnel always looks up 15008 (or whatever the HBONE addr is) to find the waypoint via service
+  # TODO (cont) We can't easily use inbound tunnel because we don't know the Workload yet.
+  - name: hbone
+    port: 15008
+    protocol: istio.io/HBONE
+---
+apiVersion: gateway.gloo.solo.io/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gloo-waypoint-params
+  namespace: recommendation
+spec:
+  kube:
+    service:
+      # this is not an external LB
+      type: ClusterIP
+    podTemplate:
+      extraLabels:
+        # we always want to be captured by zTunnel
+        ambient.istio.io/redirection: enabled
