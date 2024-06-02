@@ -58,8 +58,10 @@ curl -v -H "Authorization: Bearer $JWT" -H "Host: web-api.solo.io" http://$GATEW
 # call with JWT
 kubectl apply -f resources/extensions/httproute-web-api-jwt.yaml
 source ./waypoint/jwt.sh 
+
 curl -v -H "Authorization: Bearer $JWT" -H "Host: web-api.solo.io" http://$GATEWAY_IP:8080/
 
+kubectl exec -it deploy/sleep -- curl -H "Authorization: Bearer $JWT" -v http://web-api.web-api:8080/
 
 # get traffic to go through the waypoint on web-api
 kubectl label service web-api -n web-api istio.io/use-waypoint=web-api-gloo-waypoint
