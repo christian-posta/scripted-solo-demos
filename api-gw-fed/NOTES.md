@@ -51,3 +51,8 @@ kubectl exec -it deploy/sleep -- curl http://web-api.web-api:8080
 export GATEWAY_IP=$(kubectl get gateway -n gloo-system | grep http | awk  '{ print $3 }')
 
 curl -v -H "Host: web-api.solo.io" http://$GATEWAY_IP:8080/
+
+# call with JWT
+kubectl apply -f resources/extensions/httproute-web-api-jwt.yaml
+source ./waypoint/jwt.sh 
+curl -v -H "Authorization: Bearer $JWT" -H "Host: web-api.solo.io" http://$GATEWAY_IP:8080/
