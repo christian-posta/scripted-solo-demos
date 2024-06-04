@@ -26,7 +26,7 @@ run "kubectl label namespace purchase-history istio.io/dataplane-mode=ambient"
 
 
 desc "Let's put some traffic through"
-run "for i in {1..5}; do kubectl exec -it deploy/sleep -- curl -v http://web-api.web-api:8080/ && printf \"\n\";  done"
+run "for i in {1..100}; do kubectl exec -it deploy/sleep -- curl -s -o /dev/null --show-error http://web-api.web-api:8080/ ;  done"
 
 desc "Let's go to Kiali"
 desc "Remember to Port Forward it in another window"
