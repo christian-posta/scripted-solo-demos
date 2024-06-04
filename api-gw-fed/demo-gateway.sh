@@ -39,9 +39,10 @@ desc "Let's implement rate limiting for this API"
 run "cat ./resources/extensions/httproute-web-api-ratelimit.yaml"
 run "kubectl apply -f ./resources/extensions/httproute-web-api-ratelimit.yaml"
 
-run "curl -v -H 'Host: web-api.solo.io' -I http://$GATEWAY_IP:8080/"
-run "curl -v -H 'Host: web-api.solo.io' -I http://$GATEWAY_IP:8080/"
-run "curl -v -H 'Host: web-api.solo.io' -I http://$GATEWAY_IP:8080/"
+desc "Let's call the API 3 times so we can trip rate limit"
+run "for i in {1..3}; do curl -v -H 'Host: web-api.solo.io' -I http://$GATEWAY_IP:8080/ && printf \"\n\";  done"
+
+desc "Now this call should trip Rate Limit"
 run "curl -v -H 'Host: web-api.solo.io' -I http://$GATEWAY_IP:8080/"
 
 
