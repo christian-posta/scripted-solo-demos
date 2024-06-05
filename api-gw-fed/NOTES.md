@@ -1,3 +1,20 @@
+To get this demo working:
+
+./setup-all.sh
+./demo-gateway.sh
+./demo-waypoint-web-api.sh
+./demo-waypoint-purchase-history.sh
+
+TODO:
+
+* Get prometheus working with the gateway demo
+
+
+Helper commands here:
+
+
+
+
 /home/solo/scripted-solo-demos/ambient/scripts/setup-kind.sh
 
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
