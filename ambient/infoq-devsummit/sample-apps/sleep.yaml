@@ -18,6 +18,7 @@ spec:
     metadata:
       labels:
         app: sleep
+        version: v1
     spec:
       terminationGracePeriodSeconds: 0
       serviceAccountName: sleep

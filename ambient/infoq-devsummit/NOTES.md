@@ -29,6 +29,21 @@ kubectl rollout restart deployment --selector=prod=stable -n recommendation
 kubectl rollout restart deployment --selector=prod=stable -n purchase-history
 
 
+# add an ingress 
+kubectl apply -f ./istio/ingress-web-api.yaml 
+
+GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
+curl -H "Host: istioinaction.io" http://$GATEWAY_IP/
+
+# Enabling tracing:
+istioctl install -y -f ./istio/tracing-install.yaml 
+kubectl apply -f istio/trace-sample-100.yaml 
+
+
+# enable policy
+
+
+
 # adding the namespaces to istio-ambient
 kubectl label namespace default istio.io/dataplane-mode=ambient
 kubectl label namespace web-api istio.io/dataplane-mode=ambient
