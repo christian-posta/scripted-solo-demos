@@ -39,9 +39,30 @@ curl -H "Host: istioinaction.io" http://$GATEWAY_IP/
 istioctl install -y -f ./istio/tracing-install.yaml 
 kubectl apply -f istio/trace-sample-100.yaml 
 
+# Enable routing to only v1
+kubectl apply -f resources/istio/purchase-history-v1-100.yaml 
 
 # enable policy
 
+### deny all
+kubectl apply -f resources/istio/peerauth-strict.yaml
+kubectl apply -f resources/istio/policy/deny-all.yaml 
+
+### try call will fail
+curl -H "Host: istioinaction.io" http://$GATEWAY_IP/
+
+### enable access to web-api
+kubectl apply -f resources/istio/policy/allow-ingress-to-web-api.yaml 
+
+### enable access to recommendation and purchase history
+kubectl apply -f resources/istio/policy/allow-web-api-to-recommendation.yaml 
+kubectl apply -f resources/istio/policy/allow-recommendation-to-purchistory.yaml 
+
+### Now the curl through the GW should work
+### The call from sleep should fail though
+./call-web-api.sh 
+
+# A more complex L7 policy
 
 
 # adding the namespaces to istio-ambient
