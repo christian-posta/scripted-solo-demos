@@ -1,6 +1,10 @@
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
+  components:
+    ingressGateways:
+    - enabled: true
+      name: istio-ingressgateway
   meshConfig:
     enableTracing: true
     defaultConfig:

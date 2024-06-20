@@ -12,10 +12,15 @@ KIALI_PID="$!"
 istioctl dashboard jaeger &
 JAEGER_PID="$!"
 
+# Jaever port 9090
+istioctl dashboard prometheus &
+PROM_PID="$!"
+
 function cleanup {
   kill -9 $GRAFANA_PID
   kill -9 $KIALI_PID
   kill -9 $JAEGER_PID
+  kill -9 $PROM_PID
 }
 
 trap cleanup EXIT

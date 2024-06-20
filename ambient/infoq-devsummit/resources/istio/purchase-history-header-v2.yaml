@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: purchase-history-vs
+  namespace: purchase-history
+spec:
+  hosts:
+  - purchase-history
+  http:
+  - match:
+    - headers:
+        x-test-routing:
+          exact: v2
+    route:
+    - destination:
+        host: purchase-history
+        subset: version-v2  
+  - route:
+    - destination:
+        host: purchase-history
+        subset: version-v1
+      weight: 100
+    - destination:
+        host: purchase-history
+        subset: version-v2
+      weight: 0

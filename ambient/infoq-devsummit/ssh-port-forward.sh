@@ -18,6 +18,10 @@ KIALI_PID="$!"
 ssh -L 16686:localhost:16686 -C -N -l $USER $BOX &
 JAEGER_PID="$!"
 
+#Prom
+ssh -L 9090:localhost:9090 -C -N -l $USER $BOX &
+PROM_PID="$!"
+
 function cleanup {
   kill -9 $GRAFANA_PID
   kill -9 $KIALI_PID
