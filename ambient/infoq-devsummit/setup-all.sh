@@ -4,7 +4,8 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 kubectl apply -f sample-apps/
 
-istioctl install -y -f ./resources/istio/install.yaml 
+# by default we will install WITHOUT ambient, 
+istioctl install -y -f ./resources/istio/install.yaml
 
 kubectl apply -f ~/dev/istio/istio-1.22.0/samples/addons/
 

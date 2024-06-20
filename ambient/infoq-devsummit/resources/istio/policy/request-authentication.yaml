@@ -2,11 +2,11 @@ apiVersion: security.istio.io/v1
 kind: RequestAuthentication
 metadata:
   name: require-jwt
-  namespace: web-api
+  namespace: purchase-history
 spec:
   selector:
     matchLabels:
-      app: web-api
+      app: purchase-history
   jwtRules:
   - issuer: "solo.io"
     jwks: |

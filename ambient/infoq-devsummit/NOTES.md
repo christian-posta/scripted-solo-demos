@@ -72,8 +72,6 @@ kubectl apply -f resources/istio/policy/allow-ingress-to-web-api.yaml
 
 ### enable access to recommendation and purchase history
 kubectl apply -f resources/istio/policy/allow-web-api-to-recommendation.yaml 
-
-
 kubectl apply -f resources/istio/policy/allow-recommendation-to-purchistory.yaml 
 
 ##### need to do something different for waypoint in purchase history
@@ -84,10 +82,18 @@ kubectl apply -f resources/istio/policy/waypoint/allow-recommendation-to-purchis
 ./call-web-api.sh 
 
 # A more complex L7 policy
+you need to check out httpbin policy and service...
+
+# Adding JWT Policy for purchase-history
+kubectl apply -f resources/istio/policy/request-authentication.yaml 
+kubectl apply -f resources/istio/policy/allow-recommendation-to-purchase-history-jwt.yaml 
 
 
-# Adding JWT Policy
-kubectl apply -f resources/istio/policy/allow-web-api-with-jwt.yaml 
+#### adding policy for ambient:
+kubectl apply -f resources/istio/policy/waypoint/request-authentication-purchase-history.yaml
+
+
+
 TOKEN=$(cat ./resources/istio/jwt/token.jwt)
 curl -H "Authorization: Bearer $TOKEN" -H "Host: istioinaction.io" http://$GATEWAY_IP/
 
@@ -98,8 +104,13 @@ kubectl label namespace recommendation istio.io/dataplane-mode=ambient
 kubectl label namespace purchase-history istio.io/dataplane-mode=ambient
 
 # using waypoints
+kubectl apply -f resources/istio/waypoint/web-api-ns.yaml
 kubectl label ns web-api istio.io/use-waypoint=waypoint
+
+kubectl apply -f resources/istio/waypoint/recommendation-ns.yaml
 kubectl label ns recommendation istio.io/use-waypoint=waypoint
+
+kubectl apply -f resources/istio/waypoint/purchase-history-ns.yaml
 kubectl label ns purchase-history istio.io/use-waypoint=waypoint
 
 # delete waypoints
