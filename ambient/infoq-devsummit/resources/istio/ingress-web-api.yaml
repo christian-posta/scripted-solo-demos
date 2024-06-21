@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: web-api-gateway
+  namespace: web-api
 spec:
   selector:
     istio: ingressgateway 
@@ -17,6 +18,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: web-api-gw-vs
+  namespace: web-api
 spec:
   hosts:
   - "istioinaction.io"

@@ -3,6 +3,10 @@ To get this demo working:
 ./setup-all.sh
 
 
+TODO: 
+- be specific about the principals in the JWT
+- 
+
 # installing ambient mode
 istioctl install -y -f ./resources/istio/install.yaml --set profile=ambient
 

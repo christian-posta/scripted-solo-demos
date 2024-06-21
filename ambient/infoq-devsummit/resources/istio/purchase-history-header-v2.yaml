@@ -24,3 +24,18 @@ spec:
         host: purchase-history
         subset: version-v2
       weight: 0
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: purchase-history-dr
+  namespace: purchase-history
+spec:
+  host: purchase-history
+  subsets:
+  - name: version-v1
+    labels:
+      version: v1
+  - name: version-v2
+    labels:
+      version: v2
