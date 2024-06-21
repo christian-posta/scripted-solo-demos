@@ -119,19 +119,22 @@ backtotop
 desc "What about more fine-grained HTTP authz?"
 read -s
 
-#run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/headers"
-#run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
+run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/headers"
+run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
 
-# todo: need to implement a waypoint for this...
+desc "Let's add a waypoint for the default namespace to add L7 policies"
+run "istioctl x waypoint apply --for service --namespace default"
+run "istioctl x waypoint apply --enroll-namespace default"
 
-#desc "But we want to control which paths and how things get called"
-#read -s
+desc "Now let's add the authorization policies"
+read -s
 
-#run "cat ./resources/istio/policy/allow-sleep-to-httpbin.yaml"
-#run "kubectl apply -f ./resources/istio/policy/allow-sleep-to-httpbin.yaml"
+run "cat ./resources/istio/policy/waypoint/allow-sleep-to-httpbin.yaml"
+run "kubectl apply -f ./resources/istio/policy/waypoint/allow-sleep-to-httpbin.yaml"
 
-#run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
-#run "kubectl exec -it deploy/sleep -- curl -v -H 'x-test-me: approved' http://httpbin:8000/headers"
+desc "Now the correctly formed call to httpbin should work!"
+run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
+run "kubectl exec -it deploy/sleep -- curl -v -H 'x-test-me: approved' http://httpbin:8000/headers"
 
 ####################################
 # jwt policy

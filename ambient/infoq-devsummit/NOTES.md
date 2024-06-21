@@ -5,8 +5,6 @@ To get this demo working:
 
 TODO: 
 - be specific about the principals in the JWT
-- add httpbin demo to ambient
-- debug ambient jwt demo
 
 # installing ambient mode
 istioctl install -y -f ./resources/istio/install.yaml --set profile=ambient
