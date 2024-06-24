@@ -1,4 +1,4 @@
-ITERATIONS=${1:-100}
+ITERATIONS=${1:-250}
 
 GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
 

@@ -1,13 +1,20 @@
 #!/bin/bash
 
-kubectl delete -f resources/istio/waypoint/web-api-ns.yaml
+#kubectl delete -f resources/istio/waypoint/web-api-ns.yaml
+istioctl x waypoint delete --all -n web-api
 kubectl label ns web-api istio.io/use-waypoint-
 
-kubectl delete -f resources/istio/waypoint/recommendation-ns.yaml
+#kubectl delete -f resources/istio/waypoint/recommendation-ns.yaml
+istioctl x waypoint delete --all -n recommendation
 kubectl label ns recommendation istio.io/use-waypoint-
 
-kubectl delete -f resources/istio/waypoint/purchase-history-ns.yaml
+#kubectl delete -f resources/istio/waypoint/purchase-history-ns.yaml
+istioctl x waypoint delete --all -n purchase-history 
 kubectl label ns purchase-history istio.io/use-waypoint-
+
+istioctl x waypoint delete --all -n default
+kubectl label ns default istio.io/use-waypoint-
+
 
 kubectl delete ap --all -n istio-system
 kubectl delete ap --all -n default

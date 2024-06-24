@@ -53,39 +53,9 @@ run "kubectl label namespace web-api istio.io/dataplane-mode=ambient"
 run "kubectl label namespace recommendation istio.io/dataplane-mode=ambient"
 run "kubectl label namespace purchase-history istio.io/dataplane-mode=ambient"
 
-desc "Let's add some load"
-run "./call-web-api-load.sh"
-
+desc "Thats it!! Our apps are part of the service mesh."
 desc "Go check the metrics"
 read -s
-
-
-
-
-####################################
-# routing control
-####################################
-
-backtotop
-desc "Controlling the routing to purchase-history"
-read -s
-
-desc "Since we are going to use L7 policies (header, path, etc)"
-desc "We need to deploy a waypoint proxy for purchase history"
-
-run "istioctl x waypoint apply --enroll-namespace --for service --namespace purchase-history"
-run "kubectl get po -n purchase-history"
-
-run "cat ./resources/istio/purchase-history-header-v2.yaml"
-run "kubectl apply -f ./resources/istio/purchase-history-header-v2.yaml"
-
-GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
-desc "call the service and JQ the output to show the body"
-run "for i in {1..15} ; do curl -s -H 'Host: istioinaction.io' http://$GATEWAY_IP/  | jq .upstream_calls[].upstream_calls[].body ;  done"
-
-desc "Now let's call the services with the canary header"
-run "curl -H 'x-test-routing: v2'  -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
-
 
 ####################################
 # policy
@@ -118,8 +88,7 @@ desc "Let's enable the allow policies for the other services"
 read -s
 
 run "kubectl apply -f resources/istio/policy/allow-web-api-to-recommendation.yaml "
-
-run "kubectl apply -f resources/istio/policy/waypoint/allow-recommendation-to-purchistory.yaml"
+run "kubectl apply -f resources/istio/policy/allow-recommendation-to-purchistory.yaml"
 
 run "curl -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
 
@@ -130,22 +99,50 @@ backtotop
 desc "What about more fine-grained HTTP authz?"
 read -s
 
-run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/headers"
-run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
+run "cat ./resources/istio/policy/waypoint/allow-sleep-to-httpbin.yaml"
 
 desc "Let's add a waypoint for the default namespace to add L7 policies"
-run "istioctl x waypoint apply --for service --namespace default"
-run "istioctl x waypoint apply --enroll-namespace default"
+run "istioctl x waypoint apply --enroll-namespace --for service --namespace default"
+
 
 desc "Now let's add the authorization policies"
 read -s
 
-run "cat ./resources/istio/policy/waypoint/allow-sleep-to-httpbin.yaml"
 run "kubectl apply -f ./resources/istio/policy/waypoint/allow-sleep-to-httpbin.yaml"
 
 desc "Now the correctly formed call to httpbin should work!"
 run "kubectl exec -it deploy/sleep -- curl -v http://httpbin:8000/ip"
 run "kubectl exec -it deploy/sleep -- curl -v -H 'x-test-me: approved' http://httpbin:8000/headers"
+
+
+
+
+####################################
+# routing control
+####################################
+
+backtotop
+desc "Controlling the routing to purchase-history"
+read -s
+
+run "cat ./resources/istio/purchase-history-header-v2.yaml"
+
+desc "Since we are going to use L7 policies (header, path, etc)"
+desc "We need to deploy a waypoint proxy for purchase history"
+
+run "istioctl x waypoint apply --enroll-namespace --for service --namespace purchase-history"
+run "kubectl get po -n purchase-history"
+
+run "kubectl apply -f ./resources/istio/purchase-history-header-v2.yaml"
+run "kubectl apply -f ./resources/istio/policy/waypoint/allow-recommendation-to-purchistory.yaml"
+
+GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
+desc "call the service and JQ the output to show the body"
+run "for i in {1..15} ; do curl -s -H 'Host: istioinaction.io' http://$GATEWAY_IP/  | jq .upstream_calls[].upstream_calls[].body ;  done"
+
+desc "Now let's call the services with the canary header"
+run "curl -H 'x-test-routing: v2'  -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
+
 
 ####################################
 # jwt policy
@@ -168,8 +165,6 @@ read -s
 TOKEN=$(cat ./resources/istio/jwt/token.jwt)
 run "curl -H 'Authorization: Bearer $TOKEN' -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
 
-
-
 ####################################
 # add tracing
 ####################################
@@ -182,10 +177,7 @@ run "cat ./resources/istio/trace-sample-100.yaml"
 run "kubectl apply -f ./resources/istio/trace-sample-100.yaml"
 
 run "istioctl x waypoint apply --enroll-namespace --for service --namespace recommendation"
-run "kubectl get po -n recommendation"
-
 run "istioctl x waypoint apply --enroll-namespace --for service --namespace web-api"
-run "kubectl get po -n web-api"
 
 desc "update policies to take recommendation and web-api waypoint into account"
 run "kubectl apply -f ./resources/istio/policy/waypoint/allow-web-api-to-recommendation.yaml"
@@ -193,4 +185,4 @@ run "kubectl apply -f ./resources/istio/policy/waypoint/allow-sleep-to-web-api.y
 
 
 desc "Add some load"
-run "./call-web-api-sleep.sh"
+run "./call-web-api-sleep-jwt.sh"
