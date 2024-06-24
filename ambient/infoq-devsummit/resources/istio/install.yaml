@@ -6,6 +6,9 @@ spec:
     - enabled: true
       name: istio-ingressgateway
   meshConfig:
+    # set this for the retry demo
+    defaultHttpRetryPolicy:
+      attempts: 0  
     enableTracing: true
     defaultConfig:
       tracing: {} # disabled MeshConfig tracing options

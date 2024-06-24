@@ -41,3 +41,5 @@ kubectl delete -f ~/dev/istio/istio-1.22.0/samples/addons/
 kubectl delete ns istio-system
 
 
+kubectl apply -f sample-apps/misbehave/purchase-history-v1-clean.yaml
+

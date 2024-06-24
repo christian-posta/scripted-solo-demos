@@ -143,6 +143,19 @@ run "for i in {1..15} ; do curl -s -H 'Host: istioinaction.io' http://$GATEWAY_I
 desc "Now let's call the services with the canary header"
 run "curl -H 'x-test-routing: v2'  -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
 
+desc "What if the purchase history is misbehaving?!"
+run "kubectl apply -f sample-apps/misbehave/purchase-history-v1-error-50.yaml"
+
+desc "Go to another terminal and try call the services"
+read -s
+
+desc "Let's implement a retry policy"
+run "cat resources/istio/purchase-history-v1-retry.yaml | head -n 30"
+run "kubectl apply -f resources/istio/purchase-history-v1-retry.yaml"
+
+desc "Now go try!"
+read -s
+
 
 ####################################
 # jwt policy
