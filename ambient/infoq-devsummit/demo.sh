@@ -11,14 +11,9 @@ SOURCE_DIR=$PWD
 
 backtotop
 desc "-----====Demo Istio ====-----"
-read -s
-
 desc "We have three apps: web-api, recommendation, purchase-history"
 desc "(can go check things in k9s)"
 read -s
-
-run "kubectl exec -it deploy/sleep -- curl -v http://web-api.web-api:8080/"
-
 
 backtotop
 desc "Let's install Istio"
@@ -32,15 +27,21 @@ run "kubectl apply -f ~/dev/istio/istio-1.22.0/samples/addons/"
 # need this so we can select "waypoint" reporter on grafana
 kubectl apply -f ./resources/hack/grafana-waypoint.yaml > /dev/null 2>&1
 
-desc "Let's see what was installed"
-run "kubectl get po -n istio-system"
+desc "Go see what was installed"
+read -s
+
 
 backtotop
 desc "Let's expose the web-api through the Istio ingress-gateway"
 read -s
 
-run "kubectl apply -f ./resources/istio/ingress-web-api.yaml"
+run "kubectl get svc -n istio-system"
 GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
+desc "Ingress gateway is a Load Balancer service with IP $GATEWAY_IP"
+read -s 
+
+run "cat ./resources/istio/ingress-web-api.yaml"
+run "kubectl apply -f ./resources/istio/ingress-web-api.yaml"
 run "curl -H 'Host: istioinaction.io' http://$GATEWAY_IP/"
 
 backtotop
