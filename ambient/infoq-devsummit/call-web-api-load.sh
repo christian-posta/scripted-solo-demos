@@ -1,4 +1,7 @@
+ITERATIONS=${1:-100}
 
-time for i in {1..50}; do kubectl exec -it deploy/sleep -- curl -s -o /dev/null --show-error http://web-api.web-api:8080/ ;  done
+GATEWAY_IP=$(kubectl get svc -n istio-system | grep ingressgateway | awk '{ print $4 }')
+
+time for i in $( eval echo {0..$ITERATIONS} ); do curl -H "Host: istioinaction.io" -s -o /dev/null --show-error http://$GATEWAY_IP/ ;  done
 
 

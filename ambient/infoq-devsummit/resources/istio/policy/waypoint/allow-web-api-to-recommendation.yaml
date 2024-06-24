@@ -1,0 +1,30 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-web-api-to-recommendation-waypoint
+  namespace: recommendation
+spec:
+  targetRefs:
+  - kind: Gateway
+    group: gateway.networking.k8s.io
+    name: waypoint
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/web-api/sa/web-api"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-waypoint-to-recommendation
+  namespace: recommendation
+spec:
+  selector:
+    matchLabels:
+      app: recommendation
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/recommendation/sa/waypoint"]
