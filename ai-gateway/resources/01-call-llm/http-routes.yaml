@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: openai
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: ai-gateway
+      namespace: gloo-system
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /openai
+    backendRefs:
+    - name: open-ai-gpt4
+      namespace: gloo-system
+      group: ai.gloo.solo.io
+      kind: LLMProvider
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: mistralai
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: ai-gateway
+      namespace: gloo-system
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /mistralai
+    backendRefs:
+    - name: mistral-large
+      namespace: gloo-system
+      group: ai.gloo.solo.io
+      kind: LLMProvider

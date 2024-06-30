@@ -1,0 +1,25 @@
+apiVersion: ai.gloo.solo.io/v1alpha1
+kind: LLMProvider
+metadata:
+  name: mistral-large
+  namespace: gloo-system
+spec:
+  model: mistral-large-latest
+  tokenRef: mistralai-secret
+  mistral:
+    maxTokens: 100
+    temperature: 0.5
+    api: COMPLETION
+---
+apiVersion: ai.gloo.solo.io/v1alpha1
+kind: LLMProvider
+metadata:
+  name: open-ai-gpt4
+  namespace: gloo-system
+spec:
+  model: gpt-3.5-turbo
+  tokenRef: openai-secret
+  openAi:
+    maxTokens: 100
+    temperature: 0.5
+    api: COMPLETION
