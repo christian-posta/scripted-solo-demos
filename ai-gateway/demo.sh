@@ -224,9 +224,10 @@ curl "$GLOO_AI_GATEWAY:8080/openai"  -d '{
 #################################################################
 ############# Task 4
 #################################################################
-
+back
 desc "Would these LLMs help me get credit card numbers and other information?"
 desc "Let's try!"
+read -s
 
 curl --location "$GLOO_AI_GATEWAY:8080/mistralai" \
      --data '{
@@ -294,3 +295,57 @@ desc "Notice that the CC numbers are __Masked__ with XXXX-XXXX-XXXX-1234"
 read -s
 
 
+#################################################################
+############# Task 5
+#################################################################
+back
+desc "How can we protect cost, usage, and rate limit based on tokens?"
+read -s
+
+desc "Let's put back our JWT authentication"
+
+cat resources/05-ratelimit-token-usage/vh-options.yaml
+kubectl apply -f resources/05-ratelimit-token-usage/vh-options.yaml
+
+
+desc "Let's create a token rate limit (70 per hour) based on user id"
+
+cat resources/05-ratelimit-token-usage/ratelimit-user.yaml
+kubectl apply -f resources/05-ratelimit-token-usage/ratelimit-user.yaml
+
+desc "Let's add this token rate limit specifically to the openai route"
+cat resources/05-ratelimit-token-usage/openai-route-ratelimit.yaml
+kubectl apply -f resources/05-ratelimit-token-usage/openai-route-ratelimit.yaml
+
+
+desc "Let's use Eitan's token"
+
+export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
+curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+      },
+      {
+        "role": "user",
+        "content": "Compose a poem that explains the concept of recursion in programming."
+      }
+    ]
+  }'
+
+desc "This first request goes through, but subsequent will fail"
+curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+      },
+      {
+        "role": "user",
+        "content": "Compose a poem that explains the concept of recursion in programming."
+      }
+    ]
+  }'
