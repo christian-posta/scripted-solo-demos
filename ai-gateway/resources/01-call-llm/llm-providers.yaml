@@ -1,25 +1,23 @@
-apiVersion: ai.gloo.solo.io/v1alpha1
-kind: LLMProvider
+apiVersion: gloo.solo.io/v1
+kind: Upstream
 metadata:
-  name: mistral-large
+  labels:
+    app: gloo
+  name: mistralai
   namespace: gloo-system
 spec:
-  model: mistral-large-latest
-  tokenRef: mistralai-secret
-  mistral:
-    maxTokens: 100
-    temperature: 0.5
-    api: COMPLETION
+  ai:
+    mistral: {}
+    authTokenRef: mistralai-secret
 ---
-apiVersion: ai.gloo.solo.io/v1alpha1
-kind: LLMProvider
+apiVersion: gloo.solo.io/v1
+kind: Upstream
 metadata:
-  name: open-ai-gpt4
+  labels:
+    app: gloo
+  name: openai
   namespace: gloo-system
 spec:
-  model: gpt-3.5-turbo
-  tokenRef: openai-secret
-  openAi:
-    maxTokens: 100
-    temperature: 0.5
-    api: COMPLETION
+  ai:
+    openai: {}
+    authTokenRef: openai-secret

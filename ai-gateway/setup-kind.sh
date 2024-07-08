@@ -1,1 +1,1 @@
-/home/solo/scripted-solo-demos/ambient/scripts/deploy-multi.sh 1 istio-demo
+/home/solo/scripted-solo-demos/ambient/scripts/deploy-multi.sh 1 ai-demo
