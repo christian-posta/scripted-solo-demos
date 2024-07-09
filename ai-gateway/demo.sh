@@ -363,7 +363,7 @@ backtotop
 desc "Let's see about model failover"
 read -s
 
-kubectl apply -f resources/06-model-failover/model-failover-deploy.yaml
+kubectl get deploy model-failover -n gloo-system
 
 desc "Let's take a look at the quick reconfiguration to point to a model-provider service"
 desc "Which will help us simulate bad behaviors"
@@ -397,3 +397,55 @@ desc "We should see the default configured response from the model-failover, but
 desc "That the gateway retried with a different model"
 
 kubectl logs deploy/model-failover -n gloo-system
+
+#################################################################
+############# Task 7
+#################################################################
+backtotop
+desc "Lets try RAG"
+read -s
+
+desc "First, lets reset the model failover"
+kubectl apply -f resources/07-rag/llm-providers.yaml
+
+desc "Try running basic prompt"
+
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" \
+     --data '{
+    "model": "gpt-4o",
+    "messages": [
+     {
+        "role": "user",
+        "content": "How many varieties of cheeses are in France?"
+      }
+    ]
+  }'
+
+
+desc "This is verbose! Let's use RAG to fine tune it"
+
+desc "Lets see the vector DB"
+kubectl get po -n default
+
+desc "Let's apply the RAG route"
+cat resources/07-rag/route-options.yaml
+kubectl apply -f resources/07-rag/route-options.yaml
+
+
+desc "Using RAG, we can fine tune the response. let's try again:"
+
+
+curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" \
+     --data '{
+    "model": "gpt-4o",
+    "messages": [
+     {
+        "role": "user",
+        "content": "How many varieties of cheeses are in France?"
+      }
+    ]
+  }'
+
+desc "This time the response is very specific!  "

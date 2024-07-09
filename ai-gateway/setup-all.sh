@@ -26,3 +26,5 @@ kubectl create secret generic mistralai-secret -n gloo-system \
     --dry-run=client -oyaml | kubectl apply -f -
 
 kubectl apply -f resources/gateway/gateway.yaml
+
+kubectl apply -f resources/extensions/

@@ -1,0 +1,21 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-opt
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    ai:
+      rag:
+        datastore:
+          postgres:
+            connectionString: postgresql+psycopg://gloo:gloo@vector-db.default.svc.cluster.local:5432/gloo
+            collectionName: default
+        embedding:
+          openai:
+            authTokenRef: openai-secret
+
