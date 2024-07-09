@@ -229,6 +229,8 @@ desc "Would these LLMs help me get credit card numbers and other information?"
 desc "Let's try!"
 read -s
 
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
 curl --location "$GLOO_AI_GATEWAY:8080/mistralai" \
      --data '{
     "model": "mistral-large-latest",
@@ -302,6 +304,8 @@ back
 desc "How can we protect cost, usage, and rate limit based on tokens?"
 read -s
 
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
 desc "Let's put back our JWT authentication"
 
 cat resources/05-ratelimit-token-usage/vh-options.yaml
@@ -349,3 +353,47 @@ curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TO
       }
     ]
   }'
+
+
+#################################################################
+############# Task 6
+#################################################################
+
+backtotop
+desc "Let's see about model failover"
+read -s
+
+kubectl apply -f resources/06-model-failover/model-failover-deploy.yaml
+
+desc "Let's take a look at the quick reconfiguration to point to a model-provider service"
+desc "Which will help us simulate bad behaviors"
+
+cat resources/06-model-failover/llm-providers.yaml
+kubectl apply -f resources/06-model-failover/llm-providers.yaml
+
+desc "Let's describe the failover behavior"
+cat resources/06-model-failover/route-options.yaml
+kubectl apply -f resources/06-model-failover/route-options.yaml
+
+
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+      },
+      {
+        "role": "user",
+        "content": "Compose a poem that explains the concept of recursion in programming."
+      }
+    ]
+  }'
+
+
+desc "We should see the default configured response from the model-failover, but we should see"
+desc "That the gateway retried with a different model"
+
+kubectl logs deploy/model-failover -n gloo-system
