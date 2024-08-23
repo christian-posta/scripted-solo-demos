@@ -1,0 +1,43 @@
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-opt
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    rbac:
+      policies:
+        viewer:
+          nestedClaimDelimiter: .
+          principals:
+          - jwtPrincipal:
+              claims:
+                "llms.openai": "gpt-3.5-turbo"
+              matcher: LIST_CONTAINS
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: mistralai-opt
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: mistralai
+  options:
+    rbac:
+      policies:
+        viewer:
+          nestedClaimDelimiter: .
+          principals:
+          - jwtPrincipal:
+              claims:
+                llms.mistralai: mistral-large-latest
+              matcher: LIST_CONTAINS
+
