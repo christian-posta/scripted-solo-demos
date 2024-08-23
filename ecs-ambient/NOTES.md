@@ -30,6 +30,8 @@ terraform apply -target=module.shell_task
 
 
 #### deploy task WITH ztunnel
+~/go/bin/istioctl-ecs bootstrap default
+
 export TF_VAR_ECHO_TOKEN=`~/go/bin/istioctl-ecs bootstrap default`; export TF_VAR_SHELL_TOKEN="${TF_VAR_ECHO_TOKEN}"
 
 terraform apply -target=module.shell_task_ztunnel
@@ -42,6 +44,43 @@ TASK_ID=$(aws ecs list-tasks --cluster ceposta-ecs-ambient --service shell-ztunn
 aws ecs execute-command --cluster ceposta-ecs-ambient --task $TASK_ID --interactive --container shell --command sh
 
 
+Calling:
+
+# public
+ALL_PROXY=socks5h://127.0.0.1:15080 curl httpbin.org/get
+
+# Kubernetes pod
+ALL_PROXY=socks5h://127.0.0.1:15080 curl echo.default
+
+# To ECS task
+ALL_PROXY=socks5h://127.0.0.1:15080 curl echo.ecs.local:8080 -v
+
+# To ECS task with ztunnel (hbone)
+ALL_PROXY=socks5h://127.0.0.1:15080 curl echo-ztunnel.ecs.local:8080 -v
+
+
 
 #### Uninstall Istio
 istioctl uninstall -y --purge
+
+
+
+### Lambda
+
+Connect the lambda to the same VPC as the EKS cluster
+
+add this ENV variable:
+
+BOOTSTRAP_TOKEN
+using: ~/go/bin/istioctl-ecs bootstrap default
+
+Use this image: 
+
+606469916935.dkr.ecr.us-east-2.amazonaws.com/ceposta:echo-lambda-10 
+
+If you cannot add to a VPC on first creation, go find this policy `AWSLambdaVPCAccessExecutionRole` and add it to our lambda
+
+
+aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo.default.svc.cluster.local"}' --cli-binary-format raw-in-base64-out
+
+aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo-ztunnel.ecs.local:8080"}' --cli-binary-format raw-in-base64-out
