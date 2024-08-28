@@ -181,3 +181,9 @@ kubectl --context ceposta-eks-1 exec deploy/parking -- sh -c 'for ((i=1; i<=30; 
 
 
 
+
+
+
+
+inventory-default-0051f3e413ff69d9f.7d67968.vpc-lattice-svcs.us-east-2.on.aws
+inventory-default-0051f3e413ff69d9f.7d67968.vpc-lattice-svcs.us-east-2.on.aws
