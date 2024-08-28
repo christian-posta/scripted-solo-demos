@@ -51,9 +51,7 @@ ALL_PROXY=socks5h://127.0.0.1:15080 curl httpbin.org/get
 
 # Kubernetes pod
 ALL_PROXY=socks5h://127.0.0.1:15080 curl echo.default
-
-# To ECS task
-ALL_PROXY=socks5h://127.0.0.1:15080 curl echo.ecs.local:8080 -v
+ALL_PROXY=socks5h://127.0.0.1:15080 curl httpbin.default:8080
 
 # To ECS task with ztunnel (hbone)
 ALL_PROXY=socks5h://127.0.0.1:15080 curl echo-ztunnel.ecs.local:8080 -v
@@ -82,3 +80,5 @@ If you cannot add to a VPC on first creation, go find this policy `AWSLambdaVPCA
 
 
 aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo-ztunnel.ecs.local:8080"}' --cli-binary-format raw-in-base64-out
+
+aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://httpbin.default:8080/headers"}' --cli-binary-format raw-in-base64-out
