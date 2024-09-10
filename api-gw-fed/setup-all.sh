@@ -23,3 +23,18 @@ kubectl delete deploy,service gateway-proxy -n gloo-system
 
 kubectl apply -f sample-apps/
 
+
+## for egress / ai demo
+
+source ~/bin/ai-keys
+
+#openai token
+kubectl create secret generic openai-secret -n gloo-system \
+    --from-literal="Authorization=Bearer $OPENAI_KEY" \
+    --dry-run=client -oyaml | kubectl apply -f -
+
+#mistral token
+kubectl create secret generic mistralai-secret -n gloo-system \
+    --from-literal="Authorization=Bearer $MISTRAL_KEY" \
+    --dry-run=client -oyaml | kubectl apply -f -
+
