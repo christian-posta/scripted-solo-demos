@@ -11,9 +11,6 @@ read -s
 
 desc "We have three apps: web-api, recommendation, purchase-history"
 run "kubectl get namespaces"
-run "kubectl get po -n web-api"
-run "kubectl exec -it deploy/sleep -- curl -v http://web-api.web-api:8080/"
-
 
 desc "Deploying a Gateway with Kubernetes API Gateway"
 run "cat resources/gloo-http-gateway.yaml"

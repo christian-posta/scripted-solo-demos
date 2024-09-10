@@ -1,22 +1,23 @@
 ./setup-kind.sh
 
-docker pull docker.io/slandow/some-demo-img
-docker tag docker.io/slandow/some-demo-img:latest us-west2-docker.pkg.dev/octo-386314/gloo-waypoint/gloo-ee:latest
-kind --name kind1 load docker-image us-west2-docker.pkg.dev/octo-386314/gloo-waypoint/gloo-ee:latest
-
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
 
 
-source ~/bin/gloo-mesh-license-env 
-export GLOO_MESH_LICENSE_KEY=$GLOO_MESH_LICENSE
+source ~/bin/gloo-gateway-license
+export GLOO_LICENSE_KEY=$GLOO_LICENSE
 
-helm install -n gloo-system gloo --create-namespace ./waypoint-demo/gloo-ee-chart \
-    --set gloo-fed.enabled=false \
-    --set gloo-fed.glooFedApiserver.enable=false \
-    --set gloo.kubeGateway.enabled=true \
-    --set gloo.gloo.disableLeaderElection=true \
-    --set gloo.discovery.enabled=false \
-    --set license_key="$GLOO_MESH_LICENSE_KEY"
+## Install Istio CRDs ahead of time for Gloo, since we are going to use waypoints
+kubectl apply -f /home/solo/dev/istio/istio-1.23.0/manifests/charts/base/crds
+
+helm repo add gloo-ee-test https://storage.googleapis.com/gloo-ee-test-helm
+helm repo update
+
+helm install -f ./values.yaml -n gloo-system gloo-ee-test gloo-ee-test/gloo-ee \
+    --create-namespace \
+    --version 1.18.0-beta1-bmain-cd58f97 \
+    --set license_key="$GLOO_LICENSE_KEY"
+
+
 
 kubectl delete deploy,service gateway-proxy -n gloo-system
 

@@ -67,11 +67,11 @@ metadata:
   name: web-api-ingress-vh-options
   namespace: gloo-system
 spec:
-  targetRef:
-    kind: Gateway
-    group: gateway.networking.k8s.io
-    name: http
-    namespace: gloo-system
+  targetRefs:
+    - kind: Gateway
+      group: gateway.networking.k8s.io
+      name: http
+      namespace: gloo-system
   options:
     jwt:
       providers:

@@ -27,3 +27,13 @@ source ./jwt.sh
 
 desc "We need to call the services with a JWT token"
 run "kubectl exec -it deploy/sleep -- curl -H 'Authorization: Bearer $JWT' -v http://web-api.web-api:8080/"
+
+desc "We can also add rate limiting to purchase history"
+run "cat resources/waypoints/purchase-history-httproute-ratelimit.yaml"
+run "kubectl apply -f resources/waypoints/purchase-history-httproute-ratelimit.yaml"
+
+desc "Let's call the API 3 times so we can trip rate limit"
+run "for i in {1..3}; do kubectl exec -it deploy/sleep -- curl -s -o /dev/null --show-error http://web-api.web-api:8080/ ;  done"
+
+desc "Now this call should trip Rate Limit"
+run "kubectl exec -it deploy/sleep -- curl -v http://web-api.web-api:8080/"
