@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: httpbin-vs
+spec:
+  hosts:
+  - "httpbin"
+  http:
+  - match:
+    - uri:
+        exact: /headers
+    headers:
+      request:
+        add:
+          x-demo-header: "foo-bar"
+    route:
+    - destination:
+        host: httpbin
+        port:
+          number: 8080

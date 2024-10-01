@@ -78,7 +78,9 @@ Use this image:
 
 If you cannot add to a VPC on first creation, go find this policy `AWSLambdaVPCAccessExecutionRole` and add it to our lambda
 
+aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo.default"}' --cli-binary-format raw-in-base64-out
 
-aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo-ztunnel.ecs.local:8080"}' --cli-binary-format raw-in-base64-out
 
 aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://httpbin.default:8080/headers"}' --cli-binary-format raw-in-base64-out
+
+aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo-ztunnel.ecs.local:8080"}' --cli-binary-format raw-in-base64-out
