@@ -83,7 +83,6 @@ aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload
 
 aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://httpbin.default:8080/headers"}' --cli-binary-format raw-in-base64-out
 
-aws lambda invoke --function-name ceposta-echo-ztunnel-vpc /dev/stdout --payload '{"url":"http://echo-ztunnel.ecs.local:8080"}' --cli-binary-format raw-in-base64-out
 
 
 ### Helpful commands to show that ambient has been enabled
