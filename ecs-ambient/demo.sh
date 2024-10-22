@@ -4,7 +4,15 @@
 
 SOURCE_DIR=$PWD
 
-desc "Quick Istio Demo for AWS Community Day"
+
+#### Make sure that you run some commands before this part to set up the demo
+#### Show the cluster
+# kubectl get po -n default -o wide
+# kubectl get ns default --show-labels
+
+
+
+desc "Quick Istio Demo for Amazon ECS"
 read -s
 
 desc "Let's enforce network policy with SPIFFE universal workload identity"
@@ -22,4 +30,5 @@ desc "Let's add fault injection to calls to httpbin"
 run "cat resources/faultinjection.yaml"
 run "kubectl --context ceposta-eks-3 apply -f resources/faultinjection.yaml"
 
-desc "go call httpbin from lambda or eks"
+desc "Let's call httpbin from sleep"
+run "kubectl exec -it deploy/sleep -- time curl httpbin.default:8080/headers"
