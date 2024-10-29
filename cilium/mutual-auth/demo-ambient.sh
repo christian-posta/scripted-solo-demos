@@ -20,7 +20,7 @@ read -s
 
 backtotop
 desc "Let's add some mesh policy"
--s 
+read -s 
 
 
 run "cat istio/policy-deny-all.yaml"
