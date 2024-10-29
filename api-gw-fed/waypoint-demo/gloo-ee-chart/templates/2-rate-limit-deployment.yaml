@@ -1,0 +1,331 @@
+{{- define "ratelimit.deploymentSpec" -}}
+{{- $name := (index . 1) }}
+{{- with (first .) }}
+{{- $statsConfig := coalesce .Values.global.extensions.rateLimit.deployment.stats .Values.global.glooStats -}}
+{{- $image := merge .Values.global.extensions.rateLimit.deployment.image .Values.global.image }}
+{{- $rateLimitName := .Values.global.extensions.rateLimit.deployment.name }}
+{{- $redisName := .Values.redis.service.name }}
+{{- if .Values.global.extensions.dataplanePerProxy }}
+{{- $rateLimitName = printf "%s-%s" $rateLimitName ($name | kebabcase) }}
+{{- $redisName = printf "%s-%s" $redisName ($name | kebabcase) }}
+{{- end }} {{/* .Values.global.extensions.dataplanePerProxy */}}
+{{- $redisSecretName := $redisName -}}
+{{- if .Values.redis.disabled -}}
+{{/* note that .Values.global.extensions.dataplanePerProxy is not compatible with .Values.redis.disabled due to */}}
+{{/* hard-coding a single source for the Redis password secret */}}
+{{- $redisSecretName = "redis" -}}
+{{- end -}} {{/* .Values.redis.disabled*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: {{ $rateLimitName }}
+  name: {{ $rateLimitName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+{{- if not (kindIs "invalid" .Values.global.extensions.rateLimit.deployment.replicas) }}
+  replicas: {{ .Values.global.extensions.rateLimit.deployment.replicas }}
+{{- end }}{{/* if not (kindIs "invalid" .Values.global.extensions.rateLimit.deployment.replicas) */}}
+  selector:
+    matchLabels:
+      gloo: {{ $rateLimitName }}
+  template:
+    metadata:
+      labels:
+        gloo: {{ $rateLimitName }}
+        {{- if .Values.global.extensions.rateLimit.deployment.extraRateLimitLabels }}
+        {{- range $key, $value :=  .Values.global.extensions.rateLimit.deployment.extraRateLimitLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+      {{- if or $statsConfig.enabled .Values.global.istioIntegration.disableAutoinjection }}
+      annotations:
+        {{- if $statsConfig.enabled }}
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+        {{- end}}{{/* $statsConfig.enabled */}}
+        {{- if .Values.global.istioIntegration.disableAutoinjection }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
+      {{- end }}
+    spec:
+      {{- include "gloo.podSpecStandardFields" .Values.global.extensions.rateLimit.deployment | nindent 6 -}}
+      serviceAccountName: {{ .Values.global.extensions.rateLimit.service.name }}
+      containers:
+        - image: {{ template "gloo.image" $image}}
+          imagePullPolicy: {{ $image.pullPolicy }}
+          name: rate-limit
+          {{- with .Values.global.extensions.rateLimit.deployment.rateLimitContainerSecurityContext -}}
+{{ include "gloo.securityContext" (dict "values" . "defaults" (dict)) | nindent 10 }}
+          {{ end -}}
+          {{- if .Values.global.extensions.rateLimit.deployment.resources }}
+          resources:
+{{ toYaml .Values.global.extensions.rateLimit.deployment.resources | indent 12}}
+          {{- end}}{{/* .Values.global.extensions.rateLimit.deployment.resources */}}
+          {{- $envVars := list }}
+          env:
+            {{- $envVars = append $envVars (dict "name" "POD_NAMESPACE" "valueFrom" (dict "fieldRef" (dict "fieldPath" "metadata.namespace"))) }}
+            {{- if .Values.global.glooMtls.enabled }}
+              {{- $envVars = append $envVars (dict "name" "GLOO_ADDRESS" "value" "127.0.0.1:9955") }}
+            {{- else }}
+              {{- $envVars = append $envVars (dict "name" "GLOO_ADDRESS" "value" (printf "%s:%.0f" .Values.global.extensions.rateLimit.deployment.glooAddress .Values.global.extensions.rateLimit.deployment.glooPort))  }}
+            {{- end }}{{/* .Values.global.glooMtls.enabled */}}
+            {{- if $statsConfig.enabled }}
+              {{- $envVars = append $envVars (dict "name" "START_STATS_SERVER" "value" "true") }}
+            {{- end}}{{/* $statsConfig.enabled */}}
+            {{- if .Values.global.extensions.rateLimit.deployment.dynamodb.secretName }}
+              {{- $envVars = append $envVars (dict "name" "AWS_ACCESS_KEY_ID" "valueFrom" (dict "secretKeyRef" (dict "name" .Values.global.extensions.rateLimit.deployment.dynamodb.secretName "key" "aws_access_key_id"))) }}
+              {{- $envVars = append $envVars (dict "name" "AWS_SECRET_ACCESS_KEY" "valueFrom" (dict "secretKeyRef" (dict "name" .Values.global.extensions.rateLimit.deployment.dynamodb.secretName "key" "aws_secret_access_key"))) }}
+              {{- $envVars = append $envVars (dict "name" "AWS_REGION" "value" .Values.global.extensions.rateLimit.deployment.dynamodb.region) }}
+              {{- $envVars = append $envVars (dict "name" "DYNAMODB_RATE_LIMIT_TABLE_NAME" "value" .Values.global.extensions.rateLimit.deployment.dynamodb.tableName) }}
+              {{- $envVars = append $envVars (dict "name" "DYNAMODB_CONSISTENT_READS" "value" .Values.global.extensions.rateLimit.deployment.dynamodb.consistentReads) }}
+              {{- $envVars = append $envVars (dict "name" "DYNAMODB_BATCH_SIZE" "value" .Values.global.extensions.rateLimit.deployment.dynamodb.batchSize) }}
+            {{- else if .Values.global.extensions.rateLimit.deployment.aerospike.address }}
+            {{- $aero := .Values.global.extensions.rateLimit.deployment.aerospike }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_ADDRESS" "value" (printf "%v" $aero.address)) }}
+            {{- if $aero.namespace }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_NAMESPACE" "value" (printf "%v" $aero.namespace)) }}
+            {{- end }}
+            {{- if $aero.set }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_SET" "value" (printf "%v" $aero.set)) }}
+            {{- end }}
+            {{- if $aero.port }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_PORT" "value" (printf "%v" $aero.port)) }}
+            {{- end }}
+            {{- if $aero.batchSize }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_BATCH_SIZE" "value" (printf "%v" $aero.batchSize)) }}
+            {{- end }}
+            {{- if $aero.commitLevel }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_COMMIT_LEVEL" "value" (printf "%v" $aero.commitLevel)) }}
+            {{- end }}
+            {{- if $aero.readModeSC }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_READMODE_SC" "value" (printf "%v" $aero.readModeSC)) }}
+            {{- end }}
+            {{- if $aero.readModeAP }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_READMODE_AP" "value" (printf "%v" $aero.readModeAP)) }}
+            {{- end }}
+            {{- if $aero.tls }}
+            {{- if $aero.tls.name }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_NODE_TLS_NAME" "value" (printf "%v" $aero.tls.name)) }}
+            {{- end }}
+            {{- if $aero.tls.insecure }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_INSECURE_SKIP_VERIFY" "value" (printf "%v" $aero.tls.insecure)) }}
+            {{- end }}
+            {{- if $aero.tls.version }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_TLS_VERSION" "value" (printf "%v" $aero.tls.version)) }}
+            {{- end }}
+            {{- if $aero.tls.curveGroups }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_TLS_CURVE_GROUPS" "value" (printf "%v" (join "," $aero.tls.curveGroups))) }}
+            {{- end }}
+            {{- if $aero.tls.certSecretName }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_CERT_FILE" "value" "/etc/aerospike/tls/tls.crt") }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_KEY_FILE" "value" "/etc/aerospike/tls/tls.key") }}
+            {{- end }}
+            {{- if $aero.tls.rootCASecretName }}
+              {{- $envVars = append $envVars (dict "name" "AEROSPIKE_ROOT_CA_FILE" "value" "/etc/aerospike/root-tls/tls.crt") }}
+            {{- end }}
+            {{- end }}{{/* $aero.tls */}}
+            {{- else if .Values.redis.clientSideShardingEnabled }}{{/* end .Values.global.extensions.rateLimit.deployment.dynamodb.secretName */}}
+              {{- if and .Values.redis.clientSideShardingEnabled .Values.redis.service.db }}
+                {{- fail "Cannot set redis DB while using Envoy Redis" }}
+              {{- end }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_URL" "value" "/var/run/envoy/ratelimit.sock") }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_SOCKET_TYPE" "value" "unix") }}
+            {{- else }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_URL" "value" (printf "%s:%v" $redisName .Values.redis.service.port)) }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_DB" "value" (printf "%v" .Values.redis.service.db)) }}
+            {{- if or .Values.redis.cert.enabled .Values.redis.tlsEnabled }}
+              {{- if .Values.redis.cert.enabled }}
+                {{- $envVars = append $envVars (dict "name" "REDIS_CA_CERT" "value" "/etc/tls/ca.crt") }}
+              {{- end }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_SOCKET_TYPE" "value" "tls") }}
+            {{- else }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_SOCKET_TYPE" "value" "tcp") }}
+            {{- end }}{{/* .Values.redis.cert.enabled */}}
+              {{- if and .Values.redis.clustered .Values.redis.service.db }}
+                {{- fail "Cannot set redis DB while using Clustered Redis" }}
+              {{- end }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_CLUSTERED_MODE" "value" (printf "%v" .Values.redis.clustered))}}
+            {{- end }}{{/* .Values.global.extensions.rateLimit.deployment.dynamodb.secretName */}}
+            {{- if .Values.global.extensions.glooRedis.enableAcl }}
+              {{- $envVars = append $envVars (dict "name" "REDIS_PASSWORD" "valueFrom" (dict "secretKeyRef" (dict "name" $redisSecretName "key" "redis-password"))) }}
+            {{- end }}{{/* .Values.global.extensions.glooRedis.enableAcl */}}
+              {{- $envVars = append $envVars (dict "name" "READY_PORT_HTTP" "value" "18080") }}
+              {{- $envVars = append $envVars (dict "name" "READY_PATH_HTTP" "value" "/ready") }}
+              {{- $envVars = append $envVars (dict "name" "ALIVE_PATH_HTTP" "value" "/alive") }}
+            {{- if or .Values.global.extensions.rateLimit.deployment.logLevel .Values.global.extensions.rateLimit.deployment.loglevel }}
+              {{- $envVars = append $envVars (dict "name" "LOG_LEVEL" "value" (coalesce .Values.global.extensions.rateLimit.deployment.logLevel .Values.global.extensions.rateLimit.deployment.loglevel)) }}
+            {{- end }}
+{{- $mergedEnvVars := list }}
+{{- $keys := list }}
+{{- if not .Values.global.extensions.rateLimit.deployment.customEnv }}
+{{ toYaml $envVars | indent 12 }}
+{{- else }}
+  # We iterate over the lists in reverse order since the last declared EnvVar should take precedence
+  # CustomEnv will take precedence over our default env
+  {{- range $envVar := (reverse (concat $envVars .Values.global.extensions.rateLimit.deployment.customEnv)) }}
+    {{- if not (has $envVar.name $keys) }}
+      {{- $keys = append $keys $envVar.name}}
+      {{- $mergedEnvVars = append $mergedEnvVars $envVar}}
+    {{- end }}
+  {{- end }}
+{{ toYaml (reverse $mergedEnvVars) | indent 12 }}
+{{- end }}
+          readinessProbe:
+            httpGet:
+              port: 18080
+              path: "/ready"
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            failureThreshold: 2
+            successThreshold: 1
+          {{- if .Values.global.extensions.rateLimit.deployment.livenessProbeEnabled }}
+          livenessProbe:
+            httpGet:
+              port: 18080
+              path: "/alive"
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+          {{- end }}
+          {{- if $statsConfig.podMonitorEnabled }}
+          ports:
+            - name: http-monitoring
+              containerPort: 9091
+          {{- end }}
+          {{- if (or .Values.redis.clientSideShardingEnabled (or .Values.redis.cert.enabled (and .Values.global.extensions.rateLimit.deployment.aerospike.tls (or (.Values.global.extensions.rateLimit.deployment.aerospike.tls).rootCASecretName (.Values.global.extensions.rateLimit.deployment.aerospike.tls).certSecretName)))) }}
+          volumeMounts:
+            {{- if .Values.redis.clientSideShardingEnabled }}
+            - mountPath: /var/run/envoy/
+              name: redis-socket
+            {{- end}}
+            {{- if .Values.redis.cert.enabled }}
+            - mountPath: /etc/tls/
+              name: ca-cert-volume
+            {{- end }}
+            {{- if and .Values.global.extensions.rateLimit.deployment.aerospike.tls .Values.global.extensions.rateLimit.deployment.aerospike.tls.certSecretName }}
+            - mountPath: /etc/aerospike/tls/
+              name: aerospike-cert-volume
+            {{- end }}
+            {{- if and .Values.global.extensions.rateLimit.deployment.aerospike.tls .Values.global.extensions.rateLimit.deployment.aerospike.tls.rootCASecretName }}
+            - mountPath: /etc/aerospike/root-tls/
+              name: aerospike-root-cert-volume
+            {{- end }}
+          {{- end }}{{/* or .Values.redis.clientSideShardingEnabled .Values.redis.cert.enabled */}}
+        {{- if or .Values.global.glooMtls.enabled .Values.redis.clientSideShardingEnabled }}
+        {{- $envoyImage := merge .Values.global.glooMtls.envoy.image .Values.global.image}}
+        - name: envoy-sidecar
+          env:
+            - name: ENVOY_SIDECAR
+              value: "true"
+          image: {{ template "gloo.image" $envoyImage }}
+{{ include "gloo.securityContext" (dict "values" .Values.global.glooMtls.envoy.securityContext "defaults" (dict)) | nindent 10 }}
+          imagePullPolicy: {{ $envoyImage.pullPolicy }}
+          volumeMounts:
+            - mountPath: /etc/envoy
+              name: {{ $rateLimitName }}-sidecar-config
+            {{- if .Values.global.glooMtls.enabled }}
+            - mountPath: /etc/envoy/ssl
+              name: gloo-mtls-certs
+              readOnly: true
+            {{- end }}
+            {{- if .Values.redis.clientSideShardingEnabled }}
+            - mountPath: /var/run/envoy/
+              name: redis-socket
+            {{- end }}
+          {{- if .Values.global.glooMtls.envoySidecarResources }}
+          resources:
+{{ toYaml .Values.global.glooMtls.envoySidecarResources | indent 12}}
+          {{- end}}
+        {{- end }}{{/* End envoy sidecar */}}
+        {{- if .Values.global.glooMtls.enabled }}
+        {{- $sdsImage := merge .Values.global.glooMtls.sds.image .Values.global.image }}
+        - name: sds
+          image: {{ template "gloo.image" $sdsImage }}
+{{ include "gloo.securityContext" (dict "values" .Values.global.glooMtls.sds.securityContext "defaults" (dict)) | nindent 10 }}
+          imagePullPolicy: {{ $sdsImage.pullPolicy }}
+          env:
+            - name: GLOO_MTLS_SDS_ENABLED
+              value: "true"
+          volumeMounts:
+            - mountPath: /etc/envoy/ssl
+              name: gloo-mtls-certs
+              readOnly: true
+          {{- if .Values.global.glooMtls.sdsResources }}
+          resources:
+{{ toYaml .Values.global.glooMtls.sdsResources | indent 12}}
+          {{- end }}
+        {{- end }}{{/* End SDS container */}}
+      {{- $securityDefaults := dict "runAsNonRoot" true }}
+      {{- /* set floatingUserId to true in the helm install to let the pod be assigned a dynamic user ID */ -}}
+      {{- /* see https://github.com/helm/helm/issues/1707#issuecomment-520357573 */ -}}
+      {{- /* the user id may be set quite high -- openshift wants userids that may get printed as scientific notation */}}
+      {{- if not .Values.global.extensions.rateLimit.deployment.floatingUserId -}}
+        {{- $fmtRunAsUser := int64 (printf "%.0f" (float64 .Values.global.extensions.rateLimit.deployment.runAsUser)) }}
+        {{- $_ := set $securityDefaults "runAsUser" $fmtRunAsUser }}
+      {{- end -}}
+{{ include "gloo.securityContext" (dict "values" .Values.global.extensions.rateLimit.deployment.podSecurityContext "defaults" $securityDefaults) | nindent 6 }}
+      {{ if or (.Values.global.extensions.rateLimit.antiAffinity) (.Values.global.extensions.rateLimit.affinity) }}
+      affinity:
+      {{- end}}
+      {{- if .Values.global.extensions.rateLimit.affinity }}
+        {{ toYaml .Values.global.extensions.rateLimit.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.global.extensions.rateLimit.antiAffinity }}
+        {{ toYaml .Values.global.extensions.rateLimit.antiAffinity | nindent 8 }}
+      {{- end }}
+      {{- if or (or .Values.global.glooMtls.enabled (or .Values.redis.clientSideShardingEnabled (and .Values.global.extensions.rateLimit.deployment.aerospike.tls (or (.Values.global.extensions.rateLimit.deployment.aerospike.tls).rootCASecretName (.Values.global.extensions.rateLimit.deployment.aerospike.tls).rootCASecretName)))) .Values.redis.cert.enabled }}
+      volumes:
+        {{- if .Values.global.glooMtls.enabled }}
+        - name: gloo-mtls-certs
+          secret:
+            defaultMode: 420
+            secretName: gloo-mtls-certs
+        {{- end }}
+        - name: {{ $rateLimitName }}-sidecar-config
+          configMap:
+            name: {{ $rateLimitName }}-sidecar-config
+        {{- if .Values.redis.clientSideShardingEnabled }}
+        - emptyDir: {}
+          name: redis-socket
+        {{- end }}
+        {{- if .Values.redis.cert.enabled }}
+        - name: ca-cert-volume
+          secret:
+            secretName: {{.Release.Name}}-redis-ca-cert-secret
+            defaultMode: 420
+        {{- end }}
+        {{- if and .Values.global.extensions.rateLimit.deployment.aerospike.tls .Values.global.extensions.rateLimit.deployment.aerospike.tls.certSecretName }}
+        - name: aerospike-cert-volume
+          secret:
+            secretName: {{ .Values.global.extensions.rateLimit.deployment.aerospike.tls.certSecretName }}
+            defaultMode: 420
+        {{- end }}
+        {{- if and .Values.global.extensions.rateLimit.deployment.aerospike.tls .Values.global.extensions.rateLimit.deployment.aerospike.tls.rootCASecretName }}
+        - name: aerospike-root-cert-volume
+          secret:
+            secretName: {{ .Values.global.extensions.rateLimit.deployment.aerospike.tls.rootCASecretName }}
+            defaultMode: 420
+        {{ end }}
+      {{- end }}{{/* .Values.global.glooMtls.enabled || .Values.redis.clientSideShardingEnabled || .Values.redis.cert.enabled */}}
+{{- include "gloo.pullSecret" $image | nindent 6}}
+---
+{{- end }}{{/* with (first .) */}}
+{{- end }}{{/* define "ratelimit.deploymentSpec" */}}
+
+{{- if .Values.global.extensions.rateLimit.enabled }}
+{{- include "gloo.dataplaneperproxyhelper" $ }}
+{{- $override := dict -}}
+{{- if .Values.global.extensions.rateLimit.deployment }}
+{{- $override = .Values.global.extensions.rateLimit.deployment.kubeResourceOverride}}
+{{- end }}{{/* if .Values.global.extensions.rateLimit.deployment */}}
+{{- range $name, $spec := $.ProxiesToCreateDataplaneFor }}
+{{- if not $spec.disabled}}
+{{- $ctx := (list $ $name $spec)}}
+{{- include "gloo.util.merge" (list $ctx $override "ratelimit.deploymentSpec") -}}
+{{- end }}{{/* if not $spec.disabled */}}
+{{- end }}{{/* range $name, $spec := $.ProxiesToCreateDataplaneFor */}}
+{{- end }}{{/* .Values.global.extensions.rateLimit.enabled */}}

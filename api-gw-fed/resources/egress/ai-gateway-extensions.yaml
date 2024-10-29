@@ -1,0 +1,30 @@
+
+apiVersion: gateway.gloo.solo.io/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gloo-gateway-override
+  namespace: gloo-system
+spec:
+  kube:
+    aiExtension:
+      enabled: true
+      ports:
+      - name: ai-monitoring
+        containerPort: 9092
+---
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: http
+  namespace: gloo-system
+  annotations:
+    gateway.gloo.solo.io/gateway-parameters-name: gloo-gateway-override  
+spec:
+  gatewayClassName: gloo-gateway
+  listeners:
+  - protocol: HTTP
+    port: 8080
+    name: http
+    allowedRoutes:
+      namespaces:
+        from: All

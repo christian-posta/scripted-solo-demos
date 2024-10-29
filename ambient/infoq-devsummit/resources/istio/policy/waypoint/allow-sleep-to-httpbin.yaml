@@ -1,0 +1,41 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-sleep-to-httpbin-waypoint
+  namespace: default
+spec:
+  targetRefs:
+  - kind: Gateway
+    group: gateway.networking.k8s.io
+    name: waypoint
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/sleep"]
+    to: 
+    - operation:
+        methods: ["GET"]
+        paths: ["/headers"]
+    when:
+    - key: request.headers[x-test-me]
+      values: ["approved"]
+    - key: source.namespace
+      values: ["default"]          
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-waypoint-to-httpbin
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: httpbin
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/waypoint"]
+
+

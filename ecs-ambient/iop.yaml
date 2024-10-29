@@ -1,0 +1,42 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: ambient
+  # Resource stuff is just to allow running in a small cluster
+  meshConfig:
+    accessLogFile: /dev/stdout
+  values:
+    cni:
+      ambient:
+        dnsCapture: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 40Mi
+    ztunnel:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 40Mi
+    global:
+      proxy:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 40Mi
+      waypoint:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 40Mi
+
+    pilot:
+      autoscaleEnabled: false
+      image: 606469916935.dkr.ecr.us-east-2.amazonaws.com/ceposta:istiod-ecs19
+      env:
+        PILOT_ENABLE_ALPHA_GATEWAY_API: "true"
+        ECS_CLUSTER: "ceposta-ecs-ambient"
+      resources:
+        requests:
+          cpu: 10m
+          memory: 100Mi

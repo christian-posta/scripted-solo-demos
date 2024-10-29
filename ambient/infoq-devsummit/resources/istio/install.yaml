@@ -1,0 +1,20 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  components:
+    ingressGateways:
+    - enabled: true
+      name: istio-ingressgateway
+  meshConfig:
+    # set this for the retry demo
+    defaultHttpRetryPolicy:
+      attempts: 0  
+    enableTracing: true
+    defaultConfig:
+      tracing: {} # disabled MeshConfig tracing options
+    extensionProviders:
+    # add zipkin provider
+    - name: zipkin
+      zipkin:
+        service: zipkin.istio-system.svc.cluster.local
+        port: 9411

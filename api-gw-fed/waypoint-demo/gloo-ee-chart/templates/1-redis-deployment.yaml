@@ -1,0 +1,146 @@
+{{- define "redis.deploymentSpec" -}}
+{{- $name := (index . 1) }}
+{{- with (first .) }}
+{{- if not (.Values.redis.disabled) }}
+{{- $image := merge .Values.redis.deployment.image .Values.global.image }}
+{{- $initImage := merge .Values.redis.deployment.initContainer.image .Values.global.image }}
+{{- $redisName := .Values.redis.deployment.name }}
+{{- if .Values.global.extensions.dataplanePerProxy }}
+{{- $redisName = printf "%s-%s" $redisName ($name | kebabcase) }}
+{{- end }} {{/* .Values.global.extensions.dataplanePerProxy */}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: {{ $redisName }}
+  name: {{ $redisName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+{{- if not (kindIs "invalid" .Values.redis.deployment.replicas) }}
+  replicas: {{ .Values.redis.deployment.replicas }}
+{{- end }}
+  selector:
+    matchLabels:
+      gloo: {{ $redisName }}
+  template:
+    metadata:
+      labels:
+        gloo: {{ $redisName }}
+        {{- if .Values.redis.deployment.extraRedisLabels }}
+        {{- range $key, $value := .Values.redis.deployment.extraRedisLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+      {{- if .Values.global.istioIntegration.disableAutoinjection }}
+      annotations:
+        sidecar.istio.io/inject: "false"
+      {{- end }}
+    spec:
+      {{- include "gloo.podSpecStandardFields" .Values.redis.deployment | nindent 6 -}}
+      {{- if .Values.global.extensions.glooRedis.enableAcl -}}
+      initContainers:
+        - name: createconf
+          image: {{template "glooe.imagenonextended" $initImage}}
+{{ with .Values.redis.deployment.initContainer.securityContext -}}
+{{ include "gloo.securityContext" (dict "values" . "defaults" (dict)) | indent 10 }}
+{{ end }}
+          command: [ "/bin/sh", "-c", "echo 'aclfile /redis-acl/users.acl' > /conf/redis.conf" ]
+          volumeMounts:
+            - name: conf
+              mountPath: /conf
+      {{- end }}
+      containers:
+        - image: {{template "glooe.imagenonextended" $image}}
+          imagePullPolicy:  {{ $image.pullPolicy }}
+          name: redis
+{{ with .Values.redis.deployment.redisContainerSecurityContext -}}
+{{ include "gloo.securityContext" (dict "values" . "defaults" (dict)) | indent 10 }}
+{{ end }}
+          {{- if or .Values.redis.cert.enabled .Values.global.extensions.glooRedis.enableAcl }}
+          args:
+            {{- if .Values.redis.cert.enabled }}
+            - "--tls-port {{ .Values.redis.service.port }}"
+            - "--port 0"  
+            - "--tls-cert-file /etc/tls/tls.crt"
+            - "--tls-ca-cert-file /etc/ca-cert/ca.crt"
+            - "--tls-key-file /etc/tls/tls.key"
+            - "--tls-auth-clients no"
+            {{- end }}{{/* .Values.redis.cert.enabled */}}
+            {{- if .Values.global.extensions.glooRedis.enableAcl }}
+            - redis-server
+            - /redis-acl/users.acl
+            {{- end }}{{/* .Values.global.extensions.glooRedis.enableAcl */}}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.redis.deployment.staticPort }}
+          env:
+            - name: MASTER
+              value: "true"
+          volumeMounts:
+            - mountPath: /redis-master-data
+              name: data
+            {{- if .Values.global.extensions.glooRedis.enableAcl }}
+            - mountPath: /redis-acl
+              name: acl
+            - mountPath: /conf
+              name: conf
+            {{- end }}
+            {{- if .Values.redis.cert.enabled }}
+            - mountPath: /etc/tls
+              name: tls-volume
+            - mountPath: /etc/ca-cert
+              name: ca-cert-volume
+            {{- end }}
+          {{- if .Values.redis.deployment.resources }}
+          resources:
+{{ toYaml .Values.redis.deployment.resources | indent 12}}
+          {{- end}}
+      {{- if .Values.redis.deployment.enablePodSecurityContext }}
+        {{- $fmtRunAsUser := int64 (printf "%.0f" (float64 .Values.redis.deployment.runAsUser)) }}
+        {{- $fmtRunAsGroup := int64 (printf "%.0f" (float64 .Values.redis.deployment.runAsGroup)) }}
+        {{- $fmtFsGroup := int64 (printf "%.0f" (float64 .Values.redis.deployment.fsGroup )) }}
+        {{- $securityDefaults := dict "runAsNonRoot" true "runAsGroup" $fmtRunAsGroup "fsGroup" $fmtFsGroup}}
+        {{- if not .Values.redis.deployment.floatingUserId -}}
+          {{- $_ := set $securityDefaults "runAsUser" $fmtRunAsUser }}
+        {{- end -}}
+{{ include "gloo.securityContext" (dict "values" .Values.redis.deployment.podSecurityContext "defaults" $securityDefaults) | nindent 6 }}
+      {{- end }}
+      volumes:
+        - name: data
+          emptyDir: {}
+        {{- if .Values.redis.cert.enabled }}
+        - name: tls-volume
+          secret:
+            secretName: {{.Release.Name}}-redis-tls-secret
+            defaultMode: 420
+        - name: ca-cert-volume
+          secret:
+            secretName: {{.Release.Name}}-redis-ca-cert-secret
+            defaultMode: 420
+        {{- end }}{{/* .Values.redis.cert.enabled */}}
+        {{- if .Values.global.extensions.glooRedis.enableAcl }}
+        - name: conf
+          emptyDir: {}
+        - name: acl
+          secret:
+            defaultMode: 420
+            secretName: {{ $redisName }}
+        {{- end }}
+{{- include "gloo.pullSecret" $image | nindent 6}}
+
+---
+{{- end }}{{/* .Values.redis.disabled */}}
+{{- end }}{{/* with (first .) */}}
+{{- end }}{{/* define "redis.deploymentSpec" */}}
+
+{{- if and .Values.global.extensions.rateLimit.enabled (not .Values.redis.disabled) }}
+{{- include "gloo.dataplaneperproxyhelper" $ }}
+{{- $override := .Values.redis.deployment.kubeResourceOverride}}
+{{- range $name, $spec := $.ProxiesToCreateDataplaneFor }}
+{{- if not $spec.disabled }}
+{{- $ctx := (list $ $name $spec)}}
+{{- include "gloo.util.merge" (list $ctx $override "redis.deploymentSpec") -}}
+{{- end }} {{/* if not $spec.disabled */}}
+{{- end }} {{/* range $name, $spec := $.ProxiesToCreateDataplaneFor */}}
+{{- end }} {{/* if and .Values.global.extensions.rateLimit.enabled (not .Values.redis.disabled) */}}

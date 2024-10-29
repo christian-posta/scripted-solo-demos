@@ -1,0 +1,18 @@
+dependencies:
+- name: gloo
+  repository: https://storage.googleapis.com/solo-public-helm
+  version: 1.17.0-beta26
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 15.18.0
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 6.16.14
+- name: gloo-fed
+  repository: file:///home/landow/solo/solo-projects/install/helm/gloo-fed
+  version: 1.0.0-ci1
+- name: gateway-portal-web-server
+  repository: file://../gateway-portal-web-server
+  version: 1.0.0-ci1
+digest: sha256:e3b9e78c53d33e6aad012a8c33d0315766c80a4d35a499b957471680c198c0e5
+generated: "2024-05-23T11:49:41.191513149-07:00"

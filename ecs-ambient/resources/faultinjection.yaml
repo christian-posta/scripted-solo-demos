@@ -1,0 +1,22 @@
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: httpbin-vs
+spec:
+  hosts:
+  - "httpbin"
+  http:
+  - match:
+    - uri:
+        exact: /headers
+    fault:
+      delay:
+        percentage:
+          value: 100.0
+        fixedDelay: 5s        
+    route:
+    - destination:
+        host: httpbin
+        port:
+          number: 8080

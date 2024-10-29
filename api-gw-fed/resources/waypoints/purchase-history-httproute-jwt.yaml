@@ -1,0 +1,74 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: purchase-history
+  namespace: purchase-history
+spec:
+  parentRefs:
+  - name: purchase-history-gloo-waypoint
+  rules:
+  - filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: purchase-history-route-options
+
+    backendRefs:
+    - name: purchase-history-v1
+      port: 8080
+      weight: 100
+--- 
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: purchase-history-route-options
+  namespace: purchase-history
+spec:
+  options:
+    rbac:
+      policies:
+        viewer:
+          nestedClaimDelimiter: .
+          principals:
+          - jwtPrincipal:
+              claims:
+                "roles": "authorized-user"
+              matcher: LIST_CONTAINS
+    headerManipulation:
+      responseHeadersToAdd:
+        - header:
+            key: "gloo-api-header"
+            value: "rbac works!"
+        - header:
+            key: "traversed-waypoint"
+            value: "purchase-history-gloo-waypoint"
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualHostOption
+metadata:
+  name: purchase-history-vh-options
+  namespace: purchase-history
+spec:
+  targetRefs:
+    - kind: Gateway
+      group: gateway.networking.k8s.io
+      name: purchase-history-gloo-waypoint
+      namespace: purchase-history
+  options:
+    jwt:
+      providers:
+        selfminted:
+          issuer: solo.io
+          jwks:
+            local:
+              key: |
+                -----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAskFAGESgB22iOsGk/UgX
+                BXTmMtd8R0vphvZ4RkXySOIra/vsg1UKay6aESBoZzeLX3MbBp5laQenjaYJ3U8P
+                QLCcellbaiyUuE6+obPQVIa9GEJl37GQmZIMQj4y68KHZ4m2WbQVlZVIw/Uw52cw
+                eGtitLMztiTnsve0xtgdUzV0TaynaQrRW7REF+PtLWitnvp9evweOrzHhQiPLcdm
+                fxfxCbEJHa0LRyyYatCZETOeZgkOHlYSU0ziyMhHBqpDH1vzXrM573MQ5MtrKkWR
+                T4ZQKuEe0Acyd2GhRg9ZAxNqs/gbb8bukDPXv4JnFLtWZ/7EooKbUC/QBKhQYAsK
+                bQIDAQAB
+                -----END PUBLIC KEY-----
