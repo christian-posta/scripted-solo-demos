@@ -1,6 +1,7 @@
 
 ISTIOCTL_LOCATION=/home/solo/dev/ambient
-VERSION=1.19.3-solo
+#VERSION=1.19.3-solo
+VERSION=1.23.2-patch1-solo-distroless
 
 
 source ~/bin/ambient-docker-repo

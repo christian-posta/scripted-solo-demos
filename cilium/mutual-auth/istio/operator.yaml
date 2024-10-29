@@ -5,17 +5,17 @@ metadata:
 spec:
   profile: ambient
 
-  meshConfig:
-    defaultConfig:
-      proxyMetadata:
-        ISTIO_META_DNS_CAPTURE: "true"
-        ISTIO_META_DNS_PROXY_ADDR: "127.0.0.1:15053"
+#  meshConfig:
+#    defaultConfig:
+#      proxyMetadata:
+#        ISTIO_META_DNS_CAPTURE: "true"
+#        ISTIO_META_DNS_PROXY_ADDR: "127.0.0.1:15053"
 
-  values:
-    ztunnel:
-      meshConfig:
-        defaultConfig:
-          proxyMetadata:
-            ISTIO_META_DNS_CAPTURE: "true"
-            ISTIO_META_DNS_PROXY_ADDR: "127.0.0.1:15053"
+#  values:
+#    ztunnel:
+#      meshConfig:
+#        defaultConfig:
+#          proxyMetadata:
+#            ISTIO_META_DNS_CAPTURE: "true"
+#            ISTIO_META_DNS_PROXY_ADDR: "127.0.0.1:15053"
 
