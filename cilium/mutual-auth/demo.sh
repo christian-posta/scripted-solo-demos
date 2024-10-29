@@ -8,7 +8,7 @@ pod=$(kubectl -n kube-system get pods -l k8s-app=cilium -o jsonpath='{.items[0].
 
 
 backtotop
-desc "Cilim NetworkPolicy"
+desc "Cilium NetworkPolicy"
 read -s
 
 
