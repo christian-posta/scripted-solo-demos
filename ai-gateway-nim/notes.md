@@ -1,3 +1,14 @@
+## Setting up NIM
+
+https://cloud.google.com/blog/products/containers-kubernetes/nvidia-nims-are-available-on-gke
+
+Alternative, using helm:
+https://github.com/NVIDIA/nim-deploy/tree/main/cloud-service-providers/google-cloud/gke
+
+
+
+
+## Test commands
 Test out the openai endpoint:
 
 export INGRESS_GW_ADDRESS=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath="{.status.loadBalancer.ingress[0]['hostname','ip']}")
@@ -45,17 +56,3 @@ curl -X 'POST' \
   "frequency_penalty": 0.0
 }' | jq
 
-## Test combined
-curl "$INGRESS_GW_ADDRESS:8080/openai" -H content-type:application/json -H 'accept: application/json' \
- -d '{
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-    },
-    {
-      "role": "user",
-      "content": "Compose a poem that explains the concept of recursion in programming."
-    }
-  ]
-}' | jq
