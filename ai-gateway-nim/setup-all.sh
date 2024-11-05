@@ -1,5 +1,9 @@
 CONTEXT=gke-nim2
 
+
+# consider updating to newer Gateway CRDs
+# kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml
+
 kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
 
 

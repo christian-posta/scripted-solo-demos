@@ -128,3 +128,19 @@ spec:
               port: 8000
             model: "meta/llama-3.1-8b-instruct"      
 EOF
+
+
+
+## Set up Istio ambient to get mTLS
+kubectl --context $CLUSTER1 apply -f resources/gke-resource-quota.yaml 
+istioctl --context $CLUSTER1 install -y --set profile=ambient
+kubectl --context $CLUSTER1 apply -f ~/dev/istio/latest/samples/addons/
+kubectl --context $CLUSTER1 label namespace gloo-system istio.io/dataplane-mode=ambient
+kubectl --context $CLUSTER1 label namespace nim istio.io/dataplane-mode=ambient
+
+
+kubectl --context $CLUSTER2 apply -f resources/gke-resource-quota.yaml 
+istioctl --context $CLUSTER2 install -y --set profile=ambient
+kubectl --context $CLUSTER2 apply -f ~/dev/istio/latest/samples/addons/
+kubectl --context $CLUSTER2 label namespace gloo-system istio.io/dataplane-mode=ambient
+kubectl --context $CLUSTER2 label namespace nim istio.io/dataplane-mode=ambient
