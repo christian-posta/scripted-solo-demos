@@ -23,19 +23,9 @@ spec:
       namespace: gloo-system
       group: gloo.solo.io
       kind: Upstream
-      weight: 100
+      weight: 10
     - name: nim-llama3-1-8b
       namespace: gloo-system
       group: gloo.solo.io
       kind: Upstream
-      weight: 0
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /v1/chat/completions
-    backendRefs:
-    - name: nim-llama3-1-8b
-      namespace: gloo-system
-      group: gloo.solo.io
-      kind: Upstream
-    
+      weight: 90

@@ -1,4 +1,4 @@
-CONTEXT=gke-nim2
+CONTEXT="${1:-gke-nim2}"
 
 
 # consider updating to newer Gateway CRDs

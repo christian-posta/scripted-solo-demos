@@ -10,19 +10,23 @@ Connect the gke clusters to local machine:
 
 gcloud container clusters get-credentials $CLUSTER --region $REGION --project $PROJECT
 
+Also: note you have to enable firewall to allow traffic from the cluster1 to the ingress IP of cluster 2
+
+export INGRESS_GW_ADDRESS2=$(kubectl --context $CLUSTER2 get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath="{.status.loadBalancer.ingress[0]['hostname','ip']}")
+
+gcloud compute firewall-rules create allow-egress-to-public-ip \
+    --direction=EGRESS \
+    --priority=1000 \
+    --network=ceposta-nim-on-gke-vpc-43b8822d \
+    --action=ALLOW \
+    --rules=tcp:8000 \
+    --destination-ranges=$INGRESS_GW_ADDRESS2 \
+    --target-tags=<your-cluster-network-tags>
+
 ## Set up the AI Gateway
 
-Run `setup-all.sh` with the correct kube context
-
-export CLUSTER1=gke-nim1
-export CLUSTER2=gke-nim2
-
-kubectl --context $CLUSTER1 apply -f resources/upstreams/
-kubectl --context $CLUSTER1 apply -f resources/routing/cluster1/openai-5050.yaml
-kubectl --context $CLUSTER1 apply -f resources/routing/cluster1/nim-httproute.yaml
-
-kubectl --context $CLUSTER2 apply -f resources/upstreams/
-kubectl --context $CLUSTER2 apply -f resources/routing/cluster2/openai-httproute.yaml
+./setup-all.sh
+./reset-demo.sh
 
 
 ## Test commands
@@ -112,6 +116,8 @@ metadata:
   name: nim-llama3-1-8b
   namespace: gloo-system
 spec:
+  connectionConfig:
+    connectTimeout: '30s'
   ai:
     multi:
       priorities:

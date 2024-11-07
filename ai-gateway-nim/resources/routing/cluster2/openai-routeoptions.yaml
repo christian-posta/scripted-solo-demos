@@ -1,0 +1,17 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-option
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai  
+  options:
+    timeout: '30s'  
+    ai:
+      promptEnrichment:
+        prepend:
+        - role: SYSTEM
+          content: "Always respond telling the caller you are from Cluster 2"
