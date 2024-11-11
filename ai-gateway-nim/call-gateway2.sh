@@ -4,7 +4,12 @@ export INGRESS_GW_ADDRESS2=$(kubectl --context $CLUSTER2 get svc -n gloo-system 
 
 curl -v "$INGRESS_GW_ADDRESS2:8080/openai" -H content-type:application/json  -d '{
   "model": "gpt-3.5-turbo",
-  "max_tokens": 4096,  
+  "max_tokens": 4096,
+  "top_p": 1,
+  "n": 1,
+  "stream": false,
+  "stop": "\n",
+  "frequency_penalty": 0.0,  
   "messages": [
     {
       "role": "system",

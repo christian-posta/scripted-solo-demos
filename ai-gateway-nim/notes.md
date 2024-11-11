@@ -141,12 +141,18 @@ EOF
 kubectl --context $CLUSTER1 apply -f resources/gke-resource-quota.yaml 
 istioctl --context $CLUSTER1 install -y --set profile=ambient
 kubectl --context $CLUSTER1 apply -f ~/dev/istio/latest/samples/addons/
-kubectl --context $CLUSTER1 label namespace gloo-system istio.io/dataplane-mode=ambient
 kubectl --context $CLUSTER1 label namespace nim istio.io/dataplane-mode=ambient
+
+POD=$(kubectl --context $CLUSTER1 -n gloo-system get po -l gateway.networking.k8s.io/gateway-name=ai-gateway --no-headers -o custom-columns=:metadata.name)
+kubectl --context $CLUSTER1 -n gloo-system label pod $POD istio.io/dataplane-mode=ambient
 
 
 kubectl --context $CLUSTER2 apply -f resources/gke-resource-quota.yaml 
 istioctl --context $CLUSTER2 install -y --set profile=ambient
 kubectl --context $CLUSTER2 apply -f ~/dev/istio/latest/samples/addons/
-kubectl --context $CLUSTER2 label namespace gloo-system istio.io/dataplane-mode=ambient
+=ambient
 kubectl --context $CLUSTER2 label namespace nim istio.io/dataplane-mode=ambient
+
+Get the gloo-ai-gateway pod and label only that
+POD=$(kubectl --context $CLUSTER2 -n gloo-system get po -l gateway.networking.k8s.io/gateway-name=ai-gateway --no-headers -o custom-columns=:metadata.name)
+kubectl --context $CLUSTER2 -n gloo-system label pod $POD istio.io/dataplane-mode=ambient

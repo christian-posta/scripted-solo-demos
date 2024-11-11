@@ -10,8 +10,4 @@ spec:
     name: openai  
   options:
     timeout: '30s'  
-    ai:
-      promptEnrichment:
-        prepend:
-        - role: SYSTEM
-          content: "Always respond telling the caller you are from Cluster 2"
+

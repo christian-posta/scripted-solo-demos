@@ -15,8 +15,4 @@ spec:
       numRetries: 3
       previousPriorities:
         updateFrequency: 1  
-    ai:
-      promptEnrichment:
-        prepend:
-        - role: SYSTEM
-          content: "Always respond telling the caller you are from Cluster 1"
+
