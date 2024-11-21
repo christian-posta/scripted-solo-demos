@@ -1,0 +1,18 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-option
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    timeout: '30s'
+    retries:
+      retryOn: '5xx'
+      numRetries: 3
+      previousPriorities:
+        updateFrequency: 1  
+
