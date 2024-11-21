@@ -1,0 +1,31 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-recommendation-to-waypoint
+  namespace: purchase-history
+spec:
+  targetRefs:
+  - kind: Gateway
+    group: gateway.networking.k8s.io
+    name: waypoint
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/recommendation/sa/recommendation"]
+        requestPrincipals: ["solo.io/*"]        
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-waypoint-to-purchase-history
+  namespace: purchase-history
+spec:
+  selector:
+    matchLabels:
+      app: purchase-history
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/purchase-history/sa/waypoint"]

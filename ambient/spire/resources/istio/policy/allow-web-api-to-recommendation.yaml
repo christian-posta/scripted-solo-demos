@@ -1,0 +1,15 @@
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-web-api-to-recommendation
+  namespace: recommendation
+spec:
+  selector:
+    matchLabels:
+      app: recommendation
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/web-api/sa/web-api"]
