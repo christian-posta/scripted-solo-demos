@@ -1,0 +1,76 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: minimal                
+  revision: 1-23                
+  meshConfig:
+    enablePrometheusMerge: true   
+    # needs to match the trust domain of SPIRE/SPIRL
+    trustDomain: example.org
+    accessLogFile: /dev/stdout
+    accessLogEncoding: JSON
+    defaultConfig:
+      proxyMetadata:
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"    
+  components:
+    pilot:
+      k8s:
+        env:
+          - name: PILOT_ENABLE_K8S_SELECT_WORKLOAD_ENTRIES
+            value: "false"
+          - name: PILOT_ENABLE_IP_AUTOALLOCATE
+            value: "true"
+          - name: PILOT_SKIP_VALIDATE_TRUST_DOMAIN
+            value: "true"  
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: false
+  values:
+    global:
+      istioNamespace: istio-system
+    sidecarInjectorWebhook:
+      templates:
+        spirl: |
+          spec:
+            containers:
+            - name: istio-proxy
+              volumeMounts:
+              - name: workload-socket
+                mountPath: /run/secrets/workload-spiffe-uds
+                readOnly: true
+            volumes:
+            - name: workload-socket
+              csi:
+                driver: "csi.spiffe.io"
+                readOnly: true      
+        gateway-spirl: |
+          spec:
+            initContainers:
+            - name: wait-for-spire-socket
+              image: busybox:1.36
+              command:
+              - sh
+              - -c
+              - |
+                echo Waiting for $CHECK_FILE...
+                while [[ ! -e $CHECK_FILE ]] ; do
+                  echo 'File does not exist'
+                  sleep 15
+                done
+                echo 'Done'
+              env:
+              - name: CHECK_FILE
+                value: /run/secrets/workload-spiffe-uds/socket
+              volumeMounts:
+              - name: workload-socket
+                mountPath: /run/secrets/workload-spiffe-uds
+                readOnly: true
+            volumes:
+            - name: workload-socket
+              emptyDir:
+              csi:
+                driver: csi.spiffe.io
+                readOnly: true                   
+           
+    

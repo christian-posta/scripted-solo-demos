@@ -1,0 +1,32 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: minimal                
+  revision: 1-23                
+  meshConfig:
+    enablePrometheusMerge: true   
+    # needs to match the trust domain of SPIRE/SPIRL
+    trustDomain: example.org
+    accessLogFile: /dev/stdout
+    accessLogEncoding: JSON
+    defaultConfig:
+      proxyMetadata:
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"    
+  components:
+    pilot:
+      k8s:
+        env:
+          - name: PILOT_ENABLE_K8S_SELECT_WORKLOAD_ENTRIES
+            value: "false"
+          - name: PILOT_ENABLE_IP_AUTOALLOCATE
+            value: "true"
+          - name: PILOT_SKIP_VALIDATE_TRUST_DOMAIN
+            value: "true"  
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: false
+  values:
+    global:
+      istioNamespace: istio-system
+    
