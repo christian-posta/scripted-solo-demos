@@ -1,30 +1,56 @@
 
-DIR="/home/solo/dev/hack/ai-gateway-poc"
 
-./build-extproc.sh
+./setup-kind.sh
 
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+CONTEXT="${1:-ai-demo}"
 
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
+
+helm repo add gloo-ee-helm https://storage.googleapis.com/gloo-ee-helm
+helm repo update
 
 source ~/bin/gloo-mesh-license-env
-helm upgrade -i gloo "$DIR/custom_api/gloo-ee.tgz" \
-  --namespace gloo-system --create-namespace -f "$DIR/custom_api/values.yaml" \
-  --set-string license_key=$GLOO_MESH_LICENSE
+helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-helm/gloo-ee \
+  --version 1.18.0 \
+  --namespace gloo-system --create-namespace \
+  --set license_key=$GLOO_MESH_LICENSE \
+-f -<<EOF
+gloo:
+  kubeGateway:
+    enabled: true
+  gatewayProxies:
+    gatewayProxy:
+      disabled: true
+  discovery:
+    enabled: false
+gloo-fed:
+  enabled: false
+  glooFedApiserver:
+    enable: false
+# disable everything else for a simple deployment
+observability:
+  enabled: false
+prometheus:
+  enabled: false
+grafana:
+  defaultInstallationEnabled: false
+gateway-portal-web-server:
+  enabled: false
+EOF
+
 
 
 # create tokens here..
 source ~/bin/ai-keys
 
 #openai token
-kubectl create secret generic openai-secret -n gloo-system \
+kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
     --from-literal="Authorization=Bearer $OPENAI_KEY" \
     --dry-run=client -oyaml | kubectl apply -f -
 
 #mistral token
-kubectl create secret generic mistralai-secret -n gloo-system \
+kubectl --context $CONTEXT create secret generic mistralai-secret -n gloo-system \
     --from-literal="Authorization=Bearer $MISTRAL_KEY" \
     --dry-run=client -oyaml | kubectl apply -f -
 
-kubectl apply -f resources/gateway/gateway.yaml
-
-kubectl apply -f resources/extensions/
+kubectl --context $CONTEXT apply -f resources/ai-gateway.yaml
