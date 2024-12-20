@@ -1,10 +1,12 @@
-apiVersion: "serving.kserve.io/v1beta1"
-kind: "InferenceService"
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
 metadata:
-  name: "sklearn-iris"
+  name: sklearn-iris
+  namespace: kserve-test
 spec:
   predictor:
     model:
+      args: ["--enable_docs_url=True"]
       modelFormat:
         name: sklearn
       storageUri: "gs://kfserving-examples/models/sklearn/1.0/model"
