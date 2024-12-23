@@ -1,0 +1,35 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openai-passthrough-route
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: ai-gateway
+      namespace: gloo-system
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v1/chat/completions
+    filters:
+    - extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: openai-passthrough-route-options
+      type: ExtensionRef
+    backendRefs:
+    - name: openai-api-upstream
+      namespace: gloo-system
+      group: gloo.solo.io
+      kind: Upstream
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-passthrough-route-options
+  namespace: gloo-system
+spec:
+  options:
+    autoHostRewrite: true  
+    prefixRewrite: /v1/chat/completions
