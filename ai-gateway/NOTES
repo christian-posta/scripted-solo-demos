@@ -5,6 +5,9 @@
 
 Demo it by calling the Open AI API with the following curl command:
 
+kubectl apply -f resources/00-basic-passthrough/upstreams.yaml
+kubectl apply -f resources/00-basic-passthrough/http-routes.yaml
+
 OPENAI_API_KEY=<foo>
 
 curl https://api.openai.com/v1/chat/completions \
@@ -34,3 +37,19 @@ curl "$GATEWAY_IP:8080/v1/chat/completions" \
       }
     ]
   }'
+
+
+  ## 01-call-llm
+
+  kubectl apply -f resources/01-call-llm/llm-providers.yaml
+  kubectl apply -f resources/01-call-llm/http-routes.yaml
+
+curl "$GATEWAY_IP:8080/openai"   -H "Content-Type: application/json"   -d '{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {                
+      "role": "user",
+      "content": "Hello! How are you?"
+    }
+  ]
+}'

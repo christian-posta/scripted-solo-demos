@@ -7,8 +7,11 @@ metadata:
   namespace: gloo-system
 spec:
   ai:
-    mistral: {}
-    authTokenRef: mistralai-secret
+    mistral:
+      authToken:
+        secretRef:
+          name: mistralai-secret
+          namespace: gloo-system  
 ---
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -19,5 +22,9 @@ metadata:
   namespace: gloo-system
 spec:
   ai:
-    openai: {}
-    authTokenRef: openai-secret
+    openai:
+      authToken:
+        secretRef:
+          name: openai-secret
+          namespace: gloo-system  
+

@@ -9,11 +9,11 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 helm repo add gloo-ee-helm https://storage.googleapis.com/gloo-ee-helm
 helm repo update
 
-source ~/bin/gloo-mesh-license-env
+source ~/bin/glooe-license-key-env 
 helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-helm/gloo-ee \
   --version 1.18.0 \
   --namespace gloo-system --create-namespace \
-  --set license_key=$GLOO_MESH_LICENSE \
+  --set license_key=$GLOO_LICENSE_WITH_AI \
 -f -<<EOF
 gloo:
   kubeGateway:
