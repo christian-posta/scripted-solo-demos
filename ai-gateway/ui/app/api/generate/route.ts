@@ -1,12 +1,8 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(req: Request) {
   try {
-    const { prompt } = await req.json();
+    const { prompt, apiKey, jwtToken, openAIUrl } = await req.json();
 
     if (!prompt) {
       return new Response(JSON.stringify({ error: 'Prompt is required' }), {
@@ -15,18 +11,32 @@ export async function POST(req: Request) {
       });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-    });
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
 
-    const text = completion.choices[0]?.message?.content;
-
-    if (!text) {
-      throw new Error('No text generated from OpenAI');
+    if (jwtToken) {
+      headers['Authorization'] = `Bearer ${jwtToken}`;
+    } else if (apiKey) {
+      headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
-    return new Response(JSON.stringify({ text }), {
+    const response = await fetch(openAIUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Backend API request failed');
+    }
+
+    return new Response(JSON.stringify(data), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
