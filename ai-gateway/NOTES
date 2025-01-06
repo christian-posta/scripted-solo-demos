@@ -41,8 +41,10 @@ curl "$GATEWAY_IP:8080/v1/chat/completions" \
 
   ## 01-call-llm
 
-  kubectl apply -f resources/01-call-llm/llm-providers.yaml
-  kubectl apply -f resources/01-call-llm/http-routes.yaml
+kubectl apply -f resources/01-call-llm/llm-providers.yaml
+kubectl apply -f resources/01-call-llm/http-routes.yaml
+
+export GATEWAY_IP=$(kubectl get svc gloo-proxy-ai-gateway -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 curl "$GATEWAY_IP:8080/openai"   -H "Content-Type: application/json"   -d '{
   "model": "gpt-3.5-turbo",

@@ -46,20 +46,6 @@ curl -v --location "$GLOO_AI_GATEWAY:8080/mistralai" \
 
 
 
-########## Optional
-##### Can also enable stream responses
-# curl --location "$GLOO_AI_GATEWAY:8080/mistralai" \
-#      --data '{
-#     "model": "mistral-large-latest",
-#     "messages": [
-#      {
-#         "role": "user",
-#         "content": "What is the best French cheese?"
-#       }
-#     ],
-#     "stream": true
-#   }'
-
 
 
 #################################################################
@@ -102,7 +88,7 @@ desc "Let's look at the Eitan Token"
 cat resources/eitan-openai.token
 
 export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
-curl "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
+curl "$GLOO_AI_GATEWAY:8080/openai" -H "Content-Type: application/json" -H "Authorization: Bearer $EITAN_TOKEN" -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
       {
