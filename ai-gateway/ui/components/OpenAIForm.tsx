@@ -99,6 +99,8 @@ export default function OpenAIForm() {
       }
 
       setResponse(generatedText);
+      // Default to response tab after generating
+      setActiveTab('response');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred while generating the response.');
       console.error(err);
@@ -315,47 +317,49 @@ export default function OpenAIForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {renderAuthInputs()}
-      <div>
-        <label htmlFor="openAIUrl" className="block text-sm font-medium text-gray-700">
-          OpenAI API URL
-        </label>
-        <Input
-          id="openAIUrl"
-          value={openAIUrl}
-          onChange={(e) => setOpenAIUrl(e.target.value)}
-          required
-          className="mt-1"
-          placeholder="Enter OpenAI API URL"
-        />
-      </div>
-      <div>
-        <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">
-          Enter your prompt
-        </label>
-        <Textarea
-          id="prompt"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          required
-          className="mt-1"
-          rows={4}
-          placeholder="Type your prompt here..."
-        />
-      </div>
-      <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? 'Generating...' : 'Generate Response'}
-      </Button>
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+    <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {renderAuthInputs()}
+        <div>
+          <label htmlFor="openAIUrl" className="block text-sm font-medium text-gray-700">
+            OpenAI API URL
+          </label>
+          <Input
+            id="openAIUrl"
+            value={openAIUrl}
+            onChange={(e) => setOpenAIUrl(e.target.value)}
+            required
+            className="mt-1"
+            placeholder="Enter OpenAI API URL"
+          />
+        </div>
+        <div>
+          <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">
+            Enter your prompt
+          </label>
+          <Textarea
+            id="prompt"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            required
+            className="mt-1"
+            rows={4}
+            placeholder="Type your prompt here..."
+          />
+        </div>
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading ? 'Generating...' : 'Generate Response'}
+        </Button>
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+      </form>
       {renderTabs()}
-    </form>
+    </div>
   )
 }
 
