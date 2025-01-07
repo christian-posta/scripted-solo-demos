@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: model-failover
-          image: quay.io/solo-io/model-failover
+          image: gcr.io/field-engineering-eu/model-failover:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

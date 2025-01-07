@@ -2,6 +2,9 @@
 SOURCE_DIR=$PWD
 
 
+## Prerequisites / Clean up
+./reset-demo.sh --for 1  > /dev/null 2>&1
+
 backtotop
 desc "Let's see how we can remove sensitive API keys from the call"
 read -s

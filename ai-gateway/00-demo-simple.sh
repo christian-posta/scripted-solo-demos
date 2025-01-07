@@ -2,6 +2,9 @@
 SOURCE_DIR=$PWD
 
 
+## Prerequisites / Clean up
+./reset-demo.sh --for 0  > /dev/null 2>&1
+
 
 desc "Let's see the resources needed to route to LLM upstreams"
 
