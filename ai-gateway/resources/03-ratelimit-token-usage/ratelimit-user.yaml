@@ -8,7 +8,7 @@ spec:
     descriptors:
     - key: user-id
       rateLimit:
-        requestsPerUnit: 70
+        requestsPerUnit: 50
         unit: HOUR
     rateLimits:
     - actions:

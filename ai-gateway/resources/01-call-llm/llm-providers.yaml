@@ -3,21 +3,6 @@ kind: Upstream
 metadata:
   labels:
     app: gloo
-  name: mistralai
-  namespace: gloo-system
-spec:
-  ai:
-    mistral:
-      authToken:
-        secretRef:
-          name: mistralai-secret
-          namespace: gloo-system  
----
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  labels:
-    app: gloo
   name: openai
   namespace: gloo-system
 spec:

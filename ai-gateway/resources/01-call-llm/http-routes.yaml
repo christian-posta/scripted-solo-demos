@@ -24,29 +24,3 @@ spec:
       namespace: gloo-system
       group: gloo.solo.io
       kind: Upstream
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: mistralai
-  namespace: gloo-system
-spec:
-  parentRefs:
-    - name: ai-gateway
-      namespace: gloo-system
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /mistralai
-    filters:
-      - type: URLRewrite
-        urlRewrite:
-          path:
-            type: ReplaceFullPath
-            replaceFullPath: /v1/chat/completions
-    backendRefs:
-    - name: mistralai
-      namespace: gloo-system
-      group: gloo.solo.io
-      kind: Upstream

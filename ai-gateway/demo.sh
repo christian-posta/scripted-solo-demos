@@ -1,145 +1,172 @@
-# Task 1: Call LLM with Managed Credentials 
+. $(dirname ${BASH_SOURCE})/../util.sh
+SOURCE_DIR=$PWD
+
+
 
 desc "Let's see the resources needed to route to LLM upstreams"
 
+#################################################################
+############# Task 0
+#################################################################
+run "cat resources/00-basic-passthrough/upstreams.yaml"
+run "cat resources/00-basic-passthrough/http-routes.yaml"
 
+run "kubectl apply -f resources/00-basic-passthrough/"
+
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+OPENAI_API_KEY="KEY-HERE"
+desc "Will run the following curl command"
+desc "curl https://$GLOO_AI_GATEWAY:8080/v1/chat/completions \
+  -H \"Content-Type: application/json\" \
+  -H \"Authorization: Bearer $OPENAI_API_KEY\" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello! How are you?"
+      }
+    ]
+  }'"
+read -s
+source ~/bin/ai-keys
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello! How are you?"
+      }
+    ]
+  }'
+
+read -s
+backtotop
+desc "Let's see how we can remove sensitive API keys from the call"
+read -s
 #################################################################
 ############# Task 1
 #################################################################
-cat resources/01-call-llm/llm-providers.yaml
-cat resources/01-call-llm/http-routes.yaml
+
+run "cat resources/01-call-llm/llm-providers.yaml"
+run "cat resources/01-call-llm/http-routes.yaml"
 
 desc "Let's apply these resources"
-kubectl apply -f resources/01-call-llm/
+run "kubectl apply -f resources/01-call-llm/"
 
 export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 
 desc "Call open ai (with token auto injected by gw)"
-curl -v "$GLOO_AI_GATEWAY:8080/openai"  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
+run "curl -v \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -d '{
+    \"model\": \"gpt-3.5-turbo\",
+    \"messages\": [
       {
-        "role": "system",
-        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-      },
-      {
-        "role": "user",
-        "content": "Compose a poem that explains the concept of recursion in programming."
+        \"role\": \"user\",
+        \"content\": \"Tell me about Sedona, AZ in 20 words or fewer\"
       }
     ]
-  }' | jq
+  }' | jq"
 
 
-desc "Call mistral ai with token injected"
-
-curl -v --location "$GLOO_AI_GATEWAY:8080/mistralai" \
-     --data '{
-    "model": "mistral-large-latest",
-    "messages": [
-     {
-        "role": "user",
-        "content": "What is the best French cheese?"
-      }
-    ]
-  }' | jq
-
-
-
-
+backtotop
+desc "Let's see how we can call an LLM with a managed credential"
+read -s
 
 #################################################################
 ############# Task 2
 #################################################################
-backtotop
-desc "Restrict LLM calls to those authenticated with a JWT token"
-read -s
 
-desc "Let's add 02 route options to enfroce jwt"
+run "cat resources/02-secure-llm-jwt/vh-options.yaml"
+run "cat resources/02-secure-llm-jwt/route-options.yaml"
 
-cat resources/02-secure-llm-jwt/vh-options.yaml
-kubectl apply -f resources/02-secure-llm-jwt/vh-options.yaml
-
-cat resources/02-secure-llm-jwt/route-options.yaml
-kubectl apply -f resources/02-secure-llm-jwt/route-options.yaml
+run "kubectl apply -f resources/02-secure-llm-jwt/"
 
 desc "Try calling without a token:"
 
 export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-curl -v "$GLOO_AI_GATEWAY:8080/openai"  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
+run "curl -v \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -d '{
+    \"model\": \"gpt-3.5-turbo\",
+    \"messages\": [
       {
-        "role": "system",
-        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-      },
-      {
-        "role": "user",
-        "content": "Compose a poem that explains the concept of recursion in programming."
+        \"role\": \"user\",
+        \"content\": \"Tell me about Sedona, AZ in 20 words or fewer\"
       }
     ]
-  }'
+  }' | jq"
 
 
-
-desc "Now let's call with a token get a token"
-desc "Let's look at the Eitan Token"
-cat resources/eitan-openai.token
+desc "Now let's call with a token with the right permissions"
 
 export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
-curl "$GLOO_AI_GATEWAY:8080/openai" -H "Content-Type: application/json" -H "Authorization: Bearer $EITAN_TOKEN" -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
+cat resources/tokens/eitan-openai.token | jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' -
+
+read -s
+
+run "curl \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $EITAN_TOKEN\" -d '{
+    \"model\": \"gpt-3.5-turbo\",
+    \"messages\": [
       {
-        "role": "system",
-        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-      },
-      {
-        "role": "user",
-        "content": "Compose a poem that explains the concept of recursion in programming."
+        \"role\": \"user\",
+        \"content\": \"Tell me about Jerome, AZ in 20 words or fewer\"
       }
     ]
-  }'
+  }' | jq"
 
 
-desc "Let's look at the Keith Token"
-cat resources/keith-openai.token
-
-
-export KEITH_TOKEN=$(cat resources/tokens/keith-mistral.token)
-
-curl --location "$GLOO_AI_GATEWAY:8080/mistralai" \
-    --header "Authorization: Bearer $KEITH_TOKEN" \
-     --data '{
-    "model": "mistral-large-latest",
-    "messages": [
-     {
-        "role": "user",
-        "content": "What is the best French cheese?"
-      }
-    ]
-  }' 
-
-
-
-#### Try call with the wrong token
-curl --location "$GLOO_AI_GATEWAY:8080/mistralai" \
-    --header "Authorization: Bearer $EITAN_TOKEN" \
-     --data '{
-    "model": "mistral-large-latest",
-    "messages": [
-     {
-        "role": "user",
-        "content": "What is the best French cheese?"
-      }
-    ]
-  }' 
-
-
-
-
+backtotop
+desc "Let's see how we can implement rate limiting based on prompt tokens"
+read -s
 #################################################################
+############# Task 3
+#################################################################
+
+
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+
+desc "Let's create a token rate limit (70 per hour) based on user id"
+
+run "cat resources/05-ratelimit-token-usage/ratelimit-user.yaml"
+run "cat resources/05-ratelimit-token-usage/openai-route-ratelimit.yaml"
+
+run "kubectl apply -f resources/05-ratelimit-token-usage/"
+
+export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
+run "curl \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $EITAN_TOKEN\" -d '{
+    \"model\": \"gpt-3.5-turbo\",
+    \"messages\": [
+      {
+        \"role\": \"user\",
+        \"content\": \"Tell me about Flagstaff, AZ which is a city in Arizona, with -- believe it or not, a ski resort. \"
+      }
+    ]
+  }' | jq"
+
+desc "This first request goes through, but subsequent will fail"
+run "curl \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $EITAN_TOKEN\" -d '{
+    \"model\": \"gpt-3.5-turbo\",
+    \"messages\": [
+      {
+        \"role\": \"user\",
+        \"content\": \"Tell me about Williams, AZ \"
+      }
+    ]
+  }' | jq"
+
+
+###############################################################################
+## Exit
+###############################################################################
+
+exit 
+
+###############################################################################
 ############# Task 3
 #################################################################
 backtotop
@@ -283,62 +310,8 @@ desc "Notice that the CC numbers are __Masked__ with XXXX-XXXX-XXXX-1234"
 read -s
 
 
-#################################################################
-############# Task 5
-#################################################################
-back
-desc "How can we protect cost, usage, and rate limit based on tokens?"
-read -s
-
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-desc "Let's put back our JWT authentication"
-
-cat resources/05-ratelimit-token-usage/vh-options.yaml
-kubectl apply -f resources/05-ratelimit-token-usage/vh-options.yaml
 
 
-desc "Let's create a token rate limit (70 per hour) based on user id"
-
-cat resources/05-ratelimit-token-usage/ratelimit-user.yaml
-kubectl apply -f resources/05-ratelimit-token-usage/ratelimit-user.yaml
-
-desc "Let's add this token rate limit specifically to the openai route"
-cat resources/05-ratelimit-token-usage/openai-route-ratelimit.yaml
-kubectl apply -f resources/05-ratelimit-token-usage/openai-route-ratelimit.yaml
-
-
-desc "Let's use Eitan's token"
-
-export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
-curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-      },
-      {
-        "role": "user",
-        "content": "Compose a poem that explains the concept of recursion in programming."
-      }
-    ]
-  }'
-
-desc "This first request goes through, but subsequent will fail"
-curl -v "$GLOO_AI_GATEWAY:8080/openai" --header "Authorization: Bearer $EITAN_TOKEN" -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
-      },
-      {
-        "role": "user",
-        "content": "Compose a poem that explains the concept of recursion in programming."
-      }
-    ]
-  }'
 
 
 #################################################################
