@@ -33,6 +33,12 @@ delete_07(){
     kubectl delete -f resources/extensions/vector-db.yaml
 }
 
+delete_08(){
+    kubectl delete -f resources/08-provider-traffic-shift/
+    kubectl delete -f resources/extensions/ollama/ollama-ns.yaml
+    kubectl delete -f resources/extensions/ollama/ollama-deploy.yaml
+}
+
 
 delete_all(){
     delete_00
@@ -43,6 +49,7 @@ delete_all(){
     delete_05
     delete_06
     delete_07
+    delete_08
 }
 
 
@@ -110,6 +117,20 @@ reset_for_07() {
     kubectl apply -f resources/extensions/vector-db.yaml
 }
 
+reset_for_08() {
+    delete_00
+    delete_02
+    delete_03
+    delete_04
+    delete_05
+    delete_06
+    delete_07
+    delete_08
+    kubectl apply -f resources/01-call-llm/
+    kubectl apply -f resources/extensions/ollama/ollama-ns.yaml
+    kubectl apply -f resources/extensions/ollama/ollama-deploy.yaml
+}
+
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --for)
@@ -124,7 +145,8 @@ while [[ "$#" -gt 0 ]]; do
                 5) reset_for_05 ;;  
                 6) reset_for_06 ;;
                 7) reset_for_07 ;;
-                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, 4, 5, 6, or 7." ;;
+                8) reset_for_08 ;;
+                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, 4, 5, 6, 7, or 8." ;;
             esac
             exit 0
             ;;

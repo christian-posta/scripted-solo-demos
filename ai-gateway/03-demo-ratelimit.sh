@@ -13,9 +13,6 @@ read -s
 #################################################################
 
 
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-
 desc "Let's create a token rate limit (50 per hour) based on user id"
 
 run "cat resources/03-ratelimit-token-usage/ratelimit-user.yaml"

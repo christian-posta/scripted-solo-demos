@@ -111,7 +111,7 @@ containerdConfigPatches:
     endpoint = ["http://gcr:${cache_port}"]
 EOF
 
-kind create cluster --name kind${number} --config kind${number}.yaml --image  kindest/node:v1.28.0
+kind create cluster --name kind${number} --config kind${number}.yaml --image  kindest/node:v1.30.0
 
 ipkind=$(docker inspect kind${number}-control-plane | jq -r '.[0].NetworkSettings.Networks[].IPAddress')
 networkkind=$(echo ${ipkind} | awk -F. '{ print $1"."$2 }')

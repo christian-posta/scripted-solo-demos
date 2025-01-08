@@ -26,6 +26,9 @@ backtotop
 desc "Let's add caching"
 read -s
 
+desc "We are going to use a database to store the cache"
+run "kubectl get po -n gloo-system"
+
 run "cat resources/06-semantic-cache/route-options.yaml"
 run "kubectl apply -f resources/06-semantic-cache/route-options.yaml"
 

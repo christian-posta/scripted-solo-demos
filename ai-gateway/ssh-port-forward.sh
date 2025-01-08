@@ -6,9 +6,13 @@ BOX=${2:-gmv2}
 ssh -L 8080:172.18.101.1:8080 -C -N -l $USER $BOX &
 GW_PID="$!"
 
+ssh -L 3000:172.18.101.2:3000 -C -N -l $USER $BOX &
+GRAF_PID="$!"
+
 function cleanup {
 
   kill -9 $GW_PID
+  kill -9 $GRAF_PID
 }
 
 trap cleanup EXIT

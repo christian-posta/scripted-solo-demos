@@ -3,6 +3,7 @@ SOURCE_DIR=$PWD
 
 
 ## Prerequisites / Clean up
+source ./call-gateway.sh
 ./reset-demo.sh --for 1  > /dev/null 2>&1
 
 backtotop
@@ -18,18 +19,11 @@ run "cat resources/01-call-llm/http-routes.yaml"
 desc "Let's apply these resources"
 run "kubectl apply -f resources/01-call-llm/"
 
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
 
 desc "Call open ai (with token auto injected by gw)"
-run "curl -v \"$GLOO_AI_GATEWAY:8080/openai\" -H \"Content-Type: application/json\" -d '{
-    \"model\": \"gpt-3.5-turbo\",
-    \"messages\": [
-      {
-        \"role\": \"user\",
-        \"content\": \"Tell me about Sedona, AZ in 20 words or fewer\"
-      }
-    ]
-  }' | jq"
+print_gateway_command 
+read -s
+call_gateway 
+read -s
 
 

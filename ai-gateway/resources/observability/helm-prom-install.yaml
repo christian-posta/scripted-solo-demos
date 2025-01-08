@@ -1,0 +1,13 @@
+alertmanager:
+  enabled: false
+grafana:
+  service:
+    type: LoadBalancer
+    port: 3000
+nodeExporter:
+  enabled: false
+prometheus:
+  prometheusSpec:
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false

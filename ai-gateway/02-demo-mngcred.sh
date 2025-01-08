@@ -24,8 +24,6 @@ run "kubectl apply -f resources/02-secure-llm-jwt/"
 
 
 
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
 desc "Try calling without a token:"
 print_gateway_command
 read -s
