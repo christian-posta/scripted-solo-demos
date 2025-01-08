@@ -11,13 +11,6 @@ spec:
   options:
     ai:
       promptGuard:
-        request:
-          customResponse:
-            message: "Rejected due to inappropriate content"
-          regex:
-            action: REJECT
-            builtins:
-            - CREDIT_CARD
         response:
           regex:
             builtins:

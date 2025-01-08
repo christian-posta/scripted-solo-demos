@@ -34,7 +34,7 @@ _build_curl_command() {
           \"content\": \"$user_prompt\"
         }
       ]
-    }' | jq"
+    }'"
 }
 
 # Function to print the curl command
@@ -45,6 +45,11 @@ print_gateway_command() {
 # Function to execute the curl command
 call_gateway() {
   _build_curl_command "$@"
-  eval "$(_build_curl_command "$@")"
+  response=$(eval "$(_build_curl_command "$@")")
+  if echo "$response" | jq . >/dev/null 2>&1; then
+      echo "$response" | jq .
+  else
+      echo "$response"
+  fi
 }
 

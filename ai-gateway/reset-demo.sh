@@ -91,6 +91,9 @@ reset_for_05() {
     delete_03
     delete_04
     delete_05
+    delete_06
+    delete_07
+    delete_08
     kubectl apply -f resources/01-call-llm/
 }
 

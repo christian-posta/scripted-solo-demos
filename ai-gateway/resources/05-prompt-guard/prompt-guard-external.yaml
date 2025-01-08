@@ -19,6 +19,4 @@ spec:
                 secretRef:
                   name: openai-secret
                   namespace: gloo-system
-          customResponse:
-            message: "Rejected due to inappropriate content"
 
