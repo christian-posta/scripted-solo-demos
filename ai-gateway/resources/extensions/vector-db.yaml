@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: db
-        image: quay.io/solo-io/vector-db
+        image: gcr.io/field-engineering-eu/vector-db
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5432

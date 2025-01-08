@@ -17,5 +17,7 @@ spec:
             collectionName: default
         embedding:
           openai:
-            authTokenRef: openai-secret
-
+            authToken:
+              secretRef:
+                name: openai-secret
+                namespace: gloo-system
