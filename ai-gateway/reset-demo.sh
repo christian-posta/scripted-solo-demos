@@ -20,12 +20,17 @@ delete_04(){
     kubectl delete -f resources/04-model-failover/
 }
 
+delete_05(){
+    kubectl delete -f resources/05-prompt-guard/
+}
+
 delete_all(){
     delete_00
     delete_01
     delete_02
     delete_03
     delete_04
+    delete_05
 }
 
 
@@ -61,6 +66,15 @@ reset_for_04() {
     kubectl apply -f resources/extensions/model-failover.yaml
 }
 
+reset_for_05() {
+    delete_00
+    delete_02
+    delete_03
+    delete_04
+    delete_05
+    kubectl apply -f resources/01-call-llm/
+}
+
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -73,7 +87,8 @@ while [[ "$#" -gt 0 ]]; do
                 2) reset_for_02 ;;
                 3) reset_for_03 ;;
                 4) reset_for_04 ;;
-                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, or 4." ;;
+                5) reset_for_05 ;;
+                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, 4, or 5." ;;
             esac
             exit 0
             ;;
