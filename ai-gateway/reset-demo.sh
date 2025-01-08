@@ -23,6 +23,11 @@ delete_04(){
 delete_05(){
     kubectl delete -f resources/05-prompt-guard/
 }
+delete_06(){
+    kubectl delete -f resources/06-semantic-cache/
+}
+
+
 
 delete_all(){
     delete_00
@@ -75,6 +80,16 @@ reset_for_05() {
     kubectl apply -f resources/01-call-llm/
 }
 
+reset_for_06() {
+    delete_00
+    delete_02
+    delete_03
+    delete_04
+    delete_05
+    delete_06
+    kubectl apply -f resources/01-call-llm/
+    kubectl apply -f resources/extensions/redis.yaml
+}
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -87,8 +102,9 @@ while [[ "$#" -gt 0 ]]; do
                 2) reset_for_02 ;;
                 3) reset_for_03 ;;
                 4) reset_for_04 ;;
-                5) reset_for_05 ;;
-                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, 4, or 5." ;;
+                5) reset_for_05 ;;  
+                6) reset_for_06 ;;
+                *) echo "Invalid option for --reset-for. Use all, 0, 1, 2, 3, 4, 5, or 6." ;;
             esac
             exit 0
             ;;
