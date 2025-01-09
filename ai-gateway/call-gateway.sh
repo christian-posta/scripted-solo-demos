@@ -10,10 +10,15 @@ _build_curl_command() {
     local path="${3:-openai}"
     local system_prompt="${4:-You grew up in Phoenix, AZ and are now a travel expert.}"
     local user_prompt="${5:-Tell me about Sedona, AZ in 20 words or fewer.}"
+    local x_action="${6:-}"
 
     local headers=("-H" "\"content-type:application/json\"")
     if [[ -n "$token" ]]; then
         headers+=("-H" "\"Authorization: Bearer $token\"")
+    fi
+
+    if [[ -n "$x_action" ]]; then
+        headers+=("-H" "\"x-action: $x_action\"")
     fi
 
     echo "curl -v \"$GLOO_AI_GATEWAY:8080/$path\" ${headers[@]} -d '{

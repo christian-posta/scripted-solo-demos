@@ -22,6 +22,7 @@ delete_04(){
 
 delete_05(){
     kubectl delete -f resources/05-prompt-guard/
+    kubectl delete -f resources/extensions/promptguard.yaml
 }
 delete_06(){
     kubectl delete -f resources/extensions/redis.yaml
@@ -35,8 +36,7 @@ delete_07(){
 
 delete_08(){
     kubectl delete -f resources/08-provider-traffic-shift/
-    kubectl delete -f resources/extensions/ollama/ollama-ns.yaml
-    kubectl delete -f resources/extensions/ollama/ollama-deploy.yaml
+    kubectl delete -f resources/extensions/ollama.yaml
 }
 
 
@@ -95,6 +95,7 @@ reset_for_05() {
     delete_07
     delete_08
     kubectl apply -f resources/01-call-llm/
+    kubectl apply -f resources/extensions/promptguard.yaml
 }
 
 reset_for_06() {
@@ -130,8 +131,7 @@ reset_for_08() {
     delete_07
     delete_08
     kubectl apply -f resources/01-call-llm/
-    kubectl apply -f resources/extensions/ollama/ollama-ns.yaml
-    kubectl apply -f resources/extensions/ollama/ollama-deploy.yaml
+    kubectl apply -f resources/extensions/ollama.yaml
 }
 
 while [[ "$#" -gt 0 ]]; do

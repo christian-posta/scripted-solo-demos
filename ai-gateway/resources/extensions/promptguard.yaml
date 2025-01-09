@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promptguard
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: promptguard
+  template:
+    metadata:
+      labels:
+        app: promptguard
+    spec:
+      containers:
+      - name: promptguard
+        image: presidio-guardrail:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: promptguard
+  namespace: gloo-system
+spec:
+  selector:
+    app: promptguard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP  # Change to LoadBalancer if you need external access

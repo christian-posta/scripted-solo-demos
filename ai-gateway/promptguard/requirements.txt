@@ -1,0 +1,6 @@
+fastapi[standard]
+uvicorn[standard]
+presidio_analyzer[transformers]
+presidio_anonymizer
+transformers
+openai

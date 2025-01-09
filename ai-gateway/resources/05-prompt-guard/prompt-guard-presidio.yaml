@@ -1,0 +1,20 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-prompt-guard
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    ai:
+      promptGuard:
+        request:
+          webhook:
+            forwardHeaders:
+              - key: x
+                matchType: PREFIX
+            host: "promptguard.gloo-system.svc.cluster.local"
+            port: 80

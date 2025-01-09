@@ -12,9 +12,6 @@ read -s
 ############# Task 5
 #################################################################
 
-
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
 ## TODO: should actually, show the open ai content moderation first; and show that it can be done
 ## at the provider, but that it's better to catch it at the gateway if you can to save on costs
 ## and the fact that sensitive information should not be passed to the model
