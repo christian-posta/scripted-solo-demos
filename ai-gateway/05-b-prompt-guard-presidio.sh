@@ -10,8 +10,8 @@ desc "We can also call out to our own Presidio guardrail service"
 desc "Make sure the presidio service is running"
 read -s
 
-run "cat resources/05-prompt-guard/prompt-guard-presidio.yaml"
-run "kubectl apply -f resources/05-prompt-guard/prompt-guard-presidio.yaml"
+run "cat resources/05-prompt-guard/prompt-guard-presidio-local.yaml"
+run "kubectl apply -f resources/05-prompt-guard/prompt-guard-presidio-local.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command "" "" "" "" "What type of number is 5105-1051-0510-5100" "mask"

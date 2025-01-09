@@ -95,7 +95,7 @@ reset_for_05() {
     delete_07
     delete_08
     kubectl apply -f resources/01-call-llm/
-    kubectl apply -f resources/extensions/promptguard.yaml
+    # kubectl apply -f resources/extensions/promptguard.yaml
 }
 
 reset_for_06() {
