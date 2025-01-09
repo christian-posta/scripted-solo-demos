@@ -1,0 +1,30 @@
+apiVersion: gateway.gloo.solo.io/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gloo-gateway-override
+  namespace: gloo-system
+spec:
+  kube:
+    aiExtension:
+      env:
+        - name: "LOG_LEVEL"
+          value: "debug"    
+      enabled: true
+      tracing:
+        insecure: true
+        grpc:
+          host: "jaeger-collector.monitoring.svc.cluster.local"
+          port: 4317
+      stats:
+        customLabels:
+          - name: "team"
+            metadataKey: "principal:team"
+          - name: "name"
+            metadataKey: "principal:name"
+          - name: "id"
+            metadataKey: "principal:sub"      
+      ports:
+      - containerPort: 9092
+        name: ai-monitoring
+    deployment:
+      replicas: 1

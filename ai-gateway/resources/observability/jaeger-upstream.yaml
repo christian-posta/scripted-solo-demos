@@ -1,0 +1,61 @@
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: gloo
+  name: jaeger
+spec:
+  useHttp2: true
+  static:
+    hosts:
+    - addr: "jaeger-collector.monitoring.svc.cluster.local"
+      port: 4317
+---
+apiVersion: gateway.solo.io/v1
+kind: HttpListenerOption
+metadata:
+  name: log-provider
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: ai-gateway
+  options:
+    httpConnectionManagerSettings:
+      tracing:
+        spawnUpstreamSpan: true
+        metadataForTags:
+        - tag: ai.model
+          value:
+            namespace: ai.gloo.solo.io
+            key: model
+        - tag: ai.provider_model
+          value:
+            namespace: ai.gloo.solo.io
+            key: provider_model
+        - tag: ai.streaming
+          value:
+            namespace: ai.gloo.solo.io
+            key: streaming
+        - tag: ai.prompt_tokens
+          value:
+            namespace: ai.gloo.solo.io
+            key: prompt_tokens
+        - tag: ai.completion_tokens
+          value:
+            namespace: ai.gloo.solo.io
+            key: completion_tokens
+        - tag: user.name
+          value:
+            namespace: envoy.filters.http.jwt_authn
+            key: principal.name
+        - tag: user.team
+          value:
+            namespace: envoy.filters.http.jwt_authn
+            key: principal.team
+        openTelemetryConfig:
+          serviceName: gloo-proxy
+          collectorUpstreamRef:
+            namespace: "ai-gateway"
+            name: "jaeger"

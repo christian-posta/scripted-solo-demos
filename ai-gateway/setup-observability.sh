@@ -31,3 +31,12 @@ kubectl apply -f ./resources/observability/pod-monitor.yaml -n otel
 
 kubectl -n monitoring create cm envoy-dashboard --from-file=./resources/observability/envoy.json
 kubectl label -n monitoring cm envoy-dashboard grafana_dashboard=1
+
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+helm upgrade -i -n monitoring jaeger jaegertracing/jaeger --values ./resources/observability/jaeger.yaml
+kubectl apply -f ./resources/observability/jaeger-upstream.yaml -n gloo-system
+
+kubectl expose deployment jaeger --type=LoadBalancer --name=jaeger-loadbalancer --port=16686 --target-port=16686 -n monitoring
+
+kubectl apply -f ./resources/observability/ai-gateway-parameters.yaml -n gloo-system
+

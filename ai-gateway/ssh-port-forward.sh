@@ -6,6 +6,8 @@ GRAFANA_IP=$(ssh $USER@$BOX "kubectl get svc kube-prometheus-stack-grafana  -n m
 
 GW_IP=$(ssh $USER@$BOX "kubectl get svc gloo-proxy-ai-gateway  -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
 
+JAEGER_IP=$(ssh $USER@$BOX "kubectl get svc jaeger-loadbalancer -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
+
 # Gateway
 ssh -L 8080:$GW_IP:8080 -C -N -l $USER $BOX &
 GW_PID="$!"
@@ -13,10 +15,14 @@ GW_PID="$!"
 ssh -L 3000:$GRAFANA_IP:3000 -C -N -l $USER $BOX &
 GRAF_PID="$!"
 
+ssh -L 16686:$JAEGER_IP:16686 -C -N -l $USER $BOX &
+JAEGER_PID="$!"
+
 function cleanup {
 
   kill -9 $GW_PID
   kill -9 $GRAF_PID
+  kill -9 $JAEGER_PID
 }
 
 trap cleanup EXIT

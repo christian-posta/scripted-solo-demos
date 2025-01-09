@@ -19,3 +19,4 @@ kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
 
 
 kubectl --context $CONTEXT apply -f resources/ai-gateway.yaml
+kubectl --context $CONTEXT apply -f resources/access-logging-options.yaml

@@ -25,7 +25,7 @@ gloo-fed:
     enable: false
 # disable everything else for a simple deployment
 observability:
-  enabled: false
+  enabled: true
 prometheus:
   enabled: false
 grafana:
