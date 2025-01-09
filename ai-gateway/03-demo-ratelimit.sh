@@ -3,7 +3,7 @@ SOURCE_DIR=$PWD
 
 ## Prerequisites / Clean up
 source ./call-gateway.sh
-./reset-demo.sh --reset-for 3  > /dev/null 2>&1
+./reset-demo.sh --for 3 > /dev/null 2>&1
 
 backtotop
 desc "Let's see how we can implement rate limiting based on prompt tokens"
