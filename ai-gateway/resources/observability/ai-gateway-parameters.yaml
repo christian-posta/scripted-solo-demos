@@ -5,6 +5,10 @@ metadata:
   namespace: gloo-system
 spec:
   kube:
+    podTemplate:
+      extraAnnotations:
+        "prometheus.io/scrape2": "true"
+        "prometheus.io/port2": "9092"
     aiExtension:
       env:
         - name: "LOG_LEVEL"

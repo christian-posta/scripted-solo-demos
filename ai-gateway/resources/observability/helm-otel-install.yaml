@@ -52,6 +52,47 @@ config:
             - source_labels: [__meta_kubernetes_pod_name]
               action: replace
               target_label: pod
+
+        - job_name: gloo-gateways-second
+          honor_labels: true
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - action: keep
+              # Keep pods with label_gloo=kube-gateway
+              regex: kube-gateway
+              source_labels:
+                - __meta_kubernetes_pod_label_gloo
+
+            # Only keep pods that have prometheus.io/scrape2=true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape2]
+              action: keep
+              regex: true
+
+            # Use the second path annotation
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path2]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+
+            # Build the address from the Pod IP and the second port annotation
+            - action: replace
+              source_labels:
+                - __meta_kubernetes_pod_ip
+                - __meta_kubernetes_pod_annotation_prometheus_io_port2
+              separator: ':'
+              target_label: __address__
+
+            - action: labelmap
+              regex: __meta_kubernetes_pod_label_(.+)
+
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kube_namespace
+
+            - source_labels: [__meta_kubernetes_pod_name]
+              action: replace
+              target_label: pod              
     prometheus/gloo-controlplane:
       config:
         scrape_configs:
