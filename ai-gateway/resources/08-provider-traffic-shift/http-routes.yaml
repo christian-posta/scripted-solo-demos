@@ -1,52 +1,42 @@
----
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: openai
+  name: ollama-qwen
   namespace: gloo-system
 spec:
   parentRefs:
-    - name: ai-gateway
-      namespace: gloo-system
+  - name: ai-gateway
+    namespace: gloo-system
   rules:
-  - matches:
+  - backendRefs:
+    - group: gloo.solo.io
+      kind: Upstream
+      name: ollama-qwen-0.5-upstream
+      namespace: gloo-system
+      weight: 50
+    - group: gloo.solo.io
+      kind: Upstream
+      name: ollama-qwen-1.8-upstream
+      namespace: gloo-system
+      weight: 50
+    filters:
+    - extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: ollama-qwen-route-policies
+      type: ExtensionRef
+    matches:
     - path:
         type: PathPrefix
-        value: /openai
-    filters:
-      - type: URLRewrite
-        urlRewrite:
-          path:
-            type: ReplaceFullPath
-            replaceFullPath: /v1/chat/completions
-    backendRefs:
-    - name: openai
-      namespace: gloo-system
-      group: gloo.solo.io
-      kind: Upstream
+        value: /qwen
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
 metadata:
-  name: mistralai
+  name: ollama-qwen-route-policies
   namespace: gloo-system
 spec:
-  parentRefs:
-    - name: ai-gateway
-      namespace: gloo-system
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /mistralai
-    filters:
-      - type: URLRewrite
-        urlRewrite:
-          path:
-            type: ReplaceFullPath
-            replaceFullPath: /v1/chat/completions
-    backendRefs:
-    - name: mistralai
-      namespace: gloo-system
-      group: gloo.solo.io
-      kind: Upstream
+  options:
+    jwt:
+      disable: true
+    prefixRewrite: /v1/chat/completions

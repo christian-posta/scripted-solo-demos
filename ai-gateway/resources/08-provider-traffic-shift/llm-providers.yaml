@@ -1,30 +1,25 @@
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  labels:
-    app: gloo
-  name: mistralai
-  namespace: gloo-system
-spec:
-  ai:
-    mistral:
-      authToken:
-        secretRef:
-          name: mistralai-secret
-          namespace: gloo-system  
----
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  labels:
-    app: gloo
-  name: openai
+  name: ollama-qwen-0.5-upstream
   namespace: gloo-system
 spec:
   ai:
     openai:
-      authToken:
-        secretRef:
-          name: openai-secret
-          namespace: gloo-system  
-
+      customHost:
+        host: ollama-qwen.ollama.svc.cluster.local
+        port: 11434
+      model: qwen:0.5b
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: ollama-qwen-1.8-upstream
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      customHost:
+        host: ollama-qwen.ollama.svc.cluster.local
+        port: 11434
+      model: qwen:1.8b
