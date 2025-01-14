@@ -35,6 +35,9 @@ kubectl label -n monitoring cm envoy-dashboard grafana_dashboard=1
 kubectl -n monitoring create cm gg-dashboard --from-file=./resources/observability/gw-dashboard.json 
 kubectl label -n monitoring cm gg-dashboard grafana_dashboard=1
 
+kubectl -n monitoring create cm llm-dashboard --from-file=./resources/observability/llm-dashboard.json
+kubectl label -n monitoring cm llm-dashboard grafana_dashboard=1
+
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm upgrade -i -n monitoring jaeger jaegertracing/jaeger --values ./resources/observability/jaeger.yaml
 kubectl apply -f ./resources/observability/jaeger-upstream.yaml -n gloo-system
