@@ -5,12 +5,12 @@ grafana:
     type: LoadBalancer
     port: 3000
   # add the loki data source
-  additionalDataSources: 
-    - name: Loki
-      type: loki
-      url: http://loki-gateway.monitoring.svc.cluster.local
-      access: proxy
-      isDefault: false
+  #additionalDataSources: 
+  #  - name: Loki
+  #    type: loki
+  #    url: http://loki-gateway.monitoring.svc.cluster.local
+   #   access: proxy
+   #   isDefault: false
 nodeExporter:
   enabled: false
 prometheus:

@@ -47,10 +47,9 @@ kubectl apply -f ./resources/observability/jaeger-upstream.yaml -n gloo-system
 kubectl expose deployment jaeger --type=LoadBalancer --name=jaeger-loadbalancer --port=16686 --target-port=16686 -n monitoring
 
 # Install Loki for logging
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-
-helm upgrade --install loki grafana/loki --namespace monitoring --values ./resources/observability/loki-install.yaml
+#helm repo add grafana https://grafana.github.io/helm-charts
+#helm repo update
+#helm upgrade --install loki grafana/loki --namespace monitoring --values ./resources/observability/loki-install.yaml
 
 # set up the ai-gateway parameters with tracing tags and metrics
 kubectl apply -f ./resources/observability/ai-gateway-parameters.yaml -n gloo-system
