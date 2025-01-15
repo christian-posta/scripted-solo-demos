@@ -2,6 +2,9 @@
 
 ./setup-kind.sh
 
+# Set up Local LLM
+kubectl apply -f resources/extensions/ollama.yaml
+
 CONTEXT="${1:-ai-demo}"
 
 kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml

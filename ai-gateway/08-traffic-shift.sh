@@ -3,32 +3,51 @@ SOURCE_DIR=$PWD
 
 ## Prerequisites / Clean up
 source ./call-gateway.sh
-./reset-demo.sh --for 7  > /dev/null 2>&1
+./reset-demo.sh --for 8  > /dev/null 2>&1
 
 backtotop
-desc "Let's see if we can improve prompt performance by using RAG"
+desc "Let's take a look at shifting traffic between providers"
 read -s
 #################################################################
 ############# Task 7
 #################################################################
 
-
-desc "Try calling the LLM without RAG"
-print_gateway_command "" "" "" "" "How many varieties of cheese are in France?"
-read -s
-call_gateway "" "" "" "" "How many varieties of cheese are in France?"
+desc "As we've seen, we can route traffic to OpenAI"
+desc "Let's see if we can route traffic to a locally running LLM"
 read -s
 
+run "kubectl get po -n ollama"
+run "cat resources/08-provider-traffic-shift/llm-providers.yaml"
+run "kubectl apply -f resources/08-provider-traffic-shift/llm-providers.yaml"
+
+run "cat resources/08-provider-traffic-shift/http-routes.yaml"
+run "kubectl apply -f resources/08-provider-traffic-shift/http-routes.yaml"
+
+backtotop
+desc "Let's test the traffic shifting"
+read -s
+
+desc "Call LLM providers"
+
+for i in {1..10}; do
+  cmd=$(print_gateway_command)
+  cmd=${cmd/-v/-s}
+  response=$(bash -c "$cmd")
+  model=$(echo "$response" | jq -r '.model')
+  echo "Run $i: Model: $model"
+done
 
 
 backtotop
-desc "Let's add RAG"
+desc "Now let's route all traffic to the local LLM"
 read -s
 
-run "cat resources/07-rag/route-options.yaml"
-run "kubectl apply -f resources/07-rag/route-options.yaml"
+run "kubectl apply -f resources/08-provider-traffic-shift/http-routes-qwen-100.yaml"
 
-desc "Try calling LLM again, so it wil be cached"
-print_gateway_command "" "" "" "" "How many varieties of cheese are in France?"
-read -s
-call_gateway "" "" "" "" "How many varieties of cheese are in France?"
+for i in {1..10}; do
+  cmd=$(print_gateway_command)
+  cmd=${cmd/-v/-s}
+  response=$(bash -c "$cmd")
+  model=$(echo "$response" | jq -r '.model')
+  echo "Run $i: Model: $model"
+done

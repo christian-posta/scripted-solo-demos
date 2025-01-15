@@ -36,7 +36,6 @@ delete_07(){
 
 delete_08(){
     kubectl delete -f resources/08-provider-traffic-shift/
-    kubectl delete -f resources/extensions/ollama.yaml
 }
 
 

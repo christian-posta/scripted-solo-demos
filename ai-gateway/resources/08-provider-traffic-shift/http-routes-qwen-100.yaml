@@ -23,9 +23,9 @@ spec:
         kind: Upstream
         name: ollama-qwen-0.5-upstream
         namespace: gloo-system
-        weight: 50
+        weight: 100
       - group: gloo.solo.io
         kind: Upstream
         name: openai
         namespace: gloo-system
-        weight: 50
+        weight: 0
