@@ -6,8 +6,8 @@ from datetime import datetime
 
 import os
 
-USER1="eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJKb2huIERvZSIsInN1YiI6Impkb2UxIiwidGVhbSI6InJldHVybnMiLCJsbG1zIjp7Im9sbGFtYSI6WyJxd2VuLTAuNWIiXX19.SGepFax_pebgIxP1ilT_AynOu5Y-kgg7AI5iR8iGR3HhfYYFBhs9tH9BAZyVgXLS99ZEZrIR5bhwj7TbNqF09TQOeUsL06ersMtJldHibSSH6lJAj-Orr9RsacmCmt1jHpKRk2O_7k0iAXinfnezFQJ3-dMjW23lM83S7P3Ub8jDghoe1wIQPGQh5OBVQYlSRqXrawjH-P15X2NsEo7cG1wuv74LBVMXixsMivvHJU_T5u200F0-LVX7qmHKuC6fc1bZogIe9AZAFB0TrgtzA7Q3dP1a2KrVoCIcG7jwu_a0xcDNXoaQSG4BxBm_017VYS_cfkmQXzwLrNenBAwX7w"
-USER2="eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJKb2hubnkgRG9lIiwic3ViIjoiamRvZTIiLCJ0ZWFtIjoicmV0dXJucyIsImxsbXMiOnsib2xsYW1hIjpbInF3ZW4tMC41YiJdfX0.FkN6UJIwTa9lexZz6DG5FHMJ5tdtXdMORQpaTGUyW55fOt6jTYn5BGEV0MMzflXj9HHMCxumyQXEY2FAF0tanJ71TfIuviCvwtCeue3UPwCaoJhaLZcMr5zZyuMwp4StQ18ovwQly2OOSvrV13NmOa4M-6VIBFSnjGte1WSl5OGcmMjH4GUn1TINRWXIy_CmaL74mv2qL3azhnMuZwxvGEfVENCoei2Q66ePVWgVXA0D1LZohCSHye11D7PWprEbdMgzAA8XHP0FM2SctLWhwKzQwWIv3CSvCcWLXOCsv__5ru81_xvqhDYqrdA-CZEx4jcby5QaQ-rzrHLlvImNNg"
+USER1="eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJKb2huIERvZSIsInN1YiI6Impkb2UxIiwidGVhbSI6ImNzciIsImxsbXMiOnsib2xsYW1hIjpbInF3ZW4tMC41YiJdfX0.ptkENx2Q8yIaX9-BobGhe7OaHde3PjN_Rv-EITy83fZjrIRclkk5AL4GlmX_UcK6iGewEV5MiSRBkpNcFrWJYQE-8Dg92609jtxbBBmt6Zx10y_tw5NqKpfbhZrtT7S_FufDAdAh4QVWqGrvC6WOKRrDAOj4uGAMwv6YKf0kBLkP56J3aBsqkZ-ZSb4eVqfoYH9RBr-X7JBgyIg4MVQyxpmEv-0tzlKNDisIChPb5bkMJcGzYRModwbx87IV_mXaac5cmUa_sRLneAXNyRuXxRG-4Jvm31HMH_uCsiPxkgsRAi7_8LHOGcWMI5WrOH_FsRcRzIHaQBUt4NchcqxDUA"
+USER2="eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJKb2hubnkgRG9lIiwic3ViIjoiamRvZTIiLCJ0ZWFtIjoiZW5nIiwibGxtcyI6eyJvbGxhbWEiOlsicXdlbi0wLjViIl19fQ.DDsC1K7C65xhBkwS6kwFB7KtVAKusnSdt51fNAQtllIZidcIphBmhPn97BQYgBEaag4s85x7k2q-JkDn89sLq3gq-K0Xao1Z0lwUZCxXg4QRkcsgpUK7awe7roKC9NSU3azodJwCafF9EvLjuFARBOrThNic9FGS14j0iRPJ5E9RbcxSasOavdsfnlxaMeVy9RDjkJ2MTE2Gb5ddLpdNHoKlhrPlGjogf4KH-g5jNaFmrwuPsFNwoYjLqpCZW0Uw-b_j5dJr6JbOgAkNfswE7ZzD-uJMxbxX9r4epnv83-5Br8wEP5ztLaHN_zwuH_k_jJbOycSM_wTSXS1L8GfRlQ"
 USER3="eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJKb2huYXRoYW4gRG9lIiwic3ViIjoiamRvZTMiLCJ0ZWFtIjoicmV0dXJucyIsImxsbXMiOnsib2xsYW1hIjpbInF3ZW4tMC41YiJdfX0.U80mOvXJ-8cqfvJSveYG-1uExTzir4Im_vTgfTE0mtIsYCVbg-Hkq3_pOLfOrCRZKnGKG1fpzwG3UGDaBkdK2SJOsV5JUgAmv7A61H0WIJEV5ihGPbiuyxXTnm64MGyegEECRIFYiQSS8Nvyt0z9qcYoiufBRQqX_mxucKSQvdDQHDwaXDuR8c3mjeEz1epM0RWltXrWC2fRJcS4BjXS10lM8QWS5FYOjKwTguxnVeC2X6srTwVIhYDfzD5mKph_qRHAaBPejE01wA7RTW1b-0TGVwNjTAZFE7dgvAozuerS9z09k29dJkOMpK4RDqsB6erdgjnOVSVTs6depSot1w"
 
 TOKENS = [
@@ -23,6 +23,7 @@ parser.add_argument('--url', type=str, default="gloo-proxy-ai-gateway.gloo-syste
 args = parser.parse_args()
 
 ENDPOINT = f"http://{args.url}/load"
+STATS_SLEEP_SECONDS = 15
 
 # Sample messages to randomly choose from
 MESSAGES = [
@@ -80,13 +81,13 @@ async def send_requests(session, token, user_id):
             print(f"Exception occurred: {e}")  # Log the exception
             stats.failures += 1
             
-        await asyncio.sleep(random.uniform(3, 10))
+        await asyncio.sleep(random.uniform(3, 25))
 
 async def print_stats():
     while True:
         elapsed = int(time.time() - stats.start_time)
         print(f"Elapsed time: {elapsed}s | Successes: {stats.successes} | Failures: {stats.failures}")
-        await asyncio.sleep(30)
+        await asyncio.sleep(STATS_SLEEP_SECONDS)
 
 async def main():
     async with aiohttp.ClientSession() as session:

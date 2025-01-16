@@ -105,7 +105,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "increase(ai_prompt_tokens_total[5m])",
+          "expr": "sum by (id, name) (\n  increase(ai_prompt_tokens_total[5m])\n)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -200,7 +200,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "increase(ai_completion_tokens_total[5m])",
+          "expr": "sum by (id, name) (\n  increase(ai_completion_tokens_total[5m])\n)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -295,7 +295,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(increase(ai_prompt_tokens_total[5m])) by (team)\n/\nsum(increase(ai_completion_tokens_total[5m])) by (team)\n",
+          "expr": "(\n  sum by (id, name) ( increase(ai_prompt_tokens_total[5m]) )\n)\n/\n(\n  sum by (id, name) ( increase(ai_completion_tokens_total[5m]) )\n)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -390,14 +390,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(\n  increase(ai_prompt_tokens_total[5m]) + \n  increase(ai_completion_tokens_total[5m])\n)",
+          "expr": "sum by (team) (\n  increase(ai_prompt_tokens_total[5m])\n  +\n  increase(ai_completion_tokens_total[5m])\n)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Total Token Usage",
+      "title": "Total Token by Team",
       "type": "timeseries"
     },
     {

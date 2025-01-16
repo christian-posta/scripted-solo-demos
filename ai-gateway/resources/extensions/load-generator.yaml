@@ -20,7 +20,7 @@ spec:
   parentRefs:
     - name: ai-gateway
       namespace: gloo-system
-      sectionName: http-load-generator
+      sectionName: http-load
   hostnames:
     - load-generator.gloo.solo.io
   rules:
@@ -53,7 +53,7 @@ spec:
     kind: Gateway
     name: ai-gateway
     namespace: gloo-system
-    sectionName: http-load-generator
+    sectionName: http-load
   options:
     jwt:
       providers:

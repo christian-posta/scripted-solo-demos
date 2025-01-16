@@ -51,5 +51,4 @@ kubectl expose deployment jaeger --type=LoadBalancer --name=jaeger-loadbalancer 
 #helm repo update
 #helm upgrade --install loki grafana/loki --namespace monitoring --values ./resources/observability/loki-install.yaml
 
-# set up the ai-gateway parameters with tracing tags and metrics
-kubectl apply -f ./resources/observability/ai-gateway-parameters.yaml -n gloo-system
+
