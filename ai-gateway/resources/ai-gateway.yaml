@@ -30,6 +30,13 @@ spec:
   - allowedRoutes:
       namespaces:
         from: All
+    name: http-load-generator
+    hostname: load-generator.gloo.solo.io
+    port: 8080
+    protocol: HTTP  
+  - allowedRoutes:
+      namespaces:
+        from: All
     name: http
     port: 8080
     protocol: HTTP

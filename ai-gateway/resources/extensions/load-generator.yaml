@@ -1,0 +1,95 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: ollama-qwen-0.5-upstream
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      customHost:
+        host: ollama-qwen.ollama.svc.cluster.local
+        port: 11434
+      model: qwen:0.5b
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: load-generation-qwen
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: ai-gateway
+      namespace: gloo-system
+      sectionName: http-load-generator
+  hostnames:
+    - load-generator.gloo.solo.io
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /load
+    filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplaceFullPath
+            replaceFullPath: /v1/chat/completions
+    backendRefs:
+      - group: gloo.solo.io
+        kind: Upstream
+        name: ollama-qwen-0.5-upstream
+        namespace: gloo-system
+        weight: 100
+---
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualHostOption
+metadata:
+  name: jwt-provider
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: ai-gateway
+    namespace: gloo-system
+    sectionName: http-load-generator
+  options:
+    jwt:
+      providers:
+        selfminted:
+          issuer: solo.io
+          jwks:
+            local:
+              key: |
+                -----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAskFAGESgB22iOsGk/UgX
+                BXTmMtd8R0vphvZ4RkXySOIra/vsg1UKay6aESBoZzeLX3MbBp5laQenjaYJ3U8P
+                QLCcellbaiyUuE6+obPQVIa9GEJl37GQmZIMQj4y68KHZ4m2WbQVlZVIw/Uw52cw
+                eGtitLMztiTnsve0xtgdUzV0TaynaQrRW7REF+PtLWitnvp9evweOrzHhQiPLcdm
+                fxfxCbEJHa0LRyyYatCZETOeZgkOHlYSU0ziyMhHBqpDH1vzXrM573MQ5MtrKkWR
+                T4ZQKuEe0Acyd2GhRg9ZAxNqs/gbb8bukDPXv4JnFLtWZ/7EooKbUC/QBKhQYAsK
+                bQIDAQAB
+                -----END PUBLIC KEY-----
+
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: load-generation-opt
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: load-generation-qwen
+  options:
+    rbac:
+      policies:
+        viewer:
+          nestedClaimDelimiter: .
+          principals:
+          - jwtPrincipal:
+              claims:
+                "llms.ollama": "qwen-0.5b"
+              matcher: LIST_CONTAINS

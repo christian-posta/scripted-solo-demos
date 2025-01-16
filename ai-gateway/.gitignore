@@ -1,3 +1,5 @@
 kind*.yaml
 metallb*.yaml
 registries
+.venv
+__pycache__
