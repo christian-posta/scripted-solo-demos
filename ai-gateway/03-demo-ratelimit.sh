@@ -20,15 +20,15 @@ run "cat resources/03-ratelimit-token-usage/openai-route-ratelimit.yaml"
 
 run "kubectl apply -f resources/03-ratelimit-token-usage/"
 
-export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
+export CEPOSTA_TOKEN=$(cat resources/tokens/ceposta-openai.token)
 desc "This first call should go through"
-print_gateway_command $EITAN_TOKEN
+print_gateway_command $CEPOSTA_TOKEN
 read -s
-call_gateway $EITAN_TOKEN
+call_gateway $CEPOSTA_TOKEN
 read -s
 
 desc "This second call should fail"
-print_gateway_command $EITAN_TOKEN
+print_gateway_command $CEPOSTA_TOKEN
 read -s
-call_gateway $EITAN_TOKEN
+call_gateway $CEPOSTA_TOKEN
 

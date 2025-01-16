@@ -8,6 +8,7 @@ delete_01(){
 }
 
 delete_02(){
+    kubectl rollout restart deployment redis -n gloo-system
     kubectl delete -f resources/02-secure-llm-jwt/
 }
 

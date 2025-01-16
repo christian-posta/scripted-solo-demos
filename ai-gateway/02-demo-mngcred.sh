@@ -31,15 +31,15 @@ call_gateway
 read -s
 
 
-export EITAN_TOKEN=$(cat resources/tokens/eitan-openai.token)
+export CEPOSTA_TOKEN=$(cat resources/tokens/ceposta-openai.token)
 backtotop
 desc "Now let's call with a token with the right permissions"
 desc "Let's see the token"
-cat resources/tokens/eitan-openai.token | jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' -
+cat resources/tokens/ceposta-openai.token | jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' -
 read -s
 
 desc "Let's see the curl call"
-print_gateway_command $EITAN_TOKEN
+print_gateway_command $CEPOSTA_TOKEN
 read -s
-call_gateway $EITAN_TOKEN
+call_gateway $CEPOSTA_TOKEN
 

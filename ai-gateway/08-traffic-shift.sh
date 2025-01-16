@@ -17,8 +17,6 @@ desc "Let's see if we can route traffic to a locally running LLM"
 read -s
 
 run "kubectl get po -n ollama"
-run "cat resources/08-provider-traffic-shift/llm-providers.yaml"
-run "kubectl apply -f resources/08-provider-traffic-shift/llm-providers.yaml"
 
 run "cat resources/08-provider-traffic-shift/http-routes.yaml"
 run "kubectl apply -f resources/08-provider-traffic-shift/http-routes.yaml"
@@ -36,7 +34,7 @@ for i in {1..10}; do
   model=$(echo "$response" | jq -r '.model')
   echo "Run $i: Model: $model"
 done
-
+read -s
 
 backtotop
 desc "Now let's route all traffic to the local LLM"
