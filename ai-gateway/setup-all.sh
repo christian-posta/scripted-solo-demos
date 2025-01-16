@@ -26,3 +26,5 @@ kubectl --context $CONTEXT apply -f resources/access-logging-options.yaml
 
 
 ./setup-observability.sh $CONTEXT
+
+kubectl apply -f ./resources/extensions/load-generator.yaml
