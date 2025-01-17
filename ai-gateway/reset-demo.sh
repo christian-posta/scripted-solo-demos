@@ -41,96 +41,65 @@ delete_08(){
 
 
 delete_all(){
-    delete_00
-    delete_01
     delete_02
     delete_03
     delete_04
     delete_05
     delete_06
     delete_07
-    delete_08
+    #instead of deleting the 08 resources, we'll just overwrite   
+    # the openai httproute
+
+}
+
+reset_all(){
+    delete_all
+    kubectl apply -f resources/01-call-llm/
 }
 
 
 reset_for_00() {
+    reset_all
     delete_00
 }
 
 reset_for_01() {
+    delete_all
     delete_00
     delete_01
 }
 
 reset_for_02() {
-    delete_00
-    delete_02
-    # apply 01
-    kubectl apply -f resources/01-call-llm/
+    reset_all
 }
 
 reset_for_03() {
-    delete_00
-    delete_03
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     kubectl apply -f resources/02-secure-llm-jwt/
 }
 
 reset_for_04() {
-    delete_00
-    delete_02
-    delete_03
-    delete_04
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     kubectl apply -f resources/extensions/model-failover.yaml
 }
 
 reset_for_05() {
-    delete_00
-    delete_02
-    delete_03
-    delete_04
-    delete_05
-    delete_06
-    delete_07
-    delete_08
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     # kubectl apply -f resources/extensions/promptguard.yaml
 }
 
 reset_for_06() {
-    delete_00
-    delete_02
-    delete_03
-    delete_04
-    delete_05
-    delete_06
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     kubectl apply -f resources/extensions/redis.yaml
 }
 
 reset_for_07() {
-    delete_00
-    delete_02
-    delete_03
-    delete_04
-    delete_05
-    delete_06
-    delete_07
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     kubectl apply -f resources/extensions/vector-db.yaml
 }
 
 reset_for_08() {
-    delete_00
-    delete_02
-    delete_03
-    delete_04
-    delete_05
-    delete_06
-    delete_07
-    delete_08
-    kubectl apply -f resources/01-call-llm/
+    reset_all
     kubectl apply -f resources/extensions/ollama.yaml
 }
 

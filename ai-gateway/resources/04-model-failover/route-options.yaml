@@ -7,7 +7,7 @@ spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: model-failover
+    name: openai
   options:
     retries:
       retryOn: 'retriable-status-codes'

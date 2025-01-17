@@ -32,9 +32,9 @@ run "kubectl apply -f resources/04-model-failover/"
 
 
 desc "Try calling the LLM with model set to gpt-4o"
-print_gateway_command "" "gpt-4o" "model"
+print_gateway_command "" "gpt-4o"
 read -s
-call_gateway "" "gpt-4o" "model"
+call_gateway "" "gpt-4o"
 read -s
 
 backtotop

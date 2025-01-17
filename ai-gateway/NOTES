@@ -1,57 +1,24 @@
 
 
+## To run the demo for the UI
+* run the UI locally and port forward with ssh port forward
+* for each scenario, run the reset-demo.sh script
+* for each scenario, run the ff.py script
 
-# 00-basic-passthrough
+For example, to run the prompt guard scenario, run the following:
 
-Demo it by calling the Open AI API with the following curl command:
+```
+./reset-demo.sh --for 5
+./ff.py 05-a-prompt-guard.sh
+```
 
-kubectl apply -f resources/00-basic-passthrough/upstreams.yaml
-kubectl apply -f resources/00-basic-passthrough/http-routes.yaml
+As each command is run, you will be prompted to confirm.
 
-OPENAI_API_KEY=<foo>
-
-curl https://api.openai.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {
-        "role": "user",
-        "content": "Hello! How are you?"
-      }
-    ]
-  }'
-
-export GATEWAY_IP=$(kubectl get svc gloo-proxy-ai-gateway -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-curl "$GATEWAY_IP:8080/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {
-        "role": "user",
-        "content": "Hello! How are you?"
-      }
-    ]
-  }'
+Use any printed prompts to test the API from the UI.
 
 
-  ## 01-call-llm
+## To run the presidio scenario
+Make sure to run the ./run-local.sh script to start the presidio service.
 
-kubectl apply -f resources/01-call-llm/llm-providers.yaml
-kubectl apply -f resources/01-call-llm/http-routes.yaml
-
-export GATEWAY_IP=$(kubectl get svc gloo-proxy-ai-gateway -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-curl "$GATEWAY_IP:8080/openai"   -H "Content-Type: application/json"   -d '{
-  "model": "gpt-3.5-turbo",
-  "messages": [
-    {                
-      "role": "user",
-      "content": "Hello! How are you?"
-    }
-  ]
-}'
+## To run the UI
+Run the ./run-local.sh script to start the UI.
