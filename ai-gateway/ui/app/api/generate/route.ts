@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 export async function POST(req: Request) {
   try {
-    const { prompt, apiKey, jwtToken, openAIUrl } = await req.json();
+    const { prompt, apiKey, jwtToken, openAIUrl, customHeader } = await req.json();
 
     if (!prompt) {
       return new Response(JSON.stringify({ error: 'Prompt is required' }), {
@@ -21,6 +21,10 @@ export async function POST(req: Request) {
       headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
+    if (customHeader) {
+      headers[customHeader.name] = customHeader.value;
+    }
+
     const response = await fetch(openAIUrl, {
       method: 'POST',
       headers,
@@ -30,17 +34,25 @@ export async function POST(req: Request) {
       })
     });
 
-    const data = await response.json();
+    const bodyText = await response.text();
+
+    console.info('Response:', {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      body: bodyText
+    });
 
     if (!response.ok) {
-      throw new Error(data.error?.message || 'Backend API request failed');
+      throw new Error('Backend API request failed');
     }
+
+    const data = JSON.parse(bodyText);
 
     return new Response(JSON.stringify(data), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error generating text:', error);
     let errorMessage = 'Failed to generate text';
     if (error instanceof Error) {
       errorMessage += `: ${error.message}`;

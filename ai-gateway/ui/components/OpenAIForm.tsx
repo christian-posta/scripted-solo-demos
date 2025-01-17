@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
@@ -45,10 +45,21 @@ export default function OpenAIForm() {
   const [requestDetails, setRequestDetails] = useState<string>('')
   const [responseDetails, setResponseDetails] = useState<string>('')
   const [activeTab, setActiveTab] = useState<Tab>('response');
-  const [jwtToken, setJwtToken] = useState('')
+  const [jwtToken, setJwtToken] = useState('eyJhbGciOiJSUzI1NiIsInR5cGUiOiJKV1QifQ.eyJpc3MiOiJzb2xvLmlvIiwib3JnIjoic29sby5pbyIsIm5hbWUiOiJDaHJpc3RpYW4gUG9zdGEiLCJzdWIiOiJjZXBvc3RhIiwidGVhbSI6InJuZCIsImxsbXMiOnsib3BlbmFpIjpbImdwdC0zLjUtdHVyYm8iXX19.T8VOu-J4GdQd_SB2MymU3sF6hMVdlge2W_45jzdayMlwuOgpJZx7UW289vn-Nw3iQ0GOqp6pNKZHNMYeruD2nVQqVYdFakGztmALJCfRGTx0mdFIqzYgPkeFSArcj4rbxkkiC_VmrpuXd5zIJZ7SQf32eaJ1xHXW09RlEWWbQM7qAA6WpnWPBI8vG16CxdJ7RihmYnp7kV_nWicZhfm9HgN7jY4fUCcyesA18_7DosQvkF44_91xD7Tk2SC1UOVJcHeeRgGAwTdnQ4TOIxop9SCswnfModNZR2ekPN9j7ybOvvyLgnrvWkYdxo4dmWo6ph2d0MV1Nv7nmeK73ViM6g');
   const [includeJWT, setIncludeJWT] = useState(false)
   const [decodedJWT, setDecodedJWT] = useState<object | null>(null)
   const [authType, setAuthType] = useState<AuthType>('openai')
+  const [includeCustomHeader, setIncludeCustomHeader] = useState(false)
+  const [customHeaderName, setCustomHeaderName] = useState('x-action')
+  const [customHeaderValue, setCustomHeaderValue] = useState('mask')
+
+  useEffect(() => {
+    if (authType === 'jwt' && jwtToken) {
+      const decoded = decodeJWT(jwtToken);
+      setDecodedJWT(decoded);
+      setActiveTab('jwt');
+    }
+  }, [authType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +78,13 @@ export default function OpenAIForm() {
         prompt,
         openAIUrl,
         ...(authType === 'openai' && includeApiKey ? { apiKey } : {}),
-        ...(authType === 'jwt' && includeJWT ? { jwtToken } : {})
+        ...(authType === 'jwt' && includeJWT ? { jwtToken } : {}),
+        ...(includeCustomHeader ? { 
+          customHeader: {
+            name: customHeaderName,
+            value: customHeaderValue
+          }
+        } : {})
       };
 
       // Log request details
@@ -193,6 +210,48 @@ export default function OpenAIForm() {
               />
               <Label htmlFor="include-api-key">Include API Key in request</Label>
             </div>
+            
+            <div className="mt-4">
+              <div className="flex items-center space-x-2 mb-4">
+                <Switch
+                  id="include-custom-header"
+                  checked={includeCustomHeader}
+                  onCheckedChange={(checked) => setIncludeCustomHeader(checked)}
+                />
+                <Label htmlFor="include-custom-header">Include Custom Header</Label>
+              </div>
+              
+              {includeCustomHeader && (
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="headerName" className="block text-sm font-medium text-gray-700">
+                      Header Name
+                    </label>
+                    <Input
+                      id="headerName"
+                      type="text"
+                      value={customHeaderName}
+                      onChange={(e) => setCustomHeaderName(e.target.value)}
+                      className="mt-1"
+                      placeholder="Enter header name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="headerValue" className="block text-sm font-medium text-gray-700">
+                      Header Value
+                    </label>
+                    <Input
+                      id="headerValue"
+                      type="text"
+                      value={customHeaderValue}
+                      onChange={(e) => setCustomHeaderValue(e.target.value)}
+                      className="mt-1"
+                      placeholder="Enter header value"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
 
@@ -303,7 +362,7 @@ export default function OpenAIForm() {
               </pre>
             </div>
           )}
-          {activeTab === 'jwt' && decodedJWT && (
+          {activeTab === 'jwt' && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Decoded JWT:</h3>
               <pre className="bg-gray-100 p-4 rounded-md overflow-auto text-sm">
@@ -324,14 +383,17 @@ export default function OpenAIForm() {
           <label htmlFor="openAIUrl" className="block text-sm font-medium text-gray-700">
             OpenAI API URL
           </label>
-          <Input
+          <select
             id="openAIUrl"
             value={openAIUrl}
             onChange={(e) => setOpenAIUrl(e.target.value)}
             required
-            className="mt-1"
-            placeholder="Enter OpenAI API URL"
-          />
+            className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+          >
+            <option value="https://api.openai.com/v1/chat/completions">api.openai.com/v1/chat/completions</option>
+            <option value="http://localhost:8080/v1/chat/completions">localhost:8080/v1/chat/completions</option>
+            <option value="http://localhost:8080/openai">localhost:8080/openai</option>
+          </select>
         </div>
         <div>
           <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">
