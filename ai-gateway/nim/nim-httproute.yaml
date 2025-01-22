@@ -11,15 +11,61 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /nim
+        value: /v1/chat/completions
     filters:
-    - type: URLRewrite
-      urlRewrite:
-        path:
-          type: ReplaceFullPath
-          replaceFullPath: /v1/chat/completions
+    - extensionRef:
+        group: gateway.solo.io
+        kind: RouteOption
+        name: nim-llama3-1-8b-options
+      type: ExtensionRef
     backendRefs:
     - name: nim-llama3-1-8b
       namespace: gloo-system
       group: gloo.solo.io
       kind: Upstream
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: nim-llama3-1-8b-options
+  namespace: gloo-system
+spec:
+  options:
+    autoHostRewrite: false  
+    rbac:
+      policies:
+        viewer:
+          nestedClaimDelimiter: .
+          principals:
+          - jwtPrincipal:
+              claims:
+                "llms.meta": "meta/llama-3.1-8b-instruct"
+              matcher: LIST_CONTAINS    
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualHostOption
+metadata:
+  name: jwt-provider
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: ai-gateway
+  options:
+    jwt:
+      providers:
+        selfminted:
+          issuer: solo.io
+          jwks:
+            local:
+              key: |
+                -----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAskFAGESgB22iOsGk/UgX
+                BXTmMtd8R0vphvZ4RkXySOIra/vsg1UKay6aESBoZzeLX3MbBp5laQenjaYJ3U8P
+                QLCcellbaiyUuE6+obPQVIa9GEJl37GQmZIMQj4y68KHZ4m2WbQVlZVIw/Uw52cw
+                eGtitLMztiTnsve0xtgdUzV0TaynaQrRW7REF+PtLWitnvp9evweOrzHhQiPLcdm
+                fxfxCbEJHa0LRyyYatCZETOeZgkOHlYSU0ziyMhHBqpDH1vzXrM573MQ5MtrKkWR
+                T4ZQKuEe0Acyd2GhRg9ZAxNqs/gbb8bukDPXv4JnFLtWZ/7EooKbUC/QBKhQYAsK
+                bQIDAQAB
+                -----END PUBLIC KEY-----

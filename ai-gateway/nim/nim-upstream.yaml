@@ -1,14 +1,12 @@
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  labels:
-    app: gloo
   name: nim-llama3-1-8b
   namespace: gloo-system
 spec:
   ai:
     openai:
       customHost:
-        host: my-nim-nim-llm.nim.svc.cluster.local
+        host: meta-llama3-8b-instruct.default.svc.cluster.local
         port: 8000
       model: "meta/llama-3.1-8b-instruct"

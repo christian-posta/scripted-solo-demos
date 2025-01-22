@@ -108,6 +108,16 @@ kubectl apply -f ./nim/nimcache.yaml
 kubectl apply -f ./nim/nimservice.yaml
 
 
+## Deploy Gateway
+./install-gateway-nightly.sh $CONTEXT
+
+kubectl apply -f ./nim/nim-upstream.yaml
+kubectl apply -f ./nim/nim-httproute.yaml
+
+Call the gateway:
+call_gateway $TOKEN "meta/llama-3.1-8b-instruct" "v1/chat/completions"
+
+
 
 ## Scale down nodes
 

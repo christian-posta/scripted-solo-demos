@@ -14,6 +14,9 @@ helm repo update
 
 VERSION="1.18.2"
 
+# if you need to debug the chart, get it like this:
+# helm template gloo-ee-helm/gloo-ee --version $VERSION --namespace gloo-system --create-namespace --set license_key=$GLOO_LICENSE_WITH_AI -f -<<EOF
+
 source ~/bin/glooe-license-key-env 
 helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-helm/gloo-ee \
   --version $VERSION \
