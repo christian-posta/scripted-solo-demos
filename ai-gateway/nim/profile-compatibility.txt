@@ -1,0 +1,91 @@
+
+===========================================
+== NVIDIA Inference Microservice LLM NIM ==
+===========================================
+
+NVIDIA Inference Microservice LLM NIM Version 1.3.0
+Model: meta/llama-3.1-8b-instruct
+
+Container image Copyright (c) 2016-2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+The NIM container is governed by the NVIDIA Software License Agreement (found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement) and the Product Specific Terms for AI Products (found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products).
+
+A copy of this license can be found under /opt/nim/LICENSE.
+
+The use of this model is governed by the NVIDIA AI Foundation Models Community License Agreement (https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-ai-foundation-models-community-license-agreement).
+
+ADDITIONAL INFORMATION: Llama 3.1 Community License Agreement, Built with Llama.
+
+SYSTEM INFO
+- Free GPUs:
+  -  [20b0:10de] (0) NVIDIA A100-SXM4-40GB [current utilization: 0%]
+Profile 03a78e44c549d72b7e354b2dfbb10fc2101e007b3ea94e63b6528287f5431d40 is not fully defined with checksums
+Profile 193649a2eb95e821309d6023a2cabb31489d3b690a9973c7ab5d1ff58b0aa7eb is not fully defined with checksums
+Profile 1b02e4b399e8e0a5f7f49b49c4cf6b8cee33fb31854767ef386e74e8ff92762f is not fully defined with checksums
+Profile 25cd80b0cf0f0989de30be57025771aea3f871d22b60c0bc088cbda0701b4b23 is not fully defined with checksums
+Profile 33e38db03bb29d47b6c6e604c5e3686f224a1f88e97cd3e0e18cf83e71a949fb is not fully defined with checksums
+Profile 395082aa40085d35f004dd3056d7583aea330417ed509b4315099a66cfc72bdd is not fully defined with checksums
+Profile 3ad27031e57506f12b47d3cd74d045fe05977f0bb92e2f8c80a3240748482578 is not fully defined with checksums
+Profile 3f67662fdffadc89d38abd02c2fcb3c756f6f874e6bddc6d8521383663abd5c4 is not fully defined with checksums
+Profile 47f45a1d55aa8a03aa64f15781e2cf28cec4ff31e67b99e59f0067bf6d2f8afc is not fully defined with checksums
+Profile 47fc22081f20f85bbe66f21ec4765a3c8e578e08a0254bbe8f2ddf056a64b217 is not fully defined with checksums
+Profile 48696b63c4821ae61e3dae479a1a822f1d2aa4cc8d02fae64a59f1d88c487304 is not fully defined with checksums
+Profile 4e0d43c3245d0232d32bcca05648c98a70e9692518701cdd0cfd987acf5a3cfa is not fully defined with checksums
+Profile 6458846f873390eec5ee46d07239c4e9c976b64b84dd3585b7ff5740114a0830 is not fully defined with checksums
+Profile 69545d0e42d494d0c03be120535898cf2d8e6fd9a5c0a5687a168ef6ba6501e5 is not fully defined with checksums
+Profile 7cc8597690a35aba19a3636f35e7f1c7e7dbc005fe88ce9394cad4a4adeed414 is not fully defined with checksums
+Profile 7fb52d5c2883c5393818bc3b0414f4a9b4b5717d6257d4b79ea227985a12bef5 is not fully defined with checksums
+Profile 805f98a255898b0c7d4c68199bf8655af4ffc1a10ca0165d9aa05b9a6b0a7b8e is not fully defined with checksums
+Profile 8af967d80ae8f30f4635a59b2140fdc2b38d3004e16e66c9667fa032e56497fd is not fully defined with checksums
+Profile 8c27f77dab1986e76b524c755fa5a809f8882517b503e76bfcf8d42b991adc89 is not fully defined with checksums
+Profile 9189d008806a9638d4206e6ff94c0b0d9acc2a8861f6de5a49b9d0a5acdcf049 is not fully defined with checksums
+Profile 96e7cd0991f4ab5cf47a08cce8d1169daa8a431485be805fb00de0638bdeed9d is not fully defined with checksums
+Profile 9bccc20c28c1728b59cdbad4b2c1607d3b57388ff266da4477ea8a413ae0fb7d is not fully defined with checksums
+Profile b7b6fa584441d9536091ce5cf80ccc31765780b8a46540da4e7bada5c5108ed9 is not fully defined with checksums
+Profile c8bfdeefde531b7176e7a37163d4ab7de1b9cede0d01f008c4bd6a87436709a2 is not fully defined with checksums
+Profile d16635e67b41130625a0e0132a6205ba6ca048a19e9b0a6b61bde5087801ed08 is not fully defined with checksums
+Profile df4113435195daa68b56c83741d66b422c463c556fc1669f39f923427c1c57c5 is not fully defined with checksums
+Profile e4087b2f1d8c3c581d0587971960d4747884bdf9922b507253f60baad10752fd is not fully defined with checksums
+Profile ebaf474b36a93eebbe8853ef58e22f95875cb45706f362d1761e7e25570d642c is not fully defined with checksums
+Profile ed4af8b6563348d37f72bfd013be44573a1c88f384ef8fb3eaf0c69e4f235c20 is not fully defined with checksums
+Profile f25fe2be374f7dfd85e42d3be1792f12deab691c6e2dcdf807ad4857e163b8e0 is not fully defined with checksums
+Profile f8b5f71dd66c36c70deac7927cbd98b1c4f78caf1abf01f768be7118e1daa278 is not fully defined with checksums
+Profile fa55c825306dfc09c9d0e7ef423e897d91fe8334a3da87d284f45f45cbd4c1b0 is not fully defined with checksums
+MODEL PROFILES
+- Compatible with system and runnable:
+  - 193649a2eb95e821309d6023a2cabb31489d3b690a9973c7ab5d1ff58b0aa7eb (vllm-bf16-tp1)
+  - With LoRA support:
+    - 3ad27031e57506f12b47d3cd74d045fe05977f0bb92e2f8c80a3240748482578 (vllm-bf16-tp1-lora)
+- Compilable to TRT-LLM using just-in-time compilation of HF models to TRTLLM engines:
+  - 7cc8597690a35aba19a3636f35e7f1c7e7dbc005fe88ce9394cad4a4adeed414 (tensorrt_llm-trtllm_buildable-bf16-tp1)
+  - With LoRA support:
+    - df4113435195daa68b56c83741d66b422c463c556fc1669f39f923427c1c57c5 (tensorrt_llm-trtllm_buildable-bf16-tp1-lora)
+- Incompatible with system:
+  - fa55c825306dfc09c9d0e7ef423e897d91fe8334a3da87d284f45f45cbd4c1b0 (tensorrt_llm-h100-fp8-tp2-pp1-latency)
+  - 33e38db03bb29d47b6c6e604c5e3686f224a1f88e97cd3e0e18cf83e71a949fb (tensorrt_llm-h100_nvl-fp8-tp2-pp1-latency)
+  - f8b5f71dd66c36c70deac7927cbd98b1c4f78caf1abf01f768be7118e1daa278 (tensorrt_llm-h100-fp8-tp1-pp1-throughput)
+  - d16635e67b41130625a0e0132a6205ba6ca048a19e9b0a6b61bde5087801ed08 (tensorrt_llm-h100_nvl-fp8-tp1-pp1-throughput)
+  - 69545d0e42d494d0c03be120535898cf2d8e6fd9a5c0a5687a168ef6ba6501e5 (tensorrt_llm-a10g-fp16-tp2-pp1-throughput)
+  - 9bccc20c28c1728b59cdbad4b2c1607d3b57388ff266da4477ea8a413ae0fb7d (tensorrt_llm-a10g-bf16-tp4-pp1-latency)
+  - 25cd80b0cf0f0989de30be57025771aea3f871d22b60c0bc088cbda0701b4b23 (tensorrt_llm-l40s-bf16-tp4-pp1-latency)
+  - 03a78e44c549d72b7e354b2dfbb10fc2101e007b3ea94e63b6528287f5431d40 (tensorrt_llm-a100-bf16-tp2-pp1-latency)
+  - 8c27f77dab1986e76b524c755fa5a809f8882517b503e76bfcf8d42b991adc89 (tensorrt_llm-h100-bf16-tp2-pp1-latency)
+  - 47fc22081f20f85bbe66f21ec4765a3c8e578e08a0254bbe8f2ddf056a64b217 (tensorrt_llm-h100_nvl-bf16-tp2-pp1-latency)
+  - f25fe2be374f7dfd85e42d3be1792f12deab691c6e2dcdf807ad4857e163b8e0 (tensorrt_llm-l40s-bf16-tp2-pp1-throughput)
+  - 9189d008806a9638d4206e6ff94c0b0d9acc2a8861f6de5a49b9d0a5acdcf049 (tensorrt_llm-a100-bf16-tp1-pp1-throughput)
+  - ed4af8b6563348d37f72bfd013be44573a1c88f384ef8fb3eaf0c69e4f235c20 (tensorrt_llm-h100-bf16-tp1-pp1-throughput)
+  - 8af967d80ae8f30f4635a59b2140fdc2b38d3004e16e66c9667fa032e56497fd (tensorrt_llm-l40s-bf16-tp1-pp1-throughput)
+  - 7fb52d5c2883c5393818bc3b0414f4a9b4b5717d6257d4b79ea227985a12bef5 (tensorrt_llm-h100_nvl-bf16-tp1-pp1-throughput)
+  - 96e7cd0991f4ab5cf47a08cce8d1169daa8a431485be805fb00de0638bdeed9d (vllm-bf16-tp4)
+  - 395082aa40085d35f004dd3056d7583aea330417ed509b4315099a66cfc72bdd (vllm-bf16-tp2)
+  - 3f67662fdffadc89d38abd02c2fcb3c756f6f874e6bddc6d8521383663abd5c4 (tensorrt_llm-h100-fp8-tp1-pp1-throughput-lora)
+  - 47f45a1d55aa8a03aa64f15781e2cf28cec4ff31e67b99e59f0067bf6d2f8afc (tensorrt_llm-h100_nvl-fp8-tp1-pp1-throughput-lora)
+  - 6458846f873390eec5ee46d07239c4e9c976b64b84dd3585b7ff5740114a0830 (tensorrt_llm-a10g-fp16-tp2-pp1-throughput-lora)
+  - c8bfdeefde531b7176e7a37163d4ab7de1b9cede0d01f008c4bd6a87436709a2 (tensorrt_llm-l40s-bf16-tp2-pp1-throughput-lora)
+  - e4087b2f1d8c3c581d0587971960d4747884bdf9922b507253f60baad10752fd (tensorrt_llm-a100-bf16-tp1-pp1-throughput-lora)
+  - ebaf474b36a93eebbe8853ef58e22f95875cb45706f362d1761e7e25570d642c (tensorrt_llm-h100-bf16-tp1-pp1-throughput-lora)
+  - 805f98a255898b0c7d4c68199bf8655af4ffc1a10ca0165d9aa05b9a6b0a7b8e (tensorrt_llm-h100_nvl-bf16-tp1-pp1-throughput-lora)
+  - 1b02e4b399e8e0a5f7f49b49c4cf6b8cee33fb31854767ef386e74e8ff92762f (vllm-bf16-tp2-lora)
+  - 4e0d43c3245d0232d32bcca05648c98a70e9692518701cdd0cfd987acf5a3cfa (tensorrt_llm-trtllm_buildable-bf16-tp4)
+  - b7b6fa584441d9536091ce5cf80ccc31765780b8a46540da4e7bada5c5108ed9 (tensorrt_llm-trtllm_buildable-bf16-tp2)
+  - 48696b63c4821ae61e3dae479a1a822f1d2aa4cc8d02fae64a59f1d88c487304 (tensorrt_llm-trtllm_buildable-bf16-tp2-lora)
