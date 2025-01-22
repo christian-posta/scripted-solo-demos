@@ -64,6 +64,10 @@ helm search repo nvidia/gpu-operator --versions
 helm show values nvidia/gpu-operator --version v24.9.1 | less
 ```
 
+operator: https://github.com/NVIDIA/gpu-operator
+
+docs: https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html
+
 ```bash
 export GPU_OPERATOR_VERSION=v24.9.1
 kubectl create namespace gpu-operator
@@ -139,7 +143,14 @@ kubectl create secret generic ngc-api-secret \
     --from-literal=NGC_API_KEY="$NGC_API_KEY" 
 ```
 
-Install the operator
+Install the operator 
+
+operator:
+https://github.com/NVIDIA/k8s-nim-operator
+
+docs:
+https://docs.nvidia.com/nim-operator/latest/index.html
+
 ```bash
 export NIM_OPERATOR_VERSION=v1.0.1
 helm upgrade --install nim-operator nvidia/k8s-nim-operator --wait  \
@@ -149,6 +160,14 @@ helm upgrade --install nim-operator nvidia/k8s-nim-operator --wait  \
 ```
 
 ## Deploy NIM Cache
+
+With this model cached: 
+https://catalog.ngc.nvidia.com/orgs/nim/teams/meta/containers/llama-3.1-8b-instruct
+
+Docker image:
+https://build.nvidia.com/meta/llama-3_1-8b-instruct
+
+
 ```bash
 kubectl apply -f ./nim/nimcache.yaml
 ```
