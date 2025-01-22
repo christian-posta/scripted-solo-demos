@@ -1,5 +1,13 @@
 CONTEXT="${1:-ai-demo}"
 
+if [[ "$2" != "skip" ]]; then
+  echo "Using kube context: $CONTEXT"
+  read -p "Press Enter to continue..."
+fi
+
+
+kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
+
 helm repo add gloo-ee-test https://storage.googleapis.com/gloo-ee-test-helm
 helm repo update
 
@@ -33,3 +41,6 @@ grafana:
 gateway-portal-web-server:
   enabled: false
 EOF
+
+
+kubectl --context $CONTEXT apply -f resources/ai-gateway.yaml
