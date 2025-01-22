@@ -12,8 +12,8 @@ JAEGER_IP=$(ssh $USER@$BOX "kubectl get svc jaeger-loadbalancer -n monitoring -o
 ssh -L 8080:$GW_IP:8080 -C -N -l $USER $BOX &
 GW_PID="$!"
 
-ssh -L 8081:$GW_IP:8081 -C -N -l $USER $BOX &
-UI_PID="$!"
+#ssh -L 8081:$GW_IP:8081 -C -N -l $USER $BOX &
+#UI_PID="$!"
 
 ssh -L 3000:$GRAFANA_IP:3000 -C -N -l $USER $BOX &
 GRAF_PID="$!"

@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nim-profile-job
+spec:
+  template:
+    metadata:
+      name: nim-profile-pod
+    spec:
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Equal"
+          value: "present"
+          effect: "NoSchedule"
+      containers:
+        - name: nim-profile
+          image: nvcr.io/nim/meta/llama-3.1-8b-instruct:1.3.3
+          args: ["list-model-profiles"]
+          resources:
+            limits:
+              nvidia.com/gpu: 1  # Request 1 GPU
+          env:
+            - name: NIM_CACHE_PATH
+              value: /tmp
+            - name: NGC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ngc-api-secret
+                  key: NGC_API_KEY
+      imagePullSecrets:
+        - name: ngc-secret
+      restartPolicy: Never
