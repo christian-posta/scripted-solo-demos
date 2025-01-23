@@ -17,6 +17,6 @@ kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
 ./setup-observability.sh $CONTEXT
 
 # Set up Local LLM
-kubectl apply -f resources/extensions/ollama.yaml
-kubectl apply -f ./resources/extensions/load-generator.yaml
+kubectl --context $CONTEXT apply -f resources/extensions/ollama.yaml
+kubectl --context $CONTEXT apply -f ./resources/extensions/load-generator.yaml
 
