@@ -1,5 +1,34 @@
 
 
+## Setting up the demo on Kind
+Just run the setup-all.sh script:
+
+```bash
+./setup-all.sh
+```
+
+To set up the Istio parts:
+
+```bash
+./setup-istio-demo.sh
+```
+
+You can install things piece meal as well. For example, to just install Istio or the Gateway:
+
+```bash
+./install-gateway-stable.sh
+./install-istio-ambient.sh
+```
+
+One of the first things to try is run the load generator and check the metrics in the grafana dashboard.
+
+```bash
+cd loadgenerator
+./run-local.sh
+```
+
+
+
 ## To run the demo for the UI
 * run the UI locally and port forward with ssh port forward
 * for each scenario, run the reset-demo.sh script

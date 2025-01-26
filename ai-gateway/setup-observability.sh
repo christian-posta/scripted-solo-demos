@@ -4,8 +4,9 @@
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
 helm repo update
 
+OTEL_VERSION=0.100.0
 helm upgrade --install opentelemetry-collector open-telemetry/opentelemetry-collector \
---version 0.97.1 \
+--version $OTEL_VERSION \
 --set mode=deployment \
 --set image.repository="otel/opentelemetry-collector-contrib" \
 --set command.name="otelcol-contrib" \

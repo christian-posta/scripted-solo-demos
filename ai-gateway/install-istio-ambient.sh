@@ -1,4 +1,5 @@
 CONTEXT="${1:-ai-demo}"
+ISTIO_VERSION="1.24.2"
 
 if [[ "$2" != "skip" ]]; then
   echo "Using kube context: $CONTEXT"
@@ -15,12 +16,12 @@ helm repo update
 
 
 # Install Control Plane
-helm install istio-base istio/base -n istio-system --create-namespace --wait --kube-context $CONTEXT
-helm install istiod istio/istiod --namespace istio-system --set profile=ambient --wait --kube-context $CONTEXT
-helm install istio-cni istio/cni -n istio-system --set profile=ambient --wait --kube-context $CONTEXT
+helm install istio-base istio/base -n istio-system --version $ISTIO_VERSION --create-namespace --wait --kube-context $CONTEXT
+helm install istiod istio/istiod --namespace istio-system --version $ISTIO_VERSION --set profile=ambient --wait --kube-context $CONTEXT
+helm install istio-cni istio/cni -n istio-system --version $ISTIO_VERSION --set profile=ambient --wait --kube-context $CONTEXT
 
 # Install the Data Plane
-helm install ztunnel istio/ztunnel -n istio-system --wait --kube-context $CONTEXT
+helm install ztunnel istio/ztunnel -n istio-system --version $ISTIO_VERSION --wait --kube-context $CONTEXT
 
 
 
