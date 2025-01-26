@@ -40,3 +40,25 @@ helm install \
     kiali-operator \
     kiali/kiali-operator
 ```
+
+
+## Setting up Egress
+
+```bash
+kubectl create namespace common-infra
+kubectl label namespace common-infra istio.io/dataplane-mode=ambient
+istioctl waypoint apply --enroll-namespace --name egress-gateway --namespace common-infra
+```
+
+```bash
+kubectl apply -f ./istio/sleep.yaml -n common-infra
+```
+
+Create a service entry for the external host:
+
+```bash
+kubectl apply -f ./istio/httpbin-serviceentry.yaml
+```
+
+
+

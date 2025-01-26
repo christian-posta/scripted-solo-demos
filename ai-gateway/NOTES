@@ -1,4 +1,25 @@
 
+# What this Demo shows
+
+* Model / Provider Failover
+* Prompt Guard
+* Observability
+* Rate Limiting
+* Credential Injection
+* RAG
+* Semantic Cache
+* NVIDIA NIM on GKE
+* NIM Caching
+* NIM Operator
+* Istio Ambient 
+* mTLS for workloads
+* Metrics / Observability
+* Egress Gateway
+* Gloo Gateway / AI Gateway as Istio Waypoint
+* For controlling egress AI use traffic
+
+
+
 
 ## Setting up the demo on Kind
 Just run the setup-all.sh script:

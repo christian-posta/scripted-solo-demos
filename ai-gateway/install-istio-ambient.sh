@@ -16,12 +16,19 @@ helm repo update
 
 
 # Install Control Plane
-helm install istio-base istio/base -n istio-system --version $ISTIO_VERSION --create-namespace --wait --kube-context $CONTEXT
-helm install istiod istio/istiod --namespace istio-system --version $ISTIO_VERSION --set profile=ambient --wait --kube-context $CONTEXT
-helm install istio-cni istio/cni -n istio-system --version $ISTIO_VERSION --set profile=ambient --wait --kube-context $CONTEXT
+#helm show values istio/base --version $ISTIO_VERSION
+helm upgrade --install istio-base istio/base -n istio-system --version $ISTIO_VERSION --create-namespace  --wait --kube-context $CONTEXT
+
+
+#helm show values istio/istiod --version $ISTIO_VERSION
+helm upgrade --install istiod istio/istiod --namespace istio-system --version $ISTIO_VERSION --set profile=ambient --set pilot.env.PILOT_ENABLE_IP_AUTOALLOCATE=true --wait --kube-context $CONTEXT
+
+#helm show values istio/cni --version $ISTIO_VERSION
+helm upgrade --install istio-cni istio/cni -n istio-system --version $ISTIO_VERSION --set profile=ambient --set ambient.dnsCapture=true  --wait --kube-context $CONTEXT
 
 # Install the Data Plane
-helm install ztunnel istio/ztunnel -n istio-system --version $ISTIO_VERSION --wait --kube-context $CONTEXT
+#helm show values istio/ztunnel --version $ISTIO_VERSION
+helm upgrade --install ztunnel istio/ztunnel -n istio-system --version $ISTIO_VERSION --wait --kube-context $CONTEXT
 
 
 

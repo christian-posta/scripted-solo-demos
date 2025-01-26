@@ -1,0 +1,9 @@
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: enable-access-logging
+  namespace: common-infra
+spec:
+  accessLogging:
+    - providers:
+      - name: envoy
