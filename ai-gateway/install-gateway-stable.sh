@@ -22,28 +22,6 @@ helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-helm/gloo-ee \
   --version $VERSION \
   --namespace gloo-system --create-namespace \
   --set license_key=$GLOO_LICENSE_WITH_AI \
--f -<<EOF
-gloo:
-  kubeGateway:
-    enabled: true
-  gatewayProxies:
-    gatewayProxy:
-      disabled: true
-  discovery:
-    enabled: false
-gloo-fed:
-  enabled: false
-  glooFedApiserver:
-    enable: false
-# disable everything else for a simple deployment
-observability:
-  enabled: false
-prometheus:
-  enabled: false
-grafana:
-  defaultInstallationEnabled: false
-gateway-portal-web-server:
-  enabled: false
-EOF
+-f gloo-gateway-values.yaml
 
 kubectl --context $CONTEXT apply -f resources/ai-gateway.yaml

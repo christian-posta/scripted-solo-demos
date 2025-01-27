@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: httpbin-route
+  namespace: common-infra
+spec:
+  parentRefs:
+  - group: "networking.istio.io"
+    kind: ServiceEntry
+    name: httpbin
+  rules:
+  - filters:
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+        - name: Traversed-Waypoint
+          value: httpbin-waypoint
+    backendRefs:
+    - name: httpbin-upstream
+      group: gloo.solo.io
+      kind: Upstream

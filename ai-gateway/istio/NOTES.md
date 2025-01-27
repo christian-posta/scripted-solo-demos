@@ -42,7 +42,7 @@ helm install \
 ```
 
 
-## Setting up Egress
+## Setting up Egress (Default Waypoints)
 
 ```bash
 kubectl create namespace common-infra
@@ -60,5 +60,18 @@ Create a service entry for the external host:
 kubectl apply -f ./istio/httpbin-serviceentry.yaml
 ```
 
+Cleanup:
+
+```bash
+kubectl delete namespace common-infra
+```
+
+## Setting up Egress (Gloo Gateway Waypoints)
 
 
+```bash
+kubectl create namespace common-infra
+kubectl label namespace common-infra istio.io/dataplane-mode=ambient
+kubectl apply -f ./istio/gloo-egress-waypoint.yaml
+kubectl label ns common-infra istio.io/use-waypoint=gloo-egress-waypoint
+```

@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1
 kind: ServiceEntry
 metadata:
-  name: httpbin.org
+  name: httpbin
   namespace: common-infra
 spec:
   hosts:

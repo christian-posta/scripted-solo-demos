@@ -1,0 +1,41 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gloo-egress-waypoint
+  namespace: common-infra
+  annotations:
+    gateway.gloo.solo.io/gateway-parameters-name: gloo-egress-waypoint-override    
+spec:
+  gatewayClassName: gloo-waypoint
+  listeners:
+  - name: proxy
+    port: 15088
+    protocol: istio.io/PROXY
+  - name: hbone
+    port: 15008
+    protocol: istio.io/HBONE
+---
+apiVersion: gateway.gloo.solo.io/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gloo-egress-waypoint-override
+  namespace: common-infra
+spec:
+  kube:
+    envoyContainer:
+      bootstrap:
+        componentLogLevels:
+          upstream: debug
+          router: debug
+          connection: debug
+    aiExtension:
+      env:
+        - name: "LOG_LEVEL"
+          value: "debug"    
+      enabled: true 
+      ports:
+      - containerPort: 9092
+        name: ai-monitoring
+    deployment:
+      replicas: 1
+

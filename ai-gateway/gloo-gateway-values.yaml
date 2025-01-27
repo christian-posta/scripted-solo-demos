@@ -1,0 +1,37 @@
+ambient:
+  waypoint:
+    enabled: true
+gloo:
+  kubeGateway:
+    enabled: true
+  gatewayProxies:
+    gatewayProxy:
+      disabled: true
+  discovery:
+    enabled: false
+  gloo:
+    logLevel: info
+    disableLeaderElection: false
+    deployment:
+      replicas: 1
+      livenessProbeEnabled: true
+      customEnv:
+        # The waypoint translator is disabled by default, so must explicitly enable it
+        - name: ENABLE_WAYPOINTS
+          value: "true"
+  settings:
+    # Expose the Control Plane Admin API (port 10010 on Gloo)
+    devMode: true    
+gloo-fed:
+  enabled: false
+  glooFedApiserver:
+    enable: false
+# disable everything else for a simple deployment
+observability:
+  enabled: true
+prometheus:
+  enabled: false
+grafana:
+  defaultInstallationEnabled: false
+gateway-portal-web-server:
+  enabled: false

@@ -1,0 +1,13 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: httpbin-upstream
+  namespace: common-infra
+spec:
+  static:
+    hosts:
+      - addr: httpbin.org
+        port: 80
+    useTls: false
+
+
