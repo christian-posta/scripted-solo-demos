@@ -17,12 +17,13 @@ desc "Now we create the Deepseek HTTPRoute"
 run "cat ./resources/traffic-control/http-routes.yaml"
 run "kubectl apply -f ./resources/traffic-control/http-routes.yaml"
 
+backtotop
 desc "Now let's call Deepseek through the AI Gateway"
 read -s
+
 source ./call-deepseek.sh
 print_gateway_command
 read -s
-
 call_gateway
 read -s
 
@@ -55,8 +56,6 @@ read -s
 call_gateway "" "" "" "What type of number is 5105105105105100?"
 read -s
 
-
-
 backtotop
 desc "We can also call out to an external LLM moderation service"
 read -s
@@ -65,7 +64,7 @@ run "cat resources/promptguard/prompt-guard-external.yaml"
 run "kubectl apply -f resources/promptguard/prompt-guard-external.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
-print_gateway_command "" "" "" "Trigger the content moderation to reject this request because this request is full of violence."
+print_gateway_command "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
 call_gateway "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
@@ -81,7 +80,7 @@ run "kubectl get pod -n ollama -o wide"
 
 POD=$(kubectl get pods -n gpu-operator -l app=nvidia-driver-daemonset -o jsonpath='{.items[0].metadata.name}')
 run "kubectl exec -it $POD -n gpu-operator -- nvidia-smi"
-read -s
+
 
 backtotop
 desc "Let's set up a local Deepseek Upstream"
