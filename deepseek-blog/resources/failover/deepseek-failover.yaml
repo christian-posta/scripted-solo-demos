@@ -1,0 +1,27 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: gloo
+  name: deepseek
+  namespace: gloo-system
+spec:
+  ai:
+    multi:
+      priorities:
+      - pool:
+        - openai:
+            customHost:
+              host: "api.deepseek.com"
+            authToken:
+              secretRef:
+                name: deepseek-secret
+                namespace: gloo-system      
+      - pool:
+        - openai:
+            customHost:
+              host: ollama-deepseek-r1.ollama.svc.cluster.local
+              port: 11434
+            model: "deepseek-r1:7b"
+
+

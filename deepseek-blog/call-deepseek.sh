@@ -16,7 +16,7 @@ _build_curl_command() {
         headers+=("-H" "\"Authorization: Bearer $token\"")
     fi
 
-    echo "curl -v \"$GLOO_AI_GATEWAY:8080/$path\" ${headers[@]} -d '{
+    echo "curl \"$GLOO_AI_GATEWAY:8080/$path\" ${headers[@]} -d '{
       \"model\": \"$model\",
       \"max_tokens\": 4096,
       \"stream\": false,

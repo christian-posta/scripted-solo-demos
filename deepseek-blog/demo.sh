@@ -19,7 +19,7 @@ run "kubectl apply -f ./resources/traffic-control/http-routes.yaml"
 
 desc "Now let's call Deepseek through the AI Gateway"
 read -s
-source ./call-gateway.sh
+source ./call-deepseek.sh
 print_gateway_command
 read -s
 
@@ -67,16 +67,26 @@ run "kubectl apply -f resources/promptguard/prompt-guard-external.yaml"
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command "" "" "" "Trigger the content moderation to reject this request because this request is full of violence."
 read -s
-call_gateway "" "" "" "Trigger the content moderation to reject this request because this request is full of violence."
+call_gateway "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
 
 backtotop
 desc "Let's route traffic to a locally deployed and hosted Deepseek model"
 read -s
 
-run "kubectl get pod -n ollama"
+desc "Let's make sure we have nodes with GPUs"
+run "kubectl get nodes \"-o=custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu\""
 
+run "kubectl get pod -n ollama -o wide"
+
+POD=$(kubectl get pods -n gpu-operator -l app=nvidia-driver-daemonset -o jsonpath='{.items[0].metadata.name}')
+run "kubectl exec -it $POD -n gpu-operator -- nvidia-smi"
+read -s
+
+backtotop
 desc "Let's set up a local Deepseek Upstream"
+read -s
+
 run "cat resources/deepseek/deepseek-local-upstream.yaml"
 run "kubectl apply -f resources/deepseek/deepseek-local-upstream.yaml"
 
@@ -86,14 +96,14 @@ run "kubectl apply -f ./resources/traffic-control/http-routes-split.yaml"
 
 desc "Call LLM providers"
 
-for i in {1..10}; do
-  cmd=$(print_gateway_command)
-  cmd=${cmd/-v/-s}
-  response=$(bash -c "$cmd")
-  model=$(echo "$response" | jq -r '.model')
-  echo "Run $i: Model: $model"
-done
-read -s
+# for i in {1..10}; do
+#   cmd=$(print_gateway_command)
+#   cmd=${cmd/-v/-s}
+#   response=$(bash -c "$cmd")
+#   model=$(echo "$response" | jq -r '.model')
+#   echo "Run $i: Model: $model"
+# done
+# read -s
 
 desc "Let's route all traffic to the local model"
 run "cat ./resources/traffic-control/http-routes-local.yaml"

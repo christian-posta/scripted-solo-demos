@@ -1,0 +1,20 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: deepseek-failover-opts
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: deepseek
+  options:
+    retries:
+      retryOn: "gateway-error,connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes,5xx"
+      retriableStatusCodes: 
+      - 429
+      - 504
+      numRetries: 3
+      perTryTimeout: 10s
+      previousPriorities:
+        updateFrequency: 1

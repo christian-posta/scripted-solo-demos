@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteOption
 metadata:
-  name: deepseek-prompt-guard
+  name: deepseek-prompt-guard-opts
   namespace: gloo-system
 spec:
   targetRefs:

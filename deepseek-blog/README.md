@@ -1,5 +1,6 @@
 In this guide, we will deploy an AI Gateway to apply policy to DeepSeek R1 calls:
 
+```bash
 curl https://api.deepseek.com/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $DEEPSEEK_API_KEY" \
@@ -11,6 +12,7 @@ curl https://api.deepseek.com/chat/completions \
         ],
         "stream": false
       }'
+```
 
 
 ### Deploy KGateway
@@ -56,6 +58,8 @@ Demo:
 * Metrics
 
 ### Setup GKE Clusters with NVIDIA L4 inferencing GPUs
+
+https://cloud.google.com/compute/docs/gpus#l4-gpus
 
 ```bash
 source env.sh
