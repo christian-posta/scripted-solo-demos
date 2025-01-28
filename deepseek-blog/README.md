@@ -37,26 +37,17 @@ kubectl apply -f ai-gateway.yaml
 ### Set up Gateway To Route to DeepSeek
 
 ```bash
+source ~/bin/ai-keys
 kubectl create secret generic deepseek-secret -n gloo-system \
     --from-literal="Authorization=Bearer $DEEPSEEK_API_KEY" \
     --dry-run=client -oyaml | kubectl apply -f -
+
+kubectl create secret generic openai-secret -n gloo-system \
+    --from-literal="Authorization=Bearer $OPENAI_KEY" \
+    --dry-run=client -oyaml | kubectl apply -f -    
 ```
 
-Add the DeepSeek Upstream and HTTPRoute
-
-```bash
-kubectl apply -f deepseek-upstream.yaml
-kubectl apply -f http-routes.yaml
-```
-
-To Route Locally, add the DeepSeek Local Upstream and HTTPRoute
-
-```bash
-kubectl apply -f deepseek-local-upstream.yaml
-kubectl apply -f http-routes-local.yaml
-```
-
-TODO Fill out Demo:
+Demo:
 * Calling out to DeepSeek 
 * Prompt Guard the call
 * Traffic Split to Local

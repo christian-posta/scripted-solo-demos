@@ -8,7 +8,6 @@ metadata:
 spec:
   ai:
     openai:
-      model: deepseek-reasoner
       customHost:
         host: "api.deepseek.com"
       authToken:

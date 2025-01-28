@@ -1,13 +1,13 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteOption
 metadata:
-  name: openai-prompt-guard
+  name: deepseek-prompt-guard
   namespace: gloo-system
 spec:
   targetRefs:
   - group: gateway.networking.k8s.io
     kind: HTTPRoute
-    name: openai
+    name: deepseek
   options:
     ai:
       promptGuard:

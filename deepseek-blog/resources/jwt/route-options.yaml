@@ -16,5 +16,5 @@ spec:
           principals:
           - jwtPrincipal:
               claims:
-                "llms.openai": "gpt-3.5-turbo"
+                "llms.deepseek": "deepseek-r1:7b"
               matcher: LIST_CONTAINS
