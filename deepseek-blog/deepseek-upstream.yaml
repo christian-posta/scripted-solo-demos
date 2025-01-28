@@ -1,0 +1,17 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: gloo
+  name: deepseek
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      model: deepseek-reasoner
+      customHost:
+        host: "api.deepseek.com"
+      authToken:
+        secretRef:
+          name: deepseek-secret
+          namespace: gloo-system

@@ -1,0 +1,21 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-prompt-guard
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    ai:
+      promptGuard:
+        request:
+          customResponse:
+            message: "Rejected due to inappropriate content"
+          regex:
+            action: REJECT
+            matches:
+            - pattern: "credit card"
+              name: "CC"

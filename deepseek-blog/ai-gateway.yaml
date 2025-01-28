@@ -1,0 +1,83 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    gateway.gloo.solo.io/gateway-parameters-name: gloo-gateway-override
+  name: ai-gateway
+  namespace: gloo-system
+spec:
+  gatewayClassName: gloo-gateway
+  listeners:
+  - allowedRoutes:
+      namespaces:
+        from: All
+    name: http-load
+    hostname: load-generator.gloo.solo.io
+    port: 8081
+    protocol: HTTP  
+  - allowedRoutes:
+      namespaces:
+        from: All
+    name: http
+    port: 8080
+    protocol: HTTP
+---
+apiVersion: gateway.gloo.solo.io/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: gloo-gateway-override
+  namespace: gloo-system
+spec:
+  kube:
+    podTemplate:
+      extraAnnotations:
+        "prometheus.io/scrape2": "true"
+        "prometheus.io/port2": "9092"
+    aiExtension:
+      env:
+        - name: "LOG_LEVEL"
+          value: "debug"    
+      enabled: true
+      stats:
+        customLabels:
+          - name: "team"
+            metadataKey: "principal:team"
+          - name: "name"
+            metadataKey: "principal:name"
+          - name: "id"
+            metadataKey: "principal:sub"      
+      ports:
+      - containerPort: 9092
+        name: ai-monitoring
+    deployment:
+      replicas: 1
+---
+apiVersion: gateway.solo.io/v1
+kind: ListenerOption
+metadata:
+  name: ai-gateway-log-provider
+  namespace: gloo-system
+spec:
+  options:
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          jsonFormat:
+            httpMethod: '%REQ(:METHOD)%'
+            path: '%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%'
+            user: '%DYNAMIC_METADATA(envoy.filters.http.jwt_authn:principal:sub)%'
+            team: '%DYNAMIC_METADATA(envoy.filters.http.jwt_authn:principal:team)%'
+            requestId: '%REQ(X-REQUEST-ID)%'
+            responseCode: '%RESPONSE_CODE%'
+            systemTime: '%START_TIME%'
+            targetDuration: '%RESPONSE_DURATION%'
+            upstreamName: '%UPSTREAM_CLUSTER%'
+            total_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:total_tokens)%'
+            prompt_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:prompt_tokens)%'
+            completion_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:completion_tokens)%'
+            rate_limited_tokens: '%DYNAMIC_METADATA(envoy.ratelimit:hits_addend)%'
+          path: /dev/stdout
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: ai-gateway

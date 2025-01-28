@@ -1,0 +1,24 @@
+gloo:
+  kubeGateway:
+    enabled: true
+  gatewayProxies:
+    gatewayProxy:
+      disabled: true
+  discovery:
+    enabled: false
+  gloo:
+    logLevel: info
+    disableLeaderElection: false 
+gloo-fed:
+  enabled: false
+  glooFedApiserver:
+    enable: false
+# disable everything else for a simple deployment
+observability:
+  enabled: true
+prometheus:
+  enabled: false
+grafana:
+  defaultInstallationEnabled: false
+gateway-portal-web-server:
+  enabled: false

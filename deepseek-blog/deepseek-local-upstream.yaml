@@ -1,0 +1,12 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: deepseek-local
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      customHost:
+        host: ollama-deepseek-r1.ollama.svc.cluster.local
+        port: 11434
+      model: deepseek-r1:7b
