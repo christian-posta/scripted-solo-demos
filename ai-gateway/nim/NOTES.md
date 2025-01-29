@@ -36,12 +36,12 @@ Don't install the default GPU device plugin because we will do that with the GPU
 gcloud container node-pools create gpu-pool \
     --cluster $CLUSTER_NAME \
     --zone $ZONE \
-    --machine-type "a2-highgpu-1g" \
+    --node-locations $ZONE \
+    --machine-type "g2-standard-8" \
     --image-type "UBUNTU_CONTAINERD" \
     --node-labels="gke-no-default-nvidia-gpu-device-plugin=true" \
-    --disk-type "pd-standard" \
-    --disk-size "100" \
     --metadata disable-legacy-endpoints=true \
+    --disk-size "100" \
     --num-nodes "1" \
     --tags=nvidia-ingress-all
 ```

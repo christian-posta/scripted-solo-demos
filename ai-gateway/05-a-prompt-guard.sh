@@ -50,7 +50,7 @@ run "cat resources/05-prompt-guard/prompt-guard-external.yaml"
 run "kubectl apply -f resources/05-prompt-guard/prompt-guard-external.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
-print_gateway_command "" "" "" "" "Trigger the content moderation to reject this request because this request is full of violence."
+print_gateway_command "" "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
-call_gateway "" "" "" "" "Trigger the content moderation to reject this request because this request is full of violence."
+call_gateway "" "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
