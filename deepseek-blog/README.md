@@ -25,10 +25,10 @@ curl -v https://api.deepseek.com/chat/completions \
 
 ```bash
 ./install-gateway-1-19.sh
+./setup-observability.sh
 ```
 
-
-### Set up Gateway To Route to DeepSeek
+Set up secrets for DeepSeek and OpenAI
 
 ```bash
 source ~/bin/ai-keys
@@ -41,8 +41,11 @@ kubectl create secret generic openai-secret -n gloo-system \
     --dry-run=client -oyaml | kubectl apply -f -    
 ```
 
+To deploy the deepseek-r1:7b model onto a cluster with GPUs, make sure you have a cluster with GPUs (see for GKE below), and install:
 
-
+```bash
+kubectl apply -f resources/deepseek/ollama-deepseek.yaml
+```
 ### Setup GKE Clusters with NVIDIA L4 inferencing GPUs
 
 https://cloud.google.com/compute/docs/gpus#l4-gpus

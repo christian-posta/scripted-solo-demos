@@ -100,5 +100,5 @@ run "kubectl apply -f resources/promptguard/prompt-guard-external.yaml"
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command $CEPOSTA_TOKEN "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
-call_gateway $CEPOSTA_TOKEN "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
+call_gateway $CEPOSTA_TOKEN "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
 read -s
