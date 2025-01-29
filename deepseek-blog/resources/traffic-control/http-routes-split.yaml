@@ -29,4 +29,16 @@ spec:
         name: deepseek-local
         namespace: gloo-system
         weight: 50
-
+---
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: deepseek-timeout-opts
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: deepseek
+  options:
+    timeout: 30s

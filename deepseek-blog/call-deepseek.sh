@@ -8,7 +8,7 @@ _build_curl_command() {
     local token="${1:-}"
     local model="${2:-deepseek-chat}"
     local path="${3:-deepseek}"
-    local user_prompt="${4:-How many Rs are there in the word strawberry?}"
+    local user_prompt="${4:-What is 2 + 2?}"
 
 
     local headers=("-H" "\"content-type:application/json\"")

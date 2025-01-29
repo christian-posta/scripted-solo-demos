@@ -89,11 +89,11 @@ read -s
 run "cat resources/deepseek/deepseek-local-upstream.yaml"
 run "kubectl apply -f resources/deepseek/deepseek-local-upstream.yaml"
 
-desc "Let's split traffic from the Deepseek hosted model and the local model"
-run "cat ./resources/traffic-control/http-routes-split.yaml"
-run "kubectl apply -f ./resources/traffic-control/http-routes-split.yaml"
+#desc "Let's split traffic from the Deepseek hosted model and the local model"
+#run "cat ./resources/traffic-control/http-routes-split.yaml"
+#run "kubectl apply -f ./resources/traffic-control/http-routes-split.yaml"
 
-desc "Call LLM providers"
+#desc "Call LLM providers"
 
 # for i in {1..10}; do
 #   cmd=$(print_gateway_command)
@@ -107,6 +107,12 @@ desc "Call LLM providers"
 desc "Let's route all traffic to the local model"
 run "cat ./resources/traffic-control/http-routes-local.yaml"
 run "kubectl apply -f ./resources/traffic-control/http-routes-local.yaml"
+
+desc "Let's call the model"
+print_gateway_command "" "" "" "What is 2 + 2?"
+read -s
+call_gateway "" "" "" "What is 2 + 2?"
+read -s
 
 backtotop
 desc "The local Deepseek model is not secure, so let's secure it with JWT"

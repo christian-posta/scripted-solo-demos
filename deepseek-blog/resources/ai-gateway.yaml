@@ -11,13 +11,6 @@ spec:
   - allowedRoutes:
       namespaces:
         from: All
-    name: http-load
-    hostname: load-generator.gloo.solo.io
-    port: 8081
-    protocol: HTTP  
-  - allowedRoutes:
-      namespaces:
-        from: All
     name: http
     port: 8080
     protocol: HTTP
@@ -38,6 +31,11 @@ spec:
         - name: "LOG_LEVEL"
           value: "debug"    
       enabled: true
+      tracing:
+        insecure: true
+        grpc:
+          host: "jaeger-collector.monitoring.svc.cluster.local"
+          port: 4317      
       stats:
         customLabels:
           - name: "team"
@@ -51,6 +49,59 @@ spec:
         name: ai-monitoring
     deployment:
       replicas: 1
+---
+apiVersion: gateway.solo.io/v1
+kind: HttpListenerOption
+metadata:
+  name: log-provider
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: ai-gateway
+    sectionName: http
+  options:
+    httpConnectionManagerSettings:
+      tracing:
+        tracePercentages:
+          overallSamplePercentage: 100
+        spawnUpstreamSpan: true
+        metadataForTags:
+        - tag: ai.model
+          value:
+            namespace: ai.gloo.solo.io
+            key: model
+        - tag: ai.provider_model
+          value:
+            namespace: ai.gloo.solo.io
+            key: provider_model
+        - tag: ai.streaming
+          value:
+            namespace: ai.gloo.solo.io
+            key: streaming
+        - tag: ai.prompt_tokens
+          value:
+            namespace: ai.gloo.solo.io
+            key: prompt_tokens
+        - tag: ai.completion_tokens
+          value:
+            namespace: ai.gloo.solo.io
+            key: completion_tokens
+        - tag: user.name
+          value:
+            namespace: envoy.filters.http.jwt_authn
+            key: principal.name
+        - tag: user.team
+          value:
+            namespace: envoy.filters.http.jwt_authn
+            key: principal.team
+        openTelemetryConfig:
+          # try auto-generate based on listener name
+          #serviceName: gloo-proxy
+          collectorUpstreamRef:
+            namespace: "gloo-system"
+            name: "jaeger"
 ---
 apiVersion: gateway.solo.io/v1
 kind: ListenerOption

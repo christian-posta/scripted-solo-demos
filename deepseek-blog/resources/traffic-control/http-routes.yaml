@@ -35,4 +35,4 @@ spec:
     kind: HTTPRoute
     name: deepseek
   options:
-    timeout: 25s
+    timeout: 30s

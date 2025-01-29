@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: otel-monitor
+spec:
+  podMetricsEndpoints:
+  - interval: 30s
+    port: promexporter
+    scheme: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opentelemetry-collector

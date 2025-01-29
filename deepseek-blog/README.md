@@ -1,4 +1,12 @@
-In this guide, we will deploy an AI Gateway to apply policy to DeepSeek R1 calls:
+Demo:
+* Calling out to DeepSeek 
+* Prompt Guard the call
+* Traffic Split to Local
+* All traffic to Local
+* Secure the call with JWT
+* Metrics
+
+In this guide, we will deploy an AI Gateway to apply policy to DeepSeek R1 calls. Here is an example of calling DeepSeek directly (note, using the `deepseek-chat` model because `deepseek-reasoner` is down at the time of this writing):
 
 ```bash
 curl -v https://api.deepseek.com/chat/completions \
@@ -7,31 +15,16 @@ curl -v https://api.deepseek.com/chat/completions \
   -d '{
         "model": "deepseek-chat",
         "messages": [
-          {"role": "user", "content": "Hello!"}
+          {"role": "user", "content": "What is 2+2"}
         ],
         "stream": false
       }'
 ```
 
-
-### Deploy KGateway
+### Deploy Gloo Gateway
 
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
-
-helm repo add gloo-ee-helm https://storage.googleapis.com/gloo-ee-helm
-helm repo update
-
-VERSION="1.18.2"
-
-source ~/bin/glooe-license-key-env 
-helm upgrade -i gloo-gateway gloo-ee-helm/gloo-ee \
-  --version $VERSION \
-  --namespace gloo-system --create-namespace \
-  --set license_key=$GLOO_LICENSE_WITH_AI \
--f kgateway-values.yaml
-
-kubectl apply -f ai-gateway.yaml
+./install-gateway-1-19.sh
 ```
 
 
@@ -48,13 +41,7 @@ kubectl create secret generic openai-secret -n gloo-system \
     --dry-run=client -oyaml | kubectl apply -f -    
 ```
 
-Demo:
-* Calling out to DeepSeek 
-* Prompt Guard the call
-* Traffic Split to Local
-* All traffic to Local
-* Secure the call with JWT
-* Metrics
+
 
 ### Setup GKE Clusters with NVIDIA L4 inferencing GPUs
 

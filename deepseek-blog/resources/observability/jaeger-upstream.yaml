@@ -1,0 +1,15 @@
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: gloo
+  name: jaeger
+  namespace: gloo-system
+spec:
+  useHttp2: true
+  static:
+    hosts:
+    - addr: "jaeger-collector.monitoring.svc.cluster.local"
+      port: 4317
+
