@@ -17,8 +17,10 @@ POD=$(kubectl get pods -n gpu-operator -l app=nvidia-driver-daemonset -o jsonpat
 run "kubectl exec -it $POD -n gpu-operator -- nvidia-smi"
 
 backtotop
-desc "Let's set up a local Deepseek Gloo GatewayUpstream"
+desc "Let's set up routing to the local model"
 read -s
+
+run "kubectl get po -n gloo-system"
 
 run "cat resources/deepseek/deepseek-local-upstream.yaml"
 run "kubectl apply -f resources/deepseek/deepseek-local-upstream.yaml"
