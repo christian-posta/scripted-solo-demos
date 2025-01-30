@@ -16,6 +16,9 @@ spec:
         engine: tensorrt_llm
         tensorParallelism: "1"
         qosProfile: "throughput"
+        profiles:
+        - 193649a2eb95e821309d6023a2cabb31489d3b690a9973c7ab5d1ff58b0aa7eb
+        - 7cc8597690a35aba19a3636f35e7f1c7e7dbc005fe88ce9394cad4a4adeed414
   storage:
     pvc:
       create: true

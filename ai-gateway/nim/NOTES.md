@@ -37,7 +37,7 @@ gcloud container node-pools create gpu-pool \
     --cluster $CLUSTER_NAME \
     --zone $ZONE \
     --node-locations $ZONE \
-    --machine-type "g2-standard-8" \
+    --machine-type "g2-standard-16" \
     --image-type "UBUNTU_CONTAINERD" \
     --node-labels="gke-no-default-nvidia-gpu-device-plugin=true" \
     --metadata disable-legacy-endpoints=true \
@@ -190,6 +190,7 @@ kubectl apply -f ./nim/nim-httproute.yaml
 
 Call the gateway:
 ```bash
+TOKEN=$(cat ./resources/tokens/ceposta-openai.token)
 call_gateway $TOKEN "meta/llama-3.1-8b-instruct" "v1/chat/completions"
 ```
 
