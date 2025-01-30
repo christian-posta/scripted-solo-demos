@@ -1,6 +1,6 @@
-# ambient:
-#   waypoint:
-#     enabled: true
+ambient:
+  waypoint:
+    enabled: true
 gloo:
   kubeGateway:
     enabled: true
@@ -9,12 +9,12 @@ gloo:
       disabled: true
   discovery:
     enabled: false
-  # gloo:
-  #   deployment:
-  #     customEnv:
-  #       # The waypoint translator is disabled by default, so must explicitly enable it
-  #       - name: ENABLE_WAYPOINTS
-  #         value: "true" 
+  gloo:
+    deployment:
+      customEnv:
+        # The waypoint translator is disabled by default, so must explicitly enable it
+        - name: ENABLE_WAYPOINTS
+          value: "true" 
 gloo-fed:
   enabled: false
   glooFedApiserver:

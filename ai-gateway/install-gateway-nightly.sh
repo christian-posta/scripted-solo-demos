@@ -18,7 +18,7 @@ helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-test/gloo-ee \
   --version $VERSION \
   --namespace gloo-system --create-namespace \
   --set license_key=$GLOO_LICENSE_WITH_AI \
--f gloo-gateway-values.yaml
+-f ./gloo-gateway-values.yaml
 
 
-kubectl --context $CONTEXT apply -f resources/ai-gateway.yaml
+kubectl --context $CONTEXT apply -f ./resources/ai-gateway.yaml

@@ -8,14 +8,11 @@ spec:
   - group: "networking.istio.io"
     kind: ServiceEntry
     name: httpbin
+  hostnames:
+  - httpbin.org
   rules:
-  - filters:
-    - type: ResponseHeaderModifier
-      responseHeaderModifier:
-        add:
-        - name: Traversed-Waypoint
-          value: httpbin-waypoint
-    backendRefs:
-    - name: httpbin-upstream
-      group: gloo.solo.io
-      kind: Upstream
+  - backendRefs:
+    - kind: Hostname
+      group: networking.istio.io
+      name: httpbin.org
+      port: 80
