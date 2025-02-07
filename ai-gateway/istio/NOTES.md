@@ -22,6 +22,14 @@ Create a service entry for the external host:
 kubectl apply -f ./istio/httpbin-serviceentry.yaml
 ```
 
+Login to the sleep pod and curl the httpbin service:
+
+```bash
+kubectl exec -it deploy/sleep -n common-infra -- /bin/sh
+
+curl httpbin.org/get
+```
+
 Cleanup:
 
 ```bash
@@ -50,4 +58,15 @@ kubectl create namespace common-infra
 kubectl label namespace common-infra istio.io/dataplane-mode=ambient
 kubectl apply -f ./istio/gloo-egress-waypoint.yaml
 kubectl label ns common-infra istio.io/use-waypoint=gloo-egress-waypoint
+kubectl apply -f ./istio/sleep.yaml -n common-infra
+kubectl apply -f ./istio/httpbin-serviceentry.yaml
 ```
+
+```bash
+kubectl patch deployment/gloo-proxy-gloo-egress-waypoint -n common-infra --patch '{"spec": {"template": {"metadata": {"annotations": {"ambient.istio.io/dns-capture": "false"}}}}}'
+```
+
+
+### Digging into the AI stuff
+
+

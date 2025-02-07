@@ -1,16 +1,16 @@
 apiVersion: networking.istio.io/v1
 kind: ServiceEntry
 metadata:
-  name: httpbin
+  name: openai-egress
   namespace: common-infra
 spec:
   hosts:
-  - httpbin.org
+  - api.openai.com
   ports:
   - number: 80
     name: http
-    protocol: HTTP
+    protocol: HTTP  
   resolution: DNS
   endpoints:
-  - address: httpbin.org
-    weight: 1
+  - address: api.openai.com
+    weight: 1 
