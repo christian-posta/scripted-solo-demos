@@ -4,16 +4,13 @@ metadata:
   name: gloo-egress-waypoint
   namespace: common-infra
   annotations:
-    # gateway.gloo.solo.io/gateway-parameters-name: gloo-egress-ai-waypoint-override  
+    gateway.gloo.solo.io/gateway-parameters-name: gloo-egress-ai-waypoint-override  
 spec:
   gatewayClassName: gloo-waypoint
   listeners:
   - name: proxy
     port: 15088
     protocol: istio.io/PROXY
-  - name: hbone
-    port: 15008
-    protocol: istio.io/HBONE
 ---
 apiVersion: gateway.gloo.solo.io/v1alpha1
 kind: GatewayParameters

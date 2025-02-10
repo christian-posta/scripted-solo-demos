@@ -199,12 +199,14 @@ call_gateway $TOKEN "meta/llama-3.1-8b-instruct" "v1/chat/completions"
 ## Scale down nodes
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool gpu-pool \
     --num-nodes 0 
 ```
 
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool default-pool \
     --num-nodes 0 
 ```
@@ -213,12 +215,14 @@ gcloud container clusters resize $CLUSTER_NAME \
 Put it back
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool gpu-pool \
     --num-nodes 1 
 ```
 
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool default-pool \
     --num-nodes 1 
 ```
@@ -227,12 +231,14 @@ gcloud container clusters resize $CLUSTER_NAME \
 Scale up
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool default-pool \
     --num-nodes 3
 ```
 
 ```bash
 gcloud container clusters resize $CLUSTER_NAME \
+    --zone $ZONE \
     --node-pool gpu-pool \
     --num-nodes 3
 ```

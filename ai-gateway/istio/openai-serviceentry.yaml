@@ -6,6 +6,10 @@ metadata:
 spec:
   hosts:
   - api.openai.com
+  # remove this when we have auto-allocation
+  # working on the waypoint
+  addresses:
+  - 240.240.0.7
   ports:
   - number: 80
     name: http

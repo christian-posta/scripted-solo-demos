@@ -11,6 +11,12 @@ spec:
   hostnames:
   - httpbin.org
   rules:
+  - filters:
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+        - name: Traversed-Waypoint
+          value: gloo-egress-ai-waypoint
   - backendRefs:
     - kind: Hostname
       group: networking.istio.io
