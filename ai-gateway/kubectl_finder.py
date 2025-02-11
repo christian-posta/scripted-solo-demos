@@ -38,11 +38,11 @@ def main():
     auto_run = '-y' in sys.argv  # Check if -y is in the arguments
 
     # Check for the --run argument
-    if len(sys.argv) == 4 and sys.argv[2] == '--run':
+    if '--run' in sys.argv:
         try:
-            run_command_index = int(sys.argv[3])
-        except ValueError:
-            print("Error: Command index must be an integer.")
+            run_command_index = int(sys.argv[sys.argv.index('--run') + 1])
+        except (ValueError, IndexError):
+            print("Error: Command index must be an integer and provided after --run.")
             sys.exit(1)
 
     # Regex to match kubectl apply commands
@@ -72,19 +72,26 @@ def main():
                 cmd_to_run = kubectl_commands[run_command_index]
                 print(f"Command to run: {cmd_to_run}")
 
-                # Prompt for confirmation unless -y is passed
-                if not auto_run:
+                # Always run the command if -y is passed
+                if auto_run:
+                    print(f"Running command: {cmd_to_run}")
+                    try:
+                        subprocess.run(cmd_to_run, shell=True, check=True)
+                        print("Command executed successfully.")
+                    except subprocess.CalledProcessError as e:
+                        print(f"Error executing command: {e}")
+                else:
+                    # Prompt for confirmation if -y is not passed
                     choice = input("Do you want to run this command? (Y/n, default is Y): ").strip().lower() or 'y'
-                    if choice != 'y':
+                    if choice == 'y':
+                        print(f"Running command: {cmd_to_run}")
+                        try:
+                            subprocess.run(cmd_to_run, shell=True, check=True)
+                            print("Command executed successfully.")
+                        except subprocess.CalledProcessError as e:
+                            print(f"Error executing command: {e}")
+                    else:
                         print("Skipping command.")
-                        return
-
-                print(f"Running command: {cmd_to_run}")
-                try:
-                    subprocess.run(cmd_to_run, shell=True, check=True)
-                    print("Command executed successfully.")
-                except subprocess.CalledProcessError as e:
-                    print(f"Error executing command: {e}")
             else:
                 print(f"Error: Command index {run_command_index} is out of range.")
     else:
