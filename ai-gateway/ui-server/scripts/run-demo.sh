@@ -42,43 +42,43 @@ run_demo() {
         "05-demo-prompt-guard-reject")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 5 > /dev/null 2>&1
-            ./kubectl_finder.py "05-demo-prompt-guard.sh" --run 0 -y
+            ./kubectl_finder.py "05-a-prompt-guard.sh" --run 0 -y
             popd
             ;;
         "05-demo-prompt-guard-mask")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 5 > /dev/null 2>&1
-            ./kubectl_finder.py "05-demo-prompt-guard.sh" --run 0 -y
+            ./kubectl_finder.py "05-a-prompt-guard.sh" --run 1 -y
             popd
             ;;
         "05-demo-prompt-guard-moderation")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 5 > /dev/null 2>&1
-            ./kubectl_finder.py "05-demo-prompt-guard.sh" --run 0 -y
+            ./kubectl_finder.py "05-a-prompt-guard.sh" --run 2 -y
             popd
             ;;
         "05-demo-prompt-guard-custom")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 5 > /dev/null 2>&1
-            ./kubectl_finder.py "05-demo-prompt-guard.sh" --run 0 -y
+            ./kubectl_finder.py "05-b-prompt-guard.sh" --run 0 -y
             popd
             ;;
         "06-demo-semantic-cache")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 6 > /dev/null 2>&1
-            ./kubectl_finder.py "06-demo-semantic-cache.sh" --run 0 -y
+            ./kubectl_finder.py "06-semantic-cache.sh" --run 0 -y
             popd
             ;;
         "07-demo-rag")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 7 > /dev/null 2>&1
-            ./kubectl_finder.py "07-demo-rag.sh" --run 0 -y
+            ./kubectl_finder.py "07-rag.sh" --run 0 -y
             popd
             ;;
-        "08-traffic-shift")
+        "08-demo-traffic-shift")
             pushd $DEMO_DIR
             ./reset-demo.sh --for 8 > /dev/null 2>&1
-            ./kubectl_finder.py "08-demo-traffic-shift.sh" --run 0 -y
+            ./kubectl_finder.py "08-traffic-shift.sh" --run 0 -y
             popd
             ;;
         *)

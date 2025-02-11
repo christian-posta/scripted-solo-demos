@@ -41,8 +41,8 @@ const USECASE_COMMANDS = {
   '07-demo-rag': [
     `${path.join(SCRIPTS_ROOT_DIR, './run-demo.sh 07-demo-rag')}`
   ],
-  '08-traffic-shift': [
-    `${path.join(SCRIPTS_ROOT_DIR, './run-demo.sh 08-traffic-shift')}`
+  '08-demo-traffic-shift': [
+    `${path.join(SCRIPTS_ROOT_DIR, './run-demo.sh 08-demo-traffic-shift')}`
   ]
   // Add more usecases as needed
 };
