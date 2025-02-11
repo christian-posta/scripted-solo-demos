@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables from .env file
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -17,10 +19,22 @@ app.post('/api/llm', async (req, res) => {
   };
 
   try {
-    const { prompt, endpoint, credentials } = req.body;
+    const { prompt, credentials } = req.body;
+    let endpoint = req.body.endpoint; // Store the original endpoint
     const headers = {
       'Content-Type': 'application/json',
     };
+
+    // Check if the endpoint is localhost and if an override is provided
+    const overrideUrl = process.env.LLM_OVERRIDE_URL; // Get the override value from .env
+    if (endpoint.startsWith('http://localhost') || endpoint.startsWith('https://localhost')) {
+      if (overrideUrl) {
+        const url = new URL(endpoint);
+        const overrideUrlObj = new URL(overrideUrl);
+        // Replace the host and port while keeping the path
+        endpoint = `${overrideUrlObj.protocol}//${overrideUrlObj.host}${url.pathname}${url.search}`;
+      }
+    }
 
     if (credentials) {
       headers['Authorization'] = `Bearer ${credentials}`;
