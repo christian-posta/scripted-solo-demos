@@ -70,16 +70,18 @@ app.post('/api/llm', async (req, res) => {
     const responseDetails = {
       status: response.status,
       statusText: response.statusText,
-      headers: Object.fromEntries(response.headers),
+      headers: response.headers ? Object.fromEntries(response.headers) : {},
       body: responseData || responseText
     };
 
     if (!response.ok) {
-      throw {
-        message: responseData?.error?.message || responseText || `API call failed with status: ${response.status}`,
-        request: requestDetails,
-        response: responseDetails
-      };
+      return res.status(response.status).json({
+        error: responseData?.error?.message || responseText || 'An error occurred',
+        debug: {
+          request: requestDetails,
+          response: responseDetails
+        }
+      });
     }
 
     res.json({
@@ -98,7 +100,7 @@ app.post('/api/llm', async (req, res) => {
         response: {
           status: error.response?.status || null,
           statusText: error.response?.statusText || null,
-          headers: error.response ? Object.fromEntries(error.response.headers) : null,
+          headers: error.response && error.response.headers ? Object.fromEntries(error.response.headers) : null,
           body: error.response ? await error.response.text() : null
         }
       }
