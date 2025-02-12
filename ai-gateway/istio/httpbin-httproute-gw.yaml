@@ -5,14 +5,16 @@ metadata:
   namespace: common-infra
 spec:
   parentRefs:
-  - group: "networking.istio.io"
-    kind: ServiceEntry
-    name: httpbin
-    namespace: common-infra
+    - name: gloo-egress-waypoint
+      namespace: common-infra
   hostnames:
   - httpbin.org
   rules:
-  - filters:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /get
+    filters:
     - type: ResponseHeaderModifier
       responseHeaderModifier:
         add:

@@ -11,7 +11,7 @@ kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-a
 helm repo add gloo-ee-test https://storage.googleapis.com/gloo-ee-test-helm
 helm repo update
 
-VERSION="1.19.0-beta1-bmain-f7062f9"
+VERSION="1.19.0-beta3-bstevenctlwaypoint-cidr-ipv-6218fe9"
 
 source ~/bin/glooe-license-key-env 
 helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-test/gloo-ee \

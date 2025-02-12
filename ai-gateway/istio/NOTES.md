@@ -41,7 +41,8 @@ kubectl delete namespace common-infra
 Upgrade Gloo gateway to support waypoints:
 
 ```bash
-VERSION="1.19.0-beta1-bmain-f7062f9"
+CONTEXT="ai-demo"
+VERSION="1.19.0-beta3-bstevenctlwaypoint-cidr-ipv-6218fe9"
 
 source ~/bin/glooe-license-key-env 
 helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-test/gloo-ee \

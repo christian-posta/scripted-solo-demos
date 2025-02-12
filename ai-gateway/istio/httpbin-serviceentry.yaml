@@ -6,10 +6,6 @@ metadata:
 spec:
   hosts:
   - httpbin.org
-  # remove this when we have auto-allocation
-  # working on the waypoint  
-  addresses:
-  - 240.240.0.8  
   ports:
   - number: 80
     name: http
