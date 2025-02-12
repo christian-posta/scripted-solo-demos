@@ -10,7 +10,7 @@ fi
 DEMO_NAME=$1
 
 # Get scripts root dir from env var, default to current directory
-DEMO_DIR=/home/solo/scripted-solo-demos/ai-gateway
+DEMO_DIR="$(dirname "$(realpath "$0")")/../../"
 
 # Function to run commands for demo
 run_demo() {

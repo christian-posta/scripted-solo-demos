@@ -27,7 +27,7 @@ app.post('/api/llm', async (req, res) => {
 
     // Check if the endpoint is localhost and if an override is provided
     const overrideUrl = process.env.LLM_OVERRIDE_URL; // Get the override value from .env
-    if (endpoint.startsWith('http://localhost') || endpoint.startsWith('https://localhost')) {
+    if (endpoint.startsWith('http://your.ai-gateway.com') || endpoint.startsWith('https://your.ai-gateway.com')) {
       if (overrideUrl) {
         const url = new URL(endpoint);
         const overrideUrlObj = new URL(overrideUrl);

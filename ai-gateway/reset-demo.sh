@@ -101,6 +101,8 @@ reset_for_07() {
 reset_for_08() {
     reset_all
     kubectl apply -f resources/extensions/ollama.yaml
+    kubectl apply -f resources/08-provider-traffic-shift/qwen-upstream.yaml
+    
 }
 
 while [[ "$#" -gt 0 ]]; do

@@ -178,9 +178,17 @@ kubectl apply -f ./nim/nimservice.yaml
 ```
 
 ## Deploy Gateway
+
 ```bash
+CONTEXT=nim-cluster
 ./install-gateway-nightly.sh $CONTEXT
+
+source ~/bin/ai-keys
+kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
+    --from-literal="Authorization=Bearer $OPENAI_KEY" \
+    --dry-run=client -oyaml | kubectl apply -f -
 ```
+
 
 Deploy NIM Upstream
 ```bash
@@ -270,3 +278,4 @@ Useful if going to use filestore
 gcloud container clusters update $CLUSTER_NAME \
 --update-addons=GcpFilestoreCsiDriver=ENABLED
 ```
+
