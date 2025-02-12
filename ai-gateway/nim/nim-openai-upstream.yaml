@@ -1,0 +1,12 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: openai
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      customHost:
+        host: meta-llama3-8b-instruct.default.svc.cluster.local
+        port: 8000
+      model: "meta/llama-3.1-8b-instruct"

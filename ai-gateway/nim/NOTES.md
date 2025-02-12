@@ -189,6 +189,15 @@ kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
     --dry-run=client -oyaml | kubectl apply -f -
 ```
 
+To plug the NIM meta/llama model into the bigger demos, you can just override the `openai` upstream in 01-call-llm to be the NIM upstream (but with the openai name). Everything else should just work. 
+
+Example, this would do it:
+```bash
+cp ./nim/nim-openai-upstream.yaml ./resources/01-call-llm/llm-providers.yaml
+```
+
+TODO: use kustomize to more flexibly change out these upstreams and routes
+
 
 Deploy NIM Upstream
 ```bash
