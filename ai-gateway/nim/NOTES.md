@@ -212,6 +212,24 @@ call_gateway $TOKEN "meta/llama-3.1-8b-instruct" "v1/chat/completions"
 ```
 
 
+## Firewall the gateway so I can call it
+We want to block all to the gateway except for my IP
+
+
+
+```bash
+export MY_IP=$(curl -s ipecho.net/plain)
+kubectl patch svc -n gloo-system gloo-proxy-ai-gateway -p '{"spec": {"loadBalancerSourceRanges": ["'"$MY_IP"/32'"]}}'
+```
+
+
+With this we can block all traffic:
+
+```bash
+kubectl patch svc -n gloo-system gloo-proxy-ai-gateway -p '{"spec": {"loadBalancerSourceRanges": ["0.0.0.0/32"]}}'
+```
+
+
 
 ## Scale down nodes
 ```bash
