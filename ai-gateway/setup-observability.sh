@@ -26,6 +26,8 @@ prometheus-community/kube-prometheus-stack \
 --create-namespace \
 --values ./resources/observability/helm-prom-install.yaml
 
+# Default un/pw for grafana is admin/prom-operator
+
 # set up the pod monitor for the otel collector
 kubectl apply -f ./resources/observability/pod-monitor.yaml -n otel
 
