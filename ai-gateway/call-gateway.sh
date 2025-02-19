@@ -27,7 +27,6 @@ _build_curl_command() {
       \"top_p\": 1,
       \"n\": 1,
       \"stream\": false,
-      \"stop\": \"\n\",
       \"frequency_penalty\": 0.0,  
       \"messages\": [
         {
