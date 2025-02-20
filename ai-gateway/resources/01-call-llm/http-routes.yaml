@@ -20,7 +20,7 @@ spec:
             type: ReplaceFullPath
             replaceFullPath: /v1/chat/completions
     backendRefs:
-    - name: openai
+    - name: openai-nim
       namespace: gloo-system
       group: gloo.solo.io
       kind: Upstream

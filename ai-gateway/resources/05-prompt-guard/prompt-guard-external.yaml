@@ -14,9 +14,7 @@ spec:
         request:
           moderation:
             openai:
-              model: omni-moderation-latest
-              authToken:
-                secretRef:
-                  name: openai-secret
-                  namespace: gloo-system
-
+              model: llama-3.1-nemoguard-8b-content-safety
+              customHost:
+                host: meta-llama3-8b-instruct-moderation.default.svc.cluster.local
+                port: 8000

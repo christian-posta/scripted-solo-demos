@@ -21,7 +21,7 @@ spec:
     backendRefs:
       - group: gloo.solo.io
         kind: Upstream
-        name: ollama-qwen-0.5-upstream
+        name: openai-nim
         namespace: gloo-system
         weight: 100
       - group: gloo.solo.io
