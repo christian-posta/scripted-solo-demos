@@ -5,7 +5,7 @@ export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o
 # Helper function to build the curl command
 _build_curl_command() {
     local token="${1:-}"
-    local model="${2:-gpt-3.5-turbo}"
+    local model="${2:-meta/llama-3.1-8b-instruct}"
     local path="${3:-openai}"
     local system_prompt="${4:-You grew up in Phoenix, AZ and are now a travel expert.}"
     local user_prompt="${5:-Tell me about Sedona, AZ in 20 words or fewer.}"
