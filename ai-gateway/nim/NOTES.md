@@ -61,16 +61,19 @@ helm repo update
 Find the latest versions
 ```bash
 helm search repo nvidia/gpu-operator --versions 
-helm show values nvidia/gpu-operator --version v24.9.1 | less
+helm show values nvidia/gpu-operator --version v24.9.2 | less
 ```
 
 operator: https://github.com/NVIDIA/gpu-operator
 
 docs: https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html
+GPU Time Slicing: https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html
+
 
 ```bash
-export GPU_OPERATOR_VERSION=v24.9.1
+export GPU_OPERATOR_VERSION=v24.9.2
 kubectl create namespace gpu-operator
+kubectl apply -f ./nim/time-slicing-config-all.yaml    
 kubectl apply -f ./nim/gke-resourcequota.yaml
 helm upgrade --install gpu-operator nvidia/gpu-operator --wait  \
     -n gpu-operator \

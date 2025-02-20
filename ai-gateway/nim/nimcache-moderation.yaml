@@ -1,0 +1,28 @@
+apiVersion: apps.nvidia.com/v1alpha1
+kind: NIMCache
+metadata:
+  name: meta-llama3-8b-instruct-moderation
+spec:
+  tolerations:
+    - key: "nvidia.com/gpu"
+      operator: "Exists"
+      effect: "NoSchedule"
+  source:
+    ngc:
+      modelPuller: nvcr.io/nim/nvidia/llama-3.1-nemoguard-8b-content-safety
+      pullSecret: ngc-secret
+      authSecret: ngc-api-secret
+      model:
+        engine: tensorrt_llm
+        tensorParallelism: "1"
+        qosProfile: "throughput"
+        profiles:
+        - 193649a2eb95e821309d6023a2cabb31489d3b690a9973c7ab5d1ff58b0aa7eb
+  storage:
+    pvc:
+      create: true
+      storageClass: standard-rwo
+      size: "50Gi"
+      volumeAccessMode: ReadWriteOnce
+  resources: {}
+

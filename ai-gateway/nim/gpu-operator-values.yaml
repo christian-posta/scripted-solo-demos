@@ -8,3 +8,14 @@ toolkit:
      value: nvidia
    - name: CONTAINERD_SET_AS_DEFAULT
      value: "true"
+
+mig:
+  strategy: none
+
+## Enable this for GPU time slicing
+## Just note, that the GPU should have enough memory to handle the time slicing
+## Otherwise, the GPU will be overloaded and the system will crash
+devicePlugin:
+ config:
+   name: time-slicing-config-all
+   default: any
