@@ -1,4 +1,3 @@
-
 # consider updating to newer Gateway CRDs
 export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
@@ -50,10 +49,16 @@ print_gateway_command() {
 call_gateway() {
   _build_curl_command "$@"
   response=$(eval "$(_build_curl_command "$@")")
-  if echo "$response" | jq . >/dev/null 2>&1; then
-      echo "$response" | jq .
+  
+  # Capture both stdout and stderr from jq
+  if jq_output=$(printf '%s' "$response" | jq . 2>&1); then
+    if [[ $jq_output =~ "parse error" ]]; then
+      printf '%s' "$response"  # Print raw response if jq had parse error
+    else
+      printf '%s' "$jq_output"  # Print formatted JSON
+    fi
   else
-      echo "$response"
+    printf '%s' "$response"  # Print raw response if jq failed
   fi
 }
 
