@@ -13,11 +13,11 @@ read -s
 ############# Task 1
 #################################################################
 
-run "cat resources/01-call-llm/llm-providers.yaml"
-run "cat resources/01-call-llm/http-routes.yaml"
+run "cat resources/base/01-call-llm/llm-providers.yaml"
+run "cat resources/base/01-call-llm/http-routes.yaml"
 
 desc "Let's apply these resources"
-run "kubectl apply -f resources/01-call-llm/"
+run "kubectl apply -f resources/base/01-call-llm/"
 
 
 desc "Call open ai (with token auto injected by gw)"

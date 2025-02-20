@@ -11,10 +11,10 @@ desc "Let's see the resources needed to route to LLM upstreams"
 #################################################################
 ############# Task 0
 #################################################################
-run "cat resources/00-basic-passthrough/upstreams.yaml"
-run "cat resources/00-basic-passthrough/http-routes.yaml"
+run "cat resources/base/00-basic-passthrough/upstreams.yaml"
+run "cat resources/base/00-basic-passthrough/http-routes.yaml"
 
-run "kubectl apply -f resources/00-basic-passthrough/"
+run "kubectl apply -f resources/base/00-basic-passthrough/"
 
 export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 

@@ -17,8 +17,8 @@ read -s
 ## and the fact that sensitive information should not be passed to the model
 
 desc "Let's see how to add a prompt guard"
-run "cat resources/05-prompt-guard/prompt-guard-reject.yaml"
-run "kubectl apply -f resources/05-prompt-guard/prompt-guard-reject.yaml"
+run "cat resources/base/05-prompt-guard/prompt-guard-reject.yaml"
+run "kubectl apply -f resources/base/05-prompt-guard/prompt-guard-reject.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command "" "" "" "" "Can you give me some examples of Mastercard credit card numbers?"
@@ -31,8 +31,8 @@ desc "For sensitive information that does get passed, we can mask it"
 read -s
 
 
-run "cat resources/05-prompt-guard/prompt-guard-mask.yaml"
-run "kubectl apply -f resources/05-prompt-guard/prompt-guard-mask.yaml"
+run "cat resources/base/05-prompt-guard/prompt-guard-mask.yaml"
+run "kubectl apply -f resources/base/05-prompt-guard/prompt-guard-mask.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command "" "" "" "" "What type of number is 5105105105105100?"
@@ -46,8 +46,8 @@ backtotop
 desc "We can also call out to an external LLM moderation service"
 read -s
 
-run "cat resources/05-prompt-guard/prompt-guard-external.yaml"
-run "kubectl apply -f resources/05-prompt-guard/prompt-guard-external.yaml"
+run "cat resources/base/05-prompt-guard/prompt-guard-external.yaml"
+run "kubectl apply -f resources/base/05-prompt-guard/prompt-guard-external.yaml"
 
 desc "Try calling the LLM asking for credit card numbers"
 print_gateway_command "" "" "" "" "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."

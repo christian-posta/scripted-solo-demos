@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: openai
+  namespace: gloo-system
+spec:
+  parentRefs:
+    - name: ai-gateway
+      namespace: gloo-system
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /openai
+    filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplaceFullPath
+            replaceFullPath: /v1/chat/completions
+    backendRefs:
+      - group: gloo.solo.io
+        kind: Upstream
+        name: openai-nim
+        namespace: gloo-system
+        weight: 100
+      - group: gloo.solo.io
+        kind: Upstream
+        name: openai
+        namespace: gloo-system
+        weight: 0

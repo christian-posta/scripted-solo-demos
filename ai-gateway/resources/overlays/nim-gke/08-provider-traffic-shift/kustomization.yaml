@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../base/08-provider-traffic-shift/
+
+patches:
+- path: patches/http-routes-nim-100.yaml
+- path: patches/http-routes.yaml

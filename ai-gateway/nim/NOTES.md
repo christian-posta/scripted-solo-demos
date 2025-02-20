@@ -196,7 +196,7 @@ To plug the NIM meta/llama model into the bigger demos, you can just override th
 
 Example, this would do it:
 ```bash
-cp ./nim/nim-openai-upstream.yaml ./resources/01-call-llm/llm-providers.yaml
+cp ./nim/nim-openai-upstream.yaml ./resources/base/01-call-llm/llm-providers.yaml
 ```
 
 TODO: use kustomize to more flexibly change out these upstreams and routes

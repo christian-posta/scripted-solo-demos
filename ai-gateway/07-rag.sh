@@ -29,8 +29,8 @@ desc "We are going to use a vector database to store the data"
 run "kubectl get po -n default"
 
 desc "Let's see the route options to specify the RAG"
-run "cat resources/07-rag/route-options.yaml"
-run "kubectl apply -f resources/07-rag/route-options.yaml"
+run "cat resources/base/07-rag/route-options.yaml"
+run "kubectl apply -f resources/base/07-rag/route-options.yaml"
 
 desc "Try calling LLM again, so it wil be cached"
 print_gateway_command "" "" "" "" "How many varieties of cheese are in France?"

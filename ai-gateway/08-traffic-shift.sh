@@ -18,8 +18,8 @@ read -s
 
 run "kubectl get po -n ollama"
 
-run "cat resources/08-provider-traffic-shift/http-routes.yaml"
-run "kubectl apply -f resources/08-provider-traffic-shift/http-routes.yaml"
+run "cat resources/base/08-provider-traffic-shift/http-routes.yaml"
+run "kubectl apply -f resources/base/08-provider-traffic-shift/http-routes.yaml"
 
 backtotop
 desc "Let's test the traffic shifting"
@@ -40,7 +40,7 @@ backtotop
 desc "Now let's route all traffic to the local LLM"
 read -s
 
-run "kubectl apply -f resources/08-provider-traffic-shift/http-routes-qwen-100.yaml"
+run "kubectl apply -f resources/base/08-provider-traffic-shift/http-routes-qwen-100.yaml"
 
 for i in {1..10}; do
   cmd=$(print_gateway_command)

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- 00-basic-passthrough/
+- 01-call-llm/
+- 02-secure-llm-jwt/
+- 03-ratelimit-token-usage/
+- 04-model-failover/
+- 05-prompt-guard/
+- 06-semantic-cache/
+- 07-rag/
+- 08-provider-traffic-shift/
+
+namespace: gloo-system

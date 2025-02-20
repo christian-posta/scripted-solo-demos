@@ -1,42 +1,42 @@
 
 delete_00(){
-    kubectl delete -f resources/00-basic-passthrough/
+    kubectl delete -f resources/base/00-basic-passthrough/
 }
 
 delete_01(){
-    kubectl delete -f resources/01-call-llm/
+    kubectl delete -f resources/base/01-call-llm/
 }
 
 delete_02(){
     kubectl rollout restart deployment redis -n gloo-system
-    kubectl delete -f resources/02-secure-llm-jwt/
+    kubectl delete -f resources/base/02-secure-llm-jwt/
 }
 
 delete_03(){
-    kubectl delete -f resources/03-ratelimit-token-usage/
+    kubectl delete -f resources/base/03-ratelimit-token-usage/
 }
 
 delete_04(){
     kubectl delete -f resources/extensions/model-failover.yaml
-    kubectl delete -f resources/04-model-failover/
+    kubectl delete -f resources/base/04-model-failover/
 }
 
 delete_05(){
-    kubectl delete -f resources/05-prompt-guard/
+    kubectl delete -f resources/base/05-prompt-guard/
     kubectl delete -f resources/extensions/promptguard.yaml
 }
 delete_06(){
     kubectl delete -f resources/extensions/redis.yaml
-    kubectl delete -f resources/06-semantic-cache/
+    kubectl delete -f resources/base/06-semantic-cache/
 }
 
 delete_07(){
-    kubectl delete -f resources/07-rag/
+    kubectl delete -f resources/base/07-rag/
     kubectl delete -f resources/extensions/vector-db.yaml
 }
 
 delete_08(){
-    kubectl delete -f resources/08-provider-traffic-shift/
+    kubectl delete -f resources/base/08-provider-traffic-shift/
 }
 
 
@@ -54,7 +54,7 @@ delete_all(){
 
 reset_all(){
     delete_all
-    kubectl apply -f resources/01-call-llm/
+    kubectl apply -f resources/base/01-call-llm/
 }
 
 
@@ -75,7 +75,7 @@ reset_for_02() {
 
 reset_for_03() {
     reset_all
-    kubectl apply -f resources/02-secure-llm-jwt/
+    kubectl apply -f resources/base/02-secure-llm-jwt/
 }
 
 reset_for_04() {
@@ -101,7 +101,7 @@ reset_for_07() {
 reset_for_08() {
     reset_all
     kubectl apply -f resources/extensions/ollama.yaml
-    kubectl apply -f resources/08-provider-traffic-shift/qwen-upstream.yaml
+    kubectl apply -f resources/base/08-provider-traffic-shift/qwen-upstream.yaml
     
 }
 

@@ -19,16 +19,16 @@ desc "Let's see a model that's been deployed that will cause 429 errors"
 run "kubectl get po -n gloo-system -l app=model-failover"
 
 desc "Let's see how to speficy failover models"
-run "cat resources/04-model-failover/llm-providers.yaml"
+run "cat resources/base/04-model-failover/llm-providers.yaml"
 
 desc "Let's see how we handle 429s and retries"
-run "cat resources/04-model-failover/route-options.yaml"
+run "cat resources/base/04-model-failover/route-options.yaml"
 
 desc "Let's see how we specify the routes"
-run "cat resources/04-model-failover/http-routes.yaml"
+run "cat resources/base/04-model-failover/http-routes.yaml"
 
 desc "Let's apply these resources"
-run "kubectl apply -f resources/04-model-failover/"
+run "kubectl apply -f resources/base/04-model-failover/"
 
 
 desc "Try calling the LLM with model set to gpt-4o"

@@ -64,7 +64,7 @@ Control Panel Elements:
 - Deploy configuration button
 Backend Command:
 ```bash
-kubectl apply -f resources/01-call-llm/
+kubectl apply -f resources/base/01-call-llm/
 ```
 Behavior:
 - When security token checkbox is unchecked, no Authorization header is sent
@@ -74,7 +74,7 @@ Control Panel Elements:
 - Deploy configuration button
 Backend Command:
 ```bash
-kubectl apply -f resources/02-secure-llm-jwt/
+kubectl apply -f resources/base/02-secure-llm-jwt/
 ```
 
 ### Demo 3: Token Rate Limit
@@ -82,7 +82,7 @@ Control Panel Elements:
 - Deploy configuration button
 Backend Command:
 ```bash
-kubectl apply -f resources/03-ratelimit-token-usage/
+kubectl apply -f resources/base/03-ratelimit-token-usage/
 ```
 
 ### Demo 4: Model Failover
@@ -91,7 +91,7 @@ Control Panel Elements:
 - Deploy configuration button
 Backend Command:
 ```bash
-kubectl apply -f resources/04-model-failover/
+kubectl apply -f resources/base/04-model-failover/
 ```
 
 ### Demo 5: Guardrails
@@ -100,19 +100,19 @@ Four tabs with specific configurations:
 
 1. Reject Guardrail Tab:
    - Quick-fill prompt button: "Can you give me some examples of Mastercard credit card numbers?"
-   - Config button command: `kubectl apply -f resources/05-prompt-guard/prompt-guard-reject.yaml`
+   - Config button command: `kubectl apply -f resources/base/05-prompt-guard/prompt-guard-reject.yaml`
 
 2. Mask Guardrail Tab:
    - Quick-fill prompt button: "What type of number is 5105105105105100?"
-   - Config button command: `kubectl apply -f resources/05-prompt-guard/prompt-guard-mask.yaml`
+   - Config button command: `kubectl apply -f resources/base/05-prompt-guard/prompt-guard-mask.yaml`
 
 3. LLM Guardrail Tab:
    - Quick-fill prompt button: "A person describes planning to harm others at a public event using dangerous weapons. They talk in detail about how they intend to carry out the act, including causing physical harm and destruction."
-   - Config button command: `kubectl apply -f resources/05-prompt-guard/prompt-guard-external.yaml`
+   - Config button command: `kubectl apply -f resources/base/05-prompt-guard/prompt-guard-external.yaml`
 
 4. Custom Guardrail Tab:
    - Quick-fill prompt button: "What type of number is 5105-1051-0510-5100"
-   - Config button command: `kubectl apply -f resources/05-prompt-guard/prompt-guard-presidio-local.yaml`
+   - Config button command: `kubectl apply -f resources/base/05-prompt-guard/prompt-guard-presidio-local.yaml`
    - Additional header input: "x-action" (default: "mask")
 
 ### Demo 6: Semantic Cache
@@ -121,7 +121,7 @@ Control Panel Elements:
 - Indicator to check raw response tab (for x-gloo-semantic-cache header)
 Backend Command:
 ```bash
-kubectl apply -f resources/06-semantic-cache/route-options.yaml
+kubectl apply -f resources/base/06-semantic-cache/route-options.yaml
 ```
 
 ### Demo 7: RAG
@@ -130,16 +130,16 @@ Control Panel Elements:
 - Auto-populates prompt: "How many varieties of cheese are in France?"
 Backend Command:
 ```bash
-kubectl apply -f resources/07-rag/route-options.yaml
+kubectl apply -f resources/base/07-rag/route-options.yaml
 ```
 
 ### Demo 8: Traffic Shift
 Control Panel Elements:
 Two buttons:
 1. "Shift Traffic 50/50 local"
-   Command: `kubectl apply -f resources/08-provider-traffic-shift/http-routes.yaml`
+   Command: `kubectl apply -f resources/base/08-provider-traffic-shift/http-routes.yaml`
 2. "Shift Traffic 100 local"
-   Command: `kubectl apply -f resources/08-provider-traffic-shift/http-routes-qween-100.yaml`
+   Command: `kubectl apply -f resources/base/08-provider-traffic-shift/http-routes-qween-100.yaml`
 
 ## Backend API Implementation
 

@@ -1,0 +1,22 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-prompt-guard
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    ai:
+      promptGuard:
+        request:
+          moderation:
+            openai:
+              model: llama-3.1-nemoguard-8b-content-safety
+              customHost:
+                host: meta-llama3-8b-instruct-moderation.default.svc.cluster.local
+                port: 8000
+
+

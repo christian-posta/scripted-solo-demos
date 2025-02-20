@@ -29,8 +29,8 @@ read -s
 desc "We are going to use a database to store the cache"
 run "kubectl get po -n gloo-system"
 
-run "cat resources/06-semantic-cache/route-options.yaml"
-run "kubectl apply -f resources/06-semantic-cache/route-options.yaml"
+run "cat resources/base/06-semantic-cache/route-options.yaml"
+run "kubectl apply -f resources/base/06-semantic-cache/route-options.yaml"
 
 desc "Try calling LLM again, so it wil be cached"
 print_gateway_command 

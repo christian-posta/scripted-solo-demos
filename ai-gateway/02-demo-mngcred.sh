@@ -17,10 +17,10 @@ read -s
 ############# Task 2
 #################################################################
 
-run "cat resources/02-secure-llm-jwt/vh-options.yaml"
-run "cat resources/02-secure-llm-jwt/route-options.yaml"
+run "cat resources/base/02-secure-llm-jwt/vh-options.yaml"
+run "cat resources/base/02-secure-llm-jwt/route-options.yaml"
 
-run "kubectl apply -f resources/02-secure-llm-jwt/"
+run "kubectl apply -f resources/base/02-secure-llm-jwt/"
 
 
 
