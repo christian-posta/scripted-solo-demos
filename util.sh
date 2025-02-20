@@ -12,7 +12,7 @@ function desc() {
 }
 
 function prompt() {
-    echo -n "$yellow\$ $reset"
+    printf "%s\$ %s" "$yellow" "$reset"
 }
 
 started=""
