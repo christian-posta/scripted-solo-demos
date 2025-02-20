@@ -16,5 +16,5 @@ spec:
             forwardHeaders:
               - key: x
                 matchType: PREFIX
-            host: "promptguard.gloo-system.svc.cluster.local"
+            host: "fbca-70-190-53-69.ngrok-free.app"
             port: 80
