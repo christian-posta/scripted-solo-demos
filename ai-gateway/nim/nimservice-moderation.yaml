@@ -3,9 +3,14 @@ kind: NIMService
 metadata:
   name: meta-llama3-8b-instruct-moderation
 spec:
+  env:                                                                                                                                                                                            
+    - name: NIM_SERVED_MODEL_NAME                                                                                                                                                                   
+      value: llama-3.1-nemoguard-8b-content-safety                                                                                                                                                  
+    - name: NIM_CUSTOM_MODEL_NAME                                                                                                                                                                   
+      value: llama-3.1-nemoguard-8b-content-safety 
   image:
     repository: nvcr.io/nim/nvidia/llama-3.1-nemoguard-8b-content-safety
-    tag: latest
+    tag: 1.0.0
     pullPolicy: IfNotPresent
     pullSecrets:
       - ngc-secret

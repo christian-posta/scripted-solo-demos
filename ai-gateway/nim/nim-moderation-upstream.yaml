@@ -1,0 +1,12 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: nemoguard-8b-content-safety
+  namespace: gloo-system
+spec:
+  ai:
+    openai:
+      customHost:
+        host: meta-llama3-8b-instruct-moderation.default.svc.cluster.local
+        port: 8000
+      model: "llama-3.1-nemoguard-8b-content-safety"

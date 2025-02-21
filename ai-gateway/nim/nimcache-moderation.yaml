@@ -9,7 +9,7 @@ spec:
       effect: "NoSchedule"
   source:
     ngc:
-      modelPuller: nvcr.io/nim/nvidia/llama-3.1-nemoguard-8b-content-safety
+      modelPuller: nvcr.io/nim/nvidia/llama-3.1-nemoguard-8b-content-safety:1.0.0
       pullSecret: ngc-secret
       authSecret: ngc-api-secret
       model:

@@ -16,5 +16,5 @@ spec:
             forwardHeaders:
               - key: x
                 matchType: PREFIX
-            host: "host.com"
+            host: "fbca-70-190-53-69.ngrok-free.app"
             port: 80
