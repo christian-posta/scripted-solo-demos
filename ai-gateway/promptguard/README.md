@@ -22,7 +22,7 @@ python3 -m fastapi dev --host 0.0.0.0 ./app-llama-moderation.py
 Use ngrok to expose the service:
 
 ```bash
-ngrok  http http://0.0.0.0:8000 --scheme http
+ngrok  http 8000 --scheme http  --url=llama-becoming-mistakenly.ngrok-free.app
 ```
 
 Apply the promptguard configuration (make sure the host is updated to the ngrok url):
