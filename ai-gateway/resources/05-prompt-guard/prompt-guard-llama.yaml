@@ -16,5 +16,5 @@ spec:
             forwardHeaders:
               - key: x
                 matchType: PREFIX
-            host: "llama-becoming-mistakenly.ngrok-free.app "
+            host: "llama-becoming-mistakenly.ngrok-free.app"
             port: 80

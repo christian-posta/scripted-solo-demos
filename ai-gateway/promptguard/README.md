@@ -70,7 +70,7 @@ curl -X POST "http://localhost:8000/request" \
   }'
 
 
-curl -X POST "http://fbca-70-190-53-69.ngrok-free.app/request" \
+curl -X POST "http://llama-becoming-mistakenly.ngrok-free.app/request" \
   -H "Content-Type: application/json" \
   -H "x-action: mask" \
   -H "x-response-message: Custom response message" \
@@ -118,7 +118,7 @@ Calling the gateway when prompt guard is enabled:
 
 ```bash
 curl -v "$GLOO_AI_GATEWAY:8080/openai" -H "content-type:application/json" -H "x-action: mask" -d '{
-      "model": "gpt-3.5-turbo",
+      "model": "llama-3.1-nemoguard-8b-content-safety",
       "max_tokens": 4096,
       "top_p": 1,
       "n": 1,
