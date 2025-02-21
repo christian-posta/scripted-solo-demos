@@ -118,7 +118,7 @@ Calling the gateway when prompt guard is enabled:
 
 ```bash
 curl -v "$GLOO_AI_GATEWAY:8080/openai" -H "content-type:application/json" -H "x-action: mask" -d '{
-      "model": "llama-3.1-nemoguard-8b-content-safety",
+      "model": "meta/llama-3.1-8b-instruct",
       "max_tokens": 4096,
       "top_p": 1,
       "n": 1,
