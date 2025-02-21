@@ -13,6 +13,9 @@ docker build -t presidio-guardrail .
 
 # Running the prompt guard with NIM moderation service as the backing LLM
 
+https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/containers/llama-3.1-nemoguard-8b-content-safety
+https://build.nvidia.com/nvidia/llama-3_1-nemoguard-8b-content-safety?snippet_tab=Try
+
 Run the service locally:
 
 ```bash
@@ -21,9 +24,20 @@ python3 -m fastapi dev --host 0.0.0.0 ./app-llama-moderation.py
 
 Use ngrok to expose the service:
 
+See here for more: https://dashboard.ngrok.com/domains
+
 ```bash
 ngrok  http 8000 --scheme http  --url=llama-becoming-mistakenly.ngrok-free.app
 ```
+
+Enable moderation LLM from the gateway so the external moderation service can use it
+We should probably just package the moderation service as a docker container and deploy it to the cluster
+
+```bash
+kubectl apply -f nim/nim-moderation-upstream.yaml
+kubectl apply -f nim/nim-moderation-httproute.yaml
+```
+
 
 Apply the promptguard configuration (make sure the host is updated to the ngrok url):
 
@@ -34,7 +48,50 @@ kubectl apply -f resources/05-prompt-guard/prompt-guard-llama.yaml
 
 Example curl command that will trigger unsafe content:
 
+```bash
+curl -X POST "http://localhost:8000/request" \
+  -H "Content-Type: application/json" \
+  -H "x-action: mask" \
+  -H "x-response-message: Custom response message" \
+  -H "x-status-code: 403" \
+  -d '{
+    "body": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant."
+        },
+        {
+          "role": "user",
+          "content": "My name is John Smith and my email is john.smith@example.com"
+        }
+      ]
+    }
+  }'
 
+
+curl -X POST "http://fbca-70-190-53-69.ngrok-free.app/request" \
+  -H "Content-Type: application/json" \
+  -H "x-action: mask" \
+  -H "x-response-message: Custom response message" \
+  -H "x-status-code: 403" \
+  -d '{
+    "body": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant."
+        },
+        {
+          "role": "user",
+          "content": "My name is John Smith and my email is john.smith@example.com"
+        }
+      ]
+    }
+  }'
+```
+
+From within the cluster:
 ```bash
 curl meta-llama3-8b-instruct-moderation:8000/v1/chat/completions \
 -H "Content-Type: application/json" \
