@@ -16,17 +16,19 @@ import sys
 import json
 from typing import Annotated
 from fastapi import FastAPI, Header, Request
-
-
 import uvicorn
 import api
-import httpx
+from openai import AsyncOpenAI
 
 app = FastAPI()
 
 MODERATIONS_ENDPOINT = "34.169.165.92:8080/moderations"
 
-
+# Initialize AsyncOpenAI client
+client = AsyncOpenAI(
+    base_url=f"http://{MODERATIONS_ENDPOINT}",
+    api_key="not-needed"  # Since we're using a custom endpoint that doesn't require auth
+)
 
 def get_moderation_prompt(user_messages):
 
@@ -114,48 +116,36 @@ async def process_prompts(
     print(req.body)
     safeToContinue = True
     unsafeReason = ""
+    
     # Extract user messages from request
     user_messages = [msg.content for msg in req.body.messages if msg.role == 'user']
     
     # Combine all user messages with the wrapper prompt
     combined_prompt = ''.join(user_messages)
-
     moderation_prompt = get_moderation_prompt(combined_prompt)
     
-    # Prepare the OpenAI API request
-    moderation_request = {
-        "model": "llama-3.1-nemoguard-8b-content-safety",
-        "messages": [
-            {"role": "user", "content": moderation_prompt}
-        ]
-    }
-    print(json.dumps(moderation_request, indent=4))
     try:
-        async with httpx.AsyncClient() as client:
-            print("sending moderation request to ", MODERATIONS_ENDPOINT)
-            response = await client.post(
-                f"http://{MODERATIONS_ENDPOINT}",
-                json=moderation_request,
-                headers={"Content-Type": "application/json"}
-            )
-            print(f"Response status: {response.status_code}")
-            print(f"Response headers: {response.headers}")
-            print(f"Response text: {response.text}")
-            response_data = response.json()
-            if isinstance(response_data, dict) and "choices" in response_data and len(response_data["choices"]) > 0:
-                content = response_data["choices"][0]["message"]["content"]
-                try:
-                    content_json = json.loads(content)
-                    user_safety = content_json.get("User Safety")
-                    safety_categories = content_json.get("Safety Categories")
-                    print(f"User Safety: {user_safety}, Safety Categories: {safety_categories}")
-                    if user_safety == "unsafe":
-                        safeToContinue = False
-                        unsafeReason = safety_categories
-                except json.JSONDecodeError:
-                    print("Error decoding JSON from response content.")
-            else:
-                print("Invalid response or missing attributes.")
+        response = await client.chat.completions.create(
+            model="llama-3.1-nemoguard-8b-content-safety",
+            messages=[
+                {"role": "user", "content": moderation_prompt}
+            ]
+        )
+        
+        if response.choices and len(response.choices) > 0:
+            content = response.choices[0].message.content
+            try:
+                content_json = json.loads(content)
+                user_safety = content_json.get("User Safety")
+                safety_categories = content_json.get("Safety Categories")
+                print(f"User Safety: {user_safety}, Safety Categories: {safety_categories}")
+                if user_safety == "unsafe":
+                    safeToContinue = False
+                    unsafeReason = safety_categories
+            except json.JSONDecodeError:
+                print("Error decoding JSON from response content.")
+        else:
+            print("Invalid response or missing attributes.")
             
     except Exception as e:
         print(f"Error calling moderation endpoint: {e}")
@@ -174,7 +164,6 @@ async def process_prompts(
                     x_response_message
                     if x_response_message
                     else "Rejected: Unsafe content detected " + unsafeReason
-                    
                 ),
                 status_code=(x_status_code if x_status_code else 422),
                 reason=unsafeReason,
