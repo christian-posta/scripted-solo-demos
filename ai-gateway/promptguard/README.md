@@ -27,7 +27,7 @@ Use ngrok to expose the service:
 See here for more: https://dashboard.ngrok.com/domains
 
 ```bash
-ngrok  http 8000 --scheme http  --url=llama-becoming-mistakenly.ngrok-free.app
+ngrok  http 8000 --scheme http --url=http://llama-becoming-mistakenly.ngrok-free.app
 ```
 
 Enable moderation LLM from the gateway so the external moderation service can use it
