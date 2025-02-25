@@ -70,5 +70,9 @@ Use any printed prompts to test the API from the UI.
 ## To run the presidio scenario
 Make sure to run the ./run-local.sh script to start the presidio service.
 
-## To run the UI
-Run the ./run-local.sh script to start the UI.
+## To add prompt logging to the request/responses of access logging:
+
+```bash
+kubectl apply -f resources/prompt-logging/route-option.yaml
+kubectl apply -f resources/prompt-logging/prompt-logging.yaml
+```

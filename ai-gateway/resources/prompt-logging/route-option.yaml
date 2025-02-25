@@ -1,0 +1,31 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: openai-prompt-logging
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  options:
+    stagedTransformations:
+      regular:
+        requestTransforms:
+        - requestTransformation:
+            transformationTemplate:
+              dynamicMetadataValues:
+              # Extract the user's input prompt from the request body
+              - key: 'user_prompt'
+                value:
+                  # This captures the "content" field of the user's message inside the "messages" array using inja
+                  text: '{{ messages.1.content }}'
+        responseTransforms:
+        - responseTransformation:
+            transformationTemplate:
+              dynamicMetadataValues:
+              # Extract the AI-generated response from the model's response body
+              - key: 'llm_response'
+                value:
+                  # This captures the AI-generated message inside the "choices" array using inja
+                  text: '{{ choices.0.message.content }}'
