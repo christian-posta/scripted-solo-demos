@@ -8,4 +8,4 @@ gcloud container clusters resize $CLUSTER_NAME \
 gcloud container clusters resize $CLUSTER_NAME \
     --zone $ZONE \
     --node-pool gpu-pool \
-    --num-nodes 1     
+    --num-nodes 3     
