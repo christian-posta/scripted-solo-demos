@@ -120,3 +120,22 @@ spec:
             medium: Memory
         - name: adapters
           emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-llama2-7b-pool
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: vllm-llama2-7b-pool
+  sessionAffinity: None
+  type: ClusterIP

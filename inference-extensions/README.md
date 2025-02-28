@@ -85,4 +85,189 @@ Should see a response like this:
 }
 ```
 
+# Set up metrics
 
+infer ext: https://gateway-api-inference-extension.sigs.k8s.io/guides/metrics/
+vLLM: https://docs.vllm.ai/en/latest/serving/metrics.html
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install my-prometheus prometheus-community/prometheus
+
+
+```
+
+then you gotta manually edit the 
+scrape_interval (5s) and evaluation_interval (30s)
+for the my-prometheus-server configmap
+and also add the job names:
+
+
+
+Use the following token for the token part:
+
+```bash
+k apply -f ./metrics/metrics-sa.yaml 
+TOKEN=$(kubectl -n default get secret inference-gateway-sa-metrics-reader-secret  -o jsonpath='{.secrets[0].name}' -o jsonpath='{.data.token}' | base64 --decode)
+```
+
+Can check the metrics are reachable from within the sleep container like this:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" inference-gateway-ext-proc:9090/metrics 
+```
+
+k get cm/my-prometheus-server -o yaml
+
+```yaml
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 30s
+    rule_files:
+    - /etc/config/recording_rules.yml
+    - /etc/config/alerting_rules.yml
+    - /etc/config/rules
+    - /etc/config/alerts
+    scrape_configs:
+    # Envoy metrics not tested yet
+    #- job_name: envoy
+    #  scheme: http
+    #  metrics_path: /stats/prometheus
+    #  static_configs:
+    #  - targets:
+    #    - 'envoy.default.svc:19001'
+    - job_name: vllm
+      scheme: http
+      metrics_path: /metrics
+      static_configs:
+      - targets:
+        - 'vllm-llama2-7b-pool.default.svc:8000'
+    - job_name: 'inference-extension'
+      scheme: http
+      metrics_path: /metrics
+      authorization:
+        credentials: "<CREDS_FROM_INFER_EXT_METRICS_DOCS>"
+      static_configs:
+      - targets:
+          - 'inference-gateway-ext-proc.default.svc:9090'
+```
+
+
+Expose the metrics port on the service
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-gateway-ext-proc
+  namespace: default
+spec:
+  selector:
+    app: inference-gateway-ext-proc
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: 9002
+      targetPort: 9002
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  type: ClusterIP
+EOF
+```
+
+Grafana
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http-grafana
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /robots.txt
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv
+      volumes:
+        - name: grafana-pv
+          persistentVolumeClaim:
+            claimName: grafana-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: http-grafana
+  selector:
+    app: grafana
+  sessionAffinity: None
+EOF
+```
+
+
+Now port-forward the grafana dashboard and import the `./metrics/inference-gateway.json` dashboard file. 
+
+When you run load (ie, `./call-gateway.sh load` ) you should start to see metrics in all of the panels. 
+
+If you need to debug, check that the prometheus scraping is working by port-forward the prometheus server (:9090) and check `localhost:9090/targets`. If that looks good, then check the metrics that are getting scraped in the `localhost:9090/query`
