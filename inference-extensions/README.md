@@ -92,9 +92,8 @@ vLLM: https://docs.vllm.ai/en/latest/serving/metrics.html
 
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 helm install my-prometheus prometheus-community/prometheus
-
-
 ```
 
 then you gotta manually edit the 

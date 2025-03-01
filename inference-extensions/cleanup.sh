@@ -1,3 +1,6 @@
+
+helm uninstall my-prometheus
+
 # Remove EG extension policies
 kubectl delete -f eg/patch_policy.yaml
 kubectl delete -f eg/extension_policy.yaml

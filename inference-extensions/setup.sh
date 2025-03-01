@@ -37,3 +37,16 @@ kubectl apply -f eg/extension_policy.yaml
 kubectl apply -f eg/patch_policy.yaml
 
 
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install my-prometheus prometheus-community/prometheus
+
+kubectl apply -f metrics/metrics-sa.yaml
+
+TOKEN=$(kubectl -n default get secret inference-gateway-sa-metrics-reader-secret  -o jsonpath='{.secrets[0].name}' -o jsonpath='{.data.token}' | base64 --decode)
+cat metrics/my-prometheus-server-cm.yaml | sed "s/<TOKEN>/${TOKEN}/g" | kubectl apply -f -
+
+kubectl apply -f metrics/grafana.yaml
+
+kubectl  create cm inference-dashboard --from-file=./metrics/inference_gateway.json
+kubectl label cm inference-dashboard grafana_dashboard=1
