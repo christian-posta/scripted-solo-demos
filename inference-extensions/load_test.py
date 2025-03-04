@@ -101,16 +101,66 @@ async def make_request(session: aiohttp.ClientSession, url: str, payload: Dict[s
     start_time = time.time()
     try:
         async with session.post(url, json=payload) as response:
-            response_data = await response.json()
-            status = response.status
             elapsed = time.time() - start_time
-            return {
+            status = response.status
+            
+            # Try to get response data, but handle potential JSON parsing errors
+            try:
+                response_data = await response.json()
+            except Exception as json_error:
+                # If JSON parsing fails, get the raw text
+                response_text = await response.text()
+                response_data = {"error": f"Failed to parse JSON: {str(json_error)}", "raw_response": response_text[:500]}
+            
+            result = {
                 "request_id": request_id,
                 "status": status,
                 "elapsed_time": elapsed,
                 "prompt": payload.get("prompt", ""),
                 "response": response_data
             }
+            
+            # Add error details for non-200 responses
+            if status != 200:
+                result["error_details"] = {
+                    "status_code": status,
+                    "status_message": response.reason,
+                    "headers": dict(response.headers),
+                    "response_data": response_data
+                }
+            
+            return result
+            
+    except aiohttp.ClientConnectorError as e:
+        elapsed = time.time() - start_time
+        return {
+            "request_id": request_id,
+            "status": "connection_error",
+            "elapsed_time": elapsed,
+            "prompt": payload.get("prompt", ""),
+            "error": f"Connection error: {str(e)}",
+            "error_details": {"type": "connection_error", "message": str(e)}
+        }
+    except aiohttp.ClientResponseError as e:
+        elapsed = time.time() - start_time
+        return {
+            "request_id": request_id,
+            "status": e.status,
+            "elapsed_time": elapsed,
+            "prompt": payload.get("prompt", ""),
+            "error": f"Response error: {str(e)}",
+            "error_details": {"type": "response_error", "status": e.status, "message": str(e)}
+        }
+    except asyncio.TimeoutError:
+        elapsed = time.time() - start_time
+        return {
+            "request_id": request_id,
+            "status": "timeout",
+            "elapsed_time": elapsed,
+            "prompt": payload.get("prompt", ""),
+            "error": "Request timed out",
+            "error_details": {"type": "timeout"}
+        }
     except Exception as e:
         elapsed = time.time() - start_time
         return {
@@ -118,7 +168,8 @@ async def make_request(session: aiohttp.ClientSession, url: str, payload: Dict[s
             "status": "error",
             "elapsed_time": elapsed,
             "prompt": payload.get("prompt", ""),
-            "error": str(e)
+            "error": f"Unexpected error: {str(e)}",
+            "error_details": {"type": "unexpected", "message": str(e), "exception_type": type(e).__name__}
         }
 
 
@@ -128,26 +179,28 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
     results = []
     
     async def worker(worker_id: int, queue: asyncio.Queue, results: List):
-        while True:
-            try:
-                request_id = await queue.get()
-                if request_id is None:
-                    queue.task_done()
-                    break
-                
-                # Create a payload copy with a potentially varied prompt
-                payload = payload_template.copy()
-                if vary_prompts:
-                    payload["prompt"] = generate_random_prompt()
-                
-                # Create a new session for each request
-                async with aiohttp.ClientSession() as session:
+        # Create a single connector and session for this worker
+        connector = aiohttp.TCPConnector(limit=0)  # No connection limit
+        async with aiohttp.ClientSession(connector=connector) as session:
+            while True:
+                try:
+                    request_id = await queue.get()
+                    if request_id is None:
+                        queue.task_done()
+                        break
+                    
+                    # Create a payload copy with a potentially varied prompt
+                    payload = payload_template.copy()
+                    if vary_prompts:
+                        payload["prompt"] = generate_random_prompt()
+                    
+                    # Use the worker's session for the request
                     result = await make_request(session, url, payload, request_id)
                     results.append(result)
-                queue.task_done()
-            except Exception as e:
-                print(f"Worker {worker_id} error: {e}")
-                queue.task_done()
+                    queue.task_done()
+                except Exception as e:
+                    print(f"Worker {worker_id} error: {e}")
+                    queue.task_done()
     
     # Create a queue and add tasks
     queue = asyncio.Queue()
@@ -178,12 +231,28 @@ def analyze_results(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     successful_requests = [r for r in results if r.get("status") == 200]
     failed_requests = [r for r in results if r.get("status") != 200]
     
+    # Categorize errors by type
+    error_categories = {}
+    for req in failed_requests:
+        status = req.get("status")
+        if isinstance(status, str):
+            # Handle string status like "connection_error", "timeout", etc.
+            error_type = status
+        else:
+            # Handle numeric HTTP status codes
+            error_type = f"http_{status}"
+        
+        if error_type not in error_categories:
+            error_categories[error_type] = []
+        error_categories[error_type].append(req)
+    
     elapsed_times = [r["elapsed_time"] for r in successful_requests]
     
     return {
         "total_requests": len(results),
         "successful_requests": len(successful_requests),
         "failed_requests": len(failed_requests),
+        "error_categories": error_categories,
         "avg_response_time": sum(elapsed_times) / len(elapsed_times) if elapsed_times else 0,
         "min_response_time": min(elapsed_times) if elapsed_times else 0,
         "max_response_time": max(elapsed_times) if elapsed_times else 0,
@@ -244,6 +313,34 @@ async def main():
     print(f"Min response time: {analysis['min_response_time']:.4f} seconds")
     print(f"Max response time: {analysis['max_response_time']:.4f} seconds")
     print(f"Requests per second: {analysis['requests_per_second']:.2f}")
+    
+    # Display error information if there are any failed requests
+    if analysis['failed_requests'] > 0:
+        print("\nError Summary:")
+        for error_type, errors in analysis['error_categories'].items():
+            print(f"  {error_type}: {len(errors)} requests")
+        
+        print("\nDetailed Error Information:")
+        for error_type, errors in analysis['error_categories'].items():
+            print(f"\n{error_type} ({len(errors)} occurrences):")
+            # Show details for the first few errors of each type
+            for i, error in enumerate(errors[:3]):
+                print(f"  Example {i+1}:")
+                if "error" in error:
+                    print(f"    Error: {error['error']}")
+                if "error_details" in error:
+                    for k, v in error['error_details'].items():
+                        # Truncate long values
+                        if isinstance(v, str) and len(v) > 100:
+                            v = v[:100] + "..."
+                        elif isinstance(v, dict):
+                            # For nested dictionaries, just show keys
+                            v = f"Dict with keys: {list(v.keys())}"
+                        print(f"    {k}: {v}")
+            
+            # If there are more errors of this type, indicate that
+            if len(errors) > 3:
+                print(f"    ... and {len(errors) - 3} more similar errors")
     
     # Optionally show some example prompts that were used
     if use_random_prompts and args.vary_prompts:
