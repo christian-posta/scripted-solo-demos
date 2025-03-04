@@ -22,6 +22,7 @@ data:
       static_configs:
       - targets:
         - 'vllm-llama2-7b-pool.default.svc:8000'
+        
     - job_name: inference-extension
       scheme: http
       metrics_path: /metrics
@@ -270,6 +271,65 @@ data:
         source_labels:
         - __meta_kubernetes_pod_node_name
         target_label: node
+
+    # Add a new Kubernetes pod discovery based scrape
+    - job_name: vllm-pods
+      kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+              - default   # Replace with your namespace if different
+      relabel_configs:
+        # Only keep pods with the app label set to your vLLM application
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: vllm.*   # Adjust regex to match your pod labels
+          action: keep
+          
+        # Only keep pods with the proper port
+        - source_labels: [__meta_kubernetes_pod_container_port_name]
+          regex: metrics|http|vllm|web
+          action: keep
+
+        # Set the instance label to be the pod name
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: instance
+          
+        # Add the pod IP and port to create the scrape target
+        - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_container_port_number]
+          action: replace
+          regex: (.+);(.+)
+          replacement: $1:$2
+          target_label: __address__
+          
+        # Add useful metadata labels
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: namespace
+          
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: pod
+          
+        - source_labels: [__meta_kubernetes_pod_label_model]
+          action: replace
+          target_label: model
+          regex: (.+)
+          replacement: $1
+          
+        # Set metrics path
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+          replacement: $1
+        
+        # Default metrics path if not specified in annotations
+        - source_labels: [__metrics_path__]
+          regex: ""
+          replacement: /metrics
+          action: replace
+          target_label: __metrics_path__        
     - honor_labels: true
       job_name: kubernetes-pods-slow
       kubernetes_sd_configs:
