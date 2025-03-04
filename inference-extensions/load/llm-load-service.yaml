@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  name: vllm-llama2-7b-pool-load-test
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: vllm-llama2-7b-pool
+  sessionAffinity: None

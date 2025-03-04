@@ -264,9 +264,71 @@ spec:
 EOF
 ```
 
-
 Now port-forward the grafana dashboard and import the `./metrics/inference-gateway.json` dashboard file. 
 
 When you run load (ie, `./call-gateway.sh load` ) you should start to see metrics in all of the panels. 
 
 If you need to debug, check that the prometheus scraping is working by port-forward the prometheus server (:9090) and check `localhost:9090/targets`. If that looks good, then check the metrics that are getting scraped in the `localhost:9090/query`
+
+# API Load Testing Tool
+
+This tool allows you to perform load testing against an OpenAI-compatible API endpoint by sending concurrent requests.
+
+## Prerequisites
+
+- Python 3.7+
+- kubectl configured to access your Kubernetes cluster with the inference-gateway
+- Required Python packages (install using `pip install -r requirements.txt`)
+
+## Installation
+
+1. Clone this repository or download the files
+2. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run the load test with default parameters:
+
+```bash
+python load_test.py
+```
+
+### Command Line Arguments
+
+- `--concurrency`: Number of concurrent requests (default: 10)
+- `--requests`: Total number of requests to make (default: 25)
+- `--model`: Model to use for completions (default: "tweet-summary")
+- `--prompt`: Prompt to send to the API (default: "Write as if you were a critic: San Francisco")
+- `--max-tokens`: Maximum number of tokens to generate (default: 100)
+- `--temperature`: Temperature for sampling (default: 0)
+
+### Examples
+
+Run 50 requests with 20 concurrent connections:
+
+```bash
+python load_test.py --concurrency 20 --requests 50
+```
+
+Use a different model and prompt:
+
+```bash
+python load_test.py --model "different-model" --prompt "Describe the weather in New York"
+```
+
+## Output
+
+The script will output:
+- Total time taken for all requests
+- Number of successful and failed requests
+- Average, minimum, and maximum response times
+- Requests per second
+
+## Notes
+
+- The script automatically retrieves the gateway IP from your Kubernetes cluster
+- Ensure your kubectl context is set correctly before running the script
