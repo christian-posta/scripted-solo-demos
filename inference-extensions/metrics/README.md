@@ -1,6 +1,6 @@
 Create a grafana dashboard with the following
 
-export GRAFANA_URL=localhost:3000
+export GRAFANA_URL=http://localhost:3000
 python dashboard_generator.py --grafana-url $GRAFANA_URL --api-key $GRAFANA_API_KEY
 
 
