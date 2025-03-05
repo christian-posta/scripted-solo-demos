@@ -21,3 +21,11 @@ Time to live: Choose how long the key should be valid (or leave blank for no exp
 
 Click "Add"
 Important: Copy the API key immediately as it will only be shown once
+
+
+### Reset prom metrics
+Enable the admin web-api:
+(you have to edit the prom deployment as needed)
+- --web.enable-admin-api
+
+curl -X POST -g 'http://localhost:9090/api/v1/admin/tsdb/delete_series?match[]={__name__=~".*"}'

@@ -319,13 +319,17 @@ python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:80
 - `--temperature`: Temperature for sampling (default: 0)
 - `--vary-prompts`: If a prompt is not specified, then generate some automatically
 - `--gateway-url`: The specific gateway url to call, defaults to figuring out automatically
+- `--ramp-up-time`: Time in seconds to gradually ramp up to full concurrency (default: 0)
+- `--ramp-up-pattern`: Pattern for ramping up concurrency. Options are `linear`, `exponential`, or `step` (default: `linear`).
+
 
 ### Examples
 
 Run 50 requests with 20 concurrent connections:
+(recommended to use ramp-up time to not slam the backends right off the bat)
 
 ```bash
-python load_test.py --concurrency 20 --requests 50
+python load_test.py --concurrency 100 --requests 500 --ramp-up-time 30
 ```
 
 Use a different model and prompt:
