@@ -297,6 +297,18 @@ Run the load test with default parameters:
 python load_test.py
 ```
 
+Run with specific params
+
+```bash
+python load_test.py --requests 100 --vary-prompts
+```
+
+Or a specific gateway:
+
+```bash
+python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:8000 
+```
+
 ### Command Line Arguments
 
 - `--concurrency`: Number of concurrent requests (default: 10)
@@ -305,6 +317,8 @@ python load_test.py
 - `--prompt`: Prompt to send to the API (default: "Write as if you were a critic: San Francisco")
 - `--max-tokens`: Maximum number of tokens to generate (default: 100)
 - `--temperature`: Temperature for sampling (default: 0)
+- `--vary-prompts`: If a prompt is not specified, then generate some automatically
+- `--gateway-url`: The specific gateway url to call, defaults to figuring out automatically
 
 ### Examples
 

@@ -4,7 +4,8 @@ export GRAFANA_URL=http://localhost:3000
 python dashboard_generator.py --grafana-url $GRAFANA_URL --api-key $GRAFANA_API_KEY
 
 
-
+To add Envoy Gateway specific dashboards (for now while, we have EG under the covers; this will be removed soon)
+https://github.com/envoyproxy/gateway/blob/main/charts/gateway-addons-helm/dashboards/
 
 Creating a Grafana API Key:
 

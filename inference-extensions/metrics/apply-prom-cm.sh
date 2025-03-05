@@ -1,0 +1,2 @@
+TOKEN=$(kubectl -n default get secret inference-gateway-sa-metrics-reader-secret  -o jsonpath='{.secrets[0].name}' -o jsonpath='{.data.token}' | base64 --decode)
+cat my-prometheus-server-cm.yaml | sed "s/<TOKEN>/${TOKEN}/g" | kubectl apply -f -
