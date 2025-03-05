@@ -1,0 +1,85 @@
+# API Load Testing Tool
+
+This tool allows you to perform load testing against an OpenAI-compatible API endpoint by sending concurrent requests.
+
+## Prerequisites
+
+- Python 3.7+
+- kubectl configured to access your Kubernetes cluster with the inference-gateway
+- Required Python packages (install using `pip install -r requirements.txt`)
+
+## Installation
+
+1. Clone this repository or download the files
+2. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run the load test with default parameters:
+
+```bash
+python load_test.py
+```
+
+Run with specific params
+
+```bash
+python load_test.py --requests 100 --vary-prompts
+```
+
+Or a specific gateway:
+
+```bash
+python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:8000 
+```
+
+### Command Line Arguments
+
+- `--concurrency`: Number of concurrent requests (default: 10)
+- `--requests`: Total number of requests to make (default: 25)
+- `--model`: Model to use for completions (default: "tweet-summary")
+- `--prompt`: Prompt to send to the API (default: "Write as if you were a critic: San Francisco")
+- `--max-tokens`: Maximum number of tokens to generate (default: 100)
+- `--temperature`: Temperature for sampling (default: 0)
+- `--vary-prompts`: If a prompt is not specified, then generate some automatically
+- `--gateway-url`: The specific gateway url to call, defaults to figuring out automatically
+- `--ramp-up-time`: Time in seconds to gradually ramp up to full concurrency (default: 0)
+- `--ramp-up-pattern`: Pattern for ramping up concurrency. Options are `linear`, `exponential`, or `step` (default: `linear`).
+
+
+### Examples
+
+Run 50 requests with 20 concurrent connections:
+(recommended to use ramp-up time to not slam the backends right off the bat)
+
+```bash
+python load_test.py --concurrency 100 --requests 500 --ramp-up-time 30
+```
+
+```bash
+python load_test.py --requests 5000 --vary-prompts --gateway-url http://$IP:$PORT --concurrency 200 --ramp-up-time 20
+
+```
+
+Use a different model and prompt:
+
+```bash
+python load_test.py --model "different-model" --prompt "Describe the weather in New York"
+```
+
+## Output
+
+The script will output:
+- Total time taken for all requests
+- Number of successful and failed requests
+- Average, minimum, and maximum response times
+- Requests per second
+
+## Notes
+
+- The script automatically retrieves the gateway IP from your Kubernetes cluster
+- Ensure your kubectl context is set correctly before running the script
