@@ -2,73 +2,112 @@
 import random
 from faker import Faker
 from typing import Dict, Any, List
+import math
+import os
+import sys
+
+# Try different import approaches to handle running from different directories
+try:
+    # When running from within the load directory
+    from templates.placeholder_values import placeholder_values
+except ImportError:
+    try:
+        # When running from the parent directory
+        from load.templates.placeholder_values import placeholder_values
+    except ImportError:
+        # If all else fails, try to add the directory to the path
+        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from load.templates.placeholder_values import placeholder_values
 
 
-def generate_random_prompt() -> str:
-    """Generate a random tweet-related prompt."""
-    fake = Faker()
+def estimate_token_count(text: str) -> int:
+    """
+    Estimate the number of tokens in a text string.
+    This is a rough approximation: ~4 characters per token for English text.
+    """
+    return max(1, len(text) // 4)
+
+
+def generate_coherent_prompt(template_name: str, placeholders: Dict[str, str]) -> str:
+    """
+    Generate a coherent prompt using a specified template and placeholder values.
     
-    tweet_topics = [
-        "technology", "politics", "sports", "entertainment", "food", 
-        "travel", "health", "business", "science", "education"
-    ]
+    Args:
+        template_name: The name of the template to use
+        placeholders: A dictionary of placeholder values to fill in the template
     
-    tweet_styles = [
-        "humorous", "serious", "informative", "controversial", "inspirational",
-        "sarcastic", "promotional", "questioning", "celebratory", "critical"
-    ]
+    Returns:
+        A string with the placeholders filled in
+    """
+    # Determine the category from the template name
+    # The placeholder_values dictionary has keys like "market_analysis" which correspond to
+    # templates in specific category folders (e.g., business/market_analysis.txt)
     
-    tweet_formats = [
-        "Write a tweet about {topic} that is {style}",
-        "Compose a {style} tweet discussing recent developments in {topic}",
-        "Create a {style} tweet that would go viral about {topic}",
-        "Draft a tweet for a {topic} influencer that sounds {style}",
-        "Write a {style} tweet announcing breaking news in {topic}",
-        "Compose a tweet thread starter about {topic} with a {style} tone",
-        "Create a tweet that would get many retweets about {topic} using a {style} approach",
-        "Write a tweet responding to controversy in the {topic} world with a {style} take",
-        "Draft a {style} tweet that would trend worldwide about {topic}",
-        "Compose a tweet that a celebrity might post about {topic} with a {style} voice"
-    ]
-    
-    # Add some specific entities to make prompts more interesting
-    if random.random() < 0.5:
-        topic = random.choice(tweet_topics)
-    else:
-        if random.random() < 0.3:
-            topic = fake.company()
-        elif random.random() < 0.6:
-            topic = fake.catch_phrase()
-        else:
-            topic = fake.bs()
-    
-    style = random.choice(tweet_styles)
-    format_template = random.choice(tweet_formats)
-    
-    # Sometimes add extra context to make the prompt longer
-    extra_context = ""
-    if random.random() < 0.7:
-        context_templates = [
-            f" Include a reference to {fake.name()}.",
-            f" Mention the city of {fake.city()}.",
-            f" Include a trending hashtag like #{fake.word().replace(' ', '')}Day.",
-            f" Reference the recent event: {fake.sentence()}",
-            f" Make it appeal to {fake.job()} professionals.",
-            f" Include a call to action for readers to {fake.bs()}.",
-            f" Make sure it would resonate with people interested in {fake.catch_phrase()}.",
-            f" Include a subtle reference to {fake.company()} without naming them directly."
-        ]
-        extra_context = random.choice(context_templates)
+    # Map template names to their categories
+    template_categories = {
+        # Business templates
+        "market_analysis": "business",
+        "product_launch": "business",
         
-        # Sometimes add even more context to reach closer to 100 tokens
-        if random.random() < 0.4:
-            extra_context += random.choice(context_templates)
+        # Technical templates
+        "code_review": "technical",
+        "system_design": "technical",
+        
+        # Academic templates
+        "research_proposal": "academic",
+        
+        # Creative templates
+        "story_outline": "creative"
+    }
     
-    prompt = format_template.format(topic=topic, style=style) + extra_context
+    category = template_categories.get(template_name, "")
     
-    # Add length requirements occasionally
-    if random.random() < 0.3:
-        prompt += f" Keep it under {random.randint(200, 280)} characters."
+    # Load the template file from the appropriate category directory
+    template_path = f"templates/{category}/{template_name}.txt"
+    try:
+        with open(template_path, "r") as template_file:
+            template_content = template_file.read()
+    except FileNotFoundError:
+        # Try with the load/ prefix if running from a different directory
+        template_path = f"load/templates/{category}/{template_name}.txt"
+        with open(template_path, "r") as template_file:
+            template_content = template_file.read()
+    
+    # Replace placeholders in the template
+    for key, value in placeholders.items():
+        # Ensure the placeholder format matches the template
+        template_content = template_content.replace(f"{{{key}}}", value)
+    
+    return template_content
+
+
+def generate_random_prompt(target_tokens: int = 550, tokens_stddev: int = 200) -> str:
+    """
+    Generate a random prompt with a target token count.
+    
+    Args:
+        target_tokens: Target number of tokens for the prompt
+        tokens_stddev: Standard deviation for token count variation
+    
+    Returns:
+        A prompt with approximately the target number of tokens
+    """
+    # Select a random template and corresponding placeholder values
+    template_name = random.choice(list(placeholder_values.keys()))
+    placeholders = placeholder_values[template_name]
+    
+    # Generate a coherent prompt using the selected template and placeholders
+    prompt = generate_coherent_prompt(template_name, placeholders)
+    
+    # Estimate the token count and adjust if necessary
+    current_tokens = estimate_token_count(prompt)
+    actual_target = max(10, int(random.gauss(target_tokens, tokens_stddev)))
+    
+    # Add additional content if needed to reach the target token count
+    while current_tokens < actual_target:
+        additional_content = f" {random.choice(['Also', 'Additionally', 'Furthermore', 'Moreover'])}, {Faker().bs()}."
+        prompt += additional_content
+        current_tokens = estimate_token_count(prompt)
     
     return prompt
 

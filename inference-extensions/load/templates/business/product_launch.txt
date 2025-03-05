@@ -1,0 +1,69 @@
+Develop a comprehensive product launch strategy for {product_name} by {company} in the {industry} market.
+
+## Product Overview
+{product_name} is a {product_type} designed to {product_purpose}. Its key features include {feature1}, {feature2}, and {feature3}, which address the following customer pain points: {pain_point1} and {pain_point2}.
+
+## Target Market
+Define the primary and secondary target markets for {product_name}:
+- Primary market: {primary_market} with an estimated size of {market_size}
+- Secondary markets: {secondary_market1} and {secondary_market2}
+- Customer personas and their specific needs
+- Market readiness and adoption factors
+
+## Competitive Analysis
+Analyze the competitive landscape for {product_name}:
+- Direct competitors: {competitor1}, {competitor2}
+- Indirect alternatives: {alternative1}, {alternative2}
+- Competitive advantages of {product_name}: {advantage1}, {advantage2}
+- Potential competitive responses to the launch
+
+## Pricing Strategy
+Recommend a pricing strategy for {product_name}:
+- Pricing model (subscription, one-time, freemium, etc.)
+- Price points for different tiers or versions
+- Discount strategies and promotional pricing
+- Competitive price positioning
+
+## Go-to-Market Strategy
+Outline the go-to-market approach:
+- Launch timeline and key milestones
+- Channel strategy (direct, partner, online, retail)
+- Marketing and promotional activities
+- Sales enablement requirements
+
+## Marketing Plan
+Develop a marketing plan to support the launch:
+- Key messaging and positioning
+- Content strategy and assets
+- Digital marketing tactics
+- PR and media strategy
+- Event and experiential marketing
+
+## Sales Strategy
+Define the sales approach for {product_name}:
+- Sales process and methodology
+- Sales team structure and quotas
+- Partner and channel enablement
+- Sales tools and resources
+
+## Success Metrics
+Establish KPIs to measure launch success:
+- Revenue and sales targets
+- Market share objectives
+- Customer acquisition costs
+- Adoption and engagement metrics
+- ROI expectations
+
+## Risk Management
+Identify potential risks and mitigation strategies:
+- Launch delays or technical issues
+- Competitive threats or responses
+- Market adoption challenges
+- Supply chain or production risks
+
+## Post-Launch Activities
+Plan for post-launch activities:
+- Customer feedback collection
+- Product iterations and improvements
+- Expansion opportunities
+- Long-term product roadmap 

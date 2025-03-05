@@ -24,6 +24,16 @@ async def main():
     parser.add_argument("--ramp-up-time", type=float, default=0, help="Time in seconds to gradually ramp up to full concurrency")
     parser.add_argument("--ramp-up-pattern", type=str, default="linear", choices=["linear", "exponential", "step"], 
                         help="Pattern for ramping up concurrency")
+    # Add new arguments for token size control
+    parser.add_argument("--input-tokens-mean", type=int, default=550, 
+                        help="Mean number of tokens for input prompts (default: 550)")
+    parser.add_argument("--input-tokens-stddev", type=int, default=200, 
+                        help="Standard deviation of tokens for input prompts (default: 200)")
+    parser.add_argument("--output-tokens-mean", type=int, default=150, 
+                        help="Mean number of tokens for output generation (default: 150)")
+    parser.add_argument("--output-tokens-stddev", type=int, default=10, 
+                        help="Standard deviation of tokens for output generation (default: 10)")
+    parser.add_argument("--show-prompts-used", action="store_true", help="Display example prompts used during the load test")
     args = parser.parse_args()
     
     if args.gateway_url:
@@ -41,9 +51,20 @@ async def main():
     # Create the base payload
     payload = {
         "model": args.model,
-        "prompt": args.prompt if args.prompt else generate_random_prompt(),
-        "max_tokens": args.max_tokens,
+        "prompt": args.prompt if args.prompt else generate_random_prompt(
+            target_tokens=args.input_tokens_mean, 
+            tokens_stddev=args.input_tokens_stddev
+        ),
+        "max_tokens": max(1, int(random.gauss(args.output_tokens_mean, args.output_tokens_stddev))),
         "temperature": args.temperature
+    }
+    
+    # Token size information for the test
+    token_info = {
+        "input_tokens_mean": args.input_tokens_mean,
+        "input_tokens_stddev": args.input_tokens_stddev,
+        "output_tokens_mean": args.output_tokens_mean,
+        "output_tokens_stddev": args.output_tokens_stddev
     }
     
     print(f"Starting load test with {args.concurrency} concurrent requests for a total of {args.requests} requests")
@@ -51,8 +72,16 @@ async def main():
         print(f"Using {args.ramp_up_pattern} ramp-up over {args.ramp_up_time} seconds")
     print(f"Target URL: {url}")
     print(f"Base payload: {json.dumps(payload, indent=2)}")
+    print(f"Token size configuration:")
+    print(f"  Input tokens: mean={args.input_tokens_mean}, stddev={args.input_tokens_stddev}")
+    print(f"  Output tokens: mean={args.output_tokens_mean}, stddev={args.output_tokens_stddev}")
     if use_random_prompts:
-        print("Using randomly generated prompts for each request" if args.vary_prompts else "Using a randomly generated prompt")
+        print("Using randomly generated but coherent prompts for each request" if args.vary_prompts else "Using user prompt form the parameters.")
+    
+    should_continue = input("Should continue Y/n? ").strip().lower() or 'y'
+    if should_continue not in ['y', 'yes']:
+        print("Exiting the load test.")
+        return
     
     start_time = time.time()
     results = await run_load_test(
@@ -62,7 +91,8 @@ async def main():
         payload, 
         vary_prompts=use_random_prompts,
         ramp_up_time=args.ramp_up_time,
-        ramp_up_pattern=args.ramp_up_pattern
+        ramp_up_pattern=args.ramp_up_pattern,
+        token_info=token_info
     )
     total_time = time.time() - start_time
     
@@ -132,7 +162,7 @@ async def main():
                 print(f"    ... and {len(errors) - 3} more similar errors")
     
     # Optionally show some example prompts that were used
-    if use_random_prompts and args.vary_prompts:
+    if use_random_prompts and args.vary_prompts and args.show_prompts_used:
         print("\nExample prompts used:")
         sample_size = min(5, len(results))
         for i, result in enumerate(random.sample(results, sample_size)):

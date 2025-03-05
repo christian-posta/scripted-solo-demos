@@ -1,0 +1,66 @@
+Perform a comprehensive code review of the {project_name} {component_name} implementation in {language}.
+
+## Code Overview
+The {component_name} is responsible for {component_purpose} within the {project_name} system. It consists of approximately {code_size} lines of code across {file_count} files. The primary functionality includes {functionality1}, {functionality2}, and {functionality3}.
+
+## Architecture Review
+Evaluate the architectural design of the {component_name}:
+- Overall architecture pattern (e.g., {architecture_pattern})
+- Component interactions and dependencies
+- Separation of concerns
+- Extensibility and modularity
+- Compliance with system-wide architectural principles
+
+## Code Quality Assessment
+Assess the quality of the implementation:
+- Adherence to {language} best practices and conventions
+- Code organization and structure
+- Naming conventions and readability
+- Documentation quality (inline comments, API docs, etc.)
+- Test coverage and quality
+
+## Performance Considerations
+Analyze performance aspects of the code:
+- Algorithmic efficiency and complexity analysis
+- Resource utilization (memory, CPU, network, etc.)
+- Potential bottlenecks in the implementation
+- Scalability considerations
+- Optimization opportunities
+
+## Security Review
+Identify potential security issues:
+- Input validation and sanitization
+- Authentication and authorization mechanisms
+- Handling of sensitive data
+- Protection against common vulnerabilities ({vulnerability_type1}, {vulnerability_type2})
+- Secure coding practices
+
+## Error Handling and Resilience
+Evaluate error handling and system resilience:
+- Exception/error handling patterns
+- Logging and monitoring hooks
+- Graceful degradation capabilities
+- Recovery mechanisms
+- Edge case handling
+
+## Testing Strategy
+Review the testing approach:
+- Unit test coverage and quality
+- Integration test scenarios
+- Performance and load testing
+- Security testing
+- Test data management
+
+## Specific Code Issues
+Highlight specific areas requiring attention:
+1. In {file_name1}, the {issue1_description}
+2. The implementation of {functionality1} could be improved by {improvement1}
+3. Consider refactoring {code_section} to address {issue2_description}
+
+## Recommendations
+Provide actionable recommendations:
+- Critical issues that must be addressed
+- Important improvements for code quality
+- Suggestions for performance optimization
+- Architectural refactoring opportunities
+- Documentation improvements 

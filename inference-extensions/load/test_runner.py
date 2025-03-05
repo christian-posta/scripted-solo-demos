@@ -4,6 +4,7 @@ import aiohttp
 import time
 import math
 import threading
+import random
 from typing import Dict, Any, List, Callable
 
 from api_client import make_request
@@ -69,8 +70,32 @@ def print_progress_report(results, start_time, total_requests):
 
 async def run_load_test(concurrency: int, total_requests: int, url: str, payload_template: Dict[str, Any], 
                         vary_prompts: bool = True, ramp_up_time: float = 0, 
-                        ramp_up_pattern: str = 'linear') -> List[Dict[str, Any]]:
-    """Run a load test with the specified concurrency and ramp-up period."""
+                        ramp_up_pattern: str = 'linear', token_info: Dict[str, int] = None) -> List[Dict[str, Any]]:
+    """
+    Run a load test with the specified concurrency and ramp-up period.
+    
+    Args:
+        concurrency: Number of concurrent workers
+        total_requests: Total number of requests to make
+        url: Target URL for requests
+        payload_template: Template for request payload
+        vary_prompts: Whether to generate different prompts for each request
+        ramp_up_time: Time in seconds to gradually ramp up to full concurrency
+        ramp_up_pattern: Pattern for ramping up concurrency
+        token_info: Dictionary with token size configuration
+    
+    Returns:
+        List of results from all requests
+    """
+    # Use default token info if not provided
+    if token_info is None:
+        token_info = {
+            "input_tokens_mean": 550,
+            "input_tokens_stddev": 200,
+            "output_tokens_mean": 150,
+            "output_tokens_stddev": 10
+        }
+    
     results = []
     active_workers = 0
     worker_start_times = {}
@@ -153,10 +178,19 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
                         queue.task_done()
                         break
                     
-                    # Create a payload copy with a potentially varied prompt
+                    # Create a payload copy with a potentially varied prompt and max_tokens
                     payload = payload_template.copy()
                     if vary_prompts:
-                        payload["prompt"] = generate_random_prompt()
+                        payload["prompt"] = generate_random_prompt(
+                            target_tokens=token_info["input_tokens_mean"],
+                            tokens_stddev=token_info["input_tokens_stddev"]
+                        )
+                    
+                    # Vary the max_tokens parameter based on the configured mean and stddev
+                    payload["max_tokens"] = max(1, int(random.gauss(
+                        token_info["output_tokens_mean"],
+                        token_info["output_tokens_stddev"]
+                    )))
                     
                     # Use the worker's session for the request
                     result = await make_request(session, url, payload, request_id)

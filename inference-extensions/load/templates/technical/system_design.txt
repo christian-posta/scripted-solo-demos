@@ -1,0 +1,76 @@
+Design a scalable and resilient system architecture for {system_name}, a {system_type} that will {system_purpose}.
+
+## Requirements Analysis
+### Functional Requirements
+- The system must support {requirement1}
+- Users should be able to {requirement2}
+- The platform needs to integrate with {integration_point1} and {integration_point2}
+- Data must be {data_requirement}
+
+### Non-Functional Requirements
+- Scalability: Support for {user_count} concurrent users with {growth_rate} growth
+- Performance: Response time under {response_time} for {operation_type} operations
+- Availability: {availability_target} uptime with minimal planned downtime
+- Security: Compliance with {compliance_standard1} and {compliance_standard2}
+- Data integrity: Ensure {data_integrity_requirement}
+
+## System Architecture
+### High-Level Design
+Propose a {architecture_style} architecture with the following components:
+- {component1} for handling {component1_purpose}
+- {component2} responsible for {component2_purpose}
+- {component3} to manage {component3_purpose}
+- Data storage using {database_type} for {data_type}
+
+### Component Interactions
+Detail the interactions between system components:
+1. When a user performs {action1}, the request flows through {flow1_description}
+2. For {action2}, the system will {flow2_description}
+3. Background processes will handle {background_process} by {process_description}
+
+## Data Model
+Design the core data entities and relationships:
+- {entity1}: Stores {entity1_data} with attributes {attribute1}, {attribute2}
+- {entity2}: Contains {entity2_data} related to {entity1} through {relationship_type}
+- {entity3}: Manages {entity3_data} with {attribute3} as the primary identifier
+
+## API Design
+Define the key APIs for the system:
+- `{endpoint1}`: {endpoint1_purpose} with parameters {param1}, {param2}
+- `{endpoint2}`: Handles {endpoint2_purpose} and returns {return_data}
+- Authentication using {auth_method} with {auth_detail}
+
+## Scalability Approach
+Detail the scalability strategy:
+- Horizontal scaling of {scalable_component} using {scaling_mechanism}
+- Database scaling through {db_scaling_approach}
+- Caching strategy using {cache_type} for {cached_data}
+- Load balancing with {load_balancer_type}
+
+## Resilience and Fault Tolerance
+Describe approaches for system resilience:
+- Redundancy for {critical_component} using {redundancy_approach}
+- Failure detection through {monitoring_approach}
+- Recovery mechanisms including {recovery_mechanism}
+- Circuit breaking for {dependent_service} interactions
+
+## Security Considerations
+Address security requirements:
+- Authentication using {auth_protocol}
+- Authorization model based on {auth_model}
+- Data encryption for {sensitive_data} using {encryption_method}
+- Protection against {attack_vector1} and {attack_vector2}
+
+## Monitoring and Observability
+Design the monitoring approach:
+- Key metrics to track: {metric1}, {metric2}, {metric3}
+- Logging strategy for {log_purpose}
+- Alerting thresholds for {alert_condition}
+- Distributed tracing using {tracing_tool}
+
+## Deployment Strategy
+Outline the deployment approach:
+- Infrastructure as Code using {iac_tool}
+- CI/CD pipeline with {ci_cd_tool}
+- Environment strategy: {environment_strategy}
+- Rollback procedures for {failure_scenario} 

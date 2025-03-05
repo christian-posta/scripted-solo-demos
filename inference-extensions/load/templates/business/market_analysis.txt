@@ -1,0 +1,53 @@
+Write a comprehensive market analysis for {company} in the {industry} sector. 
+
+## Company Overview
+{company} is a {company_age} company that specializes in {specialization}. Their primary products/services include {product_list}.
+
+## Market Landscape
+Analyze the current state of the {industry} market, including:
+- Market size and growth projections
+- Key competitors: {competitor1}, {competitor2}, and {competitor3}
+- Recent industry trends, particularly {trend1} and {trend2}
+- Regulatory considerations affecting the market
+
+## Competitive Positioning
+Evaluate {company}'s position relative to competitors:
+- Strengths: {strength1}, {strength2}
+- Weaknesses: {weakness1}, {weakness2}
+- Unique selling propositions
+- Market share analysis
+
+## Customer Analysis
+Identify and analyze {company}'s target customer segments:
+- Demographics and psychographics
+- Customer needs and pain points
+- Buying behavior and decision factors
+- Customer acquisition and retention strategies
+
+## Growth Opportunities
+Recommend strategic opportunities for {company}:
+- Untapped market segments
+- Product/service expansion possibilities
+- Geographic expansion considerations
+- Partnership or acquisition opportunities
+
+## Risk Assessment
+Identify potential risks and challenges:
+- Market threats from {competitor1} and emerging players
+- Technology disruption risks, especially from {technology}
+- Economic factors that could impact growth
+- Supply chain or operational vulnerabilities
+
+## Strategic Recommendations
+Provide actionable recommendations for {company} to enhance its market position:
+- Short-term initiatives (next 12 months)
+- Medium-term strategic moves (1-3 years)
+- Long-term vision alignment
+- Resource allocation priorities
+
+## Implementation Roadmap
+Outline a high-level implementation plan for the recommended strategies:
+- Key milestones and timeline
+- Required resources and investments
+- Success metrics and KPIs
+- Potential obstacles and mitigation approaches 

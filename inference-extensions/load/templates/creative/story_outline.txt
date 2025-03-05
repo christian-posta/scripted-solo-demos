@@ -1,0 +1,80 @@
+Create a detailed outline for a {genre} story set in {setting} that explores themes of {theme1} and {theme2}.
+
+## Premise
+{protagonist_name}, a {protagonist_description}, must {main_goal} while facing {main_obstacle}. The story takes place in {time_period} and involves {key_element} as a central plot device.
+
+## Main Characters
+### Protagonist: {protagonist_name}
+- Background: {protagonist_background}
+- Motivation: {protagonist_motivation}
+- Key traits: {trait1}, {trait2}, and {trait3}
+- Internal conflict: {internal_conflict}
+
+### Antagonist: {antagonist_name}
+- Background: {antagonist_background}
+- Motivation: {antagonist_motivation}
+- Relationship to protagonist: {relationship}
+- Methods: Uses {antagonist_method} to oppose the protagonist
+
+### Supporting Character 1: {supporting1_name}
+- Role: {supporting1_role}
+- Relationship to protagonist: {supporting1_relationship}
+- Arc: {supporting1_arc}
+
+### Supporting Character 2: {supporting2_name}
+- Role: {supporting2_role}
+- Relationship to protagonist: {supporting2_relationship}
+- Arc: {supporting2_arc}
+
+## Plot Structure
+### Act 1: Setup
+- Opening scene: {opening_scene}
+- Ordinary world: Show {protagonist_name}'s life before the adventure
+- Inciting incident: {inciting_incident}
+- First threshold: {protagonist_name} decides to {first_decision}
+- End of Act 1 twist: {act1_twist}
+
+### Act 2: Confrontation
+- New world challenges: {protagonist_name} encounters {challenge1} and {challenge2}
+- Midpoint: {midpoint_event} changes everything
+- Allies and enemies: {protagonist_name} forms alliances with {ally} but makes an enemy of {enemy}
+- Rising complications: {complication1} leads to {complication2}
+- Low point: {protagonist_name} experiences {low_point} and almost gives up
+
+### Act 3: Resolution
+- Renewed determination: {protagonist_name} realizes {realization}
+- Final preparation: {preparation_scene}
+- Climactic confrontation: {protagonist_name} faces {antagonist_name} in {final_battle}
+- Resolution: {resolution_description}
+- Final image: {final_image}
+
+## Setting Details
+- Primary location: {primary_location} characterized by {location_feature}
+- Secondary locations: {secondary_location1} and {secondary_location2}
+- Time period details: {time_period_detail}
+- Cultural elements: {cultural_element1} and {cultural_element2}
+- Atmosphere: {atmosphere_description}
+
+## Themes and Symbolism
+- Primary theme: Exploration of {theme1} through {theme_exploration}
+- Secondary theme: {theme2} as shown through {secondary_theme_exploration}
+- Recurring symbol: {symbol1} represents {symbol1_meaning}
+- Motif: {motif} appears throughout to emphasize {motif_purpose}
+
+## Key Scenes
+1. {key_scene1_description}
+2. {key_scene2_description}
+3. {key_scene3_description}
+4. {key_scene4_description}
+5. {key_scene5_description}
+
+## Character Arcs
+- {protagonist_name}'s transformation: From {starting_state} to {ending_state}
+- {antagonist_name}'s journey: {antagonist_arc}
+- Relationship evolution: How {relationship1} changes throughout the story
+
+## Dialogue Samples
+Include sample dialogue that captures the voice of:
+- {protagonist_name}: "{protagonist_dialogue}"
+- {antagonist_name}: "{antagonist_dialogue}"
+- {supporting1_name}: "{supporting1_dialogue}" 
