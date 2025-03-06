@@ -49,6 +49,12 @@ python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:80
 - `--gateway-url`: The specific gateway url to call, defaults to figuring out automatically
 - `--ramp-up-time`: Time in seconds to gradually ramp up to full concurrency (default: 0)
 - `--ramp-up-pattern`: Pattern for ramping up concurrency. Options are `linear`, `exponential`, or `step` (default: `linear`).
+- `--input-tokens-mean`: default 550
+- `--input-tokens-stddev`: default 200
+- `--output-tokens-mean`: default 150
+- `--output-tokens-stddev`: default 10
+- `--show-prompts-used`: Show some of the example prompts used at the end of the runs
+
 
 
 ### Examples
@@ -56,12 +62,9 @@ python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:80
 Run 50 requests with 20 concurrent connections:
 (recommended to use ramp-up time to not slam the backends right off the bat)
 
-```bash
-python load_test.py --concurrency 100 --requests 500 --ramp-up-time 30
-```
 
 ```bash
-python load_test.py --requests 5000 --vary-prompts --gateway-url http://$IP:$PORT --concurrency 200 --ramp-up-time 20
+python load_test.py --requests 100 --vary-prompts --gateway-url http://$IP:$PORT --concurrency 50 --ramp-up-time 30
 
 ```
 
