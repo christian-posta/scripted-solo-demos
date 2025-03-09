@@ -1,3 +1,4 @@
 aiohttp==3.8.5
 asyncio==3.4.3
 faker==18.13.0 
+numpy==1.26.1

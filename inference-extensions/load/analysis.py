@@ -5,6 +5,7 @@ from typing import Dict, Any, List
 import math
 import os
 import sys
+import numpy as np
 
 # Try different import approaches to handle running from different directories
 try:
@@ -188,6 +189,13 @@ def analyze_phase(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     else:
         phase_duration = sum(elapsed_times)
     
+    # Calculate percentiles if we have successful requests
+    p50 = p90 = p95 = 0
+    if elapsed_times:
+        p50 = np.percentile(elapsed_times, 50)
+        p90 = np.percentile(elapsed_times, 90)
+        p95 = np.percentile(elapsed_times, 95)
+    
     return {
         "total_requests": len(results),
         "successful_requests": len(successful_requests),
@@ -196,6 +204,9 @@ def analyze_phase(results: List[Dict[str, Any]]) -> Dict[str, Any]:
         "avg_response_time": sum(elapsed_times) / len(elapsed_times) if elapsed_times else 0,
         "min_response_time": min(elapsed_times) if elapsed_times else 0,
         "max_response_time": max(elapsed_times) if elapsed_times else 0,
+        "p50_response_time": p50,
+        "p90_response_time": p90,
+        "p95_response_time": p95,
         "requests_per_second": len(successful_requests) / phase_duration if phase_duration > 0 else 0,
         "phase_duration": phase_duration
     } 

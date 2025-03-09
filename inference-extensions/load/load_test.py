@@ -121,6 +121,9 @@ async def main():
     print(f"Average response time: {overall['avg_response_time']:.4f} seconds")
     print(f"Min response time: {overall['min_response_time']:.4f} seconds")
     print(f"Max response time: {overall['max_response_time']:.4f} seconds")
+    print(f"P50 response time: {overall['p50_response_time']:.4f} seconds (median)")
+    print(f"P90 response time: {overall['p90_response_time']:.4f} seconds")
+    print(f"P95 response time: {overall['p95_response_time']:.4f} seconds")
     print(f"Requests per second: {overall['requests_per_second']:.2f}")
     
     # Print ramp-up phase results if applicable
@@ -132,6 +135,9 @@ async def main():
         print(f"Successful requests: {ramp_up['successful_requests']}")
         print(f"Failed requests: {ramp_up['failed_requests']}")
         print(f"Average response time: {ramp_up['avg_response_time']:.4f} seconds")
+        print(f"P50 response time: {ramp_up['p50_response_time']:.4f} seconds (median)")
+        print(f"P90 response time: {ramp_up['p90_response_time']:.4f} seconds")
+        print(f"P95 response time: {ramp_up['p95_response_time']:.4f} seconds")
         print(f"Requests per second: {ramp_up['requests_per_second']:.2f}")
     
     # Print full-load phase results
@@ -142,6 +148,9 @@ async def main():
     print(f"Successful requests: {full_load['successful_requests']}")
     print(f"Failed requests: {full_load['failed_requests']}")
     print(f"Average response time: {full_load['avg_response_time']:.4f} seconds")
+    print(f"P50 response time: {full_load['p50_response_time']:.4f} seconds (median)")
+    print(f"P90 response time: {full_load['p90_response_time']:.4f} seconds")
+    print(f"P95 response time: {full_load['p95_response_time']:.4f} seconds")
     print(f"Requests per second: {full_load['requests_per_second']:.2f}")
     
     # Display error information if there are any failed requests
@@ -190,6 +199,9 @@ async def main():
             print(f"  Average response time: {model_stats['avg_response_time']:.4f} seconds")
             print(f"  Min response time: {model_stats['min_response_time']:.4f} seconds")
             print(f"  Max response time: {model_stats['max_response_time']:.4f} seconds")
+            print(f"  P50 response time: {model_stats['p50_response_time']:.4f} seconds (median)")
+            print(f"  P90 response time: {model_stats['p90_response_time']:.4f} seconds")
+            print(f"  P95 response time: {model_stats['p95_response_time']:.4f} seconds")
 
 
 if __name__ == "__main__":
