@@ -41,7 +41,7 @@ python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:80
 
 - `--concurrency`: Number of concurrent requests (default: 10)
 - `--requests`: Total number of requests to make (default: 25)
-- `--model`: Model to use for completions (default: "tweet-summary")
+- `--model`: Model(s) to use for completions (comma-delimited for multiple models, default: "tweet-summary")
 - `--prompt`: Prompt to send to the API (default: "Write as if you were a critic: San Francisco")
 - `--max-tokens`: Maximum number of tokens to generate (default: 100)
 - `--temperature`: Temperature for sampling (default: 0)
@@ -54,14 +54,12 @@ python load_test.py --requests 100 --vary-prompts --gateway-url http://IPHERE:80
 - `--output-tokens-mean`: default 150
 - `--output-tokens-stddev`: default 10
 - `--show-prompts-used`: Show some of the example prompts used at the end of the runs
-
-
+- `--model-selection`: Strategy for selecting models when multiple are provided. Options are `round-robin` or `random` (default: `round-robin`)
 
 ### Examples
 
 Run 50 requests with 20 concurrent connections:
 (recommended to use ramp-up time to not slam the backends right off the bat)
-
 
 ```bash
 python load_test.py --requests 100 --vary-prompts --gateway-url http://$IP:$PORT --concurrency 50 --ramp-up-time 30
@@ -72,6 +70,16 @@ Use a different model and prompt:
 
 ```bash
 python load_test.py --model "different-model" --prompt "Describe the weather in New York"
+```
+
+Run with multiple models using round-robin selection:
+```bash
+python load_test.py --model "model1,model2,model3" --model-selection round-robin
+```
+
+Run with multiple models using random selection:
+```bash
+python load_test.py --model "model1,model2,model3" --model-selection random
 ```
 
 ## Output

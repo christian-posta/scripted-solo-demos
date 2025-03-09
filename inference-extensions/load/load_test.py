@@ -15,7 +15,11 @@ async def main():
     parser = argparse.ArgumentParser(description="Load test for OpenAI API completions")
     parser.add_argument("--concurrency", type=int, default=10, help="Number of concurrent requests")
     parser.add_argument("--requests", type=int, default=25, help="Total number of requests to make")
-    parser.add_argument("--model", type=str, default="tweet-summary", help="Model to use for completions")
+    parser.add_argument("--model", type=str, default="tweet-summary", 
+                        help="Model(s) to use for completions (comma-delimited for multiple models)")
+    parser.add_argument("--model-selection", type=str, default="round-robin", 
+                        choices=["round-robin", "random"], 
+                        help="Model selection strategy when multiple models are provided")
     parser.add_argument("--prompt", type=str, help="Prompt to send to the API (if not provided, random prompts will be generated)")
     parser.add_argument("--vary-prompts", action="store_true", help="Generate different prompts for each request")
     parser.add_argument("--max-tokens", type=int, default=100, help="Maximum number of tokens to generate")
@@ -45,12 +49,17 @@ async def main():
             return
         url = f"http://{ip}:{port}/v1/completions"
     
+    # Parse the model parameter into a list
+    models = [model.strip() for model in args.model.split(",")]
+    print(f"Using {len(models)} model(s): {', '.join(models)}")
+    print(f"Model selection strategy: {args.model_selection}")
+    
     # Determine if we should use random prompts
     use_random_prompts = args.prompt is None or args.vary_prompts
     
     # Create the base payload
     payload = {
-        "model": args.model,
+        "model": models[0],  # Default to first model, will be replaced per request
         "prompt": args.prompt if args.prompt else generate_random_prompt(
             target_tokens=args.input_tokens_mean, 
             tokens_stddev=args.input_tokens_stddev
@@ -92,7 +101,9 @@ async def main():
         vary_prompts=use_random_prompts,
         ramp_up_time=args.ramp_up_time,
         ramp_up_pattern=args.ramp_up_pattern,
-        token_info=token_info
+        token_info=token_info,
+        models=models,
+        model_selection=args.model_selection
     )
     total_time = time.time() - start_time
     
@@ -167,6 +178,18 @@ async def main():
         sample_size = min(5, len(results))
         for i, result in enumerate(random.sample(results, sample_size)):
             print(f"Example {i+1}: {result.get('prompt', 'N/A')}")
+
+    # Print model-specific results
+    if "per_model" in analysis:
+        print("\nPER-MODEL STATISTICS:")
+        for model, model_stats in analysis["per_model"].items():
+            print(f"\nModel: {model}")
+            print(f"  Total requests: {model_stats['total_requests']}")
+            print(f"  Successful requests: {model_stats['successful_requests']}")
+            print(f"  Failed requests: {model_stats['failed_requests']}")
+            print(f"  Average response time: {model_stats['avg_response_time']:.4f} seconds")
+            print(f"  Min response time: {model_stats['min_response_time']:.4f} seconds")
+            print(f"  Max response time: {model_stats['max_response_time']:.4f} seconds")
 
 
 if __name__ == "__main__":

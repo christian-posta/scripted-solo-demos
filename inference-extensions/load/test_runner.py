@@ -70,7 +70,8 @@ def print_progress_report(results, start_time, total_requests):
 
 async def run_load_test(concurrency: int, total_requests: int, url: str, payload_template: Dict[str, Any], 
                         vary_prompts: bool = True, ramp_up_time: float = 0, 
-                        ramp_up_pattern: str = 'linear', token_info: Dict[str, int] = None) -> List[Dict[str, Any]]:
+                        ramp_up_pattern: str = 'linear', token_info: Dict[str, int] = None,
+                        models: List[str] = None, model_selection: str = "round-robin") -> List[Dict[str, Any]]:
     """
     Run a load test with the specified concurrency and ramp-up period.
     
@@ -83,6 +84,8 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
         ramp_up_time: Time in seconds to gradually ramp up to full concurrency
         ramp_up_pattern: Pattern for ramping up concurrency
         token_info: Dictionary with token size configuration
+        models: List of model names to use (load balanced)
+        model_selection: Strategy for selecting models ("round-robin" or "random")
     
     Returns:
         List of results from all requests
@@ -95,6 +98,23 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
             "output_tokens_mean": 150,
             "output_tokens_stddev": 10
         }
+    
+    # Use a single model if models is None or empty
+    if not models:
+        models = [payload_template.get("model", "tweet-summary")]
+    
+    # Counter for round-robin model selection
+    model_counter = 0
+    
+    # Function to select a model based on the chosen strategy
+    def select_model():
+        nonlocal model_counter
+        if model_selection == "random":
+            return random.choice(models)
+        else:  # round-robin
+            model = models[model_counter % len(models)]
+            model_counter += 1
+            return model
     
     results = []
     active_workers = 0
@@ -180,6 +200,10 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
                     
                     # Create a payload copy with a potentially varied prompt and max_tokens
                     payload = payload_template.copy()
+                    
+                    # Select a model using the chosen strategy
+                    payload["model"] = select_model()
+                    
                     if vary_prompts:
                         payload["prompt"] = generate_random_prompt(
                             target_tokens=token_info["input_tokens_mean"],
@@ -198,6 +222,9 @@ async def run_load_test(concurrency: int, total_requests: int, url: str, payload
                     # Add worker information to the result
                     result["worker_id"] = worker_id
                     result["worker_start_time"] = worker_start_times.get(worker_id, test_start_time)
+                    
+                    # Add model information to the result
+                    result["model"] = payload["model"]
                     
                     results.append(result)
                     queue.task_done()

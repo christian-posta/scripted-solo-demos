@@ -147,6 +147,11 @@ def analyze_results(results: List[Dict[str, Any]], ramp_up_time: float = 0) -> D
         "full_load": analyze_phase(full_load_results)
     }
     
+    # Add model-specific analysis
+    models_used = set(r.get("model", "unknown") for r in sorted_results)
+    phases["per_model"] = {model: analyze_phase([r for r in sorted_results if r.get("model") == model]) 
+                          for model in models_used}
+    
     return phases
 
 
