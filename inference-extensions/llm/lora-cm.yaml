@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-llama2-7b-adapters
+data:
+  configmap.yaml: |
+      vLLMLoRAConfig:
+        name: vllm-llama2-7b
+        port: 8000
+        ensureExist:
+          models:
+          - base-model: meta-llama/Llama-2-7b-hf
+            id: tweet-summary-1
+            source: vineetsharma/qlora-adapter-Llama-2-7b-hf-TweetSumm
+          - base-model: meta-llama/Llama-2-7b-hf
+            id: tweet-summary-2
+            source: mahimairaja/tweet-summarization-llama-2-finetuned            

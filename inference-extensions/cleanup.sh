@@ -1,4 +1,7 @@
 
+kubectl delete cm inference-dashboard
+kubectl delete -f metrics/grafana.yaml
+kubectl delete -f metrics/metrics-sa.yaml
 helm uninstall my-prometheus
 
 # Remove EG extension policies

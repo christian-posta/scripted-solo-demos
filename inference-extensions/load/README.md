@@ -37,10 +37,10 @@ Or a specific gateway:
 
 # Direct to vLLM; note to LB across Lora models
 # note replace localhost with actual HOST/IP
-python load_test.py --requests 50 --vary-prompts --gateway-url http://localhost:8000 --concurrency 10 --model "tweet-summary-0,tweet-summary-1"
+python load_test.py --requests 50 --vary-prompts --gateway-url http://$DIRECT_IP:$DIRECT_PORT --concurrency 10 --model "tweet-summary-0,tweet-summary-1"
 
 # Through GW
-python load_test.py --requests 50 --vary-prompts --gateway-url http://localhost:8080 --concurrency 10 
+python load_test.py --requests 50 --vary-prompts --gateway-url http://$IP:$PORT --concurrency 10 
 ```
 
 ### Command Line Arguments
