@@ -1,3 +1,16 @@
+---
+apiVersion: inference.networking.x-k8s.io/v1alpha2
+kind: InferencePool
+metadata:
+  labels:
+  name: my-pool
+spec:
+  targetPortNumber: 8000
+  selector:
+    app: my-pool
+  extensionRef:
+    name: inference-gateway-ext-proc
+---
 apiVersion: inference.networking.x-k8s.io/v1alpha2
 kind: InferenceModel
 metadata:
@@ -10,7 +23,6 @@ spec:
   targetModels:
   - name: tweet-summary-1
     weight: 100
-
 ---
 apiVersion: inference.networking.x-k8s.io/v1alpha2
 kind: InferenceModel

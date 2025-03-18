@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-pool
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-pool
+  template:
+    metadata:
+      labels:
+        app: my-pool
+    spec:
+      containers:
+        - name: lora
+          image: "ceposta/vllm-cpu:latest"
+          imagePullPolicy: Always
+          command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          args:
+          - "--model"
+          - "Qwen/Qwen2.5-1.5B-Instruct"
+          - "--port"
+          - "8000"
+          - "--enable-lora"
+          - "--max-loras"
+          - "1"          
+          - "--lora-modules"
+          - '{"name": "tweet-summary-0", "path": "/adapters/hub/models--ai-blond--Qwen-Qwen2.5-Coder-1.5B-Instruct-lora/snapshots/9cde18d8ed964b0519fb481cca6acd936b2ca811"}'
+          - '{"name": "tweet-summary-1", "path": "/adapters/hub/models--ai-blond--Qwen-Qwen2.5-Coder-1.5B-Instruct-lora/snapshots/9cde18d8ed964b0519fb481cca6acd936b2ca811"}'          
+          env:
+            - name: PORT
+              value: "8000"
+            - name: HUGGING_FACE_HUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: token
+            - name: VLLM_ALLOW_RUNTIME_LORA_UPDATING
+              value: "true"
+            - name: VLLM_CPU_KVCACHE_SPACE
+              value: "8"
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 240
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 600
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /dev/shm
+              name: shm
+            - name: adapters
+              mountPath: "/adapters"
+      initContainers:
+        - name: adapter-loader
+          image: ghcr.io/tomatillo-and-multiverse/adapter-puller:demo
+          command: ["python"]
+          args:
+            - ./pull_adapters.py
+            - --adapter
+            - ai-blond/Qwen-Qwen2.5-Coder-1.5B-Instruct-lora
+            - --duplicate-count
+            - "4"
+          env:
+            - name: HF_TOKEN 
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: token
+            - name: HF_HOME
+              value: /adapters
+          volumeMounts:
+            - name: adapters
+              mountPath: "/adapters"
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: shm
+          emptyDir:
+            medium: Memory
+        - name: adapters
+          emptyDir: {}
