@@ -9,6 +9,12 @@ https://github.com/envoyproxy/gateway/blob/main/charts/gateway-addons-helm/dashb
 
 Creating a Grafana API Key:
 
+Go to the Home Drop Down --> Administration --> Users and access --> Service accounts
+
+Create a user if one doesn;t exist
+
+Then add service account token
+
 Log in to your Grafana dashboard as an admin user
 Go to Configuration (gear icon) → API Keys
 Click "Add API key"
@@ -29,3 +35,11 @@ Enable the admin web-api:
 - --web.enable-admin-api
 
 curl -X POST -g 'http://localhost:9090/api/v1/admin/tsdb/delete_series?match[]={__name__=~".*"}'
+
+
+If you need to re-install prom for some reason:
+
+```bash
+helm upgrade my-prometheus prometheus-community/prometheus \
+  --reuse-values
+```

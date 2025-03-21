@@ -3,7 +3,7 @@ source ./env.sh
 gcloud container clusters resize $CLUSTER_NAME \
     --zone $ZONE \
     --node-pool default-pool \
-    --num-nodes 1 \
+    --num-nodes 3 \
     --quiet 
 
 gcloud container clusters resize $CLUSTER_NAME \
