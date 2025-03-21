@@ -24,7 +24,7 @@ data:
         credentials: "<TOKEN>"
       static_configs:
       - targets:
-          - 'inference-gateway-ext-proc.default.svc:9090'
+          - 'my-pool-endpoint-picker.default.svc:9090'
     - job_name: prometheus
       static_configs:
       - targets:
@@ -276,7 +276,7 @@ data:
       relabel_configs:
         # Only keep pods with the app label set to your vLLM application
         - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: my-pool.*   # Adjust regex to match your pod labels
+          regex: 'my-pool'  # Adjust regex to match your pod labels
           action: keep
           
         # Only keep pods with the proper port

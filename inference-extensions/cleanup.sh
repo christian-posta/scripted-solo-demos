@@ -33,3 +33,5 @@ kubectl delete secret hf-token
 # Uninstall garbage gateway
 EG_VERSION=v1.3.1
 kubectl delete -f https://github.com/envoyproxy/gateway/releases/download/$EG_VERSION/install.yaml
+
+kubectl delete -f load/llm-load-service.yaml
