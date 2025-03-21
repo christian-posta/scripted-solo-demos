@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: global-failover-config
+  namespace: argocd
+spec:
+  destination:
+    namespace: demo-config
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: demo-config
+    repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git
+  ignoreDifferences:
+  - group: networking.mesh.gloo.solo.io 
+    kind: TrafficPolicy
+    jsonPointers:
+    - /metadata/labels  
+  - group: networking.mesh.gloo.solo.io 
+    kind: AccessPolicy
+    jsonPointers:
+    - /metadata/labels    
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: VirtualDestination
+    jsonPointers:
+    - /metadata/labels  
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: VirtualGateway
+    jsonPointers:
+    - /metadata/labels   
+  - group: networking.mesh.gloo.solo.io 
+    kind: VirtualMesh
+    jsonPointers:
+    - /metadata/labels    
+  - group: networking.enterprise.mesh.gloo.solo.io 
+    kind: RateLimitServerConfig
+    jsonPointers:
+    - /metadata/labels        
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bookinfo-config
+  namespace: argocd
+spec:
+  destination:
+    namespace: bookinfo-config
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: bookinfo-config
+    repoURL: http://gogs.gogs.svc.cluster.local/ceposta/gloo-mesh-config.git      
