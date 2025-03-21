@@ -25,11 +25,11 @@ kubectl delete -f inference/inferencemodel.yaml
 kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v0.1.0/manifests.yaml
 
 # Delete the deployed models running on vllm
-kubectl delete -f llm/deployment.yaml
+kubectl delete -f llm/gpu-deployment.yaml
 
 # Remove the hF keys secret
 kubectl delete secret hf-token
 
 # Uninstall garbage gateway
-EG_VERSION=v1.2.1
+EG_VERSION=v1.3.1
 kubectl delete -f https://github.com/envoyproxy/gateway/releases/download/$EG_VERSION/install.yaml
