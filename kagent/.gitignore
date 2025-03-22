@@ -3,3 +3,4 @@ metallb*.yaml
 registries
 .venv
 __pycache__
+**/fortio-logs

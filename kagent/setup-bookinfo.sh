@@ -16,6 +16,8 @@ else
 
     # Deploy the frontend bookinfo service in the bookinfo-frontends namespace
     kubectl --context ${CONTEXT} -n bookinfo-frontends apply -f resources/bookinfo/productpage.yaml
+    kubectl --context ${CONTEXT} -n bookinfo-frontends set env deploy/productpage-v1 DETAILS_HOSTNAME=details.bookinfo-backends.svc.cluster.local
+    kubectl --context ${CONTEXT} -n bookinfo-frontends set env deploy/productpage-v1 REVIEWS_HOSTNAME=reviews.bookinfo-backends.svc.cluster.local
 
     # Deploy the backend bookinfo services in the bookinfo-backends namespace
     kubectl --context ${CONTEXT} -n bookinfo-backends apply -f resources/bookinfo/details.yaml

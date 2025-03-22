@@ -16,9 +16,9 @@ nodeExporter:
 prometheus:
   prometheusSpec:
     additionalScrapeConfigs:
-      - job_name: loki
-        static_configs:
-          - targets: ['loki-gateway.logging.svc.cluster.local']  
+      # - job_name: loki
+      #   static_configs:
+      #     - targets: ['loki-gateway.logging.svc.cluster.local']  
     ruleSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false

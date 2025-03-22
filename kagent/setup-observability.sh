@@ -17,10 +17,10 @@ prometheus-community/kube-prometheus-stack \
 
 
 ### Configure the pod monitor for prometheus in kube-stack
-kubectl apply -f ./istio/istio-podmonitor.yaml
+kubectl apply -f ./resources/istio/istio-podmonitor.yaml
 
 ### Import all of the Istio dashboards to Grafana
-./istio/import-dashboards.sh
+./resources/istio/import-dashboards.sh
 
 
 ### Set up Kiali, and connec it to the Prometheus in kube-stack

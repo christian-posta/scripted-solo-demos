@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fortio-load-config
+data:
+  GATEWAY_URL: "http://istio-ingress.istio-ingress.svc.cluster.local"
+  PRODUCTPAGE_PATH: "/productpage"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortio-load-tester
+  labels:
+    app: fortio-load-tester
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortio-load-tester
+  template:
+    metadata:
+      labels:
+        app: fortio-load-tester
+    spec:
+      containers:
+      - name: fortio-load
+        image: docker.io/library/fortio-load:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: fortio-load-config
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+        - name: fortio-logs
+          mountPath: /app/fortio-logs
+      volumes:
+      - name: fortio-logs
+        emptyDir: {} 
