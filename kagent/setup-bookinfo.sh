@@ -27,4 +27,9 @@ else
     kubectl --context ${CONTEXT} -n bookinfo-backends apply -f resources/bookinfo/reviews.yaml
 
     kubectl --context ${CONTEXT} -n bookinfo-frontends apply -f resources/bookinfo/bookinfo-gateway.yaml 
+
+    ./add-ns-to-mesh.sh "bookinfo-frontends bookinfo-backends"
+
+    # set up load generator
+    kubectl --context ${CONTEXT} -n default apply -f load/deployment.yaml 
 fi

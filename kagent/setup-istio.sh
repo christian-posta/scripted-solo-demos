@@ -35,20 +35,9 @@ helm upgrade --install istio-ingress istio/gateway -n istio-ingress --version $I
   --set autoscaling.minReplicas=2 \
   --set autoscaling.maxReplicas=5
 
+### Configure the pod monitor for prometheus in kube-stack
+kubectl apply -f ./resources/istio/istio-podmonitor.yaml
 
-
-
-NAMESPACES="${2:-default}"
-
-if [[ -n "$NAMESPACES" ]]; then
-  echo "Adding the following namespaces for ambient mode: $NAMESPACES"
-  for NAMESPACE in $NAMESPACES; do
-    echo "Going to label namespace: $NAMESPACE"
-    if ! kubectl --context $CONTEXT label namespace $NAMESPACE "istio.io/dataplane-mode=ambient" --overwrite; then
-      echo "Failed to label namespace: $NAMESPACE. It may not exist or is already labeled."
-    fi
-  done
-else
-  echo "Not going to add any more namespaces."
-fi
+### Import all of the Istio dashboards to Grafana
+./resources/istio/import-dashboards.sh
 

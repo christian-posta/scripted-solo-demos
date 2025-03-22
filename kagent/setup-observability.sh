@@ -16,13 +16,6 @@ prometheus-community/kube-prometheus-stack \
 # Default un/pw for grafana is admin/prom-operator
 
 
-### Configure the pod monitor for prometheus in kube-stack
-kubectl apply -f ./resources/istio/istio-podmonitor.yaml
-
-### Import all of the Istio dashboards to Grafana
-./resources/istio/import-dashboards.sh
-
-
 ### Set up Kiali, and connec it to the Prometheus in kube-stack
 helm repo add kiali https://kiali.org/helm-charts
 helm repo update

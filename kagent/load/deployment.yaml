@@ -24,8 +24,8 @@ spec:
     spec:
       containers:
       - name: fortio-load
-        image: docker.io/library/fortio-load:latest
-        imagePullPolicy: Never
+        image: docker.io/ceposta/fortio-load:latest
+        imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
             name: fortio-load-config
