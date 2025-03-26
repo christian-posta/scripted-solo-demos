@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: reviews-v1-rollout
+  namespace: bookinfo-backends
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: reviews
+      version: v1
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: reviews-v1
+    scaleDown: progressively
+  template:
+    metadata:
+      labels:
+        app: reviews
+        version: v1
+    spec:
+      containers:
+      - name: reviews
+        image: docker.io/istio/examples-bookinfo-reviews-v1:1.17.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: LOG_DIR
+          value: /tmp/logs
+        ports:
+        - containerPort: 9080
+        securityContext:
+          runAsUser: 1000
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /opt/ibm/wlp/output
+          name: wlp-output
+      serviceAccountName: bookinfo-reviews
+      volumes:
+      - name: wlp-output
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {}

@@ -21,11 +21,11 @@ cd load
 docker build -t fortio-load:latest .
 
 # Optionally, tag and push to a container registry
-docker tag fortio-load:latest your-registry/fortio-load:latest
-docker push your-registry/fortio-load:latest
+docker tag fortio-load:latest docker.io/ceposta/fortio-load:latest
+docker push docker.io/ceposta/fortio-load:latest
 ```
 
-You may want to load this into a kind cluster:
+You may want to load this into a kind cluster if you're not hosting it in a CR somewhere
 
 ```bash
 kind load docker-image fortio-load:latest --name kind1
