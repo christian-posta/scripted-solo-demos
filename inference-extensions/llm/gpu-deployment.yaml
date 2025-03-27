@@ -33,6 +33,8 @@ spec:
           - '{"name": "tweet-summary-0", "path": "vineetsharma/qlora-adapter-Llama-2-7b-hf-TweetSumm", "base_model_name": "llama-2"}'
           - '{"name": "tweet-summary-1", "path": "vineetsharma/qlora-adapter-Llama-2-7b-hf-TweetSumm", "base_model_name": "llama-2"}'
           env:
+            - name: VLLM_USE_V1
+              value: "0" # shoudl consider changing this for some of the tests to improve performance
             - name: PORT
               value: "8000"
             - name: HUGGING_FACE_HUB_TOKEN
