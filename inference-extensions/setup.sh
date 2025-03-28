@@ -1,17 +1,11 @@
 # Set up the vllm models
-source ~/bin/ai-keys
-kubectl create secret generic hf-token --from-literal=token=$HF_TOKEN 
-
-# deploy the actual models running on vllm
-kubectl apply -f llm/gpu-deployment.yaml
-kubectl rollout status deployment my-pool
-
+# if you want to setup the llms, check out the setup-llms.sh script
 
 ./setup-kgateway.sh
 
 # deploy the gateway
 kubectl apply -f inference/gateway.yaml
-
+kubectl wait --for=condition=Programmed gateway/inference-gateway --timeout=300s
 
 # create an inference model
 kubectl apply -f inference/inferencemodel.yaml
