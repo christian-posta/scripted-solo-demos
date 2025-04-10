@@ -1,0 +1,16 @@
+# deny-all.yaml
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: bookinfo-backends
+spec:
+  {} # An empty spec defaults to denying all traffic in the namespace
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: bookinfo-frontends
+spec:
+  {} # An empty spec defaults to denying all traffic in the namespace

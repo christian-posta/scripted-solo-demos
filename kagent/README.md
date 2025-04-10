@@ -15,9 +15,11 @@ istio ingress /product page 8080
 to update the image for the rollouts use the following command:
 
 for v2
+> docker.io/istio/examples-bookinfo-reviews-v2:1.17.0
 > kubectl set image deployment/reviews reviews=docker.io/istio/examples-bookinfo-reviews-v2:1.17.0 -n bookinfo-backends
 
 for v3
+> docker.io/istio/examples-bookinfo-reviews-v3:1.17.0
 > kubectl set image deployment/reviews reviews=docker.io/istio/examples-bookinfo-reviews-v3:1.17.0 -n bookinfo-backends
 
 

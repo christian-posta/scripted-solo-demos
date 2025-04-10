@@ -1,0 +1,35 @@
+# allow-productpage.yaml
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-productpage
+  namespace: bookinfo-frontends # Replace if bookinfo is in another namespace
+spec:
+  selector:
+    matchLabels:
+      app: productpage # Apply this policy only to pods with app=productpage label
+  action: ALLOW
+  rules:
+  - from:
+    # Allow requests originating from the Istio Ingress Gateway
+    - source:
+        principals: ["cluster.local/ns/istio-ingress/sa/istio-ingressgateway-service-account"] # Adjust if your gateway SA is different
+    # Allow requests originating from Istio control plane (e.g., health checks)
+    - source:
+        principals: ["cluster.local/ns/istio-system/sa/istiod-service-account"] # Adjust based on your Istio installation/version
+    # If you need to allow unauthenticated access from gateway (less secure, useful for initial testing)
+    # - source:
+    #     requestPrincipals: ["*"] # Allows any request (authenticated or not) via gateway *if* gateway forwards original identity/JWT
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/productpage", "/", "/static/*", "/login", "/logout"] # Paths required by the productpage UI
+  # Add a separate rule for internal health checks (e.g., from kubelet) if needed
+  # Often Istio's health checks might use the istiod principal above. Test to confirm.
+  # - from:
+  #   - source:
+  #       namespaces: ["kube-system"] # Example if kubelet health checks need access
+  #   to:
+  #   - operation:
+  #       methods: ["GET"]
+  #       paths: ["/health"] # Or whatever the health check path is

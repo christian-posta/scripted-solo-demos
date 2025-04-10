@@ -7,7 +7,7 @@
 ./setup-istio.sh
 
 # Install Git
-./setup-gogs.sh
+# ./setup-gogs.sh
 
 # Install ArgoCD
 ./setup-argo-rollouts.sh

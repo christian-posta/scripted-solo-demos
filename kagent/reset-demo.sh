@@ -1,6 +1,8 @@
 DIR=$(dirname ${BASH_SOURCE})
 source env.sh
 
+kubectl delete -f fetcher/deployment.yaml
+kubectl delete -f resources/agents/fetcher-agent.yaml
 
 # clean up any of the argo rollouts stuff i did
 kubectl delete rollouts -n bookinfo-backends --all
