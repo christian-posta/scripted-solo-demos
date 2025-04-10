@@ -5,7 +5,7 @@ export NS=default
 export INF_EXT_VERSION="v0.2.0"
 export GATEWAY_API_VERSION="v1.2.1"
 export GATEWAY_API_CHANNEL="experimental"
-export KGTW_VERSION="1.0.1-dev"
+export KGTW_VERSION="v2.0.0-main"
 
 # Install Gateway API CRDs
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/${GATEWAY_API_CHANNEL}-install.yaml
@@ -17,18 +17,19 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extens
 kubectl create namespace kgateway-system
 
 # Install kgateway CRDs using Helm
-helm upgrade --install kgateway-crds https://github.com/danehans/toolbox/raw/refs/heads/main/charts/8836480ba3-kgateway-crds-${KGTW_VERSION}.tgz \
+helm upgrade --install kgateway-crds oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds \
   -n kgateway-system \
   --create-namespace \
   --version "${KGTW_VERSION}"
 
 # Install kgateway controller using Helm
-helm upgrade --install kgateway https://github.com/danehans/toolbox/raw/refs/heads/main/charts/8836480ba3-kgateway-${KGTW_VERSION}.tgz \
+# note, for v2.0.0 when it's released the only value we'll need is that to enable inferenceExtension
+helm upgrade --install kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgateway  \
   -n kgateway-system \
-  --set image.registry="danehans" \
-  --set controller.image.pullPolicy="Always" \
   --set inferenceExtension.enabled=true \
   --set gatewayClass.service.type="LoadBalancer" \
+  --set controller.image.pullPolicy=Always \
+  --set image.registry=ghcr.io/kgateway-dev \
   --version "${KGTW_VERSION}"
 
 # Wait for the kgateway GatewayClass to become accepted

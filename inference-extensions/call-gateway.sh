@@ -1,5 +1,5 @@
 IP=$(kubectl get gateway/inference-gateway -o jsonpath='{.status.addresses[0].value}')
-PORT=8081
+PORT=80
 
 echo "IP: ${IP}"
 echo "PORT: ${PORT}"

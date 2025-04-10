@@ -1,37 +1,28 @@
+#!/bin/bash
 
-kubectl delete cm inference-dashboard
-kubectl delete -f metrics/grafana.yaml
-kubectl delete -f metrics/metrics-sa.yaml
-helm uninstall my-prometheus
+# specify a route to the inferencepool
+kubectl delete -f inference/httproute.yaml
 
-# Remove EG extension policies
-kubectl delete -f eg/patch_policy.yaml
-kubectl delete -f eg/extension_policy.yaml
-
-# Remove the endpoint picker ext_proc ext
-kubectl delete -f inference/ext_proc.yaml
-
-# Remove the gateway
+# deploy the gateway
 kubectl delete -f inference/gateway.yaml
 
-# Disable extensions in EG
-kubectl delete -f eg/enable_patch_policy.yaml
-kubectl rollout restart deployment envoy-gateway -n envoy-gateway-system
+kubectl delete -f metrics/grafana.yaml
+kubectl delete -f metrics/metrics-sa.yaml
 
-# Delete the inference model
+# create an inference model
 kubectl delete -f inference/inferencemodel.yaml
+kubectl delete -f inference/inferencepool.yaml
 
-# Remove the inference extension for gateway api
-kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v0.1.0/manifests.yaml
 
-# Delete the deployed models running on vllm
-kubectl delete -f llm/gpu-deployment.yaml
 
-# Remove the hF keys secret
-kubectl delete secret hf-token
+# Remove Grafana and Prometheus related resources
+helm uninstall my-prometheus
+kubectl delete namespace prometheus
 
-# Uninstall garbage gateway
-EG_VERSION=v1.3.1
-kubectl delete -f https://github.com/envoyproxy/gateway/releases/download/$EG_VERSION/install.yaml
+helm uninstall kgateway -n kgateway-system
+helm uninstall kgateway-crds -n kgateway-system
 
-kubectl delete -f load/llm-load-service.yaml
+## may need this to delete the CRDs:
+# kubectl patch crd inferencepools.inference.networking.x-k8s.io --type=json -p '[{"op": "remove", "path": "/metadata/finalizers"}]'
+kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/v0.2.0/manifests.yaml
+kubectl delete namespace kgateway-system
