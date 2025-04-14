@@ -1,0 +1,11 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ToolServer
+metadata:
+  name: mcp-website-fetcher.kagent.svc.cluster.local
+  namespace: kagent
+spec:
+  config:
+    sse:
+      timeout: 5s
+      url: http://mcp-website-fetcher.kagent.svc.cluster.local/sse
+  description: ""
