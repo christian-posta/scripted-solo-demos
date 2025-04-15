@@ -15,6 +15,15 @@
           "@modelcontextprotocol/server-everything"
         ]
       }
+    },
+    {
+      "name": "everything_else",
+      "stdio": {
+        "cmd": "npx",
+        "args": [
+          "@modelcontextprotocol/server-everything"
+        ]
+      }
     }
   ]
 }
