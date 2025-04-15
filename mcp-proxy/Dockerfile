@@ -24,5 +24,5 @@ RUN mkdir -p /etc/apt/keyrings \
 
 RUN uv python install 3.12
 
-
+WORKDIR /app
 ENTRYPOINT ["/bin/mcp-proxy"]

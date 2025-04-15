@@ -8,16 +8,17 @@
   },
   "targets": [
     {
-      "name": "everything",
-      "stdio": {
-        "cmd": "npx",
-        "args": [
-          "@modelcontextprotocol/server-everything"
-        ]
+      "name": "petstore",
+      "openapi": {
+        "host": "petstore3.swagger.io",
+        "port": 443,
+        "schema": {
+          "file_path": "resources/openapi/petstore.json"
+        }
       }
     },
     {
-      "name": "everything_else",
+      "name": "everything",
       "stdio": {
         "cmd": "npx",
         "args": [
