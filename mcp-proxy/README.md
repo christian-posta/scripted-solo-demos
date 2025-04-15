@@ -16,11 +16,15 @@ You can check the config files and talk through the config.
 
 Do the same for openapi / petstore. This also shows the multi-plexing usecase / MCP federation
 
-> ./run-proxy.sh openapi.json
+```bash
+./run-proxy.sh resources/openapi.json
+```
 
 Lastly, you can add Authz policies to the calls:
 
-> ./run-proxy.sh auth.json
+```bash
+./run-proxy.sh resources/auth.json
+```
 
 You will need the following key:
 
