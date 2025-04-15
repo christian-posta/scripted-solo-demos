@@ -3,9 +3,10 @@ To run this demo:
 (note, you may need to build the docker image)
 > ./build-docker.sh
 
-Next, you can fire up the proxy and the mcp-inpsector; navigate to the right URL and list the tools:
+Next, you can fire up the proxy and the [mcp-inpsector](https://github.com/modelcontextprotocol/inspector); navigate to the right URL and list the tools:
 
 > ./run-proxy.sh
+> npx @modelcontextprotocol/inspector
 
 You can check the config files and talk through the config.
 
