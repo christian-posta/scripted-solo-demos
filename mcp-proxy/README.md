@@ -5,8 +5,12 @@ To run this demo:
 
 Next, you can fire up the proxy and the [mcp-inpsector](https://github.com/modelcontextprotocol/inspector); navigate to the right URL and list the tools:
 
-> ./run-proxy.sh
-> npx @modelcontextprotocol/inspector
+```bash
+./run-proxy.sh
+
+# run this in a different window
+npx @modelcontextprotocol/inspector
+```
 
 You can check the config files and talk through the config.
 
