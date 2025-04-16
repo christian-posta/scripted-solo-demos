@@ -1,9 +1,9 @@
-ARG VERSION="latest"
-FROM ghcr.io/mcp-proxy/mcp-proxy:${VERSION} as source
+ARG VERSION="0.4.1"
+FROM ghcr.io/agentproxy-dev/agentproxy:${VERSION} as source
 
 FROM ghcr.io/astral-sh/uv:0.6.5-debian-slim AS final
 
-COPY --from=source /app/mcp-proxy /bin/mcp-proxy
+COPY --from=source /app/agentproxy /bin/agentproxy
 
 ARG TARGETARCH
 
@@ -25,4 +25,4 @@ RUN mkdir -p /etc/apt/keyrings \
 RUN uv python install 3.12
 
 WORKDIR /app
-ENTRYPOINT ["/bin/mcp-proxy"]
+ENTRYPOINT ["/bin/agentproxy"]

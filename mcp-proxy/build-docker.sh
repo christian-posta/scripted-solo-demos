@@ -1,1 +1,1 @@
-docker build -t mcp-proxy-demo . 
+docker build -t agentproxy-demo . 

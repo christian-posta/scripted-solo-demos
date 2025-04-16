@@ -1,30 +1,34 @@
 {
   "type": "static",
-  "listener": {
-    "sse": {  
-      "address": "0.0.0.0",
-      "port": 3000
-    }
-  },
-  "targets": [
+  "listeners": [
     {
-      "name": "petstore",
-      "openapi": {
-        "host": "petstore3.swagger.io",
-        "port": 443,
-        "schema": {
-          "file_path": "resources/openapi/petstore.json"
+      "sse": {
+        "address": "[::]",
+        "port": 3000
+      }
+    }
+  ],
+  "targets": {
+    "mcp": [
+      {
+        "name": "everything",
+        "stdio": {
+          "cmd": "npx",
+          "args": [
+            "@modelcontextprotocol/server-everything"
+          ]
+        }
+      },
+      {
+        "name": "petstore",
+        "openapi": {
+          "host": "petstore3.swagger.io",
+          "port": 443,
+          "schema": {
+            "file_path": "resources/openapi/petstore.json"
+          }
         }
       }
-    },
-    {
-      "name": "everything",
-      "stdio": {
-        "cmd": "npx",
-        "args": [
-          "@modelcontextprotocol/server-everything"
-        ]
-      }
-    }
-  ]
+    ]
+  }
 }

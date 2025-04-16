@@ -1,12 +1,15 @@
 {
-    "type": "static",
-    "listener": {
-      "sse": {  
-        "address": "0.0.0.0",
+  "type": "static",
+  "listeners": [
+    {
+      "sse": {
+        "address": "[::]",
         "port": 3000
       }
-    },
-    "targets": [
+    }
+  ],
+  "targets": {
+    "mcp": [
       {
         "name": "everything",
         "stdio": {
@@ -18,3 +21,4 @@
       }
     ]
   }
+}
