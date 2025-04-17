@@ -1,0 +1,61 @@
+# Deployment Manifest for the MCP Proxy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentproxy
+  namespace: kagent
+  labels:
+    app: agentproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agentproxy
+  template:
+    metadata:
+      labels:
+        app: agentproxy
+    spec:
+      containers:
+        - name: agentproxy
+          image: ghcr.io/agentproxy-dev/agentproxy:0.4.4
+          args:
+            - -f
+            - /etc/agentproxy/config.json
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: agentproxy-config
+              mountPath: /etc/agentproxy/config.json
+              subPath: config.json
+            - name: openapi-config
+              mountPath: /etc/agentproxy/petstore.json
+              subPath: petstore.json
+            - name: pubkey-config
+              mountPath: /etc/agentproxy/pubkey
+              subPath: pubkey                            
+      volumes:
+        - name: agentproxy-config
+          configMap:
+            name: agentproxy-config
+        - name: openapi-config
+          configMap:
+            name: openapi-config
+        - name: pubkey-config
+          configMap:
+            name: pubkey-config                        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentproxy
+  namespace: kagent
+spec:
+  selector:
+    app: agentproxy
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+

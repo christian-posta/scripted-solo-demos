@@ -1,0 +1,59 @@
+{
+  "type": "static",
+  "listeners": [
+    {
+      "sse": {
+        "address": "[::]",
+        "port": 3000,
+        "authn": {
+          "jwt": {
+            "issuer": ["me"],
+            "audience": ["me.com"],
+            "local_jwks": {
+              "file_path": "/etc/agentproxy/pubkey"
+            }
+          }
+        },
+        "rbac": [
+          {
+            "name": "default",
+            "rules": [
+              {
+                "key": "sub",
+                "value": "me",
+                "resource": {
+                  "type": "TOOL",
+                  "id": "fetch",
+                  "target": "fetchermcp"
+                },
+                "matcher": "EQUALS"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "targets": {
+    "mcp": [
+      {
+        "name": "fetchermcp",
+        "sse": {
+          "host": "mcp-website-fetcher.kagent.svc.cluster.local",
+          "port": 80,
+          "path": "/sse"
+        }
+      },
+      {
+        "name": "petstore",
+        "openapi": {
+          "host": "petstore3.swagger.io",
+          "port": 443,
+          "schema": {
+            "file_path": "/etc/agentproxy/petstore.json"
+          }
+        }
+      }
+    ]
+  }
+}
