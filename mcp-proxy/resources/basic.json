@@ -1,0 +1,24 @@
+{
+  "type": "static",
+  "listeners": [
+    {
+      "sse": {
+        "address": "[::]",
+        "port": 3000
+      }
+    }
+  ],
+  "targets": {
+    "mcp": [
+      {
+        "name": "everything",
+        "stdio": {
+          "cmd": "npx",
+          "args": [
+            "@modelcontextprotocol/server-everything"
+          ]
+        }
+      }
+    ]
+  }
+}
