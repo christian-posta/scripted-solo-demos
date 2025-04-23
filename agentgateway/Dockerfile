@@ -1,5 +1,5 @@
-ARG VERSION="0.4.1"
-FROM ghcr.io/agentproxy-dev/agentproxy:${VERSION} as source
+ARG VERSION="0.4.15"
+FROM ghcr.io/agentgateway/agentproxy:${VERSION} as source
 
 FROM ghcr.io/astral-sh/uv:0.6.5-debian-slim AS final
 
@@ -24,5 +24,10 @@ RUN mkdir -p /etc/apt/keyrings \
 
 RUN uv python install 3.12
 
+EXPOSE 3000
+EXPOSE 19000
+
 WORKDIR /app
 ENTRYPOINT ["/bin/agentproxy"]
+
+

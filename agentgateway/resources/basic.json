@@ -1,7 +1,13 @@
 {
   "type": "static",
+  "admin": {
+    "host": "0.0.0.0",
+    "port": 19000
+  },
   "listeners": [
     {
+      "name": "sse",
+      "protocol": "MCP",
       "sse": {
         "address": "[::]",
         "port": 3000
@@ -12,6 +18,15 @@
     "mcp": [
       {
         "name": "everything",
+        "stdio": {
+          "cmd": "npx",
+          "args": [
+            "@modelcontextprotocol/server-everything"
+          ]
+        }
+      },
+      {
+        "name": "everything-else",
         "stdio": {
           "cmd": "npx",
           "args": [
