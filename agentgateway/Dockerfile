@@ -1,9 +1,9 @@
-ARG VERSION="0.4.15"
-FROM ghcr.io/agentgateway/agentproxy:${VERSION} as source
+ARG VERSION="0.4.23"
+FROM ghcr.io/agentgateway/agentgateway:${VERSION} as source
 
 FROM ghcr.io/astral-sh/uv:0.6.5-debian-slim AS final
 
-COPY --from=source /app/agentproxy /bin/agentproxy
+COPY --from=source /app/agentgateway /bin/agentgateway
 
 ARG TARGETARCH
 
@@ -28,6 +28,6 @@ EXPOSE 3000
 EXPOSE 19000
 
 WORKDIR /app
-ENTRYPOINT ["/bin/agentproxy"]
+ENTRYPOINT ["/bin/agentgateway"]
 
 
