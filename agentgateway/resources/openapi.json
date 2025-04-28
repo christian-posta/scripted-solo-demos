@@ -6,6 +6,8 @@
   },
   "listeners": [
     {
+      "name": "sse",
+      "protocol": "MCP",
       "sse": {
         "address": "[::]",
         "port": 3000
@@ -29,7 +31,7 @@
           "host": "petstore3.swagger.io",
           "port": 443,
           "schema": {
-            "file_path": "resources/openapi/petstore.json"
+            "file_path": "/app/resources/openapi/petstore.json"
           }
         }
       }
