@@ -2,7 +2,7 @@
 apiVersion: kagent.dev/v1alpha1
 kind: ToolServer
 metadata:
-  name: agentproxy-mcp-toolserver
+  name: agentgateway-mcp-toolserver
   namespace: kagent
 spec:
   config:
@@ -10,6 +10,6 @@ spec:
       headers:
         Authorization: 'Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IlhoTzA2eDhKaldIMXd3a1dreWVFVXhzb29HRVdvRWRpZEVwd3lkX2htdUkiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJtZS5jb20iLCJleHAiOjE5MDA2NTAyOTQsImlhdCI6MTc0NDczNDA5NiwiaXNzIjoibWUiLCJqdGkiOiI5MTU0MmI5NWFkYWE1MzRiNTgxZGU5MTUyYWRlZDY1MGQ0NGJiNGI3YjJmZjFmM2M4NGU2M2YwNWE4ZTNiMjMxIiwibmJmIjoxNzQ0NzM0MDk2LCJzdWIiOiJtZSJ9.jXoHVVvTbXb27JhTJVATqgSQ30lQXNIL3aGxgucujgRHHlTBajUJIjjwC5mvfyy274YGNiAinf-fMYieUGi3Pw'
       timeout: 5s
-      url: http://agentproxy.kagent.svc.cluster.local:3000/sse
-  description: ""
+      url: http://agentgateway.kagent.svc.cluster.local:3000/sse
+  description: "Agent Gateway MCP Tool Server"
 

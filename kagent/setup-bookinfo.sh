@@ -32,4 +32,5 @@ else
 
     # set up load generator
     kubectl --context ${CONTEXT} -n default apply -f load/deployment.yaml 
+    kubectl --context ${CONTEXT} -n default scale deploy fortio-load-tester --replicas=0
 fi

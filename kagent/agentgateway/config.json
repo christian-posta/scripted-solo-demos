@@ -1,7 +1,13 @@
 {
   "type": "static",
+  "admin": {
+    "host": "0.0.0.0",
+    "port": 19000
+  },
   "listeners": [
     {
+      "name": "sse",
+      "protocol": "MCP",      
       "sse": {
         "address": "[::]",
         "port": 3000,
@@ -10,7 +16,7 @@
             "issuer": ["me"],
             "audience": ["me.com"],
             "local_jwks": {
-              "file_path": "/etc/agentproxy/pubkey"
+              "file_path": "/etc/agentgateway/pubkey"
             }
           }
         },
@@ -23,8 +29,8 @@
                 "value": "me",
                 "resource": {
                   "type": "TOOL",
-                  "id": "fetch",
-                  "target": "fetchermcp"
+                  "id": "echo",
+                  "target": "everything"
                 },
                 "matcher": "EQUALS"
               }
@@ -50,7 +56,7 @@
           "host": "petstore3.swagger.io",
           "port": 443,
           "schema": {
-            "file_path": "/etc/agentproxy/petstore.json"
+            "file_path": "/etc/agentgateway/petstore.json"
           }
         }
       }
