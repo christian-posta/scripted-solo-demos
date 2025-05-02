@@ -14,5 +14,6 @@ helm upgrade --install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
     --namespace kagent \
     --create-namespace \
     --version $KAGENT_VERSION \
-    --set openai.apiKey=$OPENAI_API_KEY
+    --set providers.default=openAI \
+    --set providers.openAI.apiKey=$OPENAI_API_KEY
 

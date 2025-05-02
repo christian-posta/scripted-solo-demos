@@ -1,0 +1,13 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Memory
+metadata:
+  name: test-kagent-memory
+  namespace: kagent
+spec:
+  apiKeySecretKey: PINECONE_API_KEY
+  apiKeySecretRef: kagent-pinecone
+  pinecone:
+    indexHost: $PINECONE_INDEX_HOST$
+    scoreThreshold: "0.2"
+    topK: 5
+  provider: Pinecone
