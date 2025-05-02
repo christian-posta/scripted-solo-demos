@@ -1,5 +1,5 @@
 DEFAULT_CONFIG="resources/basic.json"
-IMAGE="ghcr.io/agentgateway/agentgateway:0.4.23-ext"
+IMAGE="ghcr.io/agentgateway/agentgateway:0.4.24-ext"
 CONFIG_LOCATION=${1:-$DEFAULT_CONFIG}
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 echo "The script is located in: $SCRIPT_DIR"
