@@ -24,6 +24,8 @@ spec:
             - /etc/agentgateway/config.json
           ports:
             - containerPort: 3000
+            - containerPort: 9091
+            - containerPort: 19000
           volumeMounts:
             - name: agentgateway-config
               mountPath: /etc/agentgateway/config.json
@@ -54,8 +56,15 @@ spec:
   selector:
     app: agentgateway
   ports:
-    - protocol: TCP
+    - name: mcp
+      protocol: TCP
       port: 3000
       targetPort: 3000
-
-
+    - name: metrics
+      protocol: TCP
+      port: 9091
+      targetPort: 9091
+    - name: ui
+      protocol: TCP
+      port: 19000
+      targetPort: 19000      
