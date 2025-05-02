@@ -1,6 +1,4 @@
 To run this demo:
-
-(note, you may need to build the docker image)
 > ./build-docker.sh
 
 Next, you can fire up the proxy and the [mcp-inpsector](https://github.com/modelcontextprotocol/inspector); navigate to the right URL and list the tools:
@@ -46,3 +44,9 @@ You can open Jaeger on:
 ```bash
 http://localhost:16686
 ```
+
+### A2A demo
+
+Note that the A2A listener should be on port `5555` since that's what we map when we start the docker container. 
+
+Start the langgraph A2A agent on localhost:10000, and in the target, refer to it as `host.docker.internal:10000`
