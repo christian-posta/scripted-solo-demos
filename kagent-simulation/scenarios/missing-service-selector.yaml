@@ -1,0 +1,12 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: missing-service-selector
+spec:
+  description: Service selector is missing, service does not route to pods
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v2' service.
+    
+  steps:
+    - run: |
+        kubectl patch service backend-v2 --context ${CLUSTER1} -p '{"spec":{"selector": null}}'

@@ -1,0 +1,28 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: deployment-impossible-pod-affinity
+spec:
+  description: Affinity and an anti-affinity rule that contradict each other, making scheduling impossible.
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v1' service. 
+  steps:
+    - run: |
+        kubectl patch deployment/backend-v1 --context ${CLUSTER1} --type merge -p "
+        spec:
+          template:
+            spec:
+              affinity:
+                podAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    - labelSelector:
+                        matchLabels:
+                          app: frontend
+                      topologyKey: "kubernetes.io/hostname"
+                podAntiAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    - labelSelector:
+                        matchLabels:
+                          app: frontend
+                      topologyKey: "kubernetes.io/hostname"
+        "

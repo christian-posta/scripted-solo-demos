@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j-db-v1
+  namespace: default
+  labels:
+    app: neo4j-db
+spec:
+  ports:
+  - port: 7474
+    protocol: TCP
+    targetPort: 7474
+  selector:
+    app: neo4j-db
+    version: v1
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neo4j-db-v1
+  namespace: default
+  labels:
+    app: neo4j-db
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neo4j-db
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: neo4j-db
+        version: v1
+    spec:
+      containers:
+      - name: neo4j-db
+        image: bitnami/neo4j:5.26.1
+        ports:
+          - name: http
+            containerPort: 7474
+            protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: http
+        readinessProbe:
+          tcpSocket:
+            port: http
+        env:
+        - name: "NEO4J_PASSWORD"
+          value: "password"

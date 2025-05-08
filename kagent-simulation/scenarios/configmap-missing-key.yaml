@@ -1,0 +1,33 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: configmap-missing-key
+spec:
+  description: Application Expects a Key That Does NOT Exist
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v1' service.
+  steps:
+    - run: |
+        kubectl --context ${CLUSTER1} apply -f - <<EOF
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: backend-v1-configmap
+          namespace: default
+        data:
+          CONFIG_PATH: "/etc/config"  
+        EOF
+        kubectl patch deployment/backend-v1 --context ${CLUSTER1} -p "
+        spec:
+          template:
+            spec:
+              containers:
+              - name: backend
+                env:
+                - name: APP_CONFIG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: backend-v1-configmap
+                      key: APP_CONFIG
+        "
+        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v1"

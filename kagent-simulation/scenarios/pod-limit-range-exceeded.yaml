@@ -1,0 +1,24 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: pod-limit-range-exceeded
+spec:
+  description: Pod exceeds namespace LimitRange, pod cannot be created
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see backend-v3 pods failing to create due to limit range.
+  steps:
+    - run: |
+        kubectl apply --context ${CLUSTER1} -f - <<EOF
+        apiVersion: v1
+        kind: LimitRange
+        metadata:
+          name: mem-limit-range
+          namespace: default
+        spec:
+          limits:
+          - default:
+              memory: 100Mi
+            type: Container
+        EOF
+        kubectl patch deployment backend-v3 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"containers":[{"name":"backend","resources":{"requests":{"memory":"200Mi"}}}]}}}}'
+        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v3"

@@ -1,0 +1,13 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: pod-hostport-conflict
+spec:
+  description: HostPort conflict prevents pod from scheduling on the same node
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see backend-v2 pods stuck in pending state when scaling up.
+  steps:
+    - run: |
+        kubectl patch deployment backend-v1 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"containers":[{"name":"backend","ports":[{"containerPort": 8080, "hostPort": 28080}]}]}}}}'
+        kubectl patch deployment backend-v2 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"containers":[{"name":"backend","ports":[{"containerPort": 8080, "hostPort": 28080}]}]}}}}'
+        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v2"

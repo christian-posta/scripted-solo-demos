@@ -1,0 +1,16 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: service-incorrect-port-number
+spec:
+  description: Service port number is incorrect, service is not reachable on expected port
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1.
+  steps:
+    - run: |
+        kubectl patch service/backend-v1 --context ${CLUSTER1} -p "
+        spec:
+          ports:
+            - port: 8080
+              targetPort: 8081
+        "

@@ -1,0 +1,21 @@
+apiVersion: agent-framework.solo.io/v1alpha1
+kind: Challenge
+metadata:
+  name: pod-resource-quota-exceeded
+spec:
+  description: Namespace resource quota is exceeded, pod cannot be created
+  prompt: |
+    Calling the frontend service at http://frontend-v1:8080 I see backend-v2 pods stuck in pending state due to quota.
+  steps:
+    - run: |
+        kubectl apply --context ${CLUSTER1} -f - <<EOF
+        apiVersion: v1
+        kind: ResourceQuota
+        metadata:
+          name: pod-quota
+          namespace: default
+        spec:
+          hard:
+            pods: "1"
+        EOF
+        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v2"
