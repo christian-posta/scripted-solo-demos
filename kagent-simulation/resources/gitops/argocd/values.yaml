@@ -1,0 +1,8 @@
+# all values: https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml
+
+server:
+  name: server
+  extraArgs: 
+  - --insecure
+  service:
+    type: LoadBalancer
