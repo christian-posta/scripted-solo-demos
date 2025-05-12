@@ -1,4 +1,12 @@
-To run this demo:
+## To run this demo:
+
+TL;DR - port forwards:
+
+```bash
+8080 - ArgoCD
+8081 - Sample Apps / frontend-v1
+8082 - Kagent UI
+```
 
 On a working Kubernetes Cluster (or run `./setup-kind.sh`) run the following to set up ArgoCD:
 
@@ -56,8 +64,27 @@ Use this prompt:
 Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1. These are running in the default namespace. 
 ```
 
+Make sure you have the GH tools (MCP Server) installed on kagent:
+
+```bash
+cd resources/kagent
+./setup-ghtools.sh
+```
+
+You'll need to give your agent access to the Pull Request Tools. 
+
+At the moment, the UI limits tools to 10. Follow this Issue for more: https://github.com/kagent-dev/kagent/issues/367
+
+To get around this, add the tool through the YAML:
+
+```bash
+cd resources/kagent
+kubectl apply -f k8s-agent.yaml
+```
 
 ---
+
+## Running Demo Without Argo
 
 You can also run this demo quickly w/o argo if you want. 
 
