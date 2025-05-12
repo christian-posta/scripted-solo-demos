@@ -13,7 +13,7 @@
 ./setup-argo-rollouts.sh
 
 # Install bookinfo (should eventually move this to argocd)
-./setup-bookinfo.sh
+#./setup-bookinfo.sh
 
 # Install Kagent
-./setup-kagent.sh
+#./setup-kagent.sh

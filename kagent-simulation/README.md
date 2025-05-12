@@ -1,12 +1,48 @@
-## To run this demo:
+## TL;DR 
 
-TL;DR - port forwards:
+Port forward these:
 
 ```bash
 8080 - ArgoCD
 8081 - Sample Apps / frontend-v1
 8082 - Kagent UI
 ```
+
+```bash
+./setup-ghtools.sh
+```
+
+Use the following Agent:
+
+```bash
+kubectl apply -f aire-agent.yaml
+```
+
+This is the prompt you want to use:
+
+```markdown
+Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1. The apps are running in the default namespace. 
+```
+
+If you need to follow up with the GH PR prompt:
+
+
+```markdown
+GH repo name: https://github.com/christian-posta/aire-sample-apps
+Create the branch from main. 
+You can call it "fix-live-demo-branch"
+The backend-v1 service is in the backend-v1.yaml file, can you check the GH repo?
+```
+
+
+
+## To run this demo:
+
+For the GH Personal Access Token, make sure you give it the following permissions:
+
+- Contents
+- Pull Requests
+- Issues
 
 On a working Kubernetes Cluster (or run `./setup-kind.sh`) run the following to set up ArgoCD:
 
@@ -61,8 +97,9 @@ We see things are broken. Now use https://kagent.dev to fix it following a GitOp
 Use this prompt:
 
 ```text
-Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1. These are running in the default namespace. 
+Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1. The apps are running in the default namespace. 
 ```
+
 
 Make sure you have the GH tools (MCP Server) installed on kagent:
 
@@ -79,7 +116,16 @@ To get around this, add the tool through the YAML:
 
 ```bash
 cd resources/kagent
-kubectl apply -f k8s-agent.yaml
+kubectl apply -f aire-agent.yaml
+```
+
+When it's time to prompt for the GH PR, use something like:
+
+```text
+GH repo name: https://github.com/christian-posta/aire-sample-apps
+Create the branch from main. 
+You can call it "fix-live-demo-branch"
+The backend-v1 service is in the backend-v1.yaml file, can you check the GH repo?
 ```
 
 ---
