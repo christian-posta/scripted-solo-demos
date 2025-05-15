@@ -1,0 +1,38 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: ai-gateway
+  namespace: kgateway-system
+  labels:
+    app: ai-kgateway
+spec:
+  kube:
+    aiExtension:
+      enabled: true
+      ports:
+      - name: ai-monitoring
+        containerPort: 9092
+    service:
+      type: LoadBalancer
+---
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: ai-gateway
+  namespace: kgateway-system
+  labels:
+    app: ai-kgateway
+spec:
+  gatewayClassName: kgateway
+  infrastructure:
+    parametersRef:
+      name: ai-gateway
+      group: gateway.kgateway.dev
+      kind: GatewayParameters
+  listeners:
+  - protocol: HTTP
+    port: 8080
+    name: http
+    allowedRoutes:
+      namespaces:
+        from: All

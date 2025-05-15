@@ -1,0 +1,19 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  labels:
+    app: ai-kgateway
+  name: openai
+  namespace: kgateway-system
+spec:
+  type: AI
+  ai:
+    llm:
+      provider:
+        openai:
+          authToken:
+            kind: SecretRef
+            secretRef:
+              name: openai-secret
+          model: "gpt-4.1-mini"
+

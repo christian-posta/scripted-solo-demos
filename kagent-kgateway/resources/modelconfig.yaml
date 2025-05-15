@@ -1,0 +1,12 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ModelConfig
+metadata:
+  name: kgateway-openai-mc
+  namespace: kagent
+spec:
+  model: gpt-4.1-mini
+  provider: OpenAI
+  apiKeySecretKey: Foo
+  apiKeySecretRef: foo
+  openAI:
+    baseUrl: http://ai-gateway.kgateway-system.svc.cluster.local:8080/openai
