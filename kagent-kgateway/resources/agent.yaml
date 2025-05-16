@@ -4,6 +4,6 @@ metadata:
   name: kgateway-openai-agent
   namespace: kagent
 spec:
-  description: You have basic access through kgateway
+  description: You have basic model access through kgateway
   modelConfig: kgateway-openai-mc
-  systemMessage: 'You are an OpenAI agent. '
+  systemMessage: 'You are an OpenAI agent.'

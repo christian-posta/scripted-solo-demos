@@ -6,7 +6,7 @@ metadata:
 spec:
   model: gpt-4.1-mini
   provider: OpenAI
-  apiKeySecretKey: Foo
-  apiKeySecretRef: foo
+  apiKeySecretKey: ""
+  apiKeySecretRef: ""
   openAI:
     baseUrl: http://ai-gateway.kgateway-system.svc.cluster.local:8080/openai
