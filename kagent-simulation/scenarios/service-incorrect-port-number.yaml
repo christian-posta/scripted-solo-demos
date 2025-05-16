@@ -8,7 +8,7 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see errors reaching backend-v1.
   steps:
     - run: |
-        kubectl patch service/backend-v1 --context ${CLUSTER1} -p "
+        kubectl patch service/backend-v1  -p "
         spec:
           ports:
             - port: 8080

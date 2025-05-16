@@ -8,7 +8,7 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues communicating with other services.
   steps:
     - run: |
-        kubectl apply --context ${CLUSTER1} -f - <<EOF
+        kubectl apply  -f - <<EOF
         apiVersion: networking.k8s.io/v1
         kind: NetworkPolicy
         metadata:

@@ -8,7 +8,7 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see backend-v2 pods stuck in pending state due to quota.
   steps:
     - run: |
-        kubectl apply --context ${CLUSTER1} -f - <<EOF
+        kubectl apply  -f - <<EOF
         apiVersion: v1
         kind: ResourceQuota
         metadata:
@@ -18,4 +18,4 @@ spec:
           hard:
             pods: "1"
         EOF
-        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v2"
+        kubectl  delete rs -l "app=backend,version=v2"

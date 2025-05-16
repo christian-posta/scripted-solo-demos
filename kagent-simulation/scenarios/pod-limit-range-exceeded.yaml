@@ -8,7 +8,7 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see backend-v3 pods failing to create due to limit range.
   steps:
     - run: |
-        kubectl apply --context ${CLUSTER1} -f - <<EOF
+        kubectl apply  -f - <<EOF
         apiVersion: v1
         kind: LimitRange
         metadata:
@@ -20,5 +20,5 @@ spec:
               memory: 100Mi
             type: Container
         EOF
-        kubectl patch deployment backend-v3 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"containers":[{"name":"backend","resources":{"requests":{"memory":"200Mi"}}}]}}}}'
-        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v3"
+        kubectl patch deployment backend-v3  -p '{"spec":{"template":{"spec":{"containers":[{"name":"backend","resources":{"requests":{"memory":"200Mi"}}}]}}}}'
+        kubectl  delete rs -l "app=backend,version=v3"

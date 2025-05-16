@@ -8,8 +8,8 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v1' service.
   steps:
     - run: |
-        kubectl --context ${CLUSTER1} delete deployment backend-v1
-        kubectl --context ${CLUSTER1} apply -f - <<EOF
+        kubectl  delete deployment backend-v1
+        kubectl  apply -f - <<EOF
         apiVersion: v1
         kind: Service
         metadata:

@@ -1,12 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-CLUSTER1=kind-kagent
 # Define a function to log messages with timestamp
 log() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S')] $1"
 }
-
+``
 # Check if a YAML file was provided
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <yaml-file>"
@@ -14,6 +13,7 @@ if [ $# -eq 0 ]; then
 fi
 
 YAML_FILE="$1"
+echo "YAML_FILE: $YAML_FILE"
 
 # If "random" is specified, pick a random YAML file from scenarios directory
 if [ "$YAML_FILE" = "random" ]; then

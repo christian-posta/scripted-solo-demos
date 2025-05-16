@@ -9,4 +9,4 @@ spec:
     
   steps:
     - run: |
-        kubectl patch service backend-v2 --context ${CLUSTER1} -p '{"spec":{"selector": null}}'
+        kubectl patch service backend-v2  -p '{"spec":{"selector": null}}'

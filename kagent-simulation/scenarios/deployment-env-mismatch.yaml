@@ -8,5 +8,5 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v3' service. 
   steps:
     - run: |
-        kubectl --context ${CLUSTER1} set env deployment/mysql-v1 MYSQL_ROOT_PASSWORD=mynewpassword
-        kubectl --context ${CLUSTER1} delete pod -l app=mysql,version=v1 --wait=false
+        kubectl  set env deployment/mysql-v1 MYSQL_ROOT_PASSWORD=mynewpassword
+        kubectl  delete pod -l app=mysql,version=v1 --wait=false

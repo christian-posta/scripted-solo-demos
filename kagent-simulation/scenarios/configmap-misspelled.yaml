@@ -8,5 +8,5 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v3' service.
   steps:
     - run: |
-        kubectl patch deployment backend-v3 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"volumes":[{"name":"backend-v3-code","configMap":{"name":"backend-v3-code-cm"}}]}}}}'
-        kubectl --context ${CLUSTER1} delete rs -l "app=backend,version=v3"
+        kubectl patch deployment backend-v3  -p '{"spec":{"template":{"spec":{"volumes":[{"name":"backend-v3-code","configMap":{"name":"backend-v3-code-cm"}}]}}}}'
+        kubectl  delete rs -l "app=backend,version=v3"

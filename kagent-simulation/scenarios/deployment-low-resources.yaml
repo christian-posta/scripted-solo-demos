@@ -9,4 +9,4 @@ spec:
     
   steps:
     - run: |
-        kubectl patch deployment mysql-v1 --context ${CLUSTER1} -p '{"spec":{"template":{"spec":{"containers":[{"name":"mysql","resources":{"limits":{"memory":"10Mi"}}}]}}}}'
+        kubectl patch deployment mysql-v1  -p '{"spec":{"template":{"spec":{"containers":[{"name":"mysql","resources":{"limits":{"memory":"10Mi"}}}]}}}}'

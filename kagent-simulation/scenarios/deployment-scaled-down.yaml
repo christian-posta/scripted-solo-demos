@@ -8,5 +8,5 @@ spec:
     Calling the frontend service at http://frontend-v1:8080 I see an error message telling about issues in the 'backend-v3' service. 
   steps:
     - run: |
-        kubectl --context ${CLUSTER1} scale deployment mysql-v1 --replicas=0
-        kubectl --context ${CLUSTER1} delete pod -l app=backend,version=v3 --wait=false
+        kubectl  scale deployment mysql-v1 --replicas=0
+        kubectl  delete pod -l app=backend,version=v3 --wait=false
