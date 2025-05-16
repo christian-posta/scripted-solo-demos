@@ -103,3 +103,16 @@ What type of number is 5105105105105100?
 ```
 
 In the response, any time it refers to that number it should <MASK> it.
+
+
+## Clean up
+
+Clean up is manual at this point. 
+
+You should delete the model configs associated with the kgateway.
+
+Delete the traffic policy for kgateway:
+
+```bash
+kubectl delete -f resources/prompt-mask.yaml
+```
