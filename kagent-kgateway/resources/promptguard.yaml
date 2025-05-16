@@ -1,0 +1,19 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: TrafficPolicy
+metadata:
+  name: openai-prompt-guard
+  namespace: kgateway-system
+  labels:
+    app: ai-kgateway
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: openai
+  ai:
+    promptGuard:
+      request:
+        regex:
+          action: REJECT
+          builtins:
+          - CREDIT_CARD

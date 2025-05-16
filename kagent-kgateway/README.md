@@ -67,3 +67,39 @@ Refer to these docs:
 * https://kgateway.dev/docs/ai/setup/
 * https://kgateway.dev/docs/ai/auth/
 
+
+## Demo with Kagent
+
+You should create a new OpenAI model that doesn't need an API key that points to:
+
+```text
+http://ai-gateway.kgateway-system.svc.cluster.local:8080/openai
+```
+
+If you want to add it via CRD:
+
+```bash
+kubectl apply -f resources/modelconfig.yaml
+```
+
+Next, you'll need to create a new agent with the new model. Can do it through the UI, or can do with CRD:
+
+```bash
+kubectl apply -f resources/agent.yaml
+```
+
+Now the agent should communicate though the kgateway. You can now apply policy such as prompt guard:
+
+The "mask" prompt guard works best for the demo:
+
+```bash
+kubectl apply -f resources/promptguard-mask.yaml
+```
+
+Now go to the agent and prompt it with:
+
+```text
+What type of number is 5105105105105100?
+```
+
+In the response, any time it refers to that number it should <MASK> it.
