@@ -2,8 +2,7 @@
 
 CONTEXT="${1:-ai-demo}"
 
-# ./install-gateway-stable.sh $CONTEXT
-./install-gateway-nightly.sh $CONTEXT "skip"
+./install-gateway-stable.sh $CONTEXT "skip"
 
 # create tokens here..
 source ~/bin/ai-keys

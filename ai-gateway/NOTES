@@ -18,7 +18,9 @@
 * Gloo Gateway / AI Gateway as Istio Waypoint
 * For controlling egress AI use traffic
 
+## Prep
 
+NOTE, you must have some routes deployed for this to work. That is, run 00 or 01 to get into the base state. 
 
 
 ## Setting up the demo on Kind
@@ -27,6 +29,13 @@ Just run the setup-all.sh script:
 ```bash
 ./setup-all.sh
 ```
+
+Then port forward the following:
+
+Grafana 3000 - the one in monitoring ns
+GW 8080 - the ai gateway in gloo-system
+UI Server: 6002 - this is running locally on the file system
+Jaeger: 16686 - jaeger in the monitoring ns
 
 To set up the Istio parts:
 

@@ -12,7 +12,7 @@ kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-a
 helm repo add gloo-ee-helm https://storage.googleapis.com/gloo-ee-helm
 helm repo update
 
-VERSION="1.18.2"
+VERSION="1.19.0"
 
 source ~/bin/glooe-license-key-env 
 helm upgrade --kube-context $CONTEXT -i gloo-gateway gloo-ee-helm/gloo-ee \
