@@ -1,5 +1,5 @@
 source env.sh
-
+source ~/bin/ai-keys
 
 echo "kgateway requires Kubernetes Gateway API to be installed (version v1.2.1)."
 
@@ -25,3 +25,14 @@ helm upgrade -i --create-namespace --namespace kgateway-system --version $KGATEW
 helm upgrade -i -n kgateway-system kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgateway \
      --set gateway.aiExtension.enabled=true \
      --version $KGATEWAY_VERSION
+
+kubectl apply -f kgateway/gateway.yaml
+
+
+# Set up OpenAI secret for kgateway
+kubectl create secret generic openai-secret -n kgateway-system --from-literal=Authorization=$OPENAI_API_KEY 
+kubectl label secret openai-secret -n kgateway-system app=ai-kgateway
+
+kubectl apply -f kgateway/backend.yaml
+kubectl apply -f kgateway/httproute.yaml
+

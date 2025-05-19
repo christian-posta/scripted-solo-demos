@@ -7,10 +7,10 @@ kubectl delete toolservers -n kagent --all
 kubectl delete memory -n kagent --all
 
 # Delete all agents except the whitelisted ones
-kubectl get agent -n kagent -o name | grep -v -E "argo-rollouts-conversion-agent|helm-agent|istio-agent|k8s-agent|observability-agent|promql-agent" | xargs -r kubectl delete -n kagent
+kubectl get agent -n kagent -o name | grep -v -E "argo-rollouts-conversion-agent|helm-agent|istio-agent|k8s-agent|observability-agent|promql-agent|kgateway-agent|cilium-crd-agent" | xargs -r kubectl delete -n kagent
 
 # delete all model configs except t
-kubectl get modelconfig -n kagent -o name | grep -v -E "openai-model-config" | xargs -r kubectl delete -n kagent
+kubectl get modelconfig -n kagent -o name | grep -v -E "default-model-config" | xargs -r kubectl delete -n kagent
 
 # clean up any of the argo rollouts stuff i did
 kubectl delete rollouts -n bookinfo-backends --all

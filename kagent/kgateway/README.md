@@ -5,7 +5,6 @@ To run this demo, you should have kagent already set up.
 Run the following to set up this gateway:
 
 ```bash
-./install-kgateway
 ./setup-kgateway
 ```
 
@@ -79,13 +78,13 @@ http://ai-gateway.kgateway-system.svc.cluster.local:8080/openai
 If you want to add it via CRD:
 
 ```bash
-kubectl apply -f resources/modelconfig.yaml
+kubectl apply -f kgateway/modelconfig.yaml
 ```
 
 Next, you'll need to create a new agent with the new model. Can do it through the UI, or can do with CRD:
 
 ```bash
-kubectl apply -f resources/agent.yaml
+kubectl apply -f kgateway/agent.yaml
 ```
 
 Now the agent should communicate though the kgateway. You can now apply policy such as prompt guard:
@@ -93,7 +92,7 @@ Now the agent should communicate though the kgateway. You can now apply policy s
 The "mask" prompt guard works best for the demo:
 
 ```bash
-kubectl apply -f resources/promptguard-mask.yaml
+kubectl apply -f kgateway/promptguard-mask.yaml
 ```
 
 Now go to the agent and prompt it with:
@@ -114,5 +113,15 @@ You should delete the model configs associated with the kgateway.
 Delete the traffic policy for kgateway:
 
 ```bash
-kubectl delete -f resources/prompt-mask.yaml
+kubectl delete -f kgateway/prompt-mask.yaml
+kubectl delete -f kgateway/agent.yaml
+kubectl delete -f kgateway/modelconfig.yaml
+```
+
+You can uninstall all of the kgateway with the following:
+
+```bash
+helm uninstall -n kgateway-system kgateway-crds
+helm uninstall -n kgateway-system kgateway
+kubectl delete ns kgateway-system
 ```
