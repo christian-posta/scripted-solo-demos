@@ -3,6 +3,11 @@ source env.sh
 
 kubectl delete -f fetcher/deployment.yaml
 kubectl delete -f agentgateway/deployment.yaml
+
+kubectl delete -f kgateway/promptguard-mask.yaml
+kubectl delete -f kgateway/agent.yaml
+kubectl delete -f kgateway/modelconfig.yaml
+
 kubectl delete toolservers -n kagent --all
 kubectl delete memory -n kagent --all
 

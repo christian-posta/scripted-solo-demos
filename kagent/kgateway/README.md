@@ -71,7 +71,7 @@ Refer to these docs:
 
 You should create a new OpenAI model that doesn't need an API key that points to:
 
-```text
+```bash
 http://ai-gateway.kgateway-system.svc.cluster.local:8080/openai
 ```
 
@@ -97,7 +97,7 @@ kubectl apply -f kgateway/promptguard-mask.yaml
 
 Now go to the agent and prompt it with:
 
-```text
+```bash
 What type of number is 5105105105105100?
 ```
 
