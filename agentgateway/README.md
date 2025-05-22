@@ -49,4 +49,11 @@ http://localhost:16686
 
 Note that the A2A listener should be on port `5555` since that's what we map when we start the docker container. 
 
-Start the langgraph A2A agent on localhost:10000, and in the target, refer to it as `host.docker.internal:10000`
+This is the demo:
+https://github.com/google/A2A/tree/main/samples/python/agents/langgraph
+
+```bash
+uv run .
+```
+
+Start the langgraph A2A agent on localhost:10000 (default), and in the target, refer to it as `host.docker.internal:10000`
