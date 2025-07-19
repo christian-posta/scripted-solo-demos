@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+            - "*"
+          allowHeaders:
+            - mcp-protocol-version
+            - content-type  
+      backends:
+      - mcp:
+          name: default
+          targets:
+          - name: openapi
+            openapi:
+              schema:
+                file: ./resources/openapi/petstore.json
+              host: localhost
+              port: 8080

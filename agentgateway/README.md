@@ -26,7 +26,9 @@ Lastly, you can add Authz policies to the calls:
 
 You will need the following key:
 
+```bash
 eyJhbGciOiJFUzI1NiIsImtpZCI6IlhoTzA2eDhKaldIMXd3a1dreWVFVXhzb29HRVdvRWRpZEVwd3lkX2htdUkiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJtZS5jb20iLCJleHAiOjE5MDA2NTAyOTQsImlhdCI6MTc0NDczNDA5NiwiaXNzIjoibWUiLCJqdGkiOiI5MTU0MmI5NWFkYWE1MzRiNTgxZGU5MTUyYWRlZDY1MGQ0NGJiNGI3YjJmZjFmM2M4NGU2M2YwNWE4ZTNiMjMxIiwibmJmIjoxNzQ0NzM0MDk2LCJzdWIiOiJtZSJ9.jXoHVVvTbXb27JhTJVATqgSQ30lQXNIL3aGxgucujgRHHlTBajUJIjjwC5mvfyy274YGNiAinf-fMYieUGi3Pw
+```
 
 
 ### Metrics / Tracing

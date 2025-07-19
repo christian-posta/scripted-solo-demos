@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=../../schema/local.json
+config:
+  tracing:
+    otlpEndpoint: http://localhost:4317
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+            - "*"
+          allowHeaders:
+            - mcp-protocol-version
+            - content-type  
+      backends:
+      - mcp:
+          name: default
+          targets:
+          - name: everything
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-everything"]

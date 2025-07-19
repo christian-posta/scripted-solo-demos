@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+            - "*"
+          allowHeaders:
+            - mcp-protocol-version
+            - content-type  
+      backends:
+      - mcp:
+          name: default
+          targets:
+          - name: time
+            stdio:
+              cmd: uvx
+              args: ["mcp-server-time"]
+          - name: everything
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-everything"]
