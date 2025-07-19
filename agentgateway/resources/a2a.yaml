@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        # Mark this route as a2a traffic
+        a2a: {}
+        cors:
+          allowHeaders:
+          - mcp-protocol-version
+          - content-type
+          allowOrigins:
+          - '*'        
+      backends:
+      - host: localhost:9999

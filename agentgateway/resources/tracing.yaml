@@ -1,23 +1,27 @@
-# yaml-language-server: $schema=../../schema/local.json
-config:
-  tracing:
-    otlpEndpoint: http://localhost:4317
 binds:
-- port: 3000
-  listeners:
+- listeners:
   - routes:
-    - policies:
-        cors:
-          allowOrigins:
-            - "*"
-          allowHeaders:
-            - mcp-protocol-version
-            - content-type  
-      backends:
+    - backends:
       - mcp:
           name: default
           targets:
           - name: everything
             stdio:
+              args:
+              - '@modelcontextprotocol/server-everything'
               cmd: npx
-              args: ["@modelcontextprotocol/server-everything"]
+      policies:
+        cors:
+          allowHeaders:
+          - mcp-protocol-version
+          - content-type
+          allowOrigins:
+          - '*'
+  - hostname: localhost
+    name: a2a-listener
+    protocol: HTTP
+    routes: []
+  port: 3000
+config:
+  tracing:
+    otlpEndpoint: http://localhost:4317
