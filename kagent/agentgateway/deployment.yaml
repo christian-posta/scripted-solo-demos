@@ -18,21 +18,17 @@ spec:
     spec:
       containers:
         - name: agentgateway
-          image: ghcr.io/agentgateway/agentgateway:0.4.23
+          image: ghcr.io/agentgateway/agentgateway:0.6.1-ext
           args:
             - -f
-            - /etc/agentgateway/config.json
+            - /etc/agentgateway/config.yaml
           ports:
             - containerPort: 3000
-            - containerPort: 9091
-            - containerPort: 19000
+            - containerPort: 15000
           volumeMounts:
             - name: agentgateway-config
-              mountPath: /etc/agentgateway/config.json
-              subPath: config.json
-            - name: openapi-config
-              mountPath: /etc/agentgateway/petstore.json
-              subPath: petstore.json
+              mountPath: /etc/agentgateway/config.yaml
+              subPath: config.yaml
             - name: pubkey-config
               mountPath: /etc/agentgateway/pubkey
               subPath: pubkey                            
@@ -40,9 +36,6 @@ spec:
         - name: agentgateway-config
           configMap:
             name: agentgateway-config
-        - name: openapi-config
-          configMap:
-            name: openapi-config
         - name: pubkey-config
           configMap:
             name: pubkey-config                        
@@ -60,11 +53,7 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
-    - name: metrics
-      protocol: TCP
-      port: 9091
-      targetPort: 9091
     - name: ui
       protocol: TCP
-      port: 19000
-      targetPort: 19000      
+      port: 15000
+      targetPort: 15000      

@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+        jwtAuth:
+          issuer: agentgateway.dev
+          audiences: [test.agentgateway.dev]
+          jwks:
+            # Relative to the folder the binary runs from, not the config file
+            file: /etc/agentgateway/pubkey
+        mcpAuthorization:
+          rules:
+          # Allow anyone to call 'echo'
+          - 'mcp.tool.name == "echo"'
+          # Only the test-user can call 'add'
+          - 'jwt.sub == "test-user" && mcp.tool.name == "add"'
+          # Any authenticated user with the claim `nested.key == value` can access 'printEnv'
+          - 'mcp.tool.name == "printEnv" && jwt.nested.key == "value"'
+      backends:
+      - mcp:
+          name: default
+          targets:
+          - name: everything
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-everything"]
