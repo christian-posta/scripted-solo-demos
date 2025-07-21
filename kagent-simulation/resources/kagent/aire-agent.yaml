@@ -38,7 +38,7 @@ spec:
       - audit
   description: An GitOps and ArgoCD based Kubernetes Expert AI Agent specializing in cluster operations, troubleshooting,
     and maintenance.
-  modelConfig: openai-model-config
+  modelConfig: default-model-config
   systemMessage: |
     # Kubernetes AI Agent System Prompt
 
@@ -141,13 +141,15 @@ spec:
 
     ## Limitations
 
+    0. MOST IMPORTANT: If you make tool calls / function calls, you MUST do them sequentially, don't try to parallelize the calls. 
     1. You cannot directly connect to or diagnose external systems outside of the Kubernetes cluster.
     2. You must rely on the tools provided and cannot use kubectl commands directly.
     3. You cannot access or modify files on the host system outside of the agent's environment.
     4. Remember that your suggestions impact production environments - prioritize safety and stability.
 
     ## GitOps and ArgoCD
-    All changes should be done via commits on GitHub in a "fix" branch, and GitHub PRs. The GitHub repo is defined in the argocd Application Custom Resource. Check the `argocd` namespace for any Application Custom Resources. If you cannot figure out what the GitHub repo is for an application, ask the user for the repo URL. Search the repo code for the best place to make the patch. 
+    All changes should be done via commits on GitHub in a "fix" branch, and GitHub PRs. The GitHub repo is defined in the argocd Application Custom Resource. Check the `argocd` namespace for any Application Custom Resources. If you cannot get it from there, then use this URL: https://github.com/christian-posta/aire-sample-apps 
+    If you cannot figure out what the GitHub repo is for an argocd application, ask the user for the repo URL. Try to identify the file in the repo. 
 
     When searching for the right file to patch, always start searching from the root of the repo. Look for files with the same name as the deployment or service you're working on. For example, if you find an issue with the `backend-v1` service, look for files named `backend-v1.yaml`. If you cannot find the file, ask the user for hints or present the paths you plan to search before searching. 
 
@@ -155,73 +157,22 @@ spec:
   - mcpServer:
       toolNames:
       - create_pull_request
-      toolServer: server-github
-    type: McpServer  
-  - mcpServer:
-      toolNames:
       - create_branch
-      toolServer: server-github
-    type: McpServer      
-  - mcpServer:
-      toolNames:
       - get_file_contents
-      toolServer: server-github
-    type: McpServer      
-  - mcpServer:
-      toolNames:
       - search_code
-      toolServer: server-github
-    type: McpServer          
-  - mcpServer:
-      toolNames:
       - get_pull_request
-      toolServer: server-github
-    type: McpServer  
-  - mcpServer:
-      toolNames:
       - list_pull_requests
-      toolServer: server-github
-    type: McpServer      
-  - mcpServer:
-      toolNames:
       - create_or_update_file
       toolServer: server-github
-    type: McpServer              
-  - builtin:
-      name: kagent.tools.k8s.CheckServiceConnectivity
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.AnnotateResource
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.LabelResource
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetEvents
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetAvailableAPIResources
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetClusterConfiguration
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.DescribeResource
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetResourceYAML
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.ExecuteCommand
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetResources
-    type: Builtin
-  - builtin:
-      name: kagent.tools.k8s.GetPodLogs
-    type: Builtin
-  - builtin:
-      config:
-        docs_download_url: https://doc-sqlite-db.s3.sa-east-1.amazonaws.com
-      name: kagent.tools.docs.QueryTool
-    type: Builtin
+    type: McpServer  
+  - mcpServer:
+      toolNames:                                                                                                                                                                      
+      - k8s_check_service_connectivity                                                                                                                                                         
+      - k8s_get_events                                                                                                                                                                
+      - k8s_get_available_api_resources                                                                                                                                                                                                                                                                                              
+      - k8s_describe_resource                                                                                                                                                         
+      - k8s_get_resource_yaml                                                                                                                                                         
+      - k8s_execute_command                                                                                                                                                           
+      - k8s_get_resources   
+      toolServer: kagent-tool-server
+    type: McpServer      

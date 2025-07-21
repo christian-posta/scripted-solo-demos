@@ -9,7 +9,7 @@ Port forward these:
 ```
 
 ```bash
-./setup-ghtools.sh
+./setup-argocd.sh
 ```
 
 Use the following Agent:
