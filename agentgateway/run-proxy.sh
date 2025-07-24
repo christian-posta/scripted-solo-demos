@@ -1,7 +1,7 @@
 
 DEFAULT_CONFIG="resources/basic.yaml"
 
-IMAGE="ghcr.io/agentgateway/agentgateway:0.6.1-ext"
+IMAGE="ghcr.io/agentgateway/agentgateway:0.6.2-ext"
 
 CONFIG_LOCATION=${1:-$DEFAULT_CONFIG}
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
