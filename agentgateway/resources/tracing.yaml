@@ -17,10 +17,6 @@ binds:
           - content-type
           allowOrigins:
           - '*'
-  - hostname: localhost
-    name: a2a-listener
-    protocol: HTTP
-    routes: []
   port: 3000
 config:
   tracing:
