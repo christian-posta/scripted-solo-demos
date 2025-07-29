@@ -8,8 +8,7 @@ binds:
         a2a: {}
         cors:
           allowHeaders:
-          - mcp-protocol-version
-          - content-type
+          - '*'
           allowOrigins:
           - '*'        
       backends:

@@ -13,8 +13,7 @@ binds:
       policies:
         cors:
           allowHeaders:
-          - mcp-protocol-version
-          - content-type
+          - "*"
           allowOrigins:
           - '*'
   port: 3000
