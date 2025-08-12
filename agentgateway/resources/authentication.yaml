@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- listeners:
+  - routes:
+    - backends:
+      - mcp:
+          targets:
+          - name: everything
+            stdio:
+              args:
+              - '@modelcontextprotocol/server-everything'
+              cmd: npx
+      matches:
+      - path:
+          exact: /everything/mcp
+      - path:
+          exact: /.well-known/oauth-protected-resource/everything/mcp
+      - path:
+          exact: /.well-known/oauth-authorization-server/everything/mcp
+      - path:
+          exact: /.well-known/oauth-authorization-server/everything/mcp/client-registration
+      policies:
+        cors:
+          allowHeaders:
+          - mcp-protocol-version
+          - content-type
+          allowOrigins:
+          - '*'
+        mcpAuthentication:
+          issuer: http://localhost:7080/realms/mcp
+          jwksUrl: http://localhost:7080/realms/mcp/protocol/openid-connect/certs
+          audience: mcp_proxy
+          provider:
+            keycloak: {}
+          resourceMetadata:
+            resource: http://localhost:3000/everything/mcp
+            scopesSupported:
+            - profile
+            - offline_access
+            - openid
+            bearerMethodsSupported:
+            - header
+            - body
+            - query
+            resourceDocumentation: http://localhost:3000/everything/docs
+            resourcePolicyUri: http://localhost:3000/everything/policies
+  port: 3000
