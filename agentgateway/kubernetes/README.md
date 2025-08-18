@@ -50,3 +50,34 @@ kubectl delete -f kubernetes/mcp.yaml
 helm uninstall -n kgateway-system kgateway
 helm uninstall -n kgateway-system kgateway-crds
 ```
+
+## A2A notes
+
+```bash
+kubectl apply -f kubernetes/a2a.yaml
+kubectl apply -f kubernetes/a2a-httproute.yaml
+```
+
+curl localhost:8085/.well-known/agent.json 
+
+curl -X POST http://localhost:8085/ \
+  -H "Content-Type: application/json" \
+    -v \
+    -d '{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "tasks/send",
+  "params": {
+    "id": "1",
+    "message": {
+      "role": "user",
+      "parts": [
+        {
+          "type": "text",
+          "text": "hello gateway!"
+        }
+      ]
+    }
+  }
+  }'
+

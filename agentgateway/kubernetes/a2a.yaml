@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: a2a-agent
-          image: ghcr.io/kgateway-dev/test-a2a-agent:1.0.0-ci1
+          image:  gcr.io/solo-public/docs/test-a2a-agent:latest
           ports:
             - containerPort: 9090
 ---
