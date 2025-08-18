@@ -45,6 +45,17 @@ run "cat resources/jwt/example1.key"
 
 run "agentgateway -f resources/authorization.yaml"
 
+
+backtotop
+desc "Combine auth with multiplexing: virtual MCP service"
+read -s
+
+desc "Let's take a look at locking down with auth"
+run "cat resources/virtualmcp.yaml"
+
+run "agentgateway -f resources/virtualmcp.yaml"
+
+
 backtotop
 desc "Let's take a look at Tracing / Observability"
 read -s
