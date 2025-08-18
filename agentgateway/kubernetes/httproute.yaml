@@ -25,3 +25,18 @@ spec:
         host: mcp-website-fetcher.default.svc.cluster.local
         port: 80
         protocol: SSE
+---
+# Could also do dynamic service discovery
+#apiVersion: gateway.kgateway.dev/v1alpha1
+#kind: Backend
+#metadata:
+#  name: mcp-backend
+#spec:
+#  type: MCP
+#  mcp:
+#    name: mcp-virtual-server
+#    targets:
+#      - selectors:
+#          serviceSelector:
+#            matchLabels:
+#              app: mcp-website-fetcher
