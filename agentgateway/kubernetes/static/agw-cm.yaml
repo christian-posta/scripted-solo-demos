@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: static-agentgateway-config
+  namespace: default
+data:
+  config.yaml: |-
+      binds:
+      - port: 3000
+        listeners:
+        - routes:
+          - policies:
+              cors:
+                allowOrigins:
+                - "*"
+                allowHeaders:
+                - "*"
+              jwtAuth:
+                issuer: agentgateway.dev
+                audiences: [test.agentgateway.dev]
+                jwks:  |
+                  {
+                    "keys": [
+                      {
+                        "use": "sig",
+                        "kty": "EC",
+                        "kid": "XhO06x8JjWH1wwkWkyeEUxsooGEWoEdidEpwyd_hmuI",
+                        "crv": "P-256",
+                        "alg": "ES256",
+                        "x": "XZHF8Em5LbpqfgewAalpSEH4Ka2I2xjcxxUt2j6-lCo",
+                        "y": "g3DFz45A7EOUMgmsNXatrXw1t-PG5xsbkxUs851RxSE"
+                      }
+                    ]
+                  }
+              mcpAuthorization:
+                rules:
+                # Only the test-user can call 'fetcher'
+                - 'jwt.sub == "test-user" && mcp.tool.target == "fetcher"'
+            backends:
+            - mcp:
+                targets:
+                - name: fetcher
+                  sse:
+                    host: "mcp-website-fetcher.default"
+                    port: 80
+                    path: "/sse"

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: static-agentgateway-config
+  namespace: default
+data:
+  config.yaml: |-
+      binds:
+      - port: 3000
+        listeners:
+        - routes:
+          - policies:
+              cors:
+                allowOrigins:
+                - "*"
+                allowHeaders:
+                - "*"
+            backends:
+            - mcp:
+                targets:
+                - name: fetcher
+                  sse:
+                    host: "mcp-website-fetcher.default.svc.cluster.local"
+                    port: 80
+                    path: "/sse"

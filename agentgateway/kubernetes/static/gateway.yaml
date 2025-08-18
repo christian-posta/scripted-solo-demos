@@ -1,0 +1,27 @@
+kind: GatewayParameters
+apiVersion: gateway.kgateway.dev/v1alpha1
+metadata:
+  name: static-agentgateway-config
+spec:
+  kube:
+    agentGateway:
+      enabled: true
+      # logLevel: debug
+      customConfigMapName: static-agentgateway-config
+---
+# Gateway that uses the agentgateway class but overrides with custom parameters
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: static-agentgateway
+spec:
+  gatewayClassName: agentgateway  # Use existing class
+  infrastructure:
+    parametersRef:  # Override at Gateway level
+      group: gateway.kgateway.dev
+      kind: GatewayParameters
+      name: static-agentgateway-config
+  listeners:
+    - protocol: HTTP
+      port: 3000
+      name: http      
