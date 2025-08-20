@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+            - "*"
+          allowHeaders:
+            - "*"
+        jwtAuth:
+          issuer: agentgateway.dev
+          audiences: [test.agentgateway.dev]
+          jwks:
+            # Relative to the folder the binary runs from, not the config file
+            file: ./resources/jwt/pub-key
+        mcpAuthorization:
+          rules:
+          # Allow anyone to call 'echo'
+          - 'mcp.tool.name == "echo"'
+          # Only the test-user can call 'add'
+          - 'jwt.sub == "test-user" && mcp.tool.name == "add"'
+          # Any authenticated user with the claim `nested.key == value` can access 'printEnv'
+          - '(jwt.nested.key == "value" && mcp.tool.target == "github") && (mcp.tool.name == "get_issue" || mcp.tool.name == "get_file_contents")'
+      backends:
+      - mcp:
+          targets:
+          - name: github
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-github"]
+              env:
+                GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_AIRE_PAT}
+          - name: everything
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-everything"]                
+

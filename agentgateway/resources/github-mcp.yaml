@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+            - "*"
+          allowHeaders:
+            - "*"         
+      backends:
+      - mcp:
+          targets:
+          - name: github
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-github"]
+              env:
+                GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_AIRE_PAT}
+          - name: everything
+            stdio:
+              cmd: npx
+              args: ["@modelcontextprotocol/server-everything"]                
+
