@@ -7,7 +7,7 @@ To run this demo and step by step explore agent gateway:
 Next, you can fire up the proxy and the [mcp-inpsector](https://github.com/modelcontextprotocol/inspector); navigate to the right URL and list the tools:
 
 ```bash
-./run-proxy.sh
+agentgateway -f resources/basic.yaml
 
 # run this in a different window
 npx @modelcontextprotocol/inspector
@@ -17,7 +17,8 @@ You can check the config files and talk through the config.
 
 
 
-Lastly, you can add Authz policies to the calls:
+You can also run from docker:
+
 
 ```bash
 ./run-proxy.sh resources/auththorization.yaml
@@ -49,7 +50,6 @@ http://localhost:16686
 
 ### A2A demo
 
-Note that the A2A listener should be on port `5555` since that's what we map when we start the docker container. 
 
 This is the demo:
 https://github.com/google/A2A/tree/main/samples/python/
@@ -58,7 +58,7 @@ https://github.com/google/A2A/tree/main/samples/python/
 uv run agents/helloworld  
 ```
 
-To run the client and point to agent gateway:
+To run the client and point to agent gateway (or go to agw playground)
 
 ```bash
 uv run hosts/cli --agent http://localhost:3000 

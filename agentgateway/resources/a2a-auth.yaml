@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        # Mark this route as a2a traffic
+        a2a: {}
+        cors:
+          allowHeaders:
+          - '*'
+          allowOrigins:
+          - '*'       
+        jwtAuth:
+          issuer: agentgateway.dev
+          audiences: [test.agentgateway.dev]
+          jwks:
+            # Relative to the folder the binary runs from, not the config file
+            file: ./resources/jwt/pub-key
+        authorization:
+          rules:
+          - 'jwt.sub == "test-user" && a2a.skill.id == "hello_world"'
+      backends:
+      - host: localhost:9999
