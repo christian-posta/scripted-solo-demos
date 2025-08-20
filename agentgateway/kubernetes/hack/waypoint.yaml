@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: waypoint
+  namespace: default
+spec:
+  gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: gateway.kgateway.dev
+      kind: GatewayParameters
+      name: agentwaypoint
+  listeners:
+  - allowedRoutes:
+      namespaces:
+        from: Same
+    name: mesh
+    port: 15008
+    protocol: HBONE
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: agentwaypoint
+spec:
+  kube:
+    agentGateway:
+      ca: https://istiod.istio-system.svc:15012
+      image:
+        registry: ttl.sh/1755188752
+        tag: "24h"
