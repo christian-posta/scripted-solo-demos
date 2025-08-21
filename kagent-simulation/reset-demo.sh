@@ -13,5 +13,3 @@ kubectl  apply -f resources/backend-v1.yaml
 kubectl  apply -f resources/backend-v2.yaml
 kubectl  apply -f resources/backend-v3.yaml
 kubectl  apply -f resources/frontend-v1.yaml
-
-kubectl  rollout status deployment
