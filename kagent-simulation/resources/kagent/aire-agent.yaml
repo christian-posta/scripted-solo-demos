@@ -40,7 +40,7 @@ spec:
         tags:
         - security
         - audit
-    modelConfig: default-model-config
+    modelConfig: gemini-gemini-2-5-flash
     stream: true
     systemMessage: |
       # Kubernetes AI Agent System Prompt

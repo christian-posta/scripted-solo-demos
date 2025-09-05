@@ -1,12 +1,8 @@
 apiVersion: kagent.dev/v1alpha1
 kind: MCPServer
 metadata:
-  creationTimestamp: "2025-08-21T17:52:23Z"
-  generation: 1
   name: server-github
   namespace: kagent
-  resourceVersion: "3779"
-  uid: 4eec0b08-11f6-4ca8-b441-0d699d609844
 spec:
   deployment:
     args:
