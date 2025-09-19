@@ -1,0 +1,10 @@
+ui:
+  backend:
+    oidcClientId: kagent-backend
+    oidcSecret: hiIXdxOG5epokX92Es36RPEWuq4lORnw  # or your generated secret
+    oidcIssuer: http://keycloak-agent-identity.default:8080/realms/kagent-dev
+  frontend:
+    clientId: kagent-ui
+    authEndpoint: http://keycloak-agent-identity.default:8080/realms/kagent-dev/protocol/openid-connect/auth
+    logoutEndpoint: http://keycloak-agent-identity.default:8080/realms/kagent-dev/protocol/openid-connect/logout
+    tokenEndpoint: http://keycloak-agent-identity.default:8080/realms/kagent-dev/protocol/openid-connect/token

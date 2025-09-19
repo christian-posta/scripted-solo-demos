@@ -1,0 +1,150 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+  # name: keycloak-config
+  # namespace: default
+# data:
+  # config.json: |
+  # Install this CM first!!
+  # Your config.json content goes here
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-agent-identity
+  namespace: default
+  labels:
+    app: keycloak-agent-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-agent-identity
+  template:
+    metadata:
+      labels:
+        app: keycloak-agent-identity
+    spec:
+      containers:
+      - name: keycloak
+        image: ceposta/keycloak-agent-identity:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: KC_HEALTH_ENABLED
+          value: "true"
+        - name: KC_BOOTSTRAP_ADMIN_USERNAME
+          value: "admin"
+        - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-admin
+              key: password
+        - name: KC_HTTP_ENABLED
+          value: "true"
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        livenessProbe:
+          httpGet:
+            path: /realms/master
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /realms/master
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+      volumes:
+      - name: config
+        configMap:
+          name: keycloak-config
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: keycloak-setup-job
+  namespace: default
+  labels:
+    app: keycloak-agent-identity
+    component: setup
+spec:
+  template:
+    metadata:
+      labels:
+        app: keycloak-agent-identity
+        component: setup
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: keycloak-setup
+        image: ceposta/keycloak-agent-identity-setup:latest
+        env:
+        - name: KEYCLOAK_URL
+          value: "http://keycloak-agent-identity:8080"  # Use service name
+        - name: CONFIG_FILE
+          value: "/app/config.json"
+        - name: ADMIN_USERNAME
+          value: "admin"
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-admin
+              key: password
+        - name: MAX_RETRIES
+          value: "60"  # More retries for K8s startup
+        volumeMounts:
+        - name: config
+          mountPath: /app/config.json
+          subPath: config.json
+          readOnly: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: config
+        configMap:
+          name: keycloak-config
+  backoffLimit: 3  # Retry up to 3 times if setup fails
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-admin
+  namespace: default
+type: Opaque
+data:
+  password: YWRtaW4=  # base64 encoded "admin" - change this!
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-agent-identity
+  namespace: default
+  labels:
+    app: keycloak-agent-identity
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: keycloak-agent-identity
+

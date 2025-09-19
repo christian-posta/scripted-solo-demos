@@ -1,0 +1,73 @@
+{
+  "realm" : "kagent-dev",
+  "users" : [ {
+    "id" : "acf04f2b-f529-45ef-a2d8-5311fc3c8301",
+    "createdTimestamp" : 1755712726621,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "admin",
+    "lastName" : "admin",
+    "email" : "admin@kagent-dev.org",
+    "credentials" : [ {
+      "id" : "9b06d7db-537e-438b-bebe-0429846db40f",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1755712743810,
+      "secretData" : "{\"value\":\"foe1irB5HmR5HrT3kpsY+4UQe5L9Gy/ZoD/mQ8oxDRI=\",\"salt\":\"+tsqIkH1ounFcWqj7LpcQw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-kagent-dev" ],
+    "notBefore" : 0,
+    "groups" : [ "/admins" ]
+  }, {
+    "id" : "ae63fa47-3164-42fb-af32-299b5e65dc68",
+    "createdTimestamp" : 1755712811381,
+    "username" : "reader",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "reader",
+    "lastName" : "reader",
+    "email" : "reader@kagent-dev.org",
+    "credentials" : [ {
+      "id" : "f99b73f1-8788-45f6-b408-8cd5a11dcc42",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1755712826390,
+      "secretData" : "{\"value\":\"qiIuM23xQJPRTBCtxR/arwoRh/6WWBDVEGKPpmTS8+o=\",\"salt\":\"ILOV1G5vknjoJTlQOYa8JA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-kagent-dev" ],
+    "notBefore" : 0,
+    "groups" : [ "/readers" ]
+  }, {
+    "id" : "db9d5595-30dd-4bf8-9ecc-143b43a64dd4",
+    "createdTimestamp" : 1755712773770,
+    "username" : "writer",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "writer",
+    "lastName" : "writer",
+    "email" : "writer@kagent-dev.org",
+    "credentials" : [ {
+      "id" : "a4210a74-901f-44a2-893a-52b65b2192b1",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1755712787189,
+      "secretData" : "{\"value\":\"ReGKSiukUkiMuFUdCFTd9rOGdmBtQluVvb4+NTZ44xA=\",\"salt\":\"ZYOpD9j5dFp0J49KB8WFTA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-kagent-dev" ],
+    "notBefore" : 0,
+    "groups" : [ "/writers" ]
+  } ]
+}

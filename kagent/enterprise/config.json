@@ -1,0 +1,154 @@
+{
+    "realm": {
+      "name": "mcp-realm",
+      "displayName": "MCP Server Realm",
+      "enabled": true,
+      "accessTokenLifespan": 3600,
+      "accessTokenLifespanForImplicitFlow": 1800,
+      "ssoSessionIdleTimeout": 3600,
+      "ssoSessionMaxLifespan": 72000,
+      "offlineSessionIdleTimeout": 2592000
+
+    },
+    "authenticationFlows": [
+      {
+        "name": "spiffe-clients",
+        "description": "SPIFFE-enabled client authentication flow",
+        "copyFrom": "clients",
+        "authenticators": [
+          {
+            "providerId": "client-spiffe-jwt",
+            "requirement": "ALTERNATIVE"
+          }
+        ],
+        "setAsDefault": {
+          "clientAuthentication": true
+        }
+      }
+    ],
+    "realmRoles": [
+      {
+        "name": "ai-agents",
+        "description": "This user can interact with AI agents"
+      },
+      {
+        "name": "supply-chain",
+        "description": "Agent can act on behalf of the user for supply chain"
+      }
+    ],    
+    "clientScopes": [
+      {
+        "name": "agents-audience-scope",
+        "description": "Adds agentgateway and agent-sts to token audience",
+        "protocol": "openid-connect",
+        "realmRoles": ["ai-agents"],
+        "attributes": {
+          "include.in.token.scope": "true",
+          "display.on.consent.screen": "false"
+        },
+        "mappers": [
+          {
+            "name": "agentgateway-audience-mapper",
+            "type": "oidc-audience-mapper",
+            "config": {
+              "included.custom.audience": "agentgateway",
+              "id.token.claim": "false",
+              "access.token.claim": "true"
+            }
+          },
+          {
+            "name": "agent-sts-mapper",
+            "type": "oidc-audience-mapper",
+            "config": {
+              "included.custom.audience": "agent-sts",
+              "id.token.claim": "false",
+              "access.token.claim": "true"
+            }
+          }
+        ]
+      },
+      {
+        "name": "supply-chain-may-act-scope",
+        "description": "Which agents can act on behalf of the user for supply chaing",
+        "protocol": "openid-connect",
+        "realmRoles": ["supply-chain"],
+        "attributes": {
+          "include.in.token.scope": "true",
+          "display.on.consent.screen": "false"
+        },
+        "mappers": [
+          {
+            "name": "may-act-mapper",
+            "type": "oidc-hardcoded-claim-mapper",
+            "config": {
+              "claim.name": "may_act",
+              "claim.value": "{\"sub\":[\"spiffe://cluster.local/ns/default/sa/supply-chain-backend\",\"spiffe://cluster.local/ns/default/sa/supply-chain-agent\",\"spiffe://cluster.local/ns/default/sa/market-analysis-agent\"]}",
+              "jsonType.label": "JSON",
+              "id.token.claim": "false",
+              "access.token.claim": "true",
+              "userinfo.token.claim": "false",
+              "access.tokenResponse.claim": "false"
+            }
+          }
+        ]
+      }      
+    ],
+    "clients": [
+      {
+        "clientId": "mcp-portal",
+        "name": "MCP Portal",
+        "type": "confidential", 
+        "enabled": true,
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true,
+        "clientSecret": "PLOs4j6ti521kb5ZVVVwi5GWi9eDYTwq",
+        "webOrigins": ["http://localhost:3001"],
+        "redirectUris": ["http://localhost:3001/auth/callback"]
+      },       
+      {
+        "clientId": "supply-chain-ui",
+        "name": "Supply Chain UI",
+        "type": "public",
+        "enabled": true,
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true,
+        "fullScopeAllowed": false,
+        "webOrigins": ["http://localhost:3050"],
+        "redirectUris": ["http://localhost:3050/*", "http://localhost:3050/auth/callback"],
+        "assignedScopes": {
+          "default": ["agents-audience-scope", "supply-chain-may-act-scope"]
+        },
+        "attributes": {
+          "access.token.lifespan": "3600",
+          "client.offline.session.idle.timeout": "2592000",
+          "client.offline.session.max.lifespan": "5184000",
+          "client.session.idle.timeout": "3600",
+          "client.session.max.lifespan": "72000"
+        }
+      }
+    ],
+    "users": [
+      {
+        "username": "mcp-user",
+        "email": "user@mcp.example.com",
+        "firstName": "MCP",
+        "lastName": "User",
+        "enabled": true,
+        "emailVerified": true,
+        "password": "user123",
+        "temporary": false,
+        "realmRoles": ["ai-agents", "supply-chain"]
+      },
+      {
+        "username": "other-user",
+        "email": "other@mcp.example.com",
+        "firstName": "Other",
+        "lastName": "User",
+        "enabled": true,
+        "emailVerified": true,
+        "password": "user123",
+        "temporary": false,
+        "realmRoles": ["ai-agents"]
+      }
+    ]
+  } 
