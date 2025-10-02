@@ -11,7 +11,8 @@ if [[ "$2" != "skip" ]]; then
 fi
 
 
-kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+kubectl --context $CONTEXT apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+
 
 source ~/bin/gloo-license-key-env 
 helm repo add gloo-ee-helm https://storage.googleapis.com/gloo-ee-helm

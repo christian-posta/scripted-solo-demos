@@ -10,9 +10,8 @@ spec:
       - host: api.openai.com
         port: 443
 ---
-# BackendConfigPolicy targeting the Backend
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: BackendConfigPolicy
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
 metadata:
   name: openai-tls-config
   namespace: gloo-system
@@ -21,6 +20,6 @@ spec:
   - group: gateway.kgateway.dev
     kind: Backend
     name: openai-api-backend
-  tls:
-    sni: api.openai.com
+  validation:
+    hostname: "api.openai.com"
     wellKnownCACertificates: System
