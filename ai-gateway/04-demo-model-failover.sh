@@ -13,7 +13,7 @@ read -s
 #################################################################
 
 
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 desc "Let's see a model that's been deployed that will cause 429 errors"
 run "kubectl get po -n gloo-system -l app=model-failover"

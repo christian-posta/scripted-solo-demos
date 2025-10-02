@@ -5,7 +5,7 @@ CONTEXT="${1:-ai-demo}"
 
 
 # Patch only the gateway pod to be part of ambient; we don't need to include everything in gloo-system (though we could)
-kubectl --context $CONTEXT patch deployment/gloo-proxy-ai-gateway -n gloo-system --patch '{"spec": {"template": {"metadata": {"labels": {"istio.io/dataplane-mode": "ambient","ambient.istio.io/bypass-inbound-capture": "true"}}}}}'
+kubectl --context $CONTEXT patch deployment/ai-gateway -n gloo-system --patch '{"spec": {"template": {"metadata": {"labels": {"istio.io/dataplane-mode": "ambient","ambient.istio.io/bypass-inbound-capture": "true"}}}}}'
 
 
 NAMESPACES="${2:-default ollama}"

@@ -17,12 +17,12 @@ run "cat resources/00-basic-passthrough/http-routes.yaml"
 run "kubectl apply -f resources/00-basic-passthrough/"
 
 PORT=8080
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):$PORT
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):$PORT
 
 
 if [[ -z "$GLOO_AI_GATEWAY" || "$GLOO_AI_GATEWAY" == ":$PORT" ]]; then
   echo "Could not determine GLOO_AI_GATEWAY IP automatically."
-  read -p "Please enter the external IP or hostname for gloo-proxy-ai-gateway: " GLOO_AI_GATEWAY
+  read -p "Please enter the external IP or hostname for ai-gateway: " GLOO_AI_GATEWAY
   export GLOO_AI_GATEWAY
 fi
 

@@ -13,7 +13,7 @@ read -s
 #################################################################
 
 
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 
 desc "Try calling the LLM, notice the time it takes to call the LLM in the x-envoy-upstream-service-time header"

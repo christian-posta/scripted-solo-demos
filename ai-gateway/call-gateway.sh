@@ -1,5 +1,17 @@
 # consider updating to newer Gateway CRDs
-export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system gloo-proxy-ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+
+PORT=8080
+export GLOO_AI_GATEWAY=$(kubectl get svc -n gloo-system ai-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):$PORT
+
+
+if [[ -z "$GLOO_AI_GATEWAY" || "$GLOO_AI_GATEWAY" == ":$PORT" ]]; then
+  echo "Could not determine GLOO_AI_GATEWAY IP automatically."
+  read -p "Please enter the external IP or hostname for ai-gateway: " GLOO_AI_GATEWAY
+  export GLOO_AI_GATEWAY
+fi
+
 
 
 # Helper function to build the curl command
@@ -20,7 +32,7 @@ _build_curl_command() {
         headers+=("-H" "\"x-action: $x_action\"")
     fi
 
-    echo "curl -v \"$GLOO_AI_GATEWAY:8080/$path\" ${headers[@]} -d '{
+    echo "curl -v \"$GLOO_AI_GATEWAY/$path\" ${headers[@]} -d '{
       \"model\": \"$model\",
       \"max_tokens\": 4096,
       \"top_p\": 1,

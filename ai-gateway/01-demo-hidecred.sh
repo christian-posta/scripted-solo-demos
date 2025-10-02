@@ -13,7 +13,7 @@ read -s
 ############# Task 1
 #################################################################
 
-run "cat resources/01-call-llm/llm-providers.yaml"
+run "cat resources/01-call-llm/backends.yaml"
 run "cat resources/01-call-llm/http-routes.yaml"
 
 desc "Let's apply these resources"

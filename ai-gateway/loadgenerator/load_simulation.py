@@ -19,7 +19,7 @@ TOKENS = [
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--url', type=str, default="gloo-proxy-ai-gateway.gloo-system.svc.cluster.local:8080", help='The URL of the gateway endpoint')
+parser.add_argument('--url', type=str, default="ai-gateway.gloo-system.svc.cluster.local:8080", help='The URL of the gateway endpoint')
 args = parser.parse_args()
 
 ENDPOINT = f"http://{args.url}/load"

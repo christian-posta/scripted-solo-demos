@@ -4,7 +4,7 @@ BOX=${2:-gmv2}
 
 GRAFANA_IP=$(ssh $USER@$BOX "kubectl get svc kube-prometheus-stack-grafana  -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
 
-GW_IP=$(ssh $USER@$BOX "kubectl get svc gloo-proxy-ai-gateway  -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
+GW_IP=$(ssh $USER@$BOX "kubectl get svc ai-gateway  -n gloo-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
 
 JAEGER_IP=$(ssh $USER@$BOX "kubectl get svc jaeger-loadbalancer -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
 

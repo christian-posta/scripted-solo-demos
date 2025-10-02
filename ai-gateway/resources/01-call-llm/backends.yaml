@@ -1,0 +1,18 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  labels:
+    app: agentgateway
+  name: openai
+  namespace: gloo-system
+spec:
+  type: AI
+  ai:
+    llm:
+      openai:
+        authToken:
+          kind: SecretRef
+          secretRef:
+            name: openai-secret
+        model: "gpt-3.5-turbo"
+        
