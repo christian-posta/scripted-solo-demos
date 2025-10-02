@@ -13,22 +13,12 @@ spec:
         type: PathPrefix
         value: /v1/chat/completions
     filters:
-    - extensionRef:
-        group: gateway.solo.io
-        kind: RouteOption
-        name: openai-passthrough-route-options
-      type: ExtensionRef
+    - type: URLRewrite
+      urlRewrite:
+        hostname: api.openai.com
     backendRefs:
-    - name: openai-api-upstream
+    - name: openai-api-backend
       namespace: gloo-system
-      group: gloo.solo.io
-      kind: Upstream
----
-apiVersion: gateway.solo.io/v1
-kind: RouteOption
-metadata:
-  name: openai-passthrough-route-options
-  namespace: gloo-system
-spec:
-  options:
-    autoHostRewrite: true  
+      kind: Backend
+      group: gateway.kgateway.dev
+

@@ -1,12 +1,10 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  annotations:
-    gateway.gloo.solo.io/gateway-parameters-name: gloo-gateway-override
   name: ai-gateway
   namespace: gloo-system
 spec:
-  gatewayClassName: gloo-gateway
+  gatewayClassName: agentgateway-enterprise
   listeners:
   - allowedRoutes:
       namespaces:
@@ -21,121 +19,3 @@ spec:
     name: http
     port: 8080
     protocol: HTTP
----
-apiVersion: gateway.gloo.solo.io/v1alpha1
-kind: GatewayParameters
-metadata:
-  name: gloo-gateway-override
-  namespace: gloo-system
-spec:
-  kube:
-    podTemplate:
-      extraAnnotations:
-        "prometheus.io/scrape2": "true"
-        "prometheus.io/port2": "9092"
-    aiExtension:
-      env:
-        - name: "LOG_LEVEL"
-          value: "debug"    
-      enabled: true
-      tracing:
-        insecure: true
-        grpc:
-          host: "jaeger-collector.monitoring.svc.cluster.local"
-          port: 4317
-      stats:
-        customLabels:
-          - name: "team"
-            metadataKey: "principal:team"
-          - name: "name"
-            metadataKey: "principal:name"
-          - name: "id"
-            metadataKey: "principal:sub"      
-      ports:
-      - containerPort: 9092
-        name: ai-monitoring
-    deployment:
-      replicas: 1
----
-apiVersion: gateway.solo.io/v1
-kind: HttpListenerOption
-metadata:
-  name: log-provider
-  namespace: gloo-system
-spec:
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: ai-gateway
-    sectionName: http
-  options:
-    httpConnectionManagerSettings:
-      tracing:
-        tracePercentages:
-          overallSamplePercentage: 100
-        spawnUpstreamSpan: true
-        metadataForTags:
-        - tag: ai.model
-          value:
-            namespace: ai.gloo.solo.io
-            key: model
-        - tag: ai.provider_model
-          value:
-            namespace: ai.gloo.solo.io
-            key: provider_model
-        - tag: ai.streaming
-          value:
-            namespace: ai.gloo.solo.io
-            key: streaming
-        - tag: ai.prompt_tokens
-          value:
-            namespace: ai.gloo.solo.io
-            key: prompt_tokens
-        - tag: ai.completion_tokens
-          value:
-            namespace: ai.gloo.solo.io
-            key: completion_tokens
-        - tag: user.name
-          value:
-            namespace: envoy.filters.http.jwt_authn
-            key: principal.name
-        - tag: user.team
-          value:
-            namespace: envoy.filters.http.jwt_authn
-            key: principal.team
-        openTelemetryConfig:
-          # try auto-generate based on listener name
-          #serviceName: gloo-proxy
-          collectorUpstreamRef:
-            namespace: "gloo-system"
-            name: "jaeger"
----
-apiVersion: gateway.solo.io/v1
-kind: ListenerOption
-metadata:
-  name: ai-gateway-log-provider
-  namespace: gloo-system
-spec:
-  options:
-    accessLoggingService:
-      accessLog:
-      - fileSink:
-          jsonFormat:
-            httpMethod: '%REQ(:METHOD)%'
-            path: '%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%'
-            user: '%DYNAMIC_METADATA(envoy.filters.http.jwt_authn:principal:sub)%'
-            team: '%DYNAMIC_METADATA(envoy.filters.http.jwt_authn:principal:team)%'
-            requestId: '%REQ(X-REQUEST-ID)%'
-            responseCode: '%RESPONSE_CODE%'
-            systemTime: '%START_TIME%'
-            targetDuration: '%RESPONSE_DURATION%'
-            upstreamName: '%UPSTREAM_CLUSTER%'
-            total_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:total_tokens)%'
-            prompt_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:prompt_tokens)%'
-            completion_tokens: '%DYNAMIC_METADATA(ai.gloo.solo.io:completion_tokens)%'
-            rate_limited_tokens: '%DYNAMIC_METADATA(envoy.ratelimit:hits_addend)%'
-          path: /dev/stdout
-  targetRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: ai-gateway

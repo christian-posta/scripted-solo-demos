@@ -1,0 +1,26 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: openai-api-backend
+  namespace: gloo-system
+spec:
+  type: Static
+  static:
+    hosts:
+      - host: api.openai.com
+        port: 443
+---
+# BackendConfigPolicy targeting the Backend
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: BackendConfigPolicy
+metadata:
+  name: openai-tls-config
+  namespace: gloo-system
+spec:
+  targetRefs:
+  - group: gateway.kgateway.dev
+    kind: Backend
+    name: openai-api-backend
+  tls:
+    sni: api.openai.com
+    wellKnownCACertificates: System

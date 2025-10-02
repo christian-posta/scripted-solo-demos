@@ -1,6 +1,10 @@
-./setup-kind.sh
 
-CONTEXT="${1:-ai-demo}"
+
+if [ -n "$1" ]; then
+  CONTEXT="$1"
+else
+  CONTEXT=$(kubectl config current-context)
+fi
 
 ./install-gateway-stable.sh $CONTEXT "skip"
 
@@ -13,9 +17,9 @@ kubectl --context $CONTEXT create secret generic openai-secret -n gloo-system \
     --dry-run=client -oyaml | kubectl apply -f -
 
 
-./setup-observability.sh $CONTEXT
+# ./setup-observability.sh $CONTEXT
 
 # Set up Local LLM
-kubectl --context $CONTEXT apply -f resources/extensions/ollama.yaml
-kubectl --context $CONTEXT apply -f ./resources/extensions/load-generator.yaml
+# kubectl --context $CONTEXT apply -f resources/extensions/ollama.yaml
+# kubectl --context $CONTEXT apply -f ./resources/extensions/load-generator.yaml
 
