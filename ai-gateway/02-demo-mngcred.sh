@@ -17,8 +17,8 @@ read -s
 ############# Task 2
 #################################################################
 
-run "cat resources/02-secure-llm-jwt/vh-options.yaml"
-run "cat resources/02-secure-llm-jwt/route-options.yaml"
+run "cat resources/02-secure-llm-jwt/gloo-traffic-policy.yaml"
+
 
 run "kubectl apply -f resources/02-secure-llm-jwt/"
 
@@ -31,11 +31,11 @@ call_gateway
 read -s
 
 
-export CEPOSTA_TOKEN=$(cat resources/tokens/ceposta-openai.token)
+export CEPOSTA_TOKEN=$(cat resources/tokens/alice.token)
 backtotop
 desc "Now let's call with a token with the right permissions"
 desc "Let's see the token"
-cat resources/tokens/ceposta-openai.token | jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' -
+cat resources/tokens/alice.token | jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' -
 read -s
 
 desc "Let's see the curl call"
