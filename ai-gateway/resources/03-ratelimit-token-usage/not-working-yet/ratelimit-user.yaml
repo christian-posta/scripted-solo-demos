@@ -1,0 +1,26 @@
+apiVersion: ratelimit.solo.io/v1alpha1
+kind: RateLimitConfig
+metadata:
+  name: openai-rate-limit
+  namespace: gloo-system
+spec:
+  raw:
+    descriptors:
+    - key: generic_key
+      value: counter
+      rateLimit:
+        requestsPerUnit: 2
+        unit: MINUTE
+    - key: X-User-ID
+      rateLimit:
+        unit: MINUTE
+        requestsPerUnit: 100
+    rateLimits:
+    - actions:
+      - genericKey:
+          descriptorValue: counter
+      type: requests
+      - requestHeaders:
+          descriptorKey: "X-User-ID"
+          headerName: "X-User-ID"
+      type: tokens

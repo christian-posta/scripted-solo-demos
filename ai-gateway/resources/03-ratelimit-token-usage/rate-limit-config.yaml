@@ -1,0 +1,16 @@
+apiVersion: ratelimit.solo.io/v1alpha1
+kind: RateLimitConfig
+metadata:
+  name: jwt-token-rate-limit
+  namespace: gloo-system  # or wherever your rate limiter is deployed
+spec:
+  raw:
+    domain: "solo.io"  # Must match the domain in your agentgateway config
+    descriptors:
+    # Descriptor tree matching your entries
+    - key: user_id
+      descriptors:
+      - key: email
+        rateLimit:
+          unit: MINUTE
+          requestsPerUnit: 50  # 50 tokens per minute

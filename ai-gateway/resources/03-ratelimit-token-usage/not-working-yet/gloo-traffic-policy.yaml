@@ -1,0 +1,14 @@
+apiVersion: gloo.solo.io/v1alpha1
+kind: GlooTrafficPolicy
+metadata:
+  name: openai-rate-limit
+  namespace: gloo-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: openai
+  glooRateLimit:
+    global:
+      rateLimitConfigRef:
+        name: openai-rate-limit

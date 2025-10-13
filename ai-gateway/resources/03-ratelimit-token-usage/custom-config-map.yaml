@@ -1,0 +1,37 @@
+---
+# Step 1: Create your custom ConfigMap with JWT claim-based rate limiting
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jwt-ratelimit-config
+  namespace: gloo-system
+data:
+  config.yaml: |           
+    policies:
+    - name: openai-rate-limit
+      target:
+        route: gloo-system/openai
+      policy:
+        remoteRateLimit:
+          domain: solo.io
+          host: rate-limiter-agentgateway-enterprise.gloo-system.svc.cluster.local:8083
+          descriptors:
+            - type: tokens
+              entries:
+                - key: user_id
+                  value: jwt.sub  
+                - key: email
+                  value: jwt.email
+        
+---
+# Step 2: Create GlooGatewayParameters referencing the custom ConfigMap
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: GatewayParameters
+metadata:
+  name: custom-agw-params
+  namespace: gloo-system
+spec:
+  kube:
+    agentgateway:
+      enabled: true
+      customConfigMapName: jwt-ratelimit-config

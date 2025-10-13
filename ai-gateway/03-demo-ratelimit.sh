@@ -15,12 +15,11 @@ read -s
 
 desc "Let's create a token rate limit (50 per hour) based on user id"
 
-run "cat resources/03-ratelimit-token-usage/ratelimit-user.yaml"
-run "cat resources/03-ratelimit-token-usage/openai-route-ratelimit.yaml"
+run "cat resources/03-ratelimit-token-usage/rate-limit-config.yaml"
 
 run "kubectl apply -f resources/03-ratelimit-token-usage/"
 
-export CEPOSTA_TOKEN=$(cat resources/tokens/ceposta-openai.token)
+export CEPOSTA_TOKEN=$(cat resources/tokens/alice.token)
 desc "This first call should go through"
 print_gateway_command $CEPOSTA_TOKEN
 read -s

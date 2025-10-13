@@ -75,7 +75,7 @@ reset_for_02() {
 
 reset_for_03() {
     reset_all
-    kubectl rollout restart deployment redis -n gloo-system
+    kubectl rollout restart deployment gloo-ext-cache-agentgateway-enterprise -n gloo-system
     kubectl apply -f resources/02-secure-llm-jwt/
 }
 
