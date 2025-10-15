@@ -1,0 +1,1 @@
+kmcp deploy package --deployment-name mcp-fetch --manager uvx --args "mcp-server-fetch" --no-inspector --namespace kagent
