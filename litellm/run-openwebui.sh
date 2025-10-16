@@ -1,0 +1,21 @@
+#docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
+#--env-file ./openweb-ui/env \
+#--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
+
+source .venv/bin/activate
+
+# set up localhost OIDC
+export WEBUI_URL=http://localhost:9999
+export OAUTH_CLIENT_ID=openweb-ui
+export OAUTH_CLIENT_SECRET=changeme
+export OAUTH_PROVIDER_NAME=Keycloak
+export OPENID_PROVIDER_URL=http://localhost:8080/realms/mcp-realm/.well-known/openid-configuration
+export OAUTH_SCOPES=openid email profile
+export ENABLE_OAUTH_SIGNUP=true
+export OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+export OPENID_REDIRECT_URI=http://localhost:9999/oauth/oidc/callback
+export LOG_LEVEL=debug
+
+
+# Run it
+open-webui serve --port 9999

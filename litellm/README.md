@@ -5,7 +5,22 @@ LiteLLM demos
 This demo uses openweb-ui:
 
 ```bash
-docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:v0.6.33
+./run-openwebui.sh
+```
+
+You could use docker, but that makes the keycloak integration harder:
+
+```bash
+docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
+--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
+```
+
+Can pass in env file like this:
+
+```bash
+docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
+--env-file ./openweb-ui/env \
+--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
 ```
 
 Save admin pw as `admin@solo.io` / `admin12345`
@@ -20,6 +35,25 @@ https://docs.litellm.ai/docs/proxy/deploy
 docker pull ghcr.io/berriai/litellm:v1.78.0.rc.2
 ```
 
+All env vars are in `.env`
+
+username/password is `admin/sk-1234` 
+
+refer to .env file for admin pw
+
+```bash
+docker compose up
+```
+The proxy will be avail on port 4000
+The UI will be at http://localhost:4000/ui
+
+Run the setup script to creat teams / users / keys for the demo:
+
+```bash
+python create_teams_users.py
+```
+
+Optional:
 If you bring down the `litellm` binary into your venv, you can then run:
 
 ```bash
@@ -27,7 +61,7 @@ pip install 'litellm[proxy]'
 ```
 
 ```bash
-litellm --config config/openai.yaml
+litellm --config config/litellm_config.yaml
 ```
 
 Then try it:
@@ -64,3 +98,20 @@ In this usecase, through a single gateway we can call multiple models from:
 
 LiteLLM supports many providers: https://docs.litellm.ai/docs/providers
 
+Team / User / Key structure:
+
+2 teams, 4 users
+
+Admin (sk-1234)
+
+Supply Chain
+- supply-chain@solo.io / sk-1234
+- aws-user@solo.io / sk-1234
+
+HR
+- hr@solo.io / sk-1234
+
+Each team has access to different models
+
+We can set rate limits by RPM / TPM
+We can set budget 
