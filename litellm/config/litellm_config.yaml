@@ -40,12 +40,12 @@ model_list:
       model_id: "arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0"
 
 litellm_settings:
-  callbacks: ["prometheus"]
-  prometheus_metrics_config:
-    - group: "performance"
-      metrics:
-        - "litellm_request_total_latency_metric"
-        - "litellm_llm_api_latency_metric"
-      include_labels:
-        - "model"
-        - "requested_model"
+  # set logging to verbose to decide whether to see prompts
+  set_verbose: false
+
+
+general_settings:
+  master_key: sk-1234 
+  database_url: "postgresql://llmproxy:dbpassword9090@db:5432/litellm" 
+  store_model_in_db: true
+  store_prompts_in_spend_logs: true   
