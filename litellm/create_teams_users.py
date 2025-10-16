@@ -2,9 +2,11 @@
 """
 Script to create teams and users in LiteLLM Proxy via REST API
 
-Note: This script creates API keys for programmatic access.
-For UI login, users will need passwords which are configured separately
-via SSO or the UI's user management interface.
+This script creates:
+1. API keys for programmatic access (curl, SDKs, etc.)
+2. Passwords for UI login at http://0.0.0.0:4000/ui
+
+Note: Passwords are set via /user/update endpoint after user creation.
 """
 
 import requests
@@ -52,7 +54,7 @@ TEAMS = [
     },
     {
         "team_alias": "HR",
-        "models": [],  # All models allowed
+        "models": ["gpt-3.5-turbo", "claude-3-haiku", "gemini-2.5-flash", "gemini-2.5-flash-lite"],  # All models allowed
         
         # BUDGET EXAMPLE (commented out):
         # "max_budget": 50.0,            # $50 monthly budget
@@ -74,6 +76,9 @@ USERS = [
         "user_id": "supply-chain@solo.io",
         "user_email": "supply-chain@solo.io",
         "user_role": "internal_user",  # Can create/delete own keys, view spend
+        
+        # PASSWORD (for UI login)
+        "password": "sk-1234",  # Password for logging into LiteLLM UI
         
         # TEAM ASSIGNMENT
         "teams": ["Supply Chain"],  # Assigned to Supply Chain team
@@ -101,12 +106,15 @@ USERS = [
         "user_email": "aws-user@solo.io",
         "user_role": "internal_user",
         
+        # PASSWORD (for UI login)
+        "password": "sk-1234",  # Password for logging into LiteLLM UI
+        
         # TEAM ASSIGNMENT
         "teams": [],  # Not assigned to any team - independent user
         
         # MODEL ACCESS - Example of restricting to specific models:
         # "models": ["bedrock-claude-4-sonnet", "gpt-3.5-turbo"],
-        "models": [],  # All models allowed for now
+        "models": ["bedrock-claude-4-sonnet"],  # All models allowed for now
         
         # RATE LIMIT EXAMPLE for high-traffic user (commented out):
         # "rpm_limit": 2000,             # Higher limit for AWS user
@@ -116,6 +124,9 @@ USERS = [
         "user_id": "hr@solo.io",
         "user_email": "hr@solo.io",
         "user_role": "internal_user",
+        
+        # PASSWORD (for UI login)
+        "password": "sk-1234",  # Password for logging into LiteLLM UI
         
         # TEAM ASSIGNMENT
         "teams": ["HR"],  # Assigned to HR team
@@ -198,7 +209,7 @@ def create_user(user_data: Dict, team_id_map: Dict[str, str]) -> Optional[Dict]:
         "user_id": user_data["user_id"],
         "user_email": user_data["user_email"],
         "user_role": user_data.get("user_role", "internal_user"),
-        "auto_create_key": True,  # Auto-generate API key
+        "auto_create_key": False,  # Don't auto-create key - we'll create team-scoped keys instead
     }
     
     # Add optional fields
@@ -235,6 +246,80 @@ def create_user(user_data: Dict, team_id_map: Dict[str, str]) -> Optional[Dict]:
         return None
 
 
+def create_team_scoped_key(user_id: str, team_id: str, team_name: str, models: List[str]) -> Optional[Dict]:
+    """Create a team-scoped API key via /key/generate endpoint
+    
+    This ensures the key has team_id set, so it inherits team model restrictions.
+    """
+    url = f"{PROXY_BASE_URL}/key/generate"
+    
+    payload = {
+        "user_id": user_id,
+        "team_id": team_id,
+        "models": models if models else [],  # Empty = inherits from team
+        "key_alias": f"{user_id}-{team_name.lower().replace(' ', '-')}-key",
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        key_data = response.json()
+        print(f"   🔑 Created team-scoped key for team '{team_name}'")
+        return key_data
+    except requests.exceptions.RequestException as e:
+        print(f"   ❌ Failed to create team key for '{user_id}' in team '{team_name}': {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"      Response: {e.response.text}")
+        return None
+
+
+def create_personal_key(user_id: str, models: List[str]) -> Optional[Dict]:
+    """Create a personal API key via /key/generate endpoint
+    
+    For users not in teams. Must explicitly set models list to enforce restrictions.
+    """
+    url = f"{PROXY_BASE_URL}/key/generate"
+    
+    payload = {
+        "user_id": user_id,
+        "models": models,  # Must be explicit for personal keys
+        "key_alias": f"{user_id}-personal-key",
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        key_data = response.json()
+        print(f"   🔑 Created personal key with {len(models) if models else 'all'} model(s)")
+        return key_data
+    except requests.exceptions.RequestException as e:
+        print(f"   ❌ Failed to create personal key for '{user_id}': {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"      Response: {e.response.text}")
+        return None
+
+
+def set_user_password(user_id: str, password: str) -> bool:
+    """Set password for a user via /user/update endpoint"""
+    url = f"{PROXY_BASE_URL}/user/update"
+    
+    payload = {
+        "user_id": user_id,
+        "password": password,
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        print(f"   🔑 Set password for user: {user_id}")
+        return True
+    except requests.exceptions.RequestException as e:
+        print(f"   ❌ Failed to set password for '{user_id}': {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"      Response: {e.response.text}")
+        return False
+
+
 def save_keys_to_file(users: List[Dict], filename: str):
     """Save generated API keys to a file (overwrites existing file)"""
     try:
@@ -246,25 +331,43 @@ def save_keys_to_file(users: List[Dict], filename: str):
             
             f.write("IMPORTANT NOTES:\n")
             f.write("-" * 80 + "\n")
-            f.write("1. These are API keys for programmatic access (curl, SDKs, etc.)\n")
-            f.write("2. For UI login, users need passwords set via SSO or admin interface\n")
-            f.write("3. Keep these keys secure - they grant access to LiteLLM proxy\n")
-            f.write("4. Keys can be regenerated via /key/regenerate endpoint\n\n")
+            f.write("1. API Keys: For programmatic access (curl, SDKs, etc.)\n")
+            f.write("2. Passwords: For UI login at http://0.0.0.0:4000/ui\n")
+            f.write("3. Team-scoped keys inherit model restrictions from their team\n")
+            f.write("4. Personal keys have explicit model lists (empty = all models)\n")
+            f.write("5. Keep these credentials secure - they grant access to LiteLLM proxy\n\n")
             
             f.write("=" * 80 + "\n")
-            f.write("USER API KEYS\n")
+            f.write("USER CREDENTIALS & API KEYS\n")
             f.write("=" * 80 + "\n\n")
             
             for user in users:
                 user_id = user.get('user_id', 'Unknown')
-                api_key = user.get('key', 'N/A')
-                expires = user.get('expires', 'Never')
-                max_budget = user.get('max_budget', 'None')
+                password = user.get('password', 'Not set')
+                keys = user.get('keys', [])
                 
                 f.write(f"User: {user_id}\n")
-                f.write(f"API Key: {api_key}\n")
-                f.write(f"Expires: {expires}\n")
-                f.write(f"Max Budget: {max_budget}\n")
+                f.write(f"Password: {password}\n")
+                f.write(f"Number of Keys: {len(keys)}\n")
+                f.write("\n")
+                
+                for idx, key_info in enumerate(keys, 1):
+                    key_type = key_info.get('type', 'unknown')
+                    f.write(f"  Key #{idx}:\n")
+                    f.write(f"    Type: {key_type}\n")
+                    f.write(f"    API Key: {key_info.get('key', 'N/A')}\n")
+                    f.write(f"    Alias: {key_info.get('key_alias', 'N/A')}\n")
+                    
+                    if key_type == 'team-scoped':
+                        f.write(f"    Team: {key_info.get('team', 'N/A')}\n")
+                        f.write(f"    Model Access: Inherits from team\n")
+                    elif key_type == 'personal':
+                        models = key_info.get('models', [])
+                        model_str = ', '.join(models) if models else 'All models'
+                        f.write(f"    Team: None (personal key)\n")
+                        f.write(f"    Model Access: {model_str}\n")
+                    f.write("\n")
+                
                 f.write("-" * 80 + "\n\n")
             
             f.write("\n")
@@ -272,8 +375,8 @@ def save_keys_to_file(users: List[Dict], filename: str):
             f.write("USAGE EXAMPLES\n")
             f.write("=" * 80 + "\n\n")
             
-            if users:
-                example_key = users[0].get('key', 'YOUR_API_KEY')
+            if users and users[0].get('keys'):
+                example_key = users[0]['keys'][0].get('key', 'YOUR_API_KEY')
                 f.write("Example 1: Test with curl\n")
                 f.write(f"""
 curl -X POST '{PROXY_BASE_URL}/v1/chat/completions' \\
@@ -336,7 +439,57 @@ def main():
     for user_data in USERS:
         user = create_user(user_data, team_id_map)
         if user:
-            created_users.append(user)
+            user_info = {
+                "user_id": user['user_id'],
+                "user_email": user.get('user_email'),
+                "keys": [],
+                "password": None,
+                "teams": user_data.get("teams", [])
+            }
+            
+            # Set password if provided
+            if user_data.get("password"):
+                if set_user_password(user['user_id'], user_data["password"]):
+                    user_info['password'] = user_data["password"]
+            
+            # Create appropriate key based on team membership
+            user_teams = user_data.get("teams", [])
+            user_models = user_data.get("models", [])
+            
+            if user_teams:
+                # User has team(s) - create team-scoped key
+                for team_name in user_teams:
+                    if team_name in team_id_map:
+                        key_data = create_team_scoped_key(
+                            user_id=user['user_id'],
+                            team_id=team_id_map[team_name],
+                            team_name=team_name,
+                            models=user_models
+                        )
+                        if key_data:
+                            user_info['keys'].append({
+                                "key": key_data.get('key') or key_data.get('token'),
+                                "team": team_name,
+                                "type": "team-scoped",
+                                "key_alias": key_data.get('key_alias')
+                            })
+            else:
+                # User has no team - create personal key with explicit models
+                key_data = create_personal_key(
+                    user_id=user['user_id'],
+                    models=user_models
+                )
+                if key_data:
+                    user_info['keys'].append({
+                        "key": key_data.get('key') or key_data.get('token'),
+                        "team": None,
+                        "type": "personal",
+                        "models": user_models,
+                        "key_alias": key_data.get('key_alias')
+                    })
+            
+            if user_info['keys']:  # Only add if we successfully created at least one key
+                created_users.append(user_info)
     
     print()
     
@@ -358,22 +511,27 @@ def main():
         print("-" * 80)
         for user in created_users:
             user_id = user['user_id']
-            api_key = user.get('key', 'N/A')
+            keys = user.get('keys', [])
             
-            # Safely get teams - handle None case
-            user_teams = user.get('teams') or []
-            teams = [team_name for team_name, team_id in team_id_map.items() 
-                    if team_id in user_teams]
-            team_str = f" (Team: {', '.join(teams)})" if teams else " (No team)"
-            print(f"  {user_id}: {api_key}{team_str}")
+            for key_info in keys:
+                key_type = key_info.get('type', 'unknown')
+                api_key = key_info.get('key', 'N/A')
+                
+                if key_type == 'team-scoped':
+                    team = key_info.get('team', 'Unknown')
+                    print(f"  {user_id} (Team: {team}): {api_key}")
+                elif key_type == 'personal':
+                    models = key_info.get('models', [])
+                    model_info = f"{len(models)} model(s)" if models else "all models"
+                    print(f"  {user_id} (Personal - {model_info}): {api_key}")
         print()
     
     print("💡 Next Steps:")
     print("-" * 80)
-    print(f"1. API keys have been saved to: {OUTPUT_FILE}")
-    print("2. For UI access, users need passwords configured via:")
-    print("   - SSO setup (recommended for production)")
-    print("   - Admin UI user management interface")
+    print(f"1. Credentials saved to: {OUTPUT_FILE}")
+    print(f"2. UI Login: {PROXY_BASE_URL}/ui")
+    print("   - Use user email as username")
+    print("   - Use the password from the output file")
     print("3. Test API access with the examples in virtual-keys.txt")
     print(f"4. Monitor usage at: {PROXY_BASE_URL}/ui")
     print()
