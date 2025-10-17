@@ -40,11 +40,23 @@ model_list:
       model_id: "arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0"
 
 guardrails:
+
+  # default behavior is "opt-in"
+  # if you enable "default on" then it will always be on
+  # if you want to enable it per model/team/apikey, that is enterprise!!
   - guardrail_name: "presidio-pii"
     litellm_params:
       guardrail: presidio  # supported values: "aporia", "bedrock", "lakera", "presidio"
       mode: "pre_call"
       presidio_language: "en"  # optional: set default language for PII analysis
+      default_on: true  # 👈 Runs on all requests
+  - guardrail_name: "openai-moderation-pre"
+    litellm_params:
+      guardrail: openai_moderation
+      mode: "pre_call"
+      api_key: os.environ/OPENAI_API_KEY  # Optional if already set globally
+      model: "omni-moderation-latest"     # Optional, defaults to omni-moderation-latest
+      api_base: "https://api.openai.com/v1"  # Optional, defaults to OpenAI API      
 
 litellm_settings:
   # set logging to verbose to decide whether to see prompts

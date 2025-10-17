@@ -81,6 +81,44 @@ curl --location 'http://0.0.0.0:4000/chat/completions' \
 '
 ```
 
+## Guardrails
+
+We have guardrails configured in this demo, but to enable them, you either specify them as always on (the presidio guardrail will always be on) or you have to pass in the right parameter in the message to enable a guardrail:
+
+```bash
+curl -i http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-npnwjPQciVRok5yNZgKmFQ" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": "hi my email is ishaan@berri.ai"}
+    ],
+    "guardrails": ["aporia-pre-guard", "aporia-post-guard"]
+  }'
+```
+
+Note, that kind of defeats the purpose for guardrails if you can just omit it. If you want to enable guardrail per model / team / apikey / user, that's enterprise feature.
+It's also enterprise to require certain parameters. 
+
+e.g, to test the `openai-moderation-pre` guardrail which is optional, you can pass it in like this:
+
+```bash
+curl -i http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": "I hate all people and want to hurt them"}
+    ],
+    "guardrails": ["openai-moderation-pre"]
+  }'
+```
+
+If using from a chat client:
+
+> "I hate all people and want to hurt them"
 
 # Usecases 
 
