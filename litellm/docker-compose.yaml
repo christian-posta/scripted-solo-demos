@@ -8,6 +8,7 @@ services:
      - ./guardrail/custom_guardrail.py:/app/custom_guardrail.py
      - ./guardrail/credentials.json:/app/credentials.json
      - ./config/litellm_config.yaml:/app/config.yaml
+     - ./openapi/petstore.json:/app/openapi.json
     command:
      - "--config=/app/config.yaml"
     ##############################################

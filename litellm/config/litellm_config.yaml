@@ -40,6 +40,10 @@ model_list:
       model_id: "arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0"
 
 mcp_servers:
+  petstore_mcp:
+    url: "https://petstore.swagger.io/v2"
+    spec_path: "/app/openapi.json"
+
   deepwiki:
     url: "https://mcp.deepwiki.com/mcp"
     transport: "http"
