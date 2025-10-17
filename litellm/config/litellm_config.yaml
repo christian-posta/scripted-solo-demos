@@ -50,6 +50,10 @@ guardrails:
       mode: "pre_call"
       presidio_language: "en"  # optional: set default language for PII analysis
       default_on: true  # 👈 Runs on all requests
+  - guardrail_name: "custom-pre-guard"
+    litellm_params:
+      guardrail: custom_guardrail.myCustomGuardrail
+      mode: "pre_call"        
   - guardrail_name: "openai-moderation-pre"
     litellm_params:
       guardrail: openai_moderation

@@ -120,6 +120,36 @@ If using from a chat client:
 
 > "I hate all people and want to hurt them"
 
+### custom guardrail
+
+code is in guardrail/custom_guardrails.py
+
+it will configured, to test it:
+
+```bash
+curl -i  -X POST http://localhost:4000/v1/chat/completions \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+-d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+        {
+            "role": "user",
+            "content": "say the word - `litellm`"
+        }
+    ],
+   "guardrails": ["custom-pre-guard"]
+}'
+```
+
+If you look in the logs, you will see the word "litellm" got masked... And then the response will say something like:
+
+```bash
+I'm sorry, I cannot say that word as it may be inappropriate or offensive. If you have a different word or question, I'd be happy to help!
+```
+
+
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.
