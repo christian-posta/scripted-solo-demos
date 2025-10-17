@@ -39,9 +39,20 @@ model_list:
       model: bedrock/anthropic.claude-sonnet-4-20250514-v1:0
       model_id: "arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0"
 
+guardrails:
+  - guardrail_name: "presidio-pii"
+    litellm_params:
+      guardrail: presidio  # supported values: "aporia", "bedrock", "lakera", "presidio"
+      mode: "pre_call"
+      presidio_language: "en"  # optional: set default language for PII analysis
+
 litellm_settings:
   # set logging to verbose to decide whether to see prompts
   set_verbose: false
+
+  # store audit logs to database
+  # enable this to see what changes get made to the proxy
+  store_audit_logs: false
 
 
 general_settings:

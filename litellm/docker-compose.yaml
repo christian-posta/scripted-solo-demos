@@ -46,21 +46,22 @@ services:
       timeout: 5s
       retries: 10
 
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - prometheus_data:/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  presidio-anonymizer:
+    image: mcr.microsoft.com/presidio-anonymizer:latest
+    environment:
+      - PORT=5001
     ports:
-      - "9090:9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--storage.tsdb.retention.time=15d"
-    restart: always
+      - "5001:5001"
+    restart: unless-stopped
+
+  presidio-analyzer:
+    image: mcr.microsoft.com/presidio-analyzer:latest
+    environment:
+      - PORT=5001
+    ports:
+      - "5002:5001"
+    restart: unless-stopped
 
 volumes:
-  prometheus_data:
-    driver: local
   postgres_data:
     name: litellm_postgres_data # Named volume for Postgres data persistence
