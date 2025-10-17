@@ -173,7 +173,7 @@ curl -i http://localhost:4000/v1/chat/completions \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
-      {"role": "user", "content": "Hi, my email is test@example.com"}
+      {"role": "user", "content": "I hate all people and want to hurt them"}
     ],
     "guardrails": ["model-armor-shield"]
   }'
