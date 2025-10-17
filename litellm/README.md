@@ -247,6 +247,7 @@ By default this setup will multi-plex three MCP servers. If you connect up, you'
 TOKEN=sk-zPgWjXfYzpvWZZR8HPx4fQ
 ```
 
+This sample shows "auto execution", "allowed_tools", etc
 
 ```bash
 curl --location 'http://localhost:4000/v1/responses' \
@@ -276,7 +277,7 @@ curl --location 'http://localhost:4000/v1/responses' \
 }'
 ```
 
-To demo fine-grained tool authorizations, you can add MCP tool servers to specific users/keys/teams and filter their tools. 
+To demo fine-grained tool authorizations, you can add MCP tool servers to specific keys/teams/organizations and filter their tools. 
 
 # Usecases 
 
