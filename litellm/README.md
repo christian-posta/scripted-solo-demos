@@ -201,6 +201,20 @@ curl -X POST "http://localhost:4000/v1/chat/completions" \
   }'
 ```
 
+## MCP 
+
+sample MCP server to use:
+
+```bash
+http://localhost:4000/mcp
+```
+
+Specific MCP server here:
+
+```bash
+http://localhost:4000/mcp/deepwiki
+```
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.

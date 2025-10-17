@@ -39,6 +39,16 @@ model_list:
       model: bedrock/anthropic.claude-sonnet-4-20250514-v1:0
       model_id: "arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0"
 
+mcp_servers:
+  deepwiki:
+    url: "https://mcp.deepwiki.com/mcp"
+    transport: "http"
+    alias: "wiki"
+  exa_ai:
+    url: "https://mcp.exa.ai/mcp"
+    transport: "http"
+    alias: "exa_ai"
+
 guardrails:
 
   # default behavior is "opt-in"
