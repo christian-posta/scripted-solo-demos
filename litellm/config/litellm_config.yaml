@@ -81,6 +81,26 @@ guardrails:
       guardrailIdentifier: v1qto5owq7gz      # your guardrail ID on bedrock
       guardrailVersion: "DRAFT"              # your guardrail version on bedrock
 
+  - guardrail_name: "tool-permission-guardrail"
+    litellm_params:
+      guardrail: tool_permission
+      mode: "post_call"
+      rules:
+        - id: "allow_bash"
+          tool_name: "Bash"
+          decision: "allow"
+        - id: "allow_github_mcp"
+          tool_name: "mcp__github_*"
+          decision: "allow"
+        - id: "allow_aws_documentation"
+          tool_name: "mcp__aws-documentation_*_documentation"
+          decision: "allow"
+        - id: "deny_read_commands"
+          tool_name: "Read"
+          decision: "deny"
+      default_action: "deny"  # Fallback when no rule matches: "allow" or "deny"
+      on_disallowed_action: "block"  # How to handle disallowed tools: "block" or "rewrite"      
+
 
 litellm_settings:
   # set logging to verbose to decide whether to see prompts

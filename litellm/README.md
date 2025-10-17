@@ -179,6 +179,28 @@ curl -i http://localhost:4000/v1/chat/completions \
   }'
 ```
 
+### Tool Guardrails
+
+```bash
+curl -X POST "http://localhost:4000/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user","content": "What is the weather like in Tokyo today?"}],
+    "guardrails": ["tool-permission-guardrail"],
+    "tools": [
+      {
+        "type":"function",
+        "function": {
+          "name":"get_current_weather",
+          "description": "Get the current weather in a given location"
+        }
+      }
+    ]
+  }'
+```
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.
