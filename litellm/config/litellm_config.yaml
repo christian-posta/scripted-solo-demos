@@ -48,6 +48,10 @@ mcp_servers:
     url: "https://mcp.exa.ai/mcp"
     transport: "http"
     alias: "exa_ai"
+  microsoft_docs:
+    url: "https://learn.microsoft.com/api/mcp/"
+    transport: "http"
+    alias: "microsoft_docs"
 
 guardrails:
 

@@ -241,6 +241,43 @@ Specific MCP server here:
 http://localhost:4000/mcp/deepwiki
 ```
 
+By default this setup will multi-plex three MCP servers. If you connect up, you'll see all the tools across all MCP servers. 
+
+```bash
+TOKEN=sk-zPgWjXfYzpvWZZR8HPx4fQ
+```
+
+
+```bash
+curl --location 'http://localhost:4000/v1/responses' \
+--header 'Content-Type: application/json' \
+--header "Authorization: Bearer $TOKEN" \
+--data '{
+    "model": "gpt-3.5-turbo",
+    "input": [
+    {
+      "role": "user",
+      "content": "Tell me about microsoft entra",
+      "type": "message"
+    }
+  ],
+    "tools": [
+        {
+            "type": "mcp",
+            "server_label": "litellm",
+            "server_url": "litellm_proxy/mcp",
+            "require_approval": "never",
+            "allowed_tools": ["microsoft_docs-microsoft_docs_search"]
+            
+        }
+    ],
+    "stream": true,
+    "tool_choice": "required"
+}'
+```
+
+To demo fine-grained tool authorizations, you can add MCP tool servers to specific users/keys/teams and filter their tools. 
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.
