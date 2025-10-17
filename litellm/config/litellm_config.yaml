@@ -60,7 +60,19 @@ guardrails:
       mode: "pre_call"
       api_key: os.environ/OPENAI_API_KEY  # Optional if already set globally
       model: "omni-moderation-latest"     # Optional, defaults to omni-moderation-latest
-      api_base: "https://api.openai.com/v1"  # Optional, defaults to OpenAI API      
+      api_base: "https://api.openai.com/v1"  # Optional, defaults to OpenAI API    
+  - guardrail_name: model-armor-shield
+    litellm_params:
+      guardrail: model_armor
+      mode: [pre_call, post_call]  # Run on both input and output
+      template_id: "litellm-guardrail"  # Required: Your Model Armor template ID
+      project_id: "ceposta-solo-testing"    # Your GCP project ID
+      location: "us-central1"          # GCP location (default: us-central1)
+      credentials: "/app/credentials.json"  # Path to service account key
+      mask_request_content: true       # Enable request content masking
+      mask_response_content: true      # Enable response content masking
+      fail_on_error: true             # Fail request if Model Armor errors (default: true)
+      default_on: true                # Run by default for all requests       
 
 litellm_settings:
   # set logging to verbose to decide whether to see prompts

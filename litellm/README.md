@@ -148,7 +148,21 @@ If you look in the logs, you will see the word "litellm" got masked... And then 
 I'm sorry, I cannot say that word as it may be inappropriate or offensive. If you have a different word or question, I'd be happy to help!
 ```
 
+### Google model armor
 
+```bash
+curl -i http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": "Hi, my email is test@example.com"}
+    ],
+    "guardrails": ["model-armor-shield"]
+  }'
+
+```
 
 # Usecases 
 

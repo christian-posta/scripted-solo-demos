@@ -1,5 +1,6 @@
 .webui_secret_key
 virtual-keys.txt
+**/credentials.json
 # Dependencies
 node_modules/
 npm-debug.log*

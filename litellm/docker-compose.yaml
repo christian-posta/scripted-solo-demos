@@ -6,6 +6,7 @@ services:
     volumes:
      - ~/.aws:/root/.aws:ro  # For Bedrock
      - ./guardrail/custom_guardrail.py:/app/custom_guardrail.py
+     - ./guardrail/credentials.json:/app/credentials.json
      - ./config/litellm_config.yaml:/app/config.yaml
     command:
      - "--config=/app/config.yaml"
