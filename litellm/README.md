@@ -86,9 +86,13 @@ curl --location 'http://0.0.0.0:4000/chat/completions' \
 We have guardrails configured in this demo, but to enable them, you either specify them as always on (the presidio guardrail will always be on) or you have to pass in the right parameter in the message to enable a guardrail:
 
 ```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
+```bash
 curl -i http://localhost:4000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-npnwjPQciVRok5yNZgKmFQ" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
@@ -104,9 +108,13 @@ It's also enterprise to require certain parameters.
 e.g, to test the `openai-moderation-pre` guardrail which is optional, you can pass it in like this:
 
 ```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
+```bash
 curl -i http://localhost:4000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
@@ -127,9 +135,13 @@ code is in guardrail/custom_guardrails.py
 it will configured, to test it:
 
 ```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
+```bash
 curl -i  -X POST http://localhost:4000/v1/chat/completions \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+-H "Authorization: Bearer $TOKEN" \
 -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
@@ -151,9 +163,13 @@ I'm sorry, I cannot say that word as it may be inappropriate or offensive. If yo
 ### Google model armor
 
 ```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
+```bash
 curl -i http://localhost:4000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
@@ -167,9 +183,13 @@ curl -i http://localhost:4000/v1/chat/completions \
 ### AWS Bedrock Guardails
 
 ```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
+```bash
 curl -i http://localhost:4000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [
@@ -181,10 +201,16 @@ curl -i http://localhost:4000/v1/chat/completions \
 
 ### Tool Guardrails
 
+Use a token:
+
+```bash
+TOKEN=sk-6XJtiVNzbPML2S7fBeoW7w
+```
+
 ```bash
 curl -X POST "http://localhost:4000/v1/chat/completions" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [{"role": "user","content": "What is the weather like in Tokyo today?"}],
