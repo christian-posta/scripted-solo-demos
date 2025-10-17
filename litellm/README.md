@@ -164,6 +164,21 @@ curl -i http://localhost:4000/v1/chat/completions \
 
 ```
 
+### AWS Bedrock Guardails
+
+```bash
+curl -i http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-6XJtiVNzbPML2S7fBeoW7w" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": "hi my email is christian@solo.io"}
+    ],
+    "guardrails": ["bedrock-pre-guard"]
+  }'
+```
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.
