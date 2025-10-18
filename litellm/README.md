@@ -287,6 +287,14 @@ NOTE: As of time of writing, this feature DOES NOT WORK. litellm doesn't handle 
 <br><br>
 
 I will leave this `github_mcp` config in the `litellm_config.yaml` file, but we will ignore it for now. 
+
+<br><br>
+
+Related to this:
+https://github.com/BerriAI/litellm/blob/main/litellm/proxy/_experimental/mcp_server/auth/user_api_key_auth_mcp.py#L119
+https://github.com/BerriAI/litellm/pull/15346
+
+But even this is implemented wrong. 
 </blockquote>
 
 This one is interesting. Github's public MCP / copilot MCP does not implement the MCP Authorization spec. Litellm wraps it, and facilitates the OAuth 2.1 flow for the client. To the client, litellm looks like the auth provider, but litellm really does point the user to the right Github OAuth flow. The client completes the oauth flow facilitated by litellm, ends up with the authorization_code and then calls litellm to exchange it (which litellm then passes to GitHub OAuth). The consent is the key part and then litellm handles the rest. The cool part is that the OAuth client_id / secret is managed by litellm not distributed around to everyone. 
