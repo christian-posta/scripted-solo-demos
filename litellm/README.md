@@ -1,59 +1,80 @@
-LiteLLM demos
-
-## OpenWeb UI
-
-This demo uses openweb-ui:
-
-```bash
-./run-openwebui.sh
-```
-
-You could use docker, but that makes the keycloak integration harder:
-
-```bash
-docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
---name open-webui ghcr.io/open-webui/open-webui:v0.6.33
-```
-
-Can pass in env file like this:
-
-```bash
-docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
---env-file ./openweb-ui/env \
---name open-webui ghcr.io/open-webui/open-webui:v0.6.33
-```
-
-Save admin pw as `admin@solo.io` / `admin12345`
+# Comprehensive LiteLLM Demos
 
 ## LiteLLM
 
-With docker:
+We use docker compose to run litellm. It will set up the proxy, a database and two services (presidio) to demo guardrails.
 
-https://docs.litellm.ai/docs/proxy/deploy
+All env vars are in `.env`. See the `.env.example`
+
+Username/password is `admin/sk-1234` refer to .env file for admin pw:
 
 ```bash
-docker pull ghcr.io/berriai/litellm:v1.78.0.rc.2
+LITELLM_MASTER_KEY = "sk-1234"
+DATABASE_URL = "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
+STORE_MODEL_IN_DB = "True"
 ```
 
-All env vars are in `.env`
-
-username/password is `admin/sk-1234` 
-
-refer to .env file for admin pw
+Bring up the demo environment complete with configurations:
 
 ```bash
 docker compose up
 ```
+
 The proxy will be avail on port 4000
 The UI will be at http://localhost:4000/ui
 
-Run the setup script to creat teams / users / keys for the demo:
+Run the setup script to create teams / users / keys for the demo:
 
 ```bash
+python -m venv .venv
+pip install requests
+```
+
+```bash
+source .venv/bin/activate
 python create_teams_users.py
 ```
 
-Optional:
+You can find the API keys for the users in the `virtual-keys.txt` file. Example:
+
+```txt
+User: supply-chain@solo.io
+Password: sk-1234
+Number of Keys: 1
+
+  Key #1:
+    Type: team-scoped
+    API Key: sk-XaNGkC2FNEKvOpUBntawmQ
+    Alias: supply-chain@solo.io-supply-chain-key
+    Team: Supply Chain
+    Model Access: Inherits from team
+```
+
+Then try it:
+
+```bash
+TOKEN=sk-XaNGkC2FNEKvOpUBntawmQ
+```
+
+```bash
+curl -i http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "user", "content": "Tell me about Sedona, AZ in 50 words or fewer."}
+    ]
+  }'
+```
+
+> NOTE:
+> We mount in the user's .aws (~/.aws:/root/.aws:ro) credentials for aws bedrock LLMs and for guardrails. 
+> It's not required, but could be useful if you want to demo that
+
+
+### Optional: Using Binary Directly
+
 If you bring down the `litellm` binary into your venv, you can then run:
 
 ```bash
@@ -64,22 +85,31 @@ pip install 'litellm[proxy]'
 litellm --config config/litellm_config.yaml
 ```
 
-Then try it:
+
+## OpenWeb UI
+
+When I run this demo, I opt to use OpenWebUI. I have connected it up (SSO) to Keycloak. You can run it like this (changing the env variables in the script if you need):
 
 ```bash
-curl --location 'http://0.0.0.0:4000/chat/completions' \
---header 'Content-Type: application/json' \
---data ' {
-      "model": "gpt-3.5-turbo",
-      "messages": [
-        {
-          "role": "user",
-          "content": "what llm are you"
-        }
-      ]
-    }
-'
+./run-openwebui.sh
 ```
+
+Alternative, you can run it directly without the keycloak/SSO integration
+
+```bash
+docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
+--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
+```
+
+If you need to pass env variables to it:
+
+```bash
+docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
+--env-file ./openweb-ui/env \
+--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
+```
+
+
 
 ## Guardrails
 
@@ -467,7 +497,7 @@ curl -X POST 'http://0.0.0.0:4000/v1/chat/completions' \
 - Cost predictability
 - Prevent DoS scenarios
 
-**Note**: Currently disabled in demo but fully implemented. Uncomment in `create_teams_users.py` to enable.
+**Note**: You can go to the UI to change the rate limit values. You could auto-set them when you create the teams, that's currently disabled in demo but fully implemented. Uncomment in `create_teams_users.py` to enable.
 
 ## Use Case 5: Budget Management & Cost Controls
 
