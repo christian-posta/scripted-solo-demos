@@ -279,6 +279,53 @@ curl --location 'http://localhost:4000/v1/responses' \
 
 To demo fine-grained tool authorizations, you can add MCP tool servers to specific keys/teams/organizations and filter their tools. 
 
+### Github MCP
+
+<blockquote>
+NOTE: As of time of writing, this feature DOES NOT WORK. litellm doesn't handle the 401/WWW-Authenticate correctly. Seems the other parts are there, but an MCP client which implements MCP Authorization would not be able to walk the user through the OAuth dance. This is broken
+
+<br><br>
+
+I will leave this `github_mcp` config in the `litellm_config.yaml` file, but we will ignore it for now. 
+</blockquote>
+
+This one is interesting. Github's public MCP / copilot MCP does not implement the MCP Authorization spec. Litellm wraps it, and facilitates the OAuth 2.1 flow for the client. To the client, litellm looks like the auth provider, but litellm really does point the user to the right Github OAuth flow. The client completes the oauth flow facilitated by litellm, ends up with the authorization_code and then calls litellm to exchange it (which litellm then passes to GitHub OAuth). The consent is the key part and then litellm handles the rest. The cool part is that the OAuth client_id / secret is managed by litellm not distributed around to everyone. 
+
+To test this, go to an MCP client and connec to:
+
+```bash
+http://localhost:4000/mcp/github_mcp
+```
+
+The oauth dance should proceed. 
+
+Notes:
+
+```bash
+❯ curl http://localhost:4000/.well-known/oauth-authorization-server/github_mcp | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   398  100   398    0     0  67059      0 --:--:-- --:--:-- --:--:-- 79600
+{
+  "issuer": "http://localhost:4000",
+  "authorization_endpoint": "http://localhost:4000/authorize",
+  "token_endpoint": "http://localhost:4000/token",
+  "response_types_supported": [
+    "code"
+  ],
+  "grant_types_supported": [
+    "authorization_code"
+  ],
+  "code_challenge_methods_supported": [
+    "S256"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "client_secret_post"
+  ],
+  "registration_endpoint": "http://localhost:4000/github_mcp/register"
+}
+```
+
 # Usecases 
 
 We will demonstrate the following usecases, which I believe to be the top usecases when managing LLMs for an enterprise.

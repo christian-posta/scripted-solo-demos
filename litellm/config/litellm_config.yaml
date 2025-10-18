@@ -43,6 +43,7 @@ mcp_servers:
   petstore_mcp:
     url: "https://petstore.swagger.io/v2"
     spec_path: "/app/openapi.json"
+    # allowed_tools: ["list_pets", "get_pet_by_id", "add_pet", "update_pet", "delete_pet"]
 
   deepwiki:
     url: "https://mcp.deepwiki.com/mcp"
@@ -56,6 +57,15 @@ mcp_servers:
     url: "https://learn.microsoft.com/api/mcp/"
     transport: "http"
     alias: "microsoft_docs"
+
+  github_mcp:
+    url: "https://api.githubcopilot.com/mcp"
+    auth_type: oauth2
+    authorization_url: https://github.com/login/oauth/authorize
+    token_url: https://github.com/login/oauth/access_token
+    client_id: os.environ/GITHUB_OAUTH_CLIENT_ID
+    client_secret: os.environ/GITHUB_OAUTH_CLIENT_SECRET
+    scopes: ["public_repo", "user:email"]    
 
 guardrails:
 
