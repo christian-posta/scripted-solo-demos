@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../schema/local.json
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    - policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+        backendTLS: {}          
+      backends:
+      - mcp:
+          targets:
+          - name: openapi
+            openapi:
+              schema:
+                file: /app/openapi.json
+              host: "petstore3.swagger.io:443"
+
+
