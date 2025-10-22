@@ -11,6 +11,48 @@ binds:
           - "*"
           allowMethods:  # Add this!
           - "*"
+        backendTLS: {}     
+        requestHeaderModifier:
+          remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto                    
+      matches:
+      - path:
+          exact: /mcp
+      backends:
+      - mcp:
+          targets:
+          - name: openapi
+            openapi:
+              schema:
+                file: ${OPEN_API_SCHEMA_PATH:-/app/openapi.json}
+              host: petstore.swagger.io:443          
+          - name: deepwiki
+            mcp:
+              host: "mcp.deepwiki.com"
+              port: 443
+              path: "/mcp"
+          - name: microsoft
+            mcp:
+              host: "learn.microsoft.com"
+              port: 443
+              path: "/api/mcp"              
+          - name: exa-ai
+            mcp:
+              host: "mcp.exa.ai"
+              port: 443
+              path: "/mcp"        
+
+
+    - policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+          allowMethods:  # Add this!
+          - "*"
         requestHeaderModifier:
           remove:
           - x-forwarded-for
