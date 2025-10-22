@@ -25,8 +25,8 @@ binds:
             auth0: {}
           resourceMetadata:
             authorizationServers:
-            - https://ceposta-agw.ngrok.io/mcp          
-            resource: https://ceposta-agw.ngrok.io/mcp
+            - https://ceposta-agw.ngrok.io/secure/mcp          
+            resource: https://ceposta-agw.ngrok.io/secure/mcp
             scopesSupported:
             - profile
             - openid
@@ -35,15 +35,15 @@ binds:
             - header
             - body
             - query
-            resourceDocumentation: https://ceposta-agw.ngrok.io/docs
-            resourcePolicyUri: https://ceposta-agw.ngrok.io/policies   
+            resourceDocumentation: https://ceposta-agw.ngrok.io/secure/mcp/docs
+            resourcePolicyUri: https://ceposta-agw.ngrok.io/secure/mcp/policies   
       matches:
       - path:
-          exact: /mcp
+          exact: /secure/mcp
       - path:
-          exact: /.well-known/oauth-protected-resource/mcp
+          exact: /.well-known/oauth-protected-resource/secure/mcp
       - path:
-          exact: /.well-known/oauth-authorization-server/mcp                 
+          exact: /.well-known/oauth-authorization-server/secure/mcp                 
       backends:
       - mcp:
           targets:
