@@ -1,4 +1,10 @@
 # yaml-language-server: $schema=../../schema/local.json
+config:
+  logging:
+    fields:
+      add:
+        # request.body: "request.body"
+        request.headers: "request.headers"
 binds:
 - port: 3000
   listeners:
@@ -37,8 +43,11 @@ binds:
             anthropic:
               model: claude-3-5-sonnet-20241022
       policies:
-        backendAuth:
-          key: ${ANTHROPIC_API_KEY}
+        backendAuth:  # Place auth HERE on the provider
+          key: ${ANTHROPIC_API_KEY}          
+        requestHeaderModifier:    
+          add:
+            anthropic-dangerous-direct-browser-access: "true"                      
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
