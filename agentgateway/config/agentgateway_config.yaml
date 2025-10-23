@@ -68,6 +68,23 @@ binds:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
 
+    - name: bedrock
+      matches:
+      - path:
+          pathPrefix: /bedrock
+      backends:
+      - ai:
+          name: bedrock
+          provider:
+            bedrock:
+              region: us-west-2
+              # anthropic.claude-sonnet-4-20250514-v1:0
+              # model: arn:aws:bedrock:us-west-2:606469916935:inference-profile/global.anthropic.claude-sonnet-4-20250514-v1:0
+              model: global.anthropic.claude-sonnet-4-20250514-v1:0
+      policies:
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
           
     - matches:
       - path:
