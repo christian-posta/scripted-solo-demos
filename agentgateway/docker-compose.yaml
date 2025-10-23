@@ -1,6 +1,6 @@
 services:
   agentgateway:
-    image: ghcr.io/agentgateway/agentgateway:0.9.0
+    image: ghcr.io/agentgateway/agentgateway:0.10.4
     volumes:
      - ~/.aws:/root/.aws:ro  # For Bedrock
      - ./guardrail/credentials.json:/app/credentials.json
@@ -14,7 +14,9 @@ services:
       - "15000:15000" 
     environment:
       AWS_PROFILE: "pa"   
-      AWS_REGION: "us-west-2"      
+      AWS_REGION: "us-west-2"    
+    env_file:
+     - ./config/.env        
     healthcheck:  # Defines the health check configuration for the container
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 http://localhost:15021/healthz/ready || exit 1" ]  # Command to execute for health check
       interval: 30s  # Perform health check every 30 seconds

@@ -3,21 +3,47 @@ binds:
 - port: 3000
   listeners:
   - routes:
-    - policies:
-        cors:
-          allowOrigins:
-          - "*"
-          allowHeaders:
-          - "*"
-          allowMethods:  # Add this!
-          - "*"
-        backendTLS: {}     
-        requestHeaderModifier:
-          remove:
-          - x-forwarded-for
-          - x-forwarded-host
-          - x-forwarded-proto                    
+    - name: openai
       matches:
+      - path:
+          pathPrefix: /openai
+      backends:
+      - ai:
+          name: openai
+          provider:
+            openAI:
+              model: gpt-4o
+          routes:
+            "/v1/chat/completions": completions  # LLM processing
+            "*": passthrough                      # Everything else passes through        
+      policies:
+        urlRewrite:
+          path:
+            prefix: ""    # This strips the matched /openai prefix
+        backendAuth:
+          key: ${OPENAI_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+
+    - name: anthropic-claude
+      matches:
+      - path:
+          pathPrefix: /anthropic
+      backends:
+      - ai:
+          name: anthropic
+          provider:
+            anthropic:
+              model: claude-3-5-sonnet-20241022
+      policies:
+        backendAuth:
+          key: ${ANTHROPIC_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+
+    - matches:
       - path:
           exact: /mcp
       backends:
@@ -42,50 +68,29 @@ binds:
             mcp:
               host: "mcp.exa.ai"
               port: 443
-              path: "/mcp"        
-
-
-    - policies:
+              path: "/mcp"
+      policies:
         cors:
           allowOrigins:
           - "*"
           allowHeaders:
           - "*"
-          allowMethods:  # Add this!
+          allowMethods:
           - "*"
+        backendTLS: {}     
         requestHeaderModifier:
           remove:
           - x-forwarded-for
           - x-forwarded-host
-          - x-forwarded-proto          
-        backendTLS: {}
-        mcpAuthentication:
-          issuer: https://ceposta-solo.auth0.com/
-          jwksUrl: https://ceposta-solo.auth0.com/.well-known/jwks.json
-          audience: https://ceposta-agw.ngrok.io/mcp
-          provider:
-            auth0: {}
-          resourceMetadata:
-            authorizationServers:
-            - https://ceposta-agw.ngrok.io/secure/mcp          
-            resource: https://ceposta-agw.ngrok.io/secure/mcp
-            scopesSupported:
-            - profile
-            - openid
-            - offline_access
-            bearerMethodsSupported:
-            - header
-            - body
-            - query
-            resourceDocumentation: https://ceposta-agw.ngrok.io/secure/mcp/docs
-            resourcePolicyUri: https://ceposta-agw.ngrok.io/secure/mcp/policies   
-      matches:
+          - x-forwarded-proto
+
+    - matches:
       - path:
           exact: /secure/mcp
       - path:
           exact: /.well-known/oauth-protected-resource/secure/mcp
       - path:
-          exact: /.well-known/oauth-authorization-server/secure/mcp                 
+          exact: /.well-known/oauth-authorization-server/secure/mcp
       backends:
       - mcp:
           targets:
@@ -98,5 +103,17 @@ binds:
             mcp:
               host: "learn.microsoft.com"
               port: 443
-              path: "/api/mcp"                            
-                       
+              path: "/api/mcp"
+      policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+          allowMethods:
+          - "*"
+        requestHeaderModifier:
+          remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-
