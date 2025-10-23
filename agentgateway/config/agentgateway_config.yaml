@@ -1,10 +1,10 @@
 # yaml-language-server: $schema=../../schema/local.json
 config:
-  logging:
-    fields:
-      add:
-        # request.body: "request.body"
-        request.headers: "request.headers"
+  # logging:
+  #   fields:
+  #     add:
+  #       request.body: "request.body"
+  #       request.headers: "request.headers"
 binds:
 - port: 3000
   listeners:
@@ -51,7 +51,24 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+    - name: gemini
+      matches:
+      - path:
+          pathPrefix: /gemini
+      backends:
+      - ai:
+          name: gemini
+          provider:
+            gemini:
+              model: gemini-2.5-flash-lite
+      policies:
+        backendAuth:
+          key: ${GEMINI_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
 
+          
     - matches:
       - path:
           exact: /mcp
