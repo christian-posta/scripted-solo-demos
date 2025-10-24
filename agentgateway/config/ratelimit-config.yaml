@@ -1,0 +1,40 @@
+# Rate limiting configuration for AgentGateway
+# This file defines the rate limiting rules that will be applied to routes
+
+domain: agentgateway
+
+descriptors:
+  # Global rate limit for OpenAI route - 1 request per minute
+  - key: route
+    value: "openai"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 5
+
+  # Global rate limit for Anthropic route - 500 requests per minute
+  - key: route
+    value: "anthropic"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 500
+
+  # Global rate limit for Gemini route - 500 requests per minute
+  - key: route
+    value: "gemini"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 500
+
+  # Global rate limit for Bedrock route - 200 requests per minute
+  - key: route
+    value: "bedrock"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 200
+
+  # Global rate limit for MCP routes - 100 requests per minute
+  - key: route
+    value: "mcp"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 100

@@ -31,6 +31,15 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+        # Global rate limiting for OpenAI route
+        remoteRateLimit:
+          domain: "agentgateway"
+          host: "${RATELIMIT_HOST:-localhost}:8081"
+          descriptors:
+            - entries:
+                - key: "route"
+                  value: '"openai"'
+              type: "requests"
 
     - name: anthropic-claude
       matches:

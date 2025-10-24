@@ -15,6 +15,7 @@ services:
     environment:
       AWS_PROFILE: "pa"   
       AWS_REGION: "us-west-2"    
+      RATELIMIT_HOST: "host.docker.internal"
     env_file:
      - ./config/.env        
     healthcheck:  # Defines the health check configuration for the container
@@ -34,3 +35,47 @@ services:
     - "127.0.0.1:4317:4317"
     environment:
     - COLLECTOR_OTLP_ENABLED=true
+
+  redis:
+    container_name: redis
+    restart: unless-stopped
+    image: redis:7.4.3
+    ports:
+    - "127.0.0.1:6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+    - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ratelimit:
+    container_name: ratelimit
+    restart: unless-stopped
+    image: envoyproxy/ratelimit:3e085e5b
+    ports:
+    - "8081:8081"
+    environment:
+    - REDIS_URL=redis:6379
+    - USE_STATSD=false
+    - LOG_LEVEL=info
+    - REDIS_SOCKET_TYPE=tcp
+    - RUNTIME_ROOT=/data
+    - RUNTIME_SUBDIRECTORY=ratelimit
+    - DISABLE_STATS=true
+    volumes:
+    - ./config/ratelimit-config.yaml:/data/ratelimit/config/config.yaml:ro
+    command: ["/bin/ratelimit", "-config", "/data/ratelimit/config/config.yaml"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "http://localhost:8081/healthcheck", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis_data:
