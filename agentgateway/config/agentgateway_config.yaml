@@ -13,12 +13,16 @@ config:
         jwt_act: "jwt.act"
         token_issuer: 'jwt.iss'
         token_audience: 'jwt.aud'        
-  #       request.body: "request.body"
-        # request.headers: "request.headers"
+        #request.body: "request.body"
+        #request.headers: "request.headers"
 binds:
 - port: 3000
   listeners:
   - routes:
+  
+  # ------------------------------------------------------------
+  # OpenAI route
+  # ------------------------------------------------------------
     - name: openai
       matches:
       - path:
@@ -43,17 +47,25 @@ binds:
           allowHeaders: ["*"]
           allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
           allowCredentials: false
+
+        ## We require JWT auth for calling this route
+        ## it is expected to be coming from an SSO IdP  
         jwtAuth:
           mode: optional
           issuer: http://localhost:8080/realms/mcp-realm
           audiences: [account]
           jwks:
             url: http://host.docker.internal:8080/realms/mcp-realm/protocol/openid-connect/certs       
+        
+        ## We will require JWT for all calls except OPTIONS
+        ## If this is not an OPTIONS request, the jwt.sub must be present
         authorization:
           rules:
             - "request.method == 'OPTIONS'"  # Allow OPTIONS
             - "jwt.sub != null"                    
+
         # Global rate limiting for OpenAI route
+        # We configure REQUESTS based rate limiting on this route
         remoteRateLimit:
           domain: "agentgateway"
           host: "${RATELIMIT_HOST:-localhost}:8081"
@@ -63,6 +75,9 @@ binds:
                   value: '"openai"'
               type: "requests"
 
+# ------------------------------------------------------------
+# Anthropic route
+# ------------------------------------------------------------
     - name: anthropic-claude
       matches:
       - path:
@@ -74,6 +89,8 @@ binds:
             anthropic:
               model: claude-3-5-sonnet-20241022
       policies:
+        # Global rate limiting for Anthropic route
+        # We configure TOKENS based rate limiting on this route
         remoteRateLimit:
           domain: "agentgateway"
           host: "${RATELIMIT_HOST:-localhost}:8081"
@@ -90,6 +107,9 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+# ------------------------------------------------------------
+# Gemini route
+# ------------------------------------------------------------
     - name: gemini
       matches:
       - path:
@@ -103,10 +123,21 @@ binds:
       policies:
         backendAuth:
           key: ${GEMINI_API_KEY}
+        remoteRateLimit:
+          domain: "agentgateway"
+          host: "${RATELIMIT_HOST:-localhost}:8081"
+          descriptors:
+            - entries:
+                - key: "route"
+                  value: '"gemini"'
+              type: "tokens"          
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
 
+# ------------------------------------------------------------
+# Bedrock route
+# ------------------------------------------------------------
     - name: bedrock
       matches:
       - path:
@@ -124,7 +155,17 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
-          
+        remoteRateLimit:
+          domain: "agentgateway"
+          host: "${RATELIMIT_HOST:-localhost}:8081"
+          descriptors:
+            - entries:
+                - key: "route"
+                  value: '"bedrock"'
+              type: "tokens"          
+# ------------------------------------------------------------
+# MCP route
+# ------------------------------------------------------------
     - matches:
       - path:
           exact: /mcp
@@ -166,6 +207,9 @@ binds:
           - x-forwarded-host
           - x-forwarded-proto
 
+# ------------------------------------------------------------
+# Secure MCP route
+# ------------------------------------------------------------
     - matches:
       - path:
           exact: /secure/mcp
