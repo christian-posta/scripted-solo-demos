@@ -1,5 +1,17 @@
 # yaml-language-server: $schema=../../schema/local.json
 config:
+  tracing:
+    otlpEndpoint: http://host.docker.internal:4317
+    randomSampling: 'true'  # String 'true' means always sample (100%)
+    fields:
+      add:
+        authenticated: 'jwt.sub != null'
+        gen_ai.system: 'llm.provider'
+        gen_ai.request.model: 'llm.request_model'
+        gen_ai.response.model: 'llm.response_model'
+        gen_ai.usage.input_tokens: 'llm.input_tokens'
+        gen_ai.usage.output_tokens: 'llm.output_tokens'
+        gen_ai.operation.name: '"chat"'        
   metrics:
     fields:
       add:
