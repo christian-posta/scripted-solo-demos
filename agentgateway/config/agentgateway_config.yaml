@@ -52,6 +52,14 @@ binds:
             anthropic:
               model: claude-3-5-sonnet-20241022
       policies:
+        remoteRateLimit:
+          domain: "agentgateway"
+          host: "${RATELIMIT_HOST:-localhost}:8081"
+          descriptors:
+            - entries:
+                - key: "route"
+                  value: '"anthropic"'
+              type: "tokens"      
         backendAuth:  # Place auth HERE on the provider
           key: ${ANTHROPIC_API_KEY}          
         requestHeaderModifier:    
