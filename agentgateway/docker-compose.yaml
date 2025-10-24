@@ -12,6 +12,7 @@ services:
     ports:
       - "3000:3000" 
       - "15000:15000" 
+      - "15020:15020" 
     environment:
       AWS_PROFILE: "pa"   
       AWS_REGION: "us-west-2"    

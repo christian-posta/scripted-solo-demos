@@ -1,10 +1,20 @@
 # yaml-language-server: $schema=../../schema/local.json
 config:
-  # logging:
-  #   fields:
-  #     add:
+  metrics:
+    fields:
+      add:
+        user_id: "jwt.sub" 
+  logging:
+    fields:
+      add:
+        user_id: "jwt.sub" 
+        user_name: 'jwt.name'
+        authenticated: 'jwt.sub != null'
+        jwt_act: "jwt.act"
+        token_issuer: 'jwt.iss'
+        token_audience: 'jwt.aud'        
   #       request.body: "request.body"
-  #       request.headers: "request.headers"
+        # request.headers: "request.headers"
 binds:
 - port: 3000
   listeners:
@@ -21,7 +31,7 @@ binds:
               model: gpt-4o
           routes:
             "/v1/chat/completions": completions  # LLM processing
-            "*": passthrough                      # Everything else passes through        
+            "*": passthrough                      # Everything else passes through              
       policies:
         urlRewrite:
           path:
@@ -31,6 +41,18 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+          allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+          allowCredentials: false
+        jwtAuth:
+          mode: optional
+          issuer: http://localhost:8080/realms/mcp-realm
+          audiences: [account]
+          jwks:
+            url: http://host.docker.internal:8080/realms/mcp-realm/protocol/openid-connect/certs       
+        authorization:
+          rules:
+            - "request.method == 'OPTIONS'"  # Allow OPTIONS
+            - "jwt.sub != null"                    
         # Global rate limiting for OpenAI route
         remoteRateLimit:
           domain: "agentgateway"

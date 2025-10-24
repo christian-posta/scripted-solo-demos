@@ -16,6 +16,11 @@ export OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
 export OPENID_REDIRECT_URI=http://localhost:9999/oauth/oidc/callback
 export LOG_LEVEL=debug
 
+# CRITICAL: Add these for OAuth token storage
+export WEBUI_SECRET_KEY="mysecretkeythatisverylong1234567890"
+export OAUTH_SESSION_TOKEN_ENCRYPTION_KEY="mysecretkeythatisverylong1234567890"
 
+# Optional but recommended
+export ENABLE_OAUTH_ID_TOKEN_COOKIE=true
 # Run it
 open-webui serve --port 9999
