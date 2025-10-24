@@ -78,5 +78,28 @@ services:
       timeout: 10s
       retries: 3
 
+  prometheus:
+    container_name: prometheus
+    restart: unless-stopped
+    image: prom/prometheus:v3.7.2
+    ports:
+    - "127.0.0.1:9090:9090"
+    volumes:
+    - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - prometheus_data:/prometheus
+    command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/prometheus'
+    - '--web.console.libraries=/etc/prometheus/console_libraries'
+    - '--web.console.templates=/etc/prometheus/consoles'
+    - '--storage.tsdb.retention.time=200h'
+    - '--web.enable-lifecycle'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "http://localhost:9090/-/healthy", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   redis_data:
+  prometheus_data:

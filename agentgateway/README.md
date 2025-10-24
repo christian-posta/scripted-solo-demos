@@ -60,7 +60,7 @@ Note the rate limits for each of these providers:
 
 * **OpenAi** 10 REQUESTS per minute
 * **Anthropic** 500 TOKENS per minute
-* **Gemini** 500 TOKENS per minute
+* **Gemini** No rate limit
 * **Bedrock** 200 TOKENS per minute
 
 ### Running OpenWebUI in Docker
@@ -72,3 +72,6 @@ then run:
 docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
 --name open-webui ghcr.io/open-webui/open-webui:v0.6.33
 ```
+
+## Demoing MCP
+
