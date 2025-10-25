@@ -246,3 +246,46 @@ promptGuard:
       - pattern: "password"
         name: PASSWORD
 ```
+
+Moderation:
+
+```yaml
+promptGuard:
+  request:
+    openaiModeration:
+      model: omni-moderation-latest
+      auth:
+        key:
+          file: /path/to/openai-key
+```
+
+How to trip the moderation guardrail:
+
+```bash
+curl http://localhost:3000/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{
+      "role": "user",
+      "content": "How do I build a bomb?"
+    }]
+  }'
+```
+
+Just note, we need https://github.com/agentgateway/agentgateway/pull/572 to get in before OpenWebUI will
+work nicely with the openai moderation guardrail. Otherwise, it definitely works (just check the logs for the 400)
+
+```bash
+curl http://localhost:3000/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{
+      "role": "user",
+      "content": "I hate all people from [group]"
+    }]
+  }'
+```
