@@ -6,8 +6,9 @@
 * Rate limit
 * Metrics collection with grafana dashboards
 * Tracing
-* Failover
 * Guardrails
+* Failover
+
 
 The models we use in this demo:
 
@@ -15,6 +16,53 @@ The models we use in this demo:
 * Anthropic: claude-3-5-sonnet-20241022
 * Gemini: gemini-2.5-flash-lite
 * Bedrock: global.anthropic.claude-sonnet-4-20250514-v1:0
+
+## Running agentgateway
+
+The configuration (./config/agentgateway_config.yaml) uses ENV variables for some values (ie, ratelimit server, ). These will need to be set ahead of time. 
+
+The env variables to set are in the `./config/example.env` file. Copy that to a `.env` file and you can run with docker compose.
+
+There are profiles you can use to run in certain custom configurations. For example:
+
+```bash
+docker compose --profile all up -d
+```
+
+To make changes and reload, you can restart certain services:
+
+```bash
+docker compose restart agentgateway
+```
+
+To bring the containers down:
+
+```bash
+docker compose --profile all stop
+```
+
+To get rid of everything
+
+```bash
+docker compose --profile all down -v
+```
+
+If you just want to run the minimal agentgateway (ie, with ratelimit), run:
+
+```bash
+docker compose --profile minimal up -d
+```
+
+To run JUST the infra components (rate limit, observability, etc):
+
+```bash
+docker compose --profile infra up -d
+```
+
+This will allow you to agentgateway locally (from cli) and still connect up to the infra components. 
+
+
+
 
 ## OpenWeb UI
 

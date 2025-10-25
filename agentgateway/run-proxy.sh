@@ -1,4 +1,0 @@
-source ~/bin/ai-keys
-export OPEN_API_SCHEMA_PATH=/Users/christian.posta/scripted-demos/agentgateway/resources/openapi/petstore.json
-export RATELIMIT_HOST="host.docker.internal"
-agentgateway -f config/agentgateway_config.yaml

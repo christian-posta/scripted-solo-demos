@@ -1,5 +1,6 @@
 services:
   agentgateway:
+    profiles: ["all", "minimal"]
     image: ghcr.io/agentgateway/agentgateway:0.10.4
     volumes:
      - ~/.aws:/root/.aws:ro  # For Bedrock
@@ -15,8 +16,7 @@ services:
       - "15020:15020" 
     environment:
       AWS_PROFILE: "pa"   
-      AWS_REGION: "us-west-2"    
-      RATELIMIT_HOST: "host.docker.internal"
+      AWS_REGION: "us-west-2"
     env_file:
      - ./config/.env        
     healthcheck:  # Defines the health check configuration for the container
@@ -27,6 +27,7 @@ services:
       start_period: 40s  # Wait 40 seconds after container start before beginning health checks
 
   jaeger:
+    profiles: ["all", "infra"]
     container_name: jaeger
     restart: unless-stopped
     image: jaegertracing/all-in-one:latest
@@ -38,6 +39,7 @@ services:
     - COLLECTOR_OTLP_ENABLED=true
 
   redis:
+    profiles: ["all", "minimal", "infra"]
     container_name: redis
     restart: unless-stopped
     image: redis:7.4.3
@@ -53,6 +55,7 @@ services:
       retries: 3
 
   ratelimit:
+    profiles: ["all", "minimal", "infra"]
     container_name: ratelimit
     restart: unless-stopped
     image: envoyproxy/ratelimit:3e085e5b
@@ -79,6 +82,7 @@ services:
       retries: 3
 
   prometheus:
+    profiles: ["all", "infra"]
     container_name: prometheus
     restart: unless-stopped
     image: prom/prometheus:v3.7.2
@@ -101,6 +105,7 @@ services:
       retries: 3
 
   grafana:
+    profiles: ["all", "infra"]
     container_name: grafana
     restart: unless-stopped
     image: grafana/grafana:latest

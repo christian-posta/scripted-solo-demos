@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../schema/local.json
 config:
   tracing:
-    otlpEndpoint: http://host.docker.internal:4317
+    otlpEndpoint: "http://host.docker.internal:4317"
     randomSampling: 'true'  # String 'true' means always sample (100%)
     fields:
       add:
@@ -68,7 +68,7 @@ binds:
           issuer: http://localhost:8080/realms/mcp-realm
           audiences: [account]
           jwks:
-            url: http://host.docker.internal:8080/realms/mcp-realm/protocol/openid-connect/certs       
+            url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs       
         
         ## We will require JWT for all calls except OPTIONS
         ## If this is not an OPTIONS request, the jwt.sub must be present
