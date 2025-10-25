@@ -136,6 +136,10 @@ binds:
           # note, this means we'll estimate the request token count
           # and use that for rate limit BEFORE sending to backend
           # we will still do a tru-up after the request is processed
+          # this will cost a performance penalty but it gets more
+          # accurate rate limiting (up to 200ms?)
+          # if tokenize is false, the reequest will go through and 
+          # only the response with the actual counts will be trued-up
           tokenize: true          
           provider:
             anthropic:
