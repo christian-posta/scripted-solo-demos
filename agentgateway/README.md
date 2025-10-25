@@ -8,6 +8,7 @@
 * Tracing
 * Guardrails
 * Failover
+* Integration with OpenFGA / OPA
 
 
 The models we use in this demo:
@@ -61,7 +62,9 @@ docker compose --profile infra up -d
 
 This will allow you to agentgateway locally (from cli) and still connect up to the infra components. 
 
-
+```bash
+./run-proxy-local.sh
+```
 
 
 ## OpenWeb UI
@@ -130,3 +133,70 @@ docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
 
 ## Demoing MCP
 
+
+Demo Failover:
+
+In a separate window, you'll need to start the dummy http server (this is what helps to trigger the conditions for failover)
+
+
+```bash
+source .venv/bin/activate
+python failover/http-429.py
+
+Dummy HTTP 429 server running on port 9959
+```
+
+Start agentgateway.
+
+First request will fail:
+```bash
+curl http://localhost:3000/failover/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-5",
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
+
+{"event_id":null,"error":{"type":"rate_limit_error","message":"Rate limit exceeded"}}
+```
+
+Call it a second time and you should see (note the Model!! It's not `gpt-5`!!):
+
+```bash
+{
+  "model": "gpt-4o-2024-08-06",
+  "usage": {
+    "prompt_tokens": 8,
+    "completion_tokens": 9,
+    "total_tokens": 17,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "choices": [
+    {
+      "message": {
+        "content": "Hello! How can I assist you today?",
+        "role": "assistant",
+        "refusal": null,
+        "annotations": []
+      },
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "id": "chatcmpl-CUfd1lc4PLfNnZ5YsfVBD02vJQbCR",
+  "object": "chat.completion",
+  "created": 1761425895,
+  "service_tier": "default",
+  "system_fingerprint": "fp_cbf1785567"
+}
+```

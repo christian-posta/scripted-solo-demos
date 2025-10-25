@@ -88,6 +88,41 @@ binds:
                   value: '"openai"'
               type: "requests"
 
+  # ------------------------------------------------------------
+  # Failover OpenAI route
+  # ------------------------------------------------------------
+    - name: failover-openai
+      matches:
+      - path:
+          pathPrefix: /failover/openai
+      policies:
+        retry:
+          attempts: 2        # Retry once (2 total attempts)
+          codes: [429]       # Retry on 429 errors
+        urlRewrite:
+          path:
+            prefix: ""          
+      backends:
+      - ai:
+          groups:
+          - providers:
+              - name: primary-model
+                provider:
+                  openAI:
+                    model: "gpt-5"
+                hostOverride: "localhost:9959"  
+                backendAuth:
+                  key: "INVALID_KEY_TO_FORCE_FAILURE"
+
+          - providers:
+              - name: secondary-model
+                provider:
+                  openAI:
+                    model: "gpt-4o"
+                backendAuth:
+                  key: ${OPENAI_API_KEY}                
+                                 
+
 # ------------------------------------------------------------
 # Anthropic route
 # ------------------------------------------------------------
