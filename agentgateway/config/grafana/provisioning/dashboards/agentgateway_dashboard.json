@@ -40,7 +40,7 @@
         {
           "refId": "A",
           "expr": "sum by (gen_ai_system, route) (rate(agentgateway_requests_total{protocol=\"llm\",method=\"POST\"}[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -123,7 +123,7 @@
         {
           "refId": "A",
           "expr": "sum by (gen_ai_system) (rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\"}[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -203,7 +203,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.5, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_request_duration_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -246,7 +246,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.95, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_request_duration_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -289,7 +289,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.99, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_request_duration_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -332,7 +332,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.5, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_time_to_first_token_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -375,7 +375,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.95, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_time_to_first_token_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -418,7 +418,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.5, sum by (le, gen_ai_system) (rate(agentgateway_gen_ai_server_time_per_output_token_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -461,7 +461,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.5, sum by (le) (rate(agentgateway_upstream_connect_duration_seconds_bucket{transport=\"tls\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -515,7 +515,7 @@
         {
           "refId": "A",
           "expr": "histogram_quantile(0.95, sum by (le, gen_ai_system, gen_ai_request_model) (rate(agentgateway_gen_ai_server_request_duration_bucket{gen_ai_operation_name=~\"$op\"}[5m])))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -558,7 +558,7 @@
         {
           "refId": "A",
           "expr": "sum by (gen_ai_system, gen_ai_request_model) (rate(agentgateway_requests_total{protocol=\"llm\",method=\"POST\"}[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -612,7 +612,7 @@
         {
           "refId": "A",
           "expr": "sum by (route, gen_ai_system) (rate(agentgateway_response_bytes_total{protocol=\"llm\",status=\"200\"}[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -655,7 +655,7 @@
         {
           "refId": "A",
           "expr": "rate(agentgateway_downstream_sent_bytes_total[5m])",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -698,7 +698,7 @@
         {
           "refId": "A",
           "expr": "rate(agentgateway_downstream_received_bytes_total[5m])",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -752,7 +752,7 @@
         {
           "refId": "A",
           "expr": "rate(agentgateway_xds_connection_terminations[5m])",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -795,7 +795,7 @@
         {
           "refId": "A",
           "expr": "rate(agentgateway_xds_message[5m])",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -838,7 +838,7 @@
         {
           "refId": "A",
           "expr": "rate(agentgateway_xds_message_bytes[5m])",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -892,7 +892,7 @@
         {
           "refId": "A",
             "expr": "sum by (user_name) (rate(agentgateway_requests_total{protocol=\"llm\",status=\"200\"}[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
@@ -935,7 +935,7 @@
         {
           "refId": "A",
             "expr": "sum by (user_name, gen_ai_token_type) (rate(agentgateway_gen_ai_client_token_usage_sum[5m]))",
-          "legendFormat": "{{{{__auto}}}}",
+            "legendFormat": "{{__auto}}",
           "range": true,
             "datasource": {
               "type": "prometheus",
