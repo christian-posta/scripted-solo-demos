@@ -16,6 +16,7 @@ config:
     fields:
       add:
         user_id: "jwt.sub" 
+        user_name: 'jwt.preferred_username'
   logging:
     fields:
       add:

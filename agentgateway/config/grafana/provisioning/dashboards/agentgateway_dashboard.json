@@ -165,7 +165,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "topk(10, sum by (user_id) (rate(agentgateway_gen_ai_client_token_usage_sum[1h])))",
+            "expr": "topk(10, sum by (user_name) (rate(agentgateway_gen_ai_client_token_usage_sum[1h])))",
           "legendFormat": "",
           "range": true,
             "datasource": {
@@ -891,7 +891,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (user_id) (rate(agentgateway_requests_total{protocol=\"llm\",status=\"200\"}[5m]))",
+            "expr": "sum by (user_name) (rate(agentgateway_requests_total{protocol=\"llm\",status=\"200\"}[5m]))",
           "legendFormat": "{{{{__auto}}}}",
           "range": true,
             "datasource": {
@@ -934,7 +934,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (user_id, gen_ai_token_type) (rate(agentgateway_gen_ai_client_token_usage_sum[5m]))",
+            "expr": "sum by (user_name, gen_ai_token_type) (rate(agentgateway_gen_ai_client_token_usage_sum[5m]))",
           "legendFormat": "{{{{__auto}}}}",
           "range": true,
             "datasource": {
@@ -1104,7 +1104,7 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "query": "label_values(agentgateway_requests_total, user_id)",
+          "query": "label_values(agentgateway_requests_total, user_name)",
         "refresh": 1,
         "includeAll": true,
         "allValue": ".*",
