@@ -134,7 +134,7 @@ docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
 ## Demoing MCP
 
 
-Demo Failover:
+### Demo Failover:
 
 In a separate window, you'll need to start the dummy http server (this is what helps to trigger the conditions for failover)
 
@@ -199,4 +199,50 @@ Call it a second time and you should see (note the Model!! It's not `gpt-5`!!):
   "service_tier": "default",
   "system_fingerprint": "fp_cbf1785567"
 }
+```
+
+### Guardrails
+
+```yaml
+policies:
+  ai:
+    promptGuard:
+      request:
+        regex:
+          action:
+            reject:
+              response:
+                body: "Request blocked due to sensitive content"
+                status: 403
+          rules:
+            - builtin: ssn
+            - builtin: creditCard
+            - builtin: phoneNumber
+            - builtin: email
+          
+          # Custom regex patterns
+          - pattern: "password.*"
+            name: PASSWORD
+          - pattern: "API[_-]?KEY"
+            name: API_KEY
+```
+
+Credit Card Patterns Currently Recognized:
+Visa: 4xxx-xxxx-xxxx-xxxx ✅
+Mastercard: 51xx-55xx-xxxx-xxxx only ✅ (not 56xx)
+Amex: 3xxx-xxxx-xxxx-xxxx ✅
+Discover: 6xxx-xxxx-xxxx-xxxx ✅
+Diners Club: 1xxx-xxxx-xxxx-xxxx ✅
+
+Mask:
+
+```yaml
+promptGuard:
+  request:
+    regex:
+      action: mask  # This is the default if not specified
+      rules:
+      - builtin: Email
+      - pattern: "password"
+        name: PASSWORD
 ```

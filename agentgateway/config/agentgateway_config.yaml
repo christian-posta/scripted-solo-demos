@@ -28,7 +28,7 @@ config:
         token_audience: 'jwt.aud'       
         model: 'llm.requestModel'
         provider: 'llm.provider'        
-        # prompt: 'llm.prompt' 
+        prompt: 'llm.prompt' 
         #request.body: "request.body"
         #request.headers: "request.headers"
 binds:
@@ -90,6 +90,16 @@ binds:
                 - key: "route"
                   value: '"openai"'
               type: "requests"
+        ai:
+          promptGuard:
+            request:
+              regex:
+                action: mask
+                rules:
+                - builtin: ssn
+                - builtin: creditCard
+                - builtin: phoneNumber
+                - builtin: email
 
   # ------------------------------------------------------------
   # Failover OpenAI route
@@ -166,6 +176,16 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+        ai:
+          promptGuard:
+            request:
+              regex:
+                action: mask
+                rules:
+                - builtin: ssn
+                - builtin: creditCard
+                - builtin: phoneNumber
+                - builtin: email          
 # ------------------------------------------------------------
 # Gemini route
 # ------------------------------------------------------------
@@ -185,6 +205,16 @@ binds:
         cors:
           allowOrigins: ["*"]
           allowHeaders: ["*"]
+        ai:
+          promptGuard:
+            request:
+              regex:
+                action: mask
+                rules:
+                - builtin: ssn
+                - builtin: creditCard
+                - builtin: phoneNumber
+                - builtin: email          
 
 # ------------------------------------------------------------
 # Bedrock route
@@ -213,7 +243,17 @@ binds:
             - entries:
                 - key: "route"
                   value: '"bedrock"'
-              type: "tokens"          
+              type: "tokens"   
+        ai:
+          promptGuard:
+            request:
+              regex:
+                action: mask
+                rules:
+                - builtin: ssn
+                - builtin: creditCard
+                - builtin: phoneNumber
+                - builtin: email                     
 # ------------------------------------------------------------
 # MCP route
 # ------------------------------------------------------------
