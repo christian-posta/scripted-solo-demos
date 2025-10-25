@@ -43,6 +43,10 @@ binds:
       backends:
       - ai:
           name: openai
+          # note, this means we'll estimate the request token count
+          # and use that for rate limit BEFORE sending to backend
+          # we will still do a tru-up after the request is processed
+          tokenize: true
           provider:
             openAI:
               model: gpt-4o
