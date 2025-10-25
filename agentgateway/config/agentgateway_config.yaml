@@ -25,7 +25,10 @@ config:
         authenticated: 'jwt.sub != null'
         jwt_act: "jwt.act"
         token_issuer: 'jwt.iss'
-        token_audience: 'jwt.aud'        
+        token_audience: 'jwt.aud'       
+        model: 'llm.requestModel'
+        provider: 'llm.provider'        
+        # prompt: 'llm.prompt' 
         #request.body: "request.body"
         #request.headers: "request.headers"
 binds:
