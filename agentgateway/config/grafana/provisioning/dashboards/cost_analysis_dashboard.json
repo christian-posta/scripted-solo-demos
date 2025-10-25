@@ -1,0 +1,561 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "type": "row",
+      "title": "Executive Cost Summary",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total Cost (All Time)",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"input\"}) * 0.003 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"output\"}) * 0.015 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"input\"}) * 0.005 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"output\"}) * 0.015 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"input\"}) * 0.0001 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"output\"}) * 0.0004) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "OpenAI Cost",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"input\"}) * 0.005 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Anthropic Cost",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"input\"}) * 0.003 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Gemini Cost",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"input\"}) * 0.0001 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"output\"}) * 0.0004) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total Tokens Used",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(agentgateway_gen_ai_client_token_usage_sum)",
+          "legendFormat": "",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 20,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "type": "row",
+      "title": "Cost by Provider Over Time",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Cumulative Cost by Provider",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"input\"}) * 0.005 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "OpenAI",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"input\"}) * 0.003 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "Anthropic",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "C",
+          "expr": "(sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"input\"}) * 0.0001 + sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"output\"}) * 0.0004) / 1000",
+          "legendFormat": "Gemini",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": {
+            "axisPlacement": "left",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 6,
+        "w": 24,
+        "h": 8
+      }
+    },
+    {
+      "type": "row",
+      "title": "Per-User Cost Analysis",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "type": "table",
+      "title": "Cost per User per Provider",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"input\"}) * 0.005 + sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"openai\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "format": "table",
+          "instant": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "(sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"input\"}) * 0.003 + sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"anthropic\",gen_ai_token_type=\"output\"}) * 0.015) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "format": "table",
+          "instant": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "C",
+          "expr": "(sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"input\"}) * 0.0001 + sum by (user_name, gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_system=\"gcp.gemini\",gen_ai_token_type=\"output\"}) * 0.0004) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "format": "table",
+          "instant": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "transformations": [],
+      "options": {
+        "showHeader": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "type": "table",
+      "title": "Overall Cost per User",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\",gen_ai_system=\"openai\"}) * 0.005 + sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\",gen_ai_system=\"openai\"}) * 0.015 + sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\",gen_ai_system=\"anthropic\"}) * 0.003 + sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\",gen_ai_system=\"anthropic\"}) * 0.015 + sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\",gen_ai_system=\"gcp.gemini\"}) * 0.0001 + sum by (user_name) (agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\",gen_ai_system=\"gcp.gemini\"}) * 0.0004) / 1000",
+          "legendFormat": "",
+          "range": true,
+          "format": "table",
+          "instant": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "transformations": [],
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Value",
+            "desc": true
+          }
+        ]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 15,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "type": "row",
+      "title": "Token Usage Details",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Token Usage by Provider and Type",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (gen_ai_system, gen_ai_token_type) (agentgateway_gen_ai_client_token_usage_sum)",
+          "legendFormat": "{{gen_ai_system}} - {{gen_ai_token_type}}",
+          "range": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "axisPlacement": "left",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 24,
+        "h": 8
+      }
+    },
+    {
+      "type": "row",
+      "title": "Pricing Reference",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "type": "text",
+      "title": "Pricing Information",
+      "targets": [],
+      "options": {
+        "mode": "markdown",
+        "content": "## Token Pricing (per 1,000 tokens)\n\n### OpenAI GPT-4o\n- **Input**: $0.005 (estimated)\n- **Output**: $0.015 (estimated)\n\n### Anthropic Claude-3.5 Sonnet\n- **Input**: $0.003\n- **Output**: $0.015\n\n### Google Gemini 2.5 Flash-Lite (Standard)\n- **Input**: $0.0001\n- **Output**: $0.0004\n\n---\n\n**Note**: Costs are calculated based on cumulative token usage from agentgateway metrics. The dashboard automatically includes all providers (OpenAI, Anthropic, Gemini) detected in your metrics."
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 33,
+        "w": 24,
+        "h": 6
+      }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "agentgateway",
+    "cost",
+    "billing",
+    "solo.io"
+  ],
+  "templating": {
+    "list": [
+      {
+        "type": "query",
+        "name": "provider",
+        "label": "Provider",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "query": "label_values(agentgateway_gen_ai_client_token_usage_sum, gen_ai_system)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "regex": ""
+      },
+      {
+        "type": "query",
+        "name": "user",
+        "label": "User",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "query": "label_values(agentgateway_gen_ai_client_token_usage_sum, user_name)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "regex": ""
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "",
+  "title": "Agent Gateway: Cost Analysis Dashboard",
+  "uid": null,
+  "version": 1,
+  "weekStart": ""
+}

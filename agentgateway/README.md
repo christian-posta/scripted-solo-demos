@@ -4,10 +4,17 @@
 * Egress controls with API key injection
 * Securing with SSO
 * Rate limit
+* Metrics collection with grafana dashboards
+* Tracing
 * Failover
 * Guardrails
 
+The models we use in this demo:
 
+* OpenAI: gpt-4o 
+* Anthropic: claude-3-5-sonnet-20241022
+* Gemini: gemini-2.5-flash-lite
+* Bedrock: global.anthropic.claude-sonnet-4-20250514-v1:0
 
 ## OpenWeb UI
 
