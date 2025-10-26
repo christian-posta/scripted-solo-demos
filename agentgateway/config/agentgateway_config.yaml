@@ -411,4 +411,25 @@ binds:
           remove:
           - x-forwarded-for
           - x-forwarded-host
-          - x-
+          - x-forwarded-proto          
+        backendTLS: {}
+        mcpAuthentication:
+          issuer: https://ceposta-solo.auth0.com/
+          jwksUrl: https://ceposta-solo.auth0.com/.well-known/jwks.json
+          audience: https://ceposta-agw.ngrok.io/mcp
+          provider:
+            auth0: {}
+          resourceMetadata:
+            authorizationServers:
+            - https://ceposta-agw.ngrok.io/secure/mcp          
+            resource: https://ceposta-agw.ngrok.io/secure/mcp
+            scopesSupported:
+            - profile
+            - openid
+            - offline_access
+            bearerMethodsSupported:
+            - header
+            - body
+            - query
+            resourceDocumentation: https://ceposta-agw.ngrok.io/secure/mcp/docs
+            resourcePolicyUri: https://ceposta-agw.ngrok.io/secure/mcp/policies 
