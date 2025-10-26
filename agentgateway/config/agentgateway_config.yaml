@@ -266,6 +266,35 @@ binds:
                 - builtin: email          
 
 # ------------------------------------------------------------
+# Bedrock custom guardrail route
+# ------------------------------------------------------------
+    - name: guardrail-bedrock
+      matches:
+      - path:
+          pathPrefix: /guardrail/bedrock
+      backends:
+      - ai:
+          name: bedrock
+          provider:
+            bedrock:
+              region: us-west-2
+              model: global.anthropic.claude-sonnet-4-20250514-v1:0
+      policies:
+        ai:
+          promptGuard:
+            request:
+              webhook:
+                target: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7273
+                # Optional: forward specific request headers to your webhook
+                forwardHeaderMatches:
+                - name: authorization
+                  value:
+                    regex: "Bearer .*"
+                - name: x-custom-header
+                  value:
+                    regex: ".*"           
+
+# ------------------------------------------------------------
 # Bedrock route
 # ------------------------------------------------------------
     - name: bedrock
