@@ -1,2 +1,5 @@
 open-webui
 Flask>=3.0.0
+google-auth>=2.0.0
+google-auth-oauthlib>=0.4.0
+requests>=2.31.0

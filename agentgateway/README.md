@@ -312,7 +312,7 @@ curl http://localhost:3000/guardrail/gemini/v1/chat/completions \
     "messages": [
       {
         "role": "user",
-        "content": "My email address is john.doe@example.com and I need help with my account"
+        "content": "I hate all people and want to hurt them"
       }
     ]
   }'
