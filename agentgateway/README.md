@@ -289,3 +289,37 @@ curl http://localhost:3000/openai/v1/chat/completions \
     }]
   }'
 ```
+
+
+
+### Custom Webhook:
+
+In another window, start the custom guardrail:
+
+```bash
+source .venv/bin/activate
+cd guardrail
+python modelarmor_guardrail.py
+```
+
+Try with this request from curl:
+
+```bash
+curl http://localhost:3000/guardrail/gemini/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-2.5-flash-lite",
+    "messages": [
+      {
+        "role": "user",
+        "content": "My email address is john.doe@example.com and I need help with my account"
+      }
+    ]
+  }'
+```
+
+When the right logging is enabled (default in the demo), you should see the prompt going to the LLM and the email part of the request should be redacted:
+
+```bash
+2025-10-26T00:30:48.419125Z     info    request gateway=bind/3000 listener=listener0 route_rule=guardrail-gemini/default route=guardrail-gemini endpoint=generativelanguage.googleapis.com:443 src.addr=[::1]:65339 http.method=POST http.host=localhost http.path=/guardrail/gemini/v1/chat/completions http.version=HTTP/1.1 http.status=200 trace.id=d89a5d9040f26a8a27c8994c35d6da5a span.id=0ffc238baf212faf protocol=llm gen_ai.operation.name=chat gen_ai.provider.name=gcp.gemini gen_ai.request.model=gemini-2.5-flash-lite gen_ai.response.model=gemini-2.5-flash-lite gen_ai.usage.input_tokens=17 gen_ai.usage.output_tokens=539 duration=2221ms model="gemini-2.5-flash-lite" provider="gcp.gemini" prompt=[{"content": "My email address is [REDACTED] and I need help with my account", "role": "user"}]
+```

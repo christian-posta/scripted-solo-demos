@@ -204,6 +204,37 @@ binds:
                 - builtin: creditCard
                 - builtin: phoneNumber
                 - builtin: email          
+
+# ------------------------------------------------------------
+# Gemini custom guardrail route
+# ------------------------------------------------------------
+    - name: guardrail-gemini
+      matches:
+      - path:
+          pathPrefix: /guardrail/gemini
+      backends:
+      - ai:
+          name: gemini
+          provider:
+            gemini:
+              model: gemini-2.5-flash-lite     
+      policies:
+        backendAuth:
+          key: ${GEMINI_API_KEY}    
+        ai:
+          promptGuard:
+            request:
+              webhook:
+                target: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7272
+                # Optional: forward specific request headers to your webhook
+                forwardHeaderMatches:
+                - name: authorization
+                  value:
+                    regex: "Bearer .*"
+                - name: x-custom-header
+                  value:
+                    regex: ".*"                                
+                          
 # ------------------------------------------------------------
 # Gemini route
 # ------------------------------------------------------------
@@ -225,7 +256,7 @@ binds:
           allowHeaders: ["*"]
         ai:
           promptGuard:
-            request:
+            request:           
               regex:
                 action: mask
                 rules:
