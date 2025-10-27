@@ -289,6 +289,86 @@ curl http://localhost:3000/openai/v1/chat/completions \
 
 ## Rate limiting
 
+Each model is configured with rate limiting. Right now, it's set to x-Per-Minute.
+
+The rate limiting is the same as Envoy. The proxy/gateway sends in descriptors, and the rate limit server is configured to match descriptors and enforce rate limit policy on that. For example, let's look at the OpenAI route.
+
+OpenAI route (ie, `/openai`) has the following configuration in agentgateway:
+
+```yaml
+    remoteRateLimit:
+      domain: "agentgateway"
+      host: "${RATELIMIT_HOST:-localhost}:8081"
+      descriptors:
+        - entries:
+            - key: "route"
+              value: '"openai"'
+          type: "requests"
+```
+
+This is a remote / global rate limit config (alternative is local rate limit - https://agentgateway.dev/docs/configuration/resiliency/rate-limits/#local). 
+
+It basically creates a descriptor (ie, set of metadata) with a key of "route" and a value of "openai". This is expected to be treated as a "request rate limit" (vs token rate limit which we'll cover in a bit). 
+
+The rate limit server is configured like this (`.config/ratelimit-config.yaml`):
+
+```yaml
+descriptors:
+  # Global rate limit for OpenAI route - 1 request per minute
+  - key: route
+    value: "openai"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 10
+```
+
+This means, for a request that comes in with descriptors that match here (ie, route == openai) then we'll apply a 10 request per minute. 
+
+Anthropic is configured slightly differently:
+
+```yaml
+    remoteRateLimit:
+      domain: "agentgateway"
+      host: "${RATELIMIT_HOST:-localhost}:8081"
+      descriptors:
+        - entries:
+            - key: "route"
+              value: '"anthropic"'
+          type: "tokens"      
+```
+
+Same idea, but instead of REQUESTS, we are using TOKENS. The RLS config is:
+
+```yaml
+  - key: route
+    value: "anthropic"
+    rate_limit:
+      unit: minute
+      requests_per_unit: 500
+```
+
+This means anthropic has 500 tokens per minute rate limiting enforced. 
+
+Here are the routes rate limit configs for the demo:
+
+
+| Route      | Limit                  | Unit    | Type    |
+|------------|------------------------|---------|---------|
+| openai     | 10 requests            | minute  | requests|
+| anthropic  | 500 tokens             | minute  | tokens  |
+| gemini     | 500 tokens             | minute  | tokens  |
+| bedrock    | 200 tokens             | minute  | tokens  |
+| mcp        | 100 tokens             | minute  | tokens  |
+
+_Note: "requests" type means X full API requests per minute, while "tokens" means X tokens (total input+output) per minute._
+
+_Note: at the time of writing, we don't send descriptors from the gateway to the RLS for the gemini/bedrock/mcp routes. So those wont actually have RL enforced._
+
+_Note: for anthropic, we enable the `tokenize` setting which means agw will do estimations for tokens on the prompt request and then do a true-up afterward. otherwise, if tokenize is not set, then rate limit true up happens only after the actual token usage is returned (response) from the LLM_
+
+To exercise the rate limit, try send more than 10 requests to OpenAI, or a large prompt to Anthropic. 
+
+
 ## Metrics / Grafana / Cost
 
 ## Tracing
