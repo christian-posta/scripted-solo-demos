@@ -118,6 +118,51 @@ binds:
                 - builtin: creditCard
                 - builtin: phoneNumber
                 - builtin: email
+  # ------------------------------------------------------------
+  # OpenAI route
+  # ------------------------------------------------------------
+    - name: policy-openai
+      matches:
+      - path:
+          pathPrefix: /policy/openai
+      backends:
+      - ai:
+          name: openai
+          provider:
+            openAI:
+              model: gpt-4o
+          routes:
+            "/v1/chat/completions": completions  # LLM processing
+            "*": passthrough                      # Everything else passes through              
+      policies:
+        urlRewrite:
+          path:
+            prefix: ""    # This strips the matched /openai prefix
+        backendAuth:
+          key: ${OPENAI_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+          allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+          allowCredentials: false
+
+        ## We require JWT auth for calling this route
+        ## it is expected to be coming from an SSO IdP  
+        jwtAuth:
+          mode: optional
+          issuer: http://localhost:8080/realms/mcp-realm
+          audiences: [account]
+          jwks:
+            url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs       
+        
+        ## We will require JWT for all calls except OPTIONS
+        ## If this is not an OPTIONS request, the jwt.sub must be present
+        authorization:
+          rules:
+            - "request.method == 'OPTIONS'"  # Allow OPTIONS
+            - "jwt.sub != null && 'supply-chain' in jwt.realm_access.roles"                    
+
+       
 
   # ------------------------------------------------------------
   # Failover OpenAI route

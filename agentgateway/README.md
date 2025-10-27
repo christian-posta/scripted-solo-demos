@@ -1,5 +1,7 @@
 # Agentgateway Demo
 
+
+## LLM usecases
 * Calling multiple backend LLMs with unified (OpenAI) API
 * Egress controls with API key injection
 * Securing with SSO
@@ -8,6 +10,7 @@
 * Tracing
 * Guardrails
 * Failover
+* Policy enforcement
 * Integration with OpenFGA / OPA
 
 Demo through CLI and UI. 
@@ -18,6 +21,10 @@ The models we use in this demo:
 * Anthropic: claude-3-5-sonnet-20241022
 * Gemini: gemini-2.5-flash-lite
 * Bedrock: global.anthropic.claude-sonnet-4-20250514-v1:0
+
+## MCP Usecases
+
+Fill this in
 
 ## Running agentgateway
 
@@ -682,4 +689,133 @@ Guardrail logs:
 2025-10-27 13:58:35,529 - __main__ - INFO - Bedrock decision: should_block=True, has_masked_content=True, reason=BLOCKED: PII detected: EMAIL
 2025-10-27 13:58:35,529 - __main__ - WARNING - REQUEST BLOCKED by Bedrock Guardrails: BLOCKED: PII detected: EMAIL
 2025-10-27 13:58:35,530 - werkzeug - INFO - 127.0.0.1 - - [27/Oct/2025 13:58:35] "POST /request HTTP/1.1" 200 -
+```
+
+## Policy Enforcement
+
+We can use JWT tokens to enforce fine-grained policy for calling certain LLMs. For example, we have two different users:
+
+`mcp-user`:
+
+example:
+> TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQNGMtZ3pxRDdfUDVteTI1SmNFdkJkSmx0UlQ5OWdwSndoZDFVZUxGVTlVIn0.eyJleHAiOjE3NjE2MDMzMTAsImlhdCI6MTc2MTU5OTcxMCwianRpIjoib25ydHJvOmFlMzgwMTdjLWY5NWQtNGY4YS05YTFiLTE4ZjdjOWQxZmU2YSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvbWNwLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImU1ODcwNGQ2LWRhZWEtNGM3NS04NDhkLWIxY2ZiNjgxOTAxNSIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9wZW53ZWItdWkiLCJzaWQiOiJkM2NmZmViZC01OTE0LTQ0MDUtYTNiZS05Y2QwNDg1N2FjYWMiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6OTk5OSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsic3VwcGx5LWNoYWluIiwiZGVmYXVsdC1yb2xlcy1tY3AtcmVhbG0iLCJhaS1hZ2VudHMiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJNQ1AgVXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6Im1jcC11c2VyIiwiZ2l2ZW5fbmFtZSI6Ik1DUCIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoidXNlckBtY3AuZXhhbXBsZS5jb20ifQ.Bxg5-YT7rD5G8n6d-SLTS34hpQKRYenp8EVm51kkJajOO-txx6efJYuLteSrgmhSD8EP__FAR28quiycdKD5FqiPZPpMoFZE3uSwIzjdZEkOW-t0N4Y2GgwTFr7i4joj-449O-YuORUG36Q8QTOs33VXWY_ElVjKtqTp6DOVKwWJjJC-2dX1e9l2i6NDWzifs6Zhpr6VfNJ3FjoTikCGHW_Ntf9xRMSZ72BTJ80JFfA_c5bi1AePofk1b8dmd9f3eo9yDo71Zy1km0YUqbIPdZbUflEgPvoAE2KSU07E_K45OjDTLMBsuu4sENiRW-4axnEXw65OGbNpCdhkcB3MCA
+
+```json
+{
+  "exp": 1761603310,
+  "iat": 1761599710,
+  "jti": "onrtro:ae38017c-f95d-4f8a-9a1b-18f7c9d1fe6a",
+  "iss": "http://localhost:8080/realms/mcp-realm",
+  "aud": "account",
+  "sub": "e58704d6-daea-4c75-848d-b1cfb6819015",
+  "typ": "Bearer",
+  "azp": "openweb-ui",
+  "sid": "d3cffebd-5914-4405-a3be-9cd04857acac",
+  "acr": "1",
+  "allowed-origins": [
+    "http://localhost:9999"
+  ],
+  "realm_access": {
+    "roles": [
+      "supply-chain",
+      "default-roles-mcp-realm",
+      "ai-agents",
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "profile email",
+  "email_verified": true,
+  "name": "MCP User",
+  "preferred_username": "mcp-user",
+  "given_name": "MCP",
+  "family_name": "User",
+  "email": "user@mcp.example.com"
+}
+```
+
+`other-user`:
+
+example:
+
+> TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQNGMtZ3pxRDdfUDVteTI1SmNFdkJkSmx0UlQ5OWdwSndoZDFVZUxGVTlVIn0.eyJleHAiOjE3NjE2MDMzNDIsImlhdCI6MTc2MTU5OTc0MiwianRpIjoib25ydHJvOjZhZDc1ZmRlLTU3NzktNDY3Ni1iMjViLTdiODIwMTg2NDI3MSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvbWNwLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjJmZWRmNWRmLTk3MTgtNGNlNy1iZTM4LTUyMmVhZmE3ZDdjNCIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9wZW53ZWItdWkiLCJzaWQiOiI5NzkyN2NkNS1jYWFlLTQzZmItOWNjZi02ZTcwYmJhNGQwYWQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6OTk5OSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1tY3AtcmVhbG0iLCJhaS1hZ2VudHMiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJPdGhlciBVc2VyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoib3RoZXItdXNlciIsImdpdmVuX25hbWUiOiJPdGhlciIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoib3RoZXJAbWNwLmV4YW1wbGUuY29tIn0.DNI5rpFwvkZRcp1mJrktvLWc20p1teSrN9A26-Wnq5v2wTJHkX1mA5G7rZUKA_YL-gST4lK9yUWuO3DV7iJO5TsQuieCtV8mjPa7_p3UwpwvnoWQPCTSmYnUYJPcL7gNsj8fOcpKWnbtvO68WXQQGL9igqlVXcCR9nkMQNceLvmH8cHmTOPVjcbWdNriitWgHxZIxy0zIgMWiqzwYZ0N34IeHoERKfT4_prstB63Gb5kNwhn4IWgGudNq9_O9-BhuF0LeFh0o2kt-JjUDcSyeYpnnAe1QPQgxsqQzbOHGty2ndSs78R8iWYmB19R4YwDK1-wdWz7HLS9zw3AiHEsNg
+
+```json
+{
+  "exp": 1761603342,
+  "iat": 1761599742,
+  "jti": "onrtro:6ad75fde-5779-4676-b25b-7b8201864271",
+  "iss": "http://localhost:8080/realms/mcp-realm",
+  "aud": "account",
+  "sub": "2fedf5df-9718-4ce7-be38-522eafa7d7c4",
+  "typ": "Bearer",
+  "azp": "openweb-ui",
+  "sid": "97927cd5-caae-43fb-9ccf-6e70bba4d0ad",
+  "acr": "1",
+  "allowed-origins": [
+    "http://localhost:9999"
+  ],
+  "realm_access": {
+    "roles": [
+      "default-roles-mcp-realm",
+      "ai-agents",
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "profile email",
+  "email_verified": true,
+  "name": "Other User",
+  "preferred_username": "other-user",
+  "given_name": "Other",
+  "family_name": "User",
+  "email": "other@mcp.example.com"
+}
+```
+
+You can see these users have different roles. That is, the mcp-user has `supply-chain` role, while the other user. Does not. If we set our policy like this:
+
+```yaml
+        authorization:
+          rules:
+            - "request.method == 'OPTIONS'"  # Allow OPTIONS
+            - "jwt.sub != null && 'supply-chain' in jwt.realm_access.roles"          
+```
+
+Then we will only allow the users in the supply-chain role through to call this route.
+
+```bash
+curl http://localhost:3000/policy/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+
+# Will see this if using the JWT w/o the supply-chain role
+authorization failed%
 ```
