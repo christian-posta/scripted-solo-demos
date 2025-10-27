@@ -141,7 +141,7 @@ binds:
                 provider:
                   openAI:
                     model: "gpt-5"
-                hostOverride: "localhost:9959"  
+                hostOverride: "${FAILOVER_HOST:-localhost}:9959"  
                 backendAuth:
                   key: "INVALID_KEY_TO_FORCE_FAILURE"
 

@@ -360,19 +360,69 @@ Here are the routes rate limit configs for the demo:
 | bedrock    | 200 tokens             | minute  | tokens  |
 | mcp        | 100 tokens             | minute  | tokens  |
 
-_Note: "requests" type means X full API requests per minute, while "tokens" means X tokens (total input+output) per minute._
+_Note 1: "requests" type means X full API requests per minute, while "tokens" means X tokens (total input+output) per minute._
 
-_Note: at the time of writing, we don't send descriptors from the gateway to the RLS for the gemini/bedrock/mcp routes. So those wont actually have RL enforced._
+_Note 2: at the time of writing, we don't send descriptors from the gateway to the RLS for the gemini/bedrock/mcp routes. So those wont actually have RL enforced._
 
-_Note: for anthropic, we enable the `tokenize` setting which means agw will do estimations for tokens on the prompt request and then do a true-up afterward. otherwise, if tokenize is not set, then rate limit true up happens only after the actual token usage is returned (response) from the LLM_
+_Note 3: for anthropic, we enable the `tokenize` setting which means agw will do estimations for tokens on the prompt request and then do a true-up afterward. otherwise, if tokenize is not set, then rate limit true up happens only after the actual token usage is returned (response) from the LLM_
 
 To exercise the rate limit, try send more than 10 requests to OpenAI, or a large prompt to Anthropic. 
 
 
 ## Metrics / Grafana / Cost
 
+Grafana default un/pw: `admin`/`admin`
+You may be prompted to change pw, just keep it the same. 
+
+Agentgateway exposes metrics on:
+
+```bash
+curl http://localhost:15020/metrics 
+```
+
+We connect this up to prometheus (see `./config/prometheus.yml`)
+
+This is used to populate two main grafana dashboards.
+
+Grafana is exposed on `http://localhost:3001/`
+
+![Grafana Dashboards List](./images/dashboard-list.png)
+
+The cost dashboard shows breakdown of model usage, pricing. This can be broken down by team, user, organiziation, anything you want. 
+
+![Model Cost Dashboard](./images/cost.png)
+
+And you can also get operational / usage information from the metrics:
+
+![Ops Dashboard 1](./images/operations1.png)
+![Ops Dashboard 2](./images/operations2.png)
+
 ## Tracing
 
+Tracing is Open Telemetry style tracing, configured on the gateway like this:
+
+```bash
+tracing:
+  otlpEndpoint: "http://host.docker.internal:4317"
+  randomSampling: 'true'  # String 'true' means always sample (100%)
+  fields:
+    add:
+      authenticated: 'jwt.sub != null'
+      gen_ai.system: 'llm.provider'
+      gen_ai.request.model: 'llm.request_model'
+      gen_ai.response.model: 'llm.response_model'
+      gen_ai.usage.input_tokens: 'llm.input_tokens'
+      gen_ai.usage.output_tokens: 'llm.output_tokens'
+      gen_ai.operation.name: '"chat"'        
+```
+
+If you go to the dashboard: `http://localhost:16686` you can see the traces:
+
+![Jaeger traces list](./images/tracing1.png)
+
+Clicking on one of the traces, you can see more details about the trace:
+
+![Specific trace](./images/specific-trace.png)
 
 ## Failover:
 
@@ -443,6 +493,16 @@ Call it a second time and you should see (note the Model!! It's not `gpt-5`!!):
 
 ## Guardrails
 
+Which routes have which guardrails?
+
+* OpenAI (`/openai`): `builtin`, `openai-moderation`
+* Anthropic (`/anthropic`): `builtin`
+* Gemini-guardrail (`/guardrail/gemini`): custom webhook calling model armor
+* Bedrock-guardrail (`/guardrail/bedrock`): custom webhook calling AWS bedrock
+
+
+We can use built-in guardrails (regex based, inline in the proxy, no-callout):
+
 ```yaml
 policies:
   ai:
@@ -459,12 +519,6 @@ policies:
             - builtin: creditCard
             - builtin: phoneNumber
             - builtin: email
-          
-          # Custom regex patterns
-          - pattern: "password.*"
-            name: PASSWORD
-          - pattern: "API[_-]?KEY"
-            name: API_KEY
 ```
 
 Credit Card Patterns Currently Recognized:
@@ -474,17 +528,26 @@ Amex: 3xxx-xxxx-xxxx-xxxx ✅
 Discover: 6xxx-xxxx-xxxx-xxxx ✅
 Diners Club: 1xxx-xxxx-xxxx-xxxx ✅
 
-Mask:
+How to trip the builtin guardrail:
 
-```yaml
-promptGuard:
-  request:
-    regex:
-      action: mask  # This is the default if not specified
-      rules:
-      - builtin: Email
-      - pattern: "password"
-        name: PASSWORD
+```bash
+curl http://localhost:3000/anthropic/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-3-5-sonnet-20241022",
+    "messages": [{
+      "role": "user",
+      "content": "What would you do with a sensitive card number like 5100 4567 8901 2345"
+    }]
+  }'
+
+{"model":"claude-3-5-sonnet-20241022","usage":{"prompt_tokens":24,"completion_tokens":41,"total_tokens":65},"choices":[{"message":{"content":"I aim to keep all information secure and private. I do not store, share, or process sensitive data like credit card numbers. I aim to handle such information responsibly and securely.","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Lnw3wm1SnANPqhcQpweU9Z","created":1761598517,"object":"chat.completion"}
+```
+
+You can check whether the prompt was masked by looking at the agentgateway logs:
+
+```bash
+agentgateway-1  | 2025-10-27T20:55:17.812531Z   info    request gateway=bind/3000 listener=listener0 route_rule=anthropic-claude/default route=anthropic-claude endpoint=api.anthropic.com:443 src.addr=192.168.65.1:25678 http.method=POST http.host=localhost http.path=/anthropic/v1/chat/completions http.version=HTTP/1.1 http.status=200 trace.id=1fc69b6187743c03e5f3f64d8c1ef583 span.id=f7bbb360ff792ea2 protocol=llm gen_ai.operation.name=chat gen_ai.provider.name=anthropic gen_ai.request.model=claude-3-5-sonnet-20241022 gen_ai.response.model=claude-3-5-sonnet-20241022 gen_ai.usage.input_tokens=24 gen_ai.usage.output_tokens=41 duration=1695ms model="claude-3-5-sonnet-20241022" provider="anthropic" prompt=[{"role": "user", "content": "What would you do with a sensitive card number like <CREDIT_CARD>"}]
 ```
 
 Moderation:
@@ -502,9 +565,11 @@ promptGuard:
 How to trip the moderation guardrail:
 
 ```bash
+TOKEN=$(./get-keycloak-token.sh)
+
 curl http://localhost:3000/openai/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Authorization: Bearer $TOKEN" \
   -d '{
     "model": "gpt-4o",
     "messages": [{
@@ -512,24 +577,18 @@ curl http://localhost:3000/openai/v1/chat/completions \
       "content": "How do I build a bomb?"
     }]
   }'
+
+{
+  "error": {
+    "message": "Your request was rejected by our content moderation system",
+    "type": "invalid_request_error",
+    "code": "content_policy_violation"
+  }
+}    
 ```
 
 Just note, we need https://github.com/agentgateway/agentgateway/pull/572 to get in before OpenWebUI will
 work nicely with the openai moderation guardrail. Otherwise, it definitely works (just check the logs for the 400)
-
-```bash
-curl http://localhost:3000/openai/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "model": "gpt-4o",
-    "messages": [{
-      "role": "user",
-      "content": "I hate all people from [group]"
-    }]
-  }'
-```
-
 
 
 ### Custom Model Armor Webhook:
@@ -556,9 +615,23 @@ curl http://localhost:3000/guardrail/gemini/v1/chat/completions \
       }
     ]
   }'
+
+Request rejected by Model Armor: BLOCKED: RAI policy violation%   
 ```
 
-When the right logging is enabled (default in the demo), you should see the prompt going to the LLM and the email part of the request should be redacted:
+You can see in the custom guardrail log:
+
+```bash
+025-10-27 13:57:02,571 - __main__ - INFO - Validating user prompt with Model Armor (role=user)
+2025-10-27 13:57:03,475 - __main__ - INFO - Model Armor user_prompt result: filterMatchState=MATCH_FOUND
+2025-10-27 13:57:03,476 - __main__ - WARNING - RAI filter violation detected: {'executionState': 'EXECUTION_SUCCESS', 'matchState': 'MATCH_FOUND', 'raiFilterTypeResults': {'dangerous': {'confidenceLevel': 'HIGH', 'matchState': 'MATCH_FOUND'}, 'harassment': {'confidenceLevel': 'HIGH', 'matchState': 'MATCH_FOUND'}, 'hate_speech': {'confidenceLevel': 'MEDIUM_AND_ABOVE', 'matchState': 'MATCH_FOUND'}, 'sexually_explicit': {'matchState': 'NO_MATCH_FOUND'}}}
+2025-10-27 13:57:03,476 - __main__ - INFO - Violations detected: ['rai'], blocking_mode=strict, should_block=True
+2025-10-27 13:57:03,476 - __main__ - INFO - Model Armor decision: should_block=True, has_sanitized_content=False, reason=BLOCKED: RAI policy violation
+2025-10-27 13:57:03,481 - __main__ - WARNING - REQUEST BLOCKED by Model Armor: BLOCKED: RAI policy violation
+2025-10-27 13:57:03,482 - werkzeug - INFO - 127.0.0.1 - - [27/Oct/2025 13:57:03] "POST /request HTTP/1.1" 200 -
+```
+
+When the right logging is enabled on agentgateway (default in the demo), you should see the prompt going to the LLM and the email part of the request should be redacted:
 
 ```bash
 2025-10-26T00:30:48.419125Z     info    request gateway=bind/3000 listener=listener0 route_rule=guardrail-gemini/default route=guardrail-gemini endpoint=generativelanguage.googleapis.com:443 src.addr=[::1]:65339 http.method=POST http.host=localhost http.path=/guardrail/gemini/v1/chat/completions http.version=HTTP/1.1 http.status=200 trace.id=d89a5d9040f26a8a27c8994c35d6da5a span.id=0ffc238baf212faf protocol=llm gen_ai.operation.name=chat gen_ai.provider.name=gcp.gemini gen_ai.request.model=gemini-2.5-flash-lite gen_ai.response.model=gemini-2.5-flash-lite gen_ai.usage.input_tokens=17 gen_ai.usage.output_tokens=539 duration=2221ms model="gemini-2.5-flash-lite" provider="gcp.gemini" prompt=[{"content": "My email address is [REDACTED] and I need help with my account", "role": "user"}]
@@ -566,6 +639,14 @@ When the right logging is enabled (default in the demo), you should see the prom
 
 
 ### Custom AWS Bedrock Guardrail Webhook:
+
+In another window, start the custom guardrail:
+
+```bash
+source .venv/bin/activate
+cd guardrail
+python bedrock_guardrail.py
+```
 
 ```bash
 curl http://localhost:3000/guardrail/bedrock/v1/chat/completions \
@@ -581,4 +662,24 @@ curl http://localhost:3000/guardrail/bedrock/v1/chat/completions \
   }'
 
 Request rejected by Bedrock Guardrails: BLOCKED: PII detected: EMAIL%     
+```
+
+Blocked by agentgateway:
+
+```bash
+agentgateway-1  | 2025-10-27T20:58:35.533149Z   info    request gateway=bind/3000 listener=listener0 route_rule=guardrail-bedrock/default route=guardrail-bedrock endpoint=bedrock-runtime.us-west-2.amazonaws.com:443 src.addr=192.168.65.1:17930 http.method=POST http.host=localhost http.path=/guardrail/bedrock/v1/chat/completions http.version=HTTP/1.1 http.status=403 trace.id=2db600da1ce3aa6fdaf0d96518a6d9e7 span.id=51f31aa3a91056a4 protocol=llm duration=2163ms
+```
+
+Guardrail logs:
+
+```bash
+2025-10-27 13:58:33,372 - __main__ - INFO - Validating user prompt with Bedrock Guardrails (1 messages)
+2025-10-27 13:58:35,528 - __main__ - INFO - Bedrock input result: action=GUARDRAIL_INTERVENED
+2025-10-27 13:58:35,528 - __main__ - WARNING - PII violation (blocked): EMAIL
+2025-10-27 13:58:35,528 - __main__ - INFO - Violations detected: ['pii:EMAIL']
+2025-10-27 13:58:35,529 - __main__ - INFO - Blocked: ['pii:EMAIL'], Anonymized: []
+2025-10-27 13:58:35,529 - __main__ - INFO - Blocking mode: strict, should_block: True
+2025-10-27 13:58:35,529 - __main__ - INFO - Bedrock decision: should_block=True, has_masked_content=True, reason=BLOCKED: PII detected: EMAIL
+2025-10-27 13:58:35,529 - __main__ - WARNING - REQUEST BLOCKED by Bedrock Guardrails: BLOCKED: PII detected: EMAIL
+2025-10-27 13:58:35,530 - werkzeug - INFO - 127.0.0.1 - - [27/Oct/2025 13:58:35] "POST /request HTTP/1.1" 200 -
 ```
