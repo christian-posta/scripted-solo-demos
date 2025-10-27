@@ -7,8 +7,8 @@ KEYCLOAK_HOST="${KEYCLOAK_HOST:-localhost:8080}"
 REALM="mcp-realm"
 CLIENT_ID="openweb-ui"
 CLIENT_SECRET="changeme"
-USERNAME="mcp-user"
-PASSWORD="user123"
+USERNAME="${1:-mcp-user}"
+PASSWORD="${2:-user123}"
 
 # Token endpoint URL
 TOKEN_URL="http://${KEYCLOAK_HOST}/realms/${REALM}/protocol/openid-connect/token"
