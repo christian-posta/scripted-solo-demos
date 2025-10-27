@@ -10,6 +10,7 @@
 * Failover
 * Integration with OpenFGA / OPA
 
+Demo through CLI and UI. 
 
 The models we use in this demo:
 
@@ -30,11 +31,34 @@ There are profiles you can use to run in certain custom configurations. For exam
 docker compose --profile all up -d
 ```
 
+To smoke test, you can run:
+
+```bash
+curl http://localhost:3000/gemini/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-2.5-flash-lite",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+```
+
 To make changes and reload, you can restart certain services:
 
 ```bash
 docker compose restart agentgateway
 ```
+
+To see logs:
+
+```bash
+docker compose logs -f agentgateway
+```
+
 
 To bring the containers down:
 
@@ -79,6 +103,15 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+You should setup a keycloak OIDC client:
+
+* **realm** mcp-realm
+* **name**: openweb-ui
+* **callbacks** http://localhost:9999/oauth/oidc/callback
+* **web origins** http://localhost:9999
+* **Confidential Client** with password `changeme`
+* Enable standard flow and direct access grants
 
 Now you should be able to run this:
 
@@ -131,10 +164,137 @@ docker run -d -p 9999:8080 -v ~/temp/open-webui:/app/backend/data \
 --name open-webui ghcr.io/open-webui/open-webui:v0.6.33
 ```
 
-## Demoing MCP
+# Demo
+
+In this section, we'll see how to demo various capabilities from the command line. Otherwise, you can use a web UI / chat agent like OpenWebUI. 
+
+* Calling multiple backend LLMs with unified (OpenAI) API
+* Egress controls with API key injection
+* Securing with SSO
+* Rate limit
+* Metrics collection with grafana dashboards
+* Tracing
+* Guardrails
+* Failover
+* Integration with OpenFGA / OPA
+
+## Unified API
+
+We will use the OpenAI API to call multiple models. 
+
+For example, to call Gemini:
+
+```bash
+curl http://localhost:3000/gemini/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-2.5-flash-lite",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+
+{"model":"gemini-2.5-flash-lite","usage":{"prompt_tokens":11,"completion_tokens":4,"total_tokens":15},"choices":[{"message":{"content":"Hello, World!","role":"assistant"},"finish_reason":"stop","index":0}],"created":1761584454,"id":"RqX_aKxP8uOq2w-JjO6xBw","object":"chat.completion"}
+```
+
+To call Anthropic:
+
+```bash
+curl http://localhost:3000/anthropic/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-3-5-sonnet-20241022",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+
+{"model":"claude-3-5-sonnet-20241022","usage":{"prompt_tokens":17,"completion_tokens":20,"total_tokens":37},"choices":[{"message":{"content":"Hello! I'm here and ready to help. How can I assist you today?","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Y95VCEuzVatbFZDKcGqJxt","created":1761584439,"object":"chat.completion"}
+```
+
+To call Bedrock. Make sure your aws credentials are current. For example,
+
+```bash
+aws sso login
+```
+
+```bash
+curl http://localhost:3000/bedrock/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "global.anthropic.claude-sonnet-4-20250514-v1:0",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+
+{"model":"global.anthropic.claude-sonnet-4-20250514-v1:0","usage":{"prompt_tokens":17,"completion_tokens":30,"total_tokens":47},"choices":[{"message":{"content":"Hello! Nice to meet you. Your test worked perfectly - I received your message loud and clear. How can I help you today?","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"bedrock-1761584402445","created":1761584402,"object":"chat.completion"}  
+```
+
+## Securing with SSO
+
+To call OpenAI:
+
+```bash
+curl http://localhost:3000/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+
+...
+* upload completely sent off: 146 bytes
+< HTTP/1.1 403 Forbidden
+< content-type: text/plain
+< content-length: 20
+< date: Mon, 27 Oct 2025 17:01:58 GMT
+< 
+* Connection #0 to host localhost left intact
+authorization failed%     
+```
+
+This because we need to pass an SSO token for this to work. 
+
+```bash
+TOKEN=$(./get-keycloak-token.sh)
+
+curl http://localhost:3000/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+```
+
+## Rate limiting
+
+## Metrics / Grafana / Cost
+
+## Tracing
 
 
-### Demo Failover:
+## Failover:
 
 In a separate window, you'll need to start the dummy http server (this is what helps to trigger the conditions for failover)
 
@@ -201,7 +361,7 @@ Call it a second time and you should see (note the Model!! It's not `gpt-5`!!):
 }
 ```
 
-### Guardrails
+## Guardrails
 
 ```yaml
 policies:
