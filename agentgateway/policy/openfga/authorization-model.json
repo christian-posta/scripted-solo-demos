@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.1",
+  "type_definitions": [
+    {
+      "type": "user",
+      "relations": {
+        "member": {
+          "this": {}
+        },
+        "can_use": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "member": {
+            "directly_related_user_types": [
+              {
+                "type": "team"
+              }
+            ]
+          },
+          "can_use": {
+            "directly_related_user_types": [
+              {
+                "type": "model"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "team",
+      "relations": {
+        "member": {
+          "this": {}
+        },
+        "can_use": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "member": {
+            "directly_related_user_types": [
+              {
+                "type": "user"
+              }
+            ]
+          },
+          "can_use": {
+            "directly_related_user_types": [
+              {
+                "type": "model"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "model",
+      "relations": {
+        "can_use": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "can_use": {
+            "directly_related_user_types": [
+              {
+                "type": "user"
+              },
+              {
+                "type": "team",
+                "relation": "member"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

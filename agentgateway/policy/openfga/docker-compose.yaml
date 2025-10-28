@@ -1,0 +1,16 @@
+services:
+  openfga:
+    image: openfga/openfga:v1.10.3
+    ports:
+      - "8181:8080"
+      - "3101:3000"  # Playground
+    environment:
+      OPENFGA_DATASTORE_ENGINE: memory
+      OPENFGA_LOG_LEVEL: info
+    command: run
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
