@@ -119,7 +119,7 @@ binds:
                 - builtin: phoneNumber
                 - builtin: email
   # ------------------------------------------------------------
-  # OpenAI route
+  # Local Policy OpenAI route
   # ------------------------------------------------------------
     - name: policy-openai
       matches:
@@ -162,6 +162,46 @@ binds:
             - "request.method == 'OPTIONS'"  # Allow OPTIONS
             - "jwt.sub != null && 'supply-chain' in jwt.realm_access.roles"                    
 
+  # ------------------------------------------------------------
+  # OPA Policy OpenAI route where we restrict to specific models
+  # ------------------------------------------------------------
+    - name: opa-openai
+      matches:
+      - path:
+          pathPrefix: /opa/openai
+      backends:
+      - ai:
+          name: openai
+          provider:
+            openAI:
+              model: gpt-4o
+          routes:
+            "/v1/chat/completions": passthrough  # LLM processing
+            "*": passthrough                      # Everything else passes through              
+      policies:
+        extAuthz:
+          host: "${EXT_AUTHZ_HOST:-localhost}:9191"  # Direct host:port reference
+          context:  # Custom context extensions sent to policy engine
+            environment: "development"
+            region: "us-west-1"
+            service: "agentgateway"        
+          # IMPORTANT: Include request body so OPA can inspect the model field
+          # We need this to support sending the body: 
+          # https://github.com/agentgateway/agentgateway/pull/578
+          # includeRequestBody:
+          #   maxRequestBytes: 8192      # Maximum body size to send (default: 8192)
+          #   allowPartialMessage: false  # Don't send partial if body exceeds max
+          #   packAsBytes: false         # Send as UTF-8 string (not raw bytes)            
+        urlRewrite:
+          path:
+            prefix: ""    # This strips the matched /openai prefix
+        backendAuth:
+          key: ${OPENAI_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+          allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+          allowCredentials: false
        
 
   # ------------------------------------------------------------

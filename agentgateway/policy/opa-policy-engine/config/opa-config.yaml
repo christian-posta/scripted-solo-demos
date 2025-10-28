@@ -1,0 +1,16 @@
+# OPA Configuration for External Authorization
+plugins:
+  envoy_ext_authz_grpc:
+    addr: :9191
+    query: data.authz.allow
+
+# Logging configuration
+log_level: info
+
+# Decision logging
+decision_logs:
+  console: true
+
+# Status reporting
+status:
+  console: true

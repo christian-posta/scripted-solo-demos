@@ -1,3 +1,4 @@
+run-proxy-dev.sh
 .webui_secret_key
 virtual-keys.txt
 **/credentials.json

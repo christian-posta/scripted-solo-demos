@@ -1,0 +1,19 @@
+# OPA Policy Engine .gitignore
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker volumes (if mounted locally)
+data/

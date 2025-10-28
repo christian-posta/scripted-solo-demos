@@ -1,0 +1,57 @@
+{
+    "attributes": {
+      "source": {
+        "address": {
+          "socketAddress": {
+            "protocol": 0,
+            "address": "192.168.1.10",
+            "portValue": 54321
+          }
+        },
+        "service": "",
+        "labels": {},
+        "principal": "",
+        "certificate": ""
+      },
+      "destination": {
+        "address": {
+          "socketAddress": {
+            "protocol": 0,
+            "address": "127.0.0.1",
+            "portValue": 3000
+          }
+        },
+        "service": "",
+        "labels": {},
+        "principal": "",
+        "certificate": ""
+      },
+      "request": {
+        "time": "2025-01-27T12:00:00Z",
+        "http": {
+          "id": "trace-id-123",
+          "method": "POST",
+          "headers": {
+            "host": "example.com",
+            "content-type": "application/json",
+            "x-user": "alice"
+          },
+          "path": "/api/data",
+          "host": "example.com",
+          "scheme": "https",
+          "protocol": "HTTP/1.1",
+          "query": "",
+          "fragment": "",
+          "size": 0,
+          "body": "",
+          "rawBody": ""
+        }
+      },
+      "contextExtensions": {
+        "environment": "production"
+      },
+      "tlsSession": {
+        "sni": "example.com"
+      }
+    }
+  }

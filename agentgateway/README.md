@@ -827,3 +827,65 @@ curl http://localhost:3000/policy/openai/v1/chat/completions \
 # Will see this if using the JWT w/o the supply-chain role
 authorization failed%
 ```
+
+
+## OPA Policy Enforcement
+
+You will need to start the OPA ext_auth server:
+
+```bash
+cd ./policy/opa-policy-engine
+./run-opa.sh
+```
+
+_Note: this will run on port 8181 (http) and 9191 (grpc)_
+
+Take a look at `./policy/opa-policy-engine/policies/authz.rego` for the policy, which restricts models to those that start with gpt-3.5* and requires a specific header `x-opa-passthrough-enabled: true`. 
+
+Keep in mind, the execution engine evaluates in this order:
+
+| Confirmed execution order:                                      |
+|---------------------------------------------------------------|
+| JWT validation (lines 53-56)                                  |
+| ext_authz (lines 58-63) ← YOUR PR adds body support here      |
+| Authorization (CEL) (lines 70-72)                             |
+| Local rate limit (lines 75-77)                                |
+| Remote rate limit (lines 79-86)                               |
+| ext_proc (lines 88-93)                                        |
+| Transformation (lines 95-97) ← This is AFTER ext_authz        |
+| CSRF (lines 99-103)                                           |
+
+Which means, we can do things like validate JWT before sending to ext_authz. The only problem at the moment is that JWT validation removes the JWT from the headers, so ext_authz won't see it (https://github.com/agentgateway/agentgateway/issues/576). We could try xform with cel to put into headers, but as you can see xformation happens after ext_authz. 
+
+We will also want body support in the policy engine. So we should optionally include the body (https://github.com/agentgateway/agentgateway/pull/578)
+
+_Note: Until the https://github.com/agentgateway/agentgateway/pull/578 is fixed, we may not be able to demo this very well_
+
+Should deny this:
+
+```bash
+curl http://localhost:3000/opa/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi, this is a hello world test. "
+      }
+    ]
+  }'
+```
+
+
+Should allow this since it has an allowed body, and has the right header. 
+
+```bash
+curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "x-opa-passthrough-enabled: true" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
+  }'
+```
