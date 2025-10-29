@@ -3,32 +3,8 @@
   "type_definitions": [
     {
       "type": "user",
-      "relations": {
-        "member": {
-          "this": {}
-        },
-        "can_use": {
-          "this": {}
-        }
-      },
-      "metadata": {
-        "relations": {
-          "member": {
-            "directly_related_user_types": [
-              {
-                "type": "team"
-              }
-            ]
-          },
-          "can_use": {
-            "directly_related_user_types": [
-              {
-                "type": "model"
-              }
-            ]
-          }
-        }
-      }
+      "relations": {},
+      "metadata": null
     },
     {
       "type": "team",
@@ -36,7 +12,7 @@
         "member": {
           "this": {}
         },
-        "can_use": {
+        "org": {
           "this": {}
         }
       },
@@ -49,10 +25,117 @@
               }
             ]
           },
-          "can_use": {
+          "org": {
             "directly_related_user_types": [
               {
-                "type": "model"
+                "type": "org"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "org",
+      "relations": {
+        "member": {
+          "this": {}
+        },
+        "teams": {
+          "this": {}
+        },
+        "entitled_providers": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "member": {
+            "directly_related_user_types": [
+              {
+                "type": "user"
+              }
+            ]
+          },
+          "teams": {
+            "directly_related_user_types": [
+              {
+                "type": "team"
+              }
+            ]
+          },
+          "entitled_providers": {
+            "directly_related_user_types": [
+              {
+                "type": "provider"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "provider",
+      "relations": {
+        "can_use": {
+          "tupleToUserset": {
+            "computedUserset": {
+              "relation": "member"
+            },
+            "tupleset": {
+              "relation": "entitled_orgs"
+            }
+          }
+        },
+        "entitled_orgs": {
+          "this": {}
+        },
+        "allowed_teams": {
+          "this": {}
+        },
+        "extra_can_use": {
+          "union": {
+            "child": [
+              {
+                "this": {}
+              },
+              {
+                "tupleToUserset": {
+                  "computedUserset": {
+                    "relation": "member"
+                  },
+                  "tupleset": {
+                    "relation": "allowed_teams"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "can_use": {
+            "directly_related_user_types": []
+          },
+          "entitled_orgs": {
+            "directly_related_user_types": [
+              {
+                "type": "org"
+              }
+            ]
+          },
+          "allowed_teams": {
+            "directly_related_user_types": [
+              {
+                "type": "team"
+              }
+            ]
+          },
+          "extra_can_use": {
+            "directly_related_user_types": [
+              {
+                "type": "user"
               }
             ]
           }
@@ -62,20 +145,72 @@
     {
       "type": "model",
       "relations": {
-        "can_use": {
+        "provider": {
           "this": {}
+        },
+        "allowed_teams": {
+          "this": {}
+        },
+        "can_use": {
+          "union": {
+            "child": [
+              {
+                "this": {}
+              },
+              {
+                "tupleToUserset": {
+                  "computedUserset": {
+                    "relation": "member"
+                  },
+                  "tupleset": {
+                    "relation": "allowed_teams"
+                  }
+                }
+              },
+              {
+                "tupleToUserset": {
+                  "computedUserset": {
+                    "relation": "can_use"
+                  },
+                  "tupleset": {
+                    "relation": "provider"
+                  }
+                }
+              },
+              {
+                "tupleToUserset": {
+                  "computedUserset": {
+                    "relation": "extra_can_use"
+                  },
+                  "tupleset": {
+                    "relation": "provider"
+                  }
+                }
+              }
+            ]
+          }
         }
       },
       "metadata": {
         "relations": {
+          "provider": {
+            "directly_related_user_types": [
+              {
+                "type": "provider"
+              }
+            ]
+          },
+          "allowed_teams": {
+            "directly_related_user_types": [
+              {
+                "type": "team"
+              }
+            ]
+          },
           "can_use": {
             "directly_related_user_types": [
               {
                 "type": "user"
-              },
-              {
-                "type": "team",
-                "relation": "member"
               }
             ]
           }

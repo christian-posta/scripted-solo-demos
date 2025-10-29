@@ -60,6 +60,9 @@ See: https://github.com/openfga/cli
 
 ## Quick Start
 
+To use the playground use the online one: `https://play.fga.dev/sandbox/?store=FooStore`
+The local one won't work well in Docker.
+
 ### 1. Install Python Dependencies
 
 ```bash

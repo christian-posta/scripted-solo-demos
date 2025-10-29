@@ -119,48 +119,56 @@ async def main():
         model_id=model_id
     )
     
-    # Upload model if needed (optional - can be done via CLI)
-    # await gateway.upload_authorization_model("authorization-model.json")
-    
-    # Set up demo data
-    print("\nSetting up demo relationships...")
-    await gateway.setup_demo_relationships()
+    # Set up demo data for V3 model
+    print("\nSetting up V3 demo relationships...")
+    await gateway.setup_demo_relationships_v3()
     print("Done setting up demo relationships.\n")
     
-    # Test access checks
-    print("Testing access checks...")
+    # Test access checks for V3 model
+    print("Testing V3 authorization model...")
+    print("=" * 70)
     
-    alice_can_use_claude = await gateway.can_access_model("alice", "claude-3-opus")
-    print(f"Alice can access Claude 3 Opus: {alice_can_use_claude}")  # Expected: True
+    # Test org-level provider entitlement
+    print("\n[Test 1] Alice can access gpt4o (via org:acme → provider:openai)")
+    alice_can_use_gpt4o = await gateway.can_access_model("alice", "gpt4o")
+    print(f"  Result: {alice_can_use_gpt4o}")  # Expected: True
     
-    alice_can_use_gemini = await gateway.can_access_model("alice", "gemini-pro")
-    print(f"Alice can access Gemini Pro: {alice_can_use_gemini}")  # Expected: False
+    print("\n[Test 2] Bob can access gpt4o (via org:acme → provider:openai)")
+    bob_can_use_gpt4o = await gateway.can_access_model("bob", "gpt4o")
+    print(f"  Result: {bob_can_use_gpt4o}")  # Expected: True
     
-    bob_can_use_gpt4 = await gateway.can_access_model("bob", "gpt-4")
-    print(f"Bob can access GPT-4: {bob_can_use_gpt4}")  # Expected: True
+    # Test team-level model allowlist
+    print("\n[Test 3] Bob can access claude-35 (via team:acme-ml allowlist)")
+    bob_can_use_claude = await gateway.can_access_model("bob", "claude-35")
+    print(f"  Result: {bob_can_use_claude}")  # Expected: True
     
-    bob_can_use_claude = await gateway.can_access_model("bob", "claude-3-opus")
-    print(f"Bob can access Claude 3 Opus: {bob_can_use_claude}")  # Expected: True (as contributor)
+    print("\n[Test 4] Alice cannot access claude-35 (not on allowlist)")
+    alice_can_use_claude = await gateway.can_access_model("alice", "claude-35")
+    print(f"  Result: {alice_can_use_claude}")  # Expected: False
     
-    # Test feature access
-    print("\nTesting feature access...")
+    # Test direct model grant
+    print("\n[Test 5] Erin can access gpt4o (direct grant)")
+    erin_can_use_gpt4o = await gateway.can_access_model("erin", "gpt4o")
+    print(f"  Result: {erin_can_use_gpt4o}")  # Expected: True
     
-    alice_can_access_vision = await gateway.can_access_feature("alice", "vision")
-    print(f"Alice can access vision feature: {alice_can_access_vision}")  # Expected: True
+    # Test provider-level extra_can_use via model access
+    print("\n[Test 6] Dave can access gpt4o (via provider:openai extra_can_use)")
+    dave_can_use_gpt4o = await gateway.can_access_model("dave", "gpt4o")
+    print(f"  Result: {dave_can_use_gpt4o}")  # Expected: True
     
-    alice_can_access_code = await gateway.can_access_feature("alice", "code_generation")
-    print(f"Alice can access code_generation feature: {alice_can_access_code}")  # Expected: False
+    print("\n[Test 7] Dave cannot use provider:openai via can_use (no org membership)")
+    dave_can_use_openai = await gateway.can_access_provider("dave", "openai")
+    print(f"  Result: {dave_can_use_openai}")  # Expected: False
     
-    # Test budget constraints
-    print("\nTesting budget constraints...")
+    print("\n[Test 8] Charlie cannot access gpt4o (no permissions)")
+    charlie_can_use_gpt4o = await gateway.can_access_model("charlie", "gpt4o")
+    print(f"  Result: {charlie_can_use_gpt4o}")  # Expected: False
     
-    alice_can_afford_small = await gateway.can_afford_model("alice", "claude-3-opus", 1000)
-    print(f"Alice can use 1000 tokens with Claude 3 Opus: {alice_can_afford_small}")  # Expected: True
+    print("\n" + "=" * 70)
+    print("\n✅ All V3 authorization tests completed!")
     
-    alice_can_afford_large = await gateway.can_afford_model("alice", "claude-3-opus", 50000)
-    print(f"Alice can use 50000 tokens with Claude 3 Opus: {alice_can_afford_large}")  # Expected: False (exceeds budget)
-    
-    print("\n✅ All tests completed!")
+    # Clean up
+    await gateway.close()
 
 
 if __name__ == "__main__":
