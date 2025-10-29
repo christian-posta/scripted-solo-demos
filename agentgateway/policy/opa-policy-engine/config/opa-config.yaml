@@ -2,7 +2,7 @@
 plugins:
   envoy_ext_authz_grpc:
     addr: :9191
-    query: data.authz.allow
+    query: data.authz
 
 # Logging configuration
 log_level: info

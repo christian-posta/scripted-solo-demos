@@ -831,6 +831,8 @@ authorization failed%
 
 ## OPA Policy Enforcement
 
+_Note: Until the https://github.com/agentgateway/agentgateway/pull/578 is fixed, we may not be able to demo this very well_
+
 You will need to start the OPA ext_auth server:
 
 ```bash
@@ -859,7 +861,7 @@ Which means, we can do things like validate JWT before sending to ext_authz. The
 
 We will also want body support in the policy engine. So we should optionally include the body (https://github.com/agentgateway/agentgateway/pull/578)
 
-_Note: Until the https://github.com/agentgateway/agentgateway/pull/578 is fixed, we may not be able to demo this very well_
+
 
 Should deny this:
 
