@@ -891,3 +891,21 @@ curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
   }'
 ```
+
+
+_Note: Will save this for later, doesn't work yet_
+
+If we add auth to OPA:
+
+```bash
+TOKEN=$(./get-keycloak-token.sh)
+
+curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "x-opa-passthrough-enabled: true" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
+  }'
+```
