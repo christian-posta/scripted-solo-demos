@@ -5,12 +5,12 @@ from relationships import AIGatewayReBAC
 
 async def demo():
     # Configuration - read from environment variables set by setup-openfga.sh
-    API_URL = os.getenv("FGA_API_URL", "http://localhost:8181")
-    STORE_ID = os.getenv("FGA_STORE_ID")
-    MODEL_ID = os.getenv("FGA_MODEL_ID")
+    API_URL = os.getenv("OPENFGA_API_URL", "http://localhost:8181")
+    STORE_ID = os.getenv("OPENFGA_STORE_ID")
+    MODEL_ID = os.getenv("OPENFGA_MODEL_ID")
     
     if not STORE_ID or not MODEL_ID:
-        print("❌ Error: FGA_STORE_ID and FGA_MODEL_ID environment variables must be set")
+        print("❌ Error: OPENFGA_STORE_ID and OPENFGA_MODEL_ID environment variables must be set")
         print("Please run: source .env")
         print("Or run: ./setup-openfga.sh")
         return
