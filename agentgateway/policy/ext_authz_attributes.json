@@ -1,0 +1,153 @@
+{
+    "decision_id": "5befcbb1-b43d-4b40-b9fa-9ae915bcfdfd",
+    "input": {
+      "attributes": {
+        "contextExtensions": {
+          "environment": "development",
+          "region": "us-west-1",
+          "service": "agentgateway"
+        },
+        "destination": {
+          "address": {
+            "socketAddress": {
+              "address": "::1",
+              "portValue": 3000
+            }
+          }
+        },
+        "metadataContext": {
+          "filterMetadata": {
+            "agentgateway.jwt.claims": {
+              "acr": "1",
+              "allowed-origins": [
+                "http://localhost:9999"
+              ],
+              "aud": "account",
+              "azp": "openweb-ui",
+              "email": "user@mcp.example.com",
+              "email_verified": true,
+              "exp": 1761700528,
+              "family_name": "User",
+              "given_name": "MCP",
+              "iat": 1761696928,
+              "iss": "http://localhost:8080/realms/mcp-realm",
+              "jti": "onrtro:e1d72051-ba3d-4efd-a907-3811cc5d9c3b",
+              "name": "MCP User",
+              "preferred_username": "mcp-user",
+              "realm_access": {
+                "roles": [
+                  "supply-chain",
+                  "default-roles-mcp-realm",
+                  "ai-agents",
+                  "offline_access",
+                  "uma_authorization"
+                ]
+              },
+              "resource_access": {
+                "account": {
+                  "roles": [
+                    "manage-account",
+                    "manage-account-links",
+                    "view-profile"
+                  ]
+                }
+              },
+              "scope": "profile email",
+              "sid": "9f07cba9-12f4-43dc-93cf-cbf0a1a958a9",
+              "sub": "e58704d6-daea-4c75-848d-b1cfb6819015",
+              "typ": "Bearer"
+            }
+          }
+        },
+        "request": {
+          "http": {
+            "headers": {
+              "accept": "*/*",
+              "content-length": "116",
+              "content-type": "application/json",
+              "traceparent": "00-dbb6773042e0c1a762eff0bd48f93ebd-446b7b7adc4d0284-01",
+              "user-agent": "curl/8.7.1",
+              "x-opa-passthrough-enabled": "true"
+            },
+            "host": "localhost",
+            "id": "dbb6773042e0c1a762eff0bd48f93ebd",
+            "method": "POST",
+            "path": "/opa/openai/v1/chat/completions",
+            "protocol": "HTTP/1.1",
+            "scheme": "http"
+          },
+          "time": {
+            "nanos": 543617584,
+            "seconds": 1761696965
+          }
+        },
+        "source": {
+          "address": {
+            "socketAddress": {
+              "address": "::1",
+              "portValue": 62370
+            }
+          }
+        }
+      },
+      "parsed_body": null,
+      "parsed_path": [
+        "opa",
+        "openai",
+        "v1",
+        "chat",
+        "completions"
+      ],
+      "parsed_query": {},
+      "truncated_body": false,
+      "version": [
+        [
+          {
+            "type": "string",
+            "value": "encoding"
+          },
+          {
+            "type": "string",
+            "value": "protojson"
+          }
+        ],
+        [
+          {
+            "type": "string",
+            "value": "ext_authz"
+          },
+          {
+            "type": "string",
+            "value": "v3"
+          }
+        ]
+      ]
+    },
+    "labels": {
+      "id": "a2f0617c-2618-4842-bcd8-d75a66aa63d2",
+      "version": "1.9.0"
+    },
+    "level": "info",
+    "metrics": {
+      "timer_rego_external_resolve_ns": 833,
+      "timer_rego_query_eval_ns": 702416,
+      "timer_server_handler_ns": 1118375
+    },
+    "msg": "Decision Log",
+    "query": "data.authz",
+    "result": {
+      "allowed": false,
+      "has_passthrough_header": true,
+      "http_method": "POST",
+      "http_path": "/opa/openai/v1/chat/completions",
+      "is_correct_path": true,
+      "is_development": true,
+      "reason": [
+        "Request body is missing. Cannot validate model requirement."
+      ],
+      "source_ip": "::1"
+    },
+    "time": "2025-10-29T00:16:05Z",
+    "timestamp": "2025-10-29T00:16:05.551465877Z",
+    "type": "openpolicyagent.org/decision_logs"
+  }
