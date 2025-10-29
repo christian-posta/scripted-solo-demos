@@ -831,6 +831,13 @@ authorization failed%
 
 ## OPA Policy Enforcement
 
+We need to uncomment this part in the /opa/openai route:
+
+          # includeRequestBody:
+          #   maxRequestBytes: 8192
+          #   allowPartialMessage: false
+          #   packAsBytes: false
+
 _Note: Until the https://github.com/agentgateway/agentgateway/pull/578 is fixed, we may not be able to demo this very well_
 
 You will need to start the OPA ext_auth server:
@@ -909,3 +916,45 @@ curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
   }'
 ```
+
+
+## FGA Policy Enforcement (WIP)
+
+We need to uncomment this part in the /fga/openai route:
+
+          # includeRequestBody:
+          #   maxRequestBytes: 8192
+          #   allowPartialMessage: false
+          #   packAsBytes: false
+
+This should fail:
+
+```bash
+TOKEN=$(./get-keycloak-token.sh)
+
+curl -X POST http://localhost:3000/fga/openai/v1/chat/completions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "x-opa-passthrough-enabled: true" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
+  }'
+```
+
+
+This should work:
+
+```bash
+TOKEN=$(./get-keycloak-token.sh)
+
+curl -X POST http://localhost:3000/fga/openai/v1/chat/completions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "x-opa-passthrough-enabled: true" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hi, this is a hello world test."}]
+  }'
+```
+

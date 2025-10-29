@@ -101,6 +101,10 @@ export OPENFGA_STORE_ID=$STORE_ID
 # OpenFGA Authorization Model ID (optional - uses latest if not specified)
 # Get this from: fga model list --store-id=<STORE_ID>
 export OPENFGA_MODEL_ID=$MODEL_ID
+
+# OpenFGA Relation for model access checks
+# This must match the relation defined in the authorization model for the 'model' type
+export OPENFGA_RELATION=can_use
 EOF
 
 echo ""

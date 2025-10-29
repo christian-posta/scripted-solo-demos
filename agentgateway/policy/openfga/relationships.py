@@ -156,12 +156,14 @@ class AIGatewayReBAC:
             ("team:globex-research", "allowed_teams", "provider:anthropic"),
             
             # ----- Models and provider ownership -----
-            ("provider:openai", "provider", "model:gpt4o"),
+            ("provider:openai", "provider", "model:gpt-4o"),
+            ("provider:openai", "provider", "model:gpt-3.5-turbo"),
             ("provider:anthropic", "provider", "model:claude-35"),
             
             # ----- Per-model allowlists -----
             ("team:acme-ml", "allowed_teams", "model:claude-35"),
             
-            # ----- Optional direct model grant -----
-            ("user:erin", "can_use", "model:gpt4o"),
+            # ----- Direct model grants -----
+            ("user:erin", "can_use", "model:gpt-4o"),
+            ("user:mcp-user", "can_use", "model:gpt-4o"),  # mcp-user can access gpt-4o only
         ])

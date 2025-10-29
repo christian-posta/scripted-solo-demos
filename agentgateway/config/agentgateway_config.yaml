@@ -179,6 +179,12 @@ binds:
             "/v1/chat/completions": passthrough  # LLM processing
             "*": passthrough                      # Everything else passes through              
       policies:
+        jwtAuth:
+          mode: optional
+          issuer: http://localhost:8080/realms/mcp-realm
+          audiences: [account]
+          jwks:
+            url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs             
         extAuthz:
           host: "${EXT_AUTHZ_HOST:-localhost}:9191"  # Direct host:port reference
           context:  # Custom context extensions sent to policy engine
@@ -188,10 +194,63 @@ binds:
           # IMPORTANT: Include request body so OPA can inspect the model field
           # We need this to support sending the body: 
           # https://github.com/agentgateway/agentgateway/pull/578
+          # additionally, we need the JWT claims passed through, so 
+          # we need to use this until we sort that out:
+          # https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack          
           # includeRequestBody:
-          #   maxRequestBytes: 8192      # Maximum body size to send (default: 8192)
-          #   allowPartialMessage: false  # Don't send partial if body exceeds max
-          #   packAsBytes: false         # Send as UTF-8 string (not raw bytes)            
+          #   maxRequestBytes: 8192
+          #   allowPartialMessage: false
+          #   packAsBytes: false
+        urlRewrite:
+          path:
+            prefix: ""    # This strips the matched /openai prefix
+        backendAuth:
+          key: ${OPENAI_API_KEY}
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+          allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+          allowCredentials: false
+
+  # ------------------------------------------------------------
+  # FGA (OpenFGA) Policy OpenAI route where we restrict to specific models
+  # ------------------------------------------------------------
+    - name: fga-openai
+      matches:
+      - path:
+          pathPrefix: /fga/openai
+      backends:
+      - ai:
+          name: openai
+          provider:
+            openAI:
+              model: gpt-4o
+          routes:
+            "/v1/chat/completions": passthrough  # LLM processing
+            "*": passthrough                      # Everything else passes through              
+      policies:
+        jwtAuth:
+          mode: optional
+          issuer: http://localhost:8080/realms/mcp-realm
+          audiences: [account]
+          jwks:
+            url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs             
+        extAuthz:
+          host: "${EXT_AUTHZ_HOST:-localhost}:7070"  # Direct host:port reference
+          context:  # Custom context extensions sent to policy engine
+            environment: "development"
+            region: "us-west-1"
+            service: "agentgateway"        
+          # IMPORTANT: Include request body so OPA can inspect the model field
+          # We need this to support sending the body: 
+          # https://github.com/agentgateway/agentgateway/pull/578
+          # additionally, we need the JWT claims passed through, so 
+          # we need to use this until we sort that out:
+          # https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack
+          # includeRequestBody:
+          #   maxRequestBytes: 8192
+          #   allowPartialMessage: false
+          #   packAsBytes: false    
         urlRewrite:
           path:
             prefix: ""    # This strips the matched /openai prefix

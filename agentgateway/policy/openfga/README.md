@@ -87,84 +87,38 @@ This script will:
 
 ### 3. Run Tests
 
-```bash
-# Using the generated script
-python run-tests.py <STORE_ID> <MODEL_ID>
-
-# Or set environment variables
-export FGA_STORE_ID=<store_id>
-export FGA_MODEL_ID=<model_id>
-python run-tests.py
-```
-
-The output will show:
-- ✅ Alice can access Claude 3 Opus (via research team subscription)
-- ❌ Alice cannot access Gemini Pro (not in subscription)
-- ✅ Bob can access GPT-4 (via dev team subscription)
-- ✅ Bob can access Claude 3 Opus (as contributor on nlp_research project)
-- ✅ Alice can use vision features
-- ❌ Alice cannot use code_generation features
-- ✅ Alice can afford small token usage
-- ❌ Alice cannot afford large token usage (exceeds budget)
-
-## Manual Setup
-
-If you prefer to set things up manually:
-
-### 1. Start OpenFGA Server
+Note, we should always do this, because this is what sets up the tuples!!
 
 ```bash
-docker-compose up -d
+ source .env && python test-relationships.py
 ```
 
-### 2. Create a Store
+If this looks good, we should copy the .env file that gets created (with the model/store ID) over to where the ext-auth server is:
 
 ```bash
-fga store create --name "AI Gateway ReBAC"
-# Note the store ID from the output
+cp .env ~/go/src/github.com/christian-posta/extauth-policy-engine
 ```
 
-### 3. Upload Authorization Model
+Then we can start the ext_auth server (go to that dir):
 
 ```bash
-fga model write --store-id <STORE_ID> --file authorization-model.json
-# Note the model ID from the output
+cd ~/go/src/github.com/christian-posta/extauth-policy-engine
+source .env
+./policy-engine
 ```
 
-### 4. Run Tests
+NOTE: Check that the startup prints the store and model id you are expecting!!!
+
+Then start up agentgateway. Then you can call it according to the README.md at the root of the project. At the moment we need to user the agentgateway from the dynamic metadata hack branch:
+
+> https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack
+
+Once we sort this out correctly, we can just use a regular build.
 
 ```bash
-export FGA_STORE_ID=<store_id>
-export FGA_MODEL_ID=<model_id>
-python run-tests.py
+cargo run -- -f ~/scripted-demos/agentgateway/config/agentgateway_config.yaml
 ```
 
-## Using in Your Application
-
-Here's how to use the `AIGatewayReBAC` class in your application:
-
-```python
-import asyncio
-from relationships import AIGatewayReBAC
-
-async def check_access(user_id, model_id):
-    gateway = AIGatewayReBAC(
-        api_url="http://localhost:8181",
-        store_id="your_store_id",
-        model_id="your_model_id"
-    )
-    
-    # Check if user can access the model
-    can_access = await gateway.can_access_model(user_id, model_id)
-    
-    # Check if user can afford the request
-    can_afford = await gateway.can_afford_model(user_id, model_id, token_count=1000)
-    
-    return can_access and can_afford
-
-# Usage
-result = asyncio.run(check_access("alice", "claude-3-opus"))
-```
 
 ## Stopping the Server
 
@@ -172,78 +126,6 @@ result = asyncio.run(check_access("alice", "claude-3-opus"))
 docker-compose down
 ```
 
-## Authorization Model
-
-The authorization model defines:
-
-### Types
-- **user**: Individual users
-- **team**: Groups of users
-- **subscription**: Team subscriptions to providers
-- **provider**: AI model providers (Anthropic, OpenAI, Google)
-- **model**: Specific AI models (Claude 3 Opus, GPT-4, etc.)
-- **feature**: Model features (vision, code generation, etc.)
-- **project**: User projects with budgets
-
-### Key Relations
-
-- `team:member` → users who belong to a team
-- `subscription:subscriber` → team that has the subscription
-- `subscription:offers` → providers offered by the subscription
-- `project:owner` → user who owns a project
-- `project:contributor` → users who can contribute
-- `model:provider` → provider that owns a model
-- `model:can_use` → users who can use a model (computed)
-- `project:allowed_model` → models allowed on a project
-
-## How It Works
-
-1. **User** → belongs to **Team** (via membership)
-2. **Team** → has **Subscription** (via subscriber relation)
-3. **Subscription** → offers **Provider** (via offers relation)
-4. **Provider** → owns **Model** (via provider relation)
-5. Users can use models if:
-   - Their team's subscription offers the provider, OR
-   - They are owner/contributor of a project that allows the model
-
-### Example: Alice accessing Claude 3 Opus
-
-1. Alice is a member of research_team
-2. research_team has subscription:academic
-3. subscription:academic offers provider:anthropic
-4. provider:anthropic provides model:claude-3-opus
-5. Therefore: Alice can use Claude 3 Opus ✅
-
-## Development
-
-### Adding New Relationships
-
-Edit `relationships.py` to add new relationship methods or modify `setup_demo_relationships()` to add test data.
-
-### Modifying the Authorization Model
-
-Edit `authorization-model.json` and re-upload:
-
-```bash
-fga model write --store-id <STORE_ID> --file authorization-model.json
-```
-
-## Troubleshooting
-
-### "Could not connect to OpenFGA"
-
-- Check that Docker is running: `docker ps`
-- Check that OpenFGA is up: `curl http://localhost:8181/healthz`
-
-### "Store not found"
-
-- Verify the store ID with: `fga store list`
-- Create a new store: `fga store create --name "My Store"`
-
-### "Model not found"
-
-- Check the model ID with: `fga model list --store-id <STORE_ID>`
-- Re-upload the model: `fga model write --store-id <STORE_ID> --file authorization-model.json`
 
 ## References
 

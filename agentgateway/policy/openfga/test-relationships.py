@@ -31,18 +31,18 @@ async def demo():
     print("Testing V3 authorization model...")
     print("=" * 70)
     
-    # Test 1: Alice (member of acme-eng) should have access to gpt4o via org entitlement
-    print("\n[Test 1] Alice can access gpt4o (via org:acme → provider:openai)")
-    alice_can_use_gpt4o = await gateway.can_access_model("alice", "gpt4o")
+    # Test 1: Alice (member of acme-eng) should have access to gpt-4o via org entitlement
+    print("\n[Test 1] Alice can access gpt-4o (via org:acme → provider:openai)")
+    alice_can_use_gpt4o = await gateway.can_access_model("alice", "gpt-4o")
     print(f"  Result: {alice_can_use_gpt4o}")
-    assert alice_can_use_gpt4o == True, "Expected Alice to have access to gpt4o via org entitlement"
+    assert alice_can_use_gpt4o == True, "Expected Alice to have access to gpt-4o via org entitlement"
     print("  ✅ PASS")
     
-    # Test 2: Bob (member of acme-ml) should have access to gpt4o via org entitlement
-    print("\n[Test 2] Bob can access gpt4o (via org:acme → provider:openai)")
-    bob_can_use_gpt4o = await gateway.can_access_model("bob", "gpt4o")
+    # Test 2: Bob (member of acme-ml) should have access to gpt-4o via org entitlement
+    print("\n[Test 2] Bob can access gpt-4o (via org:acme → provider:openai)")
+    bob_can_use_gpt4o = await gateway.can_access_model("bob", "gpt-4o")
     print(f"  Result: {bob_can_use_gpt4o}")
-    assert bob_can_use_gpt4o == True, "Expected Bob to have access to gpt4o via org entitlement"
+    assert bob_can_use_gpt4o == True, "Expected Bob to have access to gpt-4o via org entitlement"
     print("  ✅ PASS")
     
     # Test 3: Bob (member of acme-ml) should have access to claude-35 via team allowlist
@@ -59,19 +59,19 @@ async def demo():
     assert alice_can_use_claude == False, "Expected Alice NOT to have access to claude-35"
     print("  ✅ PASS")
     
-    # Test 5: Erin has direct access to gpt4o
-    print("\n[Test 5] Erin can access gpt4o (direct grant)")
-    erin_can_use_gpt4o = await gateway.can_access_model("erin", "gpt4o")
+    # Test 5: Erin has direct access to gpt-4o
+    print("\n[Test 5] Erin can access gpt-4o (direct grant)")
+    erin_can_use_gpt4o = await gateway.can_access_model("erin", "gpt-4o")
     print(f"  Result: {erin_can_use_gpt4o}")
-    assert erin_can_use_gpt4o == True, "Expected Erin to have direct access to gpt4o"
+    assert erin_can_use_gpt4o == True, "Expected Erin to have direct access to gpt-4o"
     print("  ✅ PASS")
     
-    # Test 6: Dave can access gpt4o via provider:openai extra_can_use
+    # Test 6: Dave can access gpt-4o via provider:openai extra_can_use
     # Note: Dave has extra_can_use on provider:openai, which grants access to all models from that provider
-    print("\n[Test 6] Dave can access gpt4o (via provider:openai extra_can_use)")
-    dave_can_use_gpt4o = await gateway.can_access_model("dave", "gpt4o")
+    print("\n[Test 6] Dave can access gpt-4o (via provider:openai extra_can_use)")
+    dave_can_use_gpt4o = await gateway.can_access_model("dave", "gpt-4o")
     print(f"  Result: {dave_can_use_gpt4o}")
-    assert dave_can_use_gpt4o == True, "Expected Dave to have access to gpt4o via provider extra_can_use"
+    assert dave_can_use_gpt4o == True, "Expected Dave to have access to gpt-4o via provider extra_can_use"
     print("  ✅ PASS")
     
     # Test 7: Dave should NOT have org-level provider access (only extra_can_use)
@@ -81,11 +81,25 @@ async def demo():
     assert dave_can_use_openai == False, "Expected Dave NOT to have provider-level can_use (only extra_can_use)"
     print("  ✅ PASS")
     
-    # Test 8: Random user should NOT have access to gpt4o
-    print("\n[Test 8] Charlie cannot access gpt4o (no permissions)")
-    charlie_can_use_gpt4o = await gateway.can_access_model("charlie", "gpt4o")
+    # Test 8: Random user should NOT have access to gpt-4o
+    print("\n[Test 8] Charlie cannot access gpt-4o (no permissions)")
+    charlie_can_use_gpt4o = await gateway.can_access_model("charlie", "gpt-4o")
     print(f"  Result: {charlie_can_use_gpt4o}")
-    assert charlie_can_use_gpt4o == False, "Expected Charlie NOT to have access to gpt4o"
+    assert charlie_can_use_gpt4o == False, "Expected Charlie NOT to have access to gpt-4o"
+    print("  ✅ PASS")
+    
+    # Test 9: mcp-user can access gpt-4o (direct grant)
+    print("\n[Test 9] mcp-user can access gpt-4o (direct grant)")
+    mcp_can_use_gpt4o = await gateway.can_access_model("mcp-user", "gpt-4o")
+    print(f"  Result: {mcp_can_use_gpt4o}")
+    assert mcp_can_use_gpt4o == True, "Expected mcp-user to have access to gpt-4o"
+    print("  ✅ PASS")
+    
+    # Test 10: mcp-user CANNOT access gpt-3.5-turbo (no grant)
+    print("\n[Test 10] mcp-user cannot access gpt-3.5-turbo (no permissions)")
+    mcp_can_use_gpt35 = await gateway.can_access_model("mcp-user", "gpt-3.5-turbo")
+    print(f"  Result: {mcp_can_use_gpt35}")
+    assert mcp_can_use_gpt35 == False, "Expected mcp-user NOT to have access to gpt-3.5-turbo"
     print("  ✅ PASS")
     
     print("\n" + "=" * 70)
