@@ -831,15 +831,6 @@ authorization failed%
 
 ## OPA Policy Enforcement
 
-We need to uncomment this part in the /opa/openai route:
-
-          # includeRequestBody:
-          #   maxRequestBytes: 8192
-          #   allowPartialMessage: false
-          #   packAsBytes: false
-
-_Note: Until the https://github.com/agentgateway/agentgateway/pull/578 is fixed, we may not be able to demo this very well_
-
 You will need to start the OPA ext_auth server:
 
 ```bash

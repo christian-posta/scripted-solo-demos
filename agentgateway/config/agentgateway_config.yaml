@@ -95,11 +95,9 @@ binds:
             request:
               rejection:
                 status: 400
-                # keep this commented out until we can get this in a release:
-                # https://github.com/agentgateway/agentgateway/pull/572
-                # headers:
-                #   set:
-                #     content-type: "application/json"                
+                headers:
+                  set:
+                    content-type: "application/json"                
                 body: |
                   {
                     "error": {
@@ -191,16 +189,10 @@ binds:
             environment: "development"
             region: "us-west-1"
             service: "agentgateway"        
-          # IMPORTANT: Include request body so OPA can inspect the model field
-          # We need this to support sending the body: 
-          # https://github.com/agentgateway/agentgateway/pull/578
-          # additionally, we need the JWT claims passed through, so 
-          # we need to use this until we sort that out:
-          # https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack          
-          # includeRequestBody:
-          #   maxRequestBytes: 8192
-          #   allowPartialMessage: false
-          #   packAsBytes: false
+          includeRequestBody:
+            maxRequestBytes: 8192
+            allowPartialMessage: false
+            packAsBytes: false
         urlRewrite:
           path:
             prefix: ""    # This strips the matched /openai prefix
@@ -241,16 +233,13 @@ binds:
             environment: "development"
             region: "us-west-1"
             service: "agentgateway"        
-          # IMPORTANT: Include request body so OPA can inspect the model field
-          # We need this to support sending the body: 
-          # https://github.com/agentgateway/agentgateway/pull/578
           # additionally, we need the JWT claims passed through, so 
           # we need to use this until we sort that out:
           # https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack
-          # includeRequestBody:
-          #   maxRequestBytes: 8192
-          #   allowPartialMessage: false
-          #   packAsBytes: false    
+          includeRequestBody:
+            maxRequestBytes: 8192
+            allowPartialMessage: false
+            packAsBytes: false    
         urlRewrite:
           path:
             prefix: ""    # This strips the matched /openai prefix
