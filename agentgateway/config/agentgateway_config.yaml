@@ -318,7 +318,7 @@ binds:
           tokenize: true          
           provider:
             anthropic:
-              model: claude-3-5-sonnet-20241022
+              model: claude-sonnet-4-5-20250929
       policies:
         # Global rate limiting for Anthropic route
         # We configure TOKENS based rate limiting on this route

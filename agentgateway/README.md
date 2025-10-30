@@ -18,7 +18,7 @@ Demo through CLI and UI.
 The models we use in this demo:
 
 * OpenAI: gpt-4o 
-* Anthropic: claude-3-5-sonnet-20241022
+* Anthropic: claude-sonnet-4-5-20250929
 * Gemini: gemini-2.5-flash-lite
 * Bedrock: global.anthropic.claude-sonnet-4-20250514-v1:0
 
@@ -150,7 +150,7 @@ Go to User settings:
 
 Fill in URLs for various providers:
 
-* API Base: `http://localhost:3000/anthropic/v1` / Auth: None / Add model: `claude-3-5-sonnet-20241022`
+* API Base: `http://localhost:3000/anthropic/v1` / Auth: None / Add model: `claude-sonnet-4-5-20250929`
 * API Base: `http://localhost:3000/gemini/v1` / Auth: None / Add model: `gemini-2.5-flash-lite`
 * API Base: `http://localhost:3000/bedrock/v1` / Auth: None / Add model: `global.anthropic.claude-sonnet-4-20250514-v1:0`
 
@@ -213,7 +213,7 @@ To call Anthropic:
 curl http://localhost:3000/anthropic/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "claude-3-5-sonnet-20241022",
+    "model": "claude-sonnet-4-5-20250929",
     "messages": [
       {
         "role": "user",
@@ -222,7 +222,7 @@ curl http://localhost:3000/anthropic/v1/chat/completions \
     ]
   }'
 
-{"model":"claude-3-5-sonnet-20241022","usage":{"prompt_tokens":17,"completion_tokens":20,"total_tokens":37},"choices":[{"message":{"content":"Hello! I'm here and ready to help. How can I assist you today?","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Y95VCEuzVatbFZDKcGqJxt","created":1761584439,"object":"chat.completion"}
+{"model":"claude-sonnet-4-5-20250929","usage":{"prompt_tokens":17,"completion_tokens":20,"total_tokens":37},"choices":[{"message":{"content":"Hello! I'm here and ready to help. How can I assist you today?","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Y95VCEuzVatbFZDKcGqJxt","created":1761584439,"object":"chat.completion"}
 ```
 
 To call Bedrock. Make sure your aws credentials are current. For example,
@@ -541,20 +541,20 @@ How to trip the builtin guardrail:
 curl http://localhost:3000/anthropic/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "claude-3-5-sonnet-20241022",
+    "model": "claude-sonnet-4-5-20250929",
     "messages": [{
       "role": "user",
       "content": "What would you do with a sensitive card number like 5100 4567 8901 2345"
     }]
   }'
 
-{"model":"claude-3-5-sonnet-20241022","usage":{"prompt_tokens":24,"completion_tokens":41,"total_tokens":65},"choices":[{"message":{"content":"I aim to keep all information secure and private. I do not store, share, or process sensitive data like credit card numbers. I aim to handle such information responsibly and securely.","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Lnw3wm1SnANPqhcQpweU9Z","created":1761598517,"object":"chat.completion"}
+{"model":"claude-sonnet-4-5-20250929","usage":{"prompt_tokens":24,"completion_tokens":41,"total_tokens":65},"choices":[{"message":{"content":"I aim to keep all information secure and private. I do not store, share, or process sensitive data like credit card numbers. I aim to handle such information responsibly and securely.","role":"assistant"},"index":0,"finish_reason":"stop"}],"id":"msg_01Lnw3wm1SnANPqhcQpweU9Z","created":1761598517,"object":"chat.completion"}
 ```
 
 You can check whether the prompt was masked by looking at the agentgateway logs:
 
 ```bash
-agentgateway-1  | 2025-10-27T20:55:17.812531Z   info    request gateway=bind/3000 listener=listener0 route_rule=anthropic-claude/default route=anthropic-claude endpoint=api.anthropic.com:443 src.addr=192.168.65.1:25678 http.method=POST http.host=localhost http.path=/anthropic/v1/chat/completions http.version=HTTP/1.1 http.status=200 trace.id=1fc69b6187743c03e5f3f64d8c1ef583 span.id=f7bbb360ff792ea2 protocol=llm gen_ai.operation.name=chat gen_ai.provider.name=anthropic gen_ai.request.model=claude-3-5-sonnet-20241022 gen_ai.response.model=claude-3-5-sonnet-20241022 gen_ai.usage.input_tokens=24 gen_ai.usage.output_tokens=41 duration=1695ms model="claude-3-5-sonnet-20241022" provider="anthropic" prompt=[{"role": "user", "content": "What would you do with a sensitive card number like <CREDIT_CARD>"}]
+agentgateway-1  | 2025-10-27T20:55:17.812531Z   info    request gateway=bind/3000 listener=listener0 route_rule=anthropic-claude/default route=anthropic-claude endpoint=api.anthropic.com:443 src.addr=192.168.65.1:25678 http.method=POST http.host=localhost http.path=/anthropic/v1/chat/completions http.version=HTTP/1.1 http.status=200 trace.id=1fc69b6187743c03e5f3f64d8c1ef583 span.id=f7bbb360ff792ea2 protocol=llm gen_ai.operation.name=chat gen_ai.provider.name=anthropic gen_ai.request.model=claude-sonnet-4-5-20250929 gen_ai.response.model=claude-sonnet-4-5-20250929 gen_ai.usage.input_tokens=24 gen_ai.usage.output_tokens=41 duration=1695ms model="claude-sonnet-4-5-20250929" provider="anthropic" prompt=[{"role": "user", "content": "What would you do with a sensitive card number like <CREDIT_CARD>"}]
 ```
 
 Moderation:
