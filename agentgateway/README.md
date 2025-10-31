@@ -1056,3 +1056,42 @@ curl -X POST http://localhost:3000/fga/openai/v1/chat/completions \
   }'
 ```
 
+## A2AS - Prompt Templating / Enrichment
+
+Turn 1: 
+
+```bash
+TOKEN=$(./get-keycloak-token.sh)
+
+curl http://localhost:3000/a2as/gemini/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "model": "gemini-2.5-flash-lite",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello"
+      }
+    ]
+  }'
+```
+
+Turn 2:
+
+```bash
+curl http://localhost:3000/a2as/gemini/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "model": "gemini-2.5-flash-lite",
+    "messages": [
+      {"role": "system", "content": "You are a helpful email assistant that can read and summarize emails."},
+      {"role": "system", "content": "<a2as:defense>\n...\n</a2as:defense>"},
+      {"role": "system", "content": "<a2as:policy>\n...\n</a2as:policy>"},
+      {"role": "user", "content": "<a2as:user:test>\nSummarize my emails\n</a2as:user:test>"},
+      {"role": "assistant", "content": "I can help with that..."},
+      {"role": "user", "content": "What about from last week?"}
+    ]
+  }'
+```
