@@ -24,7 +24,114 @@ The models we use in this demo:
 
 ## MCP Usecases
 
-Fill this in
+We can do a lot to virtualize and protect/govern MCP tools. 
+
+### MCP Virtualization 
+
+We have the `/mcp` route set up to virtualize the following MCP servers:
+
+* **OpenAPI**: automatically convert an OpenAPI API to MCP tools
+* **DeepWiki**: docs and diagrams for public GitHub repos https://docs.devin.ai/work-with-devin/deepwiki
+* **Microsoft Docs**: docs for microsoft projects
+* **Exa AI**: AI powered search engine
+
+If you start the agentgateway, then go to mcp-inspector, type in the following:
+
+* Streamable HTTP
+* `http://localhost:3000/mcp`
+
+Click "connect" and you should connect up to the tools:
+
+![Grafana Dashboards List](./images/mcp-inspector1.png)
+
+You should see ALL of the tools. This is an example of MCP Virtualization.
+
+
+### MCP Authorization
+
+Following the MCP Authorization spec, we can add Oauth 2.1 support (with Oauth protected metadata, Authoization metadata, DCR support, etc). 
+
+That runs on `http://localhost:3000/secure/mcp`
+
+For example if you try to connect directly to it, you should get the right `www-authenticate` header and pointer to oauth-protected metadata:
+
+```bash
+❯ curl -v http://localhost:3000/secure/mcp
+* Host localhost:3000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:3000...
+* Connected to localhost (::1) port 3000
+> GET /secure/mcp HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/8.7.1
+> Accept: */*
+>
+* Request completely sent off
+< HTTP/1.1 401 Unauthorized
+< www-authenticate: Bearer resource_metadata="https://ceposta-agw.ngrok.io/.well-known/oauth-protected-resource/secure/mcp"
+< content-type: application/json
+< content-length: 65
+< date: Fri, 31 Oct 2025 00:09:14 GMT
+<
+* Connection #0 to host localhost left intact
+{"error":"unauthorized","error_description":"JWT token required"}%
+```
+
+_Note: it directs me to: https://ceposta-agw.ngrok.io/.well-known/oauth-protected-resource/secure/mcp_
+
+To run this demo, we need to run this over `HTTPS`. In my demo env i run `ngrok` to expose over the public internet. For example:
+
+```bash
+ngrok http 3000 --url=ceposta-agw.ngrok.io
+```
+
+That basically just creates a tunnel from the internet to my agentgateway on HTTPS. 
+
+If you take a closer look, you'll see we are using Auth0 as the identity provider. 
+
+Enter the following into mcp inspector:
+
+`https://ceposta-agw.ngrok.io/secure/mcp`
+
+![Grafana Dashboards List](./images/mcp-auth-inspector1.png)
+
+You can follow the step-by-step flow:
+
+![](./images/mcp-auth-inspector2.png)
+
+And once you login, you can list the tools. 
+
+Notice on the Auth0 side, we dynamically registered our OAuth client (mcp-inspector):
+
+![](./images/mcp-auth-dcr.png)
+
+#### Notes for set up on Auth0
+
+You need to create an "API" on Auth0:
+
+![](./images/auth0-api.png)
+
+_Note: the API should match the audience on agentgateway_
+
+```yaml        
+mcpAuthentication:
+  issuer: https://ceposta-solo.auth0.com/
+  jwksUrl: https://ceposta-solo.auth0.com/.well-known/jwks.json
+  audience: https://ceposta-agw.ngrok.io/mcp
+
+```
+
+
+You will need to enable dynamic client registration on Auth0:
+
+![](./images/auth0-enable-dcr.png)
+
+You will also need to connect up to a user source. I use the database, but IMPORTANT you should enable it for Third Party:
+
+![](./images/auth0-connectors-db.png)
+
+
 
 ## Running agentgateway
 
