@@ -12,6 +12,7 @@
 * Failover
 * Policy enforcement
 * Integration with OpenFGA / OPA
+* A2AS style prompt injection mitigation 
 
 Demo through CLI and UI. 
 
