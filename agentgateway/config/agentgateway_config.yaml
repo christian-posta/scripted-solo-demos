@@ -352,6 +352,9 @@ binds:
             gemini:
               model: gemini-2.5-flash-lite     
       policies:
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]      
         backendAuth:
           key: ${GEMINI_API_KEY}    
         ai:
@@ -520,7 +523,31 @@ binds:
                 - builtin: ssn
                 - builtin: creditCard
                 - builtin: phoneNumber
-                - builtin: email                     
+                - builtin: email    
+
+# ------------------------------------------------------------
+# Echo Tool Poisoning MCP route
+# ------------------------------------------------------------
+    - matches:
+      - path:
+          exact: /echo/mcp
+      backends:
+      - mcp:
+          targets:       
+          - name: echo
+            mcp:
+              host: "${ECHO_MCP_HOST:-localhost}"
+              port: 8282
+              path: "/mcp"
+      policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+          allowMethods:
+          - "*"
+                                 
 # ------------------------------------------------------------
 # MCP route
 # ------------------------------------------------------------

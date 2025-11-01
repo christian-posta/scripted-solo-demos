@@ -1,0 +1,21 @@
+name: prompt-injection-mcp
+framework: fastmcp-python
+version: 0.1.0
+description: Prompt injection mcp
+secrets:
+    local:
+        enabled: false
+        provider: env
+        file: .env.local
+    production:
+        enabled: false
+        provider: kubernetes
+        secretName: prompt-injection-mcp-secrets-production
+        namespace: default
+    staging:
+        enabled: false
+        provider: kubernetes
+        secretName: prompt-injection-mcp-secrets-staging
+        namespace: default
+created_at: 2025-10-31T20:05:51.485889-07:00
+updated_at: 2025-10-31T20:05:51.572212-07:00
