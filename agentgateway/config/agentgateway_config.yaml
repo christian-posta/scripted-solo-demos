@@ -547,6 +547,50 @@ binds:
           - "*"
           allowMethods:
           - "*"
+
+# ------------------------------------------------------------
+# MCP public route
+# ------------------------------------------------------------
+    - matches:
+      - path:
+          exact: /public/mcp
+      backends:
+      - mcp:
+          targets:
+          - name: openapi
+            openapi:
+              schema:
+                file: ${OPEN_API_SCHEMA_PATH:-/app/openapi.json}
+              host: petstore.swagger.io:443          
+          - name: deepwiki
+            mcp:
+              host: "mcp.deepwiki.com"
+              port: 443
+              path: "/mcp"
+          - name: microsoft
+            mcp:
+              host: "learn.microsoft.com"
+              port: 443
+              path: "/api/mcp"              
+          - name: exa-ai
+            mcp:
+              host: "mcp.exa.ai"
+              port: 443
+              path: "/mcp"
+      policies:
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+          allowMethods:
+          - "*"
+        backendTLS: {}     
+        requestHeaderModifier:
+          remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
                                  
 # ------------------------------------------------------------
 # MCP route
@@ -578,6 +622,19 @@ binds:
               port: 443
               path: "/mcp"
       policies:
+        jwtAuth:
+          mode: optional
+          issuer: http://localhost:8080/realms/mcp-realm
+          audiences: [account]
+          jwks:
+            url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs            
+        mcpAuthorization:
+          rules:
+          # Allow anyone to call some tools
+          - 'mcp.tool.name == "microsoft_docs_fetch"'
+          - 'mcp.tool.name == "web_search_exa"'
+          - "'ai-agents' in jwt.realm_access.roles && mcp.tool.target == 'deepwiki'"
+          - "'supply-chain' in jwt.realm_access.roles && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'openapi')"          
         cors:
           allowOrigins:
           - "*"

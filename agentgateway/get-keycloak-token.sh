@@ -3,7 +3,7 @@
 # Script to get an access token from Keycloak using Resource Owner Password Credentials Grant (ROPC)
 
 # Configuration
-KEYCLOAK_HOST="${KEYCLOAK_HOST:-localhost:8080}"
+KEYCLOAK_HOST="localhost:8080"
 REALM="mcp-realm"
 CLIENT_ID="openweb-ui"
 CLIENT_SECRET="changeme"
