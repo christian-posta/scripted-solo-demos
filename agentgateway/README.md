@@ -1092,6 +1092,29 @@ If you connect with a different user, on that's in the `supply-chain` role, you'
 ./get-keycloak-token.sh other-user
 ```
 
+You can add this MCP server to your VS code and pass bearer tokens with the following config:
+
+```bash
+cat resources/vs-code-mcp.json
+{
+        "servers": {
+                "my-mcp-server-fd253bb5": {
+                        "url": "http://localhost:3000/mcp",
+                        "type": "http",
+                        "headers": {
+                                "Authorization": "Bearer ${input:authToken}"
+                        }
+                }
+        },
+        "inputs": [
+                {
+                        "id": "authToken",
+                        "type": "promptString",
+                        "description": "Enter the bearer token for the MCP server"
+                }
+        ]
+}
+```
 
 ### MCP Authorization (Spec)
 
