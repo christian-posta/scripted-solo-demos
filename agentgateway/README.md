@@ -1200,3 +1200,22 @@ You will also need to connect up to a user source. I use the database, but IMPOR
 
 ![](./images/auth0-connectors-db.png)
 
+Note, the actual JWT that Auth0 sends back looks like this:
+
+```bash
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FVTNOMFF3UVVKQlJUVTROa1pFUkRkRU9UTkNNa1V3UVVNMFJrUXpPRE5DTWtJMk9VWTJPUSJ9.eyJpc3MiOiJodHRwczovL2NlcG9zdGEtc29sby5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjhmN2E5Y2M4ZmFiZTAxMjE4ZWJmZDU4IiwiYXVkIjpbImh0dHBzOi8vY2Vwb3N0YS1hZ3cubmdyb2suaW8vbWNwIiwiaHR0cHM6Ly9jZXBvc3RhLXNvbG8uYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc2MjM4MjA1MiwiZXhwIjoxNzYyNDY4NDUyLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoicUprY2NzUVBuQmhnMkROb2FKNGs5U1JGU0J1ZDlUS2YifQ.FIXPrcW2-VbOlkROtO80kiCxk_qZyF0kF7rHdymS6jlgi2FA5oCivSjYO53_DI2Y9xFn48S52ahBfkArSXMxEhv_ou-7n-uMU1oP5eHBQUvKYmkmW9FKVo5c7PJBx0lwA3tEHf0LZQsw9mvIssOgiy16pj0lZOk3K5VKGieNzW-aWn-qoEu2tXyWv0ctv8e1CjEWoqnI7wu8ZenrtQocPhI33BoIGQAn6taYQGlJ5TfuZLTGPy0402CG4AjBnTyF6tAXjYjXbKIkxN4G-IWIerraxdJGVMHsnas3k_uH9CXDrCEsDjiw9oguh869fz8NL1TnkxdmIM7mVEfx84Vejg
+
+
+{
+  "iss": "https://ceposta-solo.auth0.com/",
+  "sub": "auth0|68f7a9cc8fabe01218ebfd58",
+  "aud": [
+    "https://ceposta-agw.ngrok.io/mcp",
+    "https://ceposta-solo.auth0.com/userinfo"
+  ],
+  "iat": 1762382052,
+  "exp": 1762468452,
+  "scope": "openid profile email",
+  "azp": "qJkccsQPnBhg2DNoaJ4k9SRFSBud9TKf"
+}
+```

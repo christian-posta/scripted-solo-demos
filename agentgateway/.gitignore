@@ -21,6 +21,7 @@ yarn.lock
 .env.test.local
 .env.production.local
 .env.*.local
+script.env
 
 # Python
 __pycache__/
