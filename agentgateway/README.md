@@ -1200,10 +1200,35 @@ You will also need to connect up to a user source. I use the database, but IMPOR
 
 ![](./images/auth0-connectors-db.png)
 
-Note, the actual JWT that Auth0 sends back looks like this:
+#### Authorizations
+
+To apply authorizations, we need to put some demo permissions into the token. We can do that by adding roles and permissions in the Auth0 console.
+
+To add permissions, we will pick our API/audience we've been using and add some permissions:
+
+* Applications -> APIs -> Agent Gateway Ngrok
+* Permissions -> Add Permission
+  * add `call:agent`, `call:mcp`, `call:supply-chain`
+
+Now you can add Roles and assign permission to roles.
+
+* User Management -> Roles -> Create Role
+* Name: `ai-agents`, `supply-chain`
+* For the `ai-agents` role, add the `call:agent` permission
+* For the `supply-chain` role, add the `call:mcp` and `call:supply-chain` permission
+
+Lastly, you need to enable RBAC and enable putting permissions into the token:
+
+* Applications -> APIs -> Agent Gateway Ngrok
+* Scroll down Settings and enable:
+  * Enable RBAC
+  * Add Permissions in Access Token
+
+
+Now the actual JWT that Auth0 sends back will look like this:
 
 ```bash
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FVTNOMFF3UVVKQlJUVTROa1pFUkRkRU9UTkNNa1V3UVVNMFJrUXpPRE5DTWtJMk9VWTJPUSJ9.eyJpc3MiOiJodHRwczovL2NlcG9zdGEtc29sby5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjhmN2E5Y2M4ZmFiZTAxMjE4ZWJmZDU4IiwiYXVkIjpbImh0dHBzOi8vY2Vwb3N0YS1hZ3cubmdyb2suaW8vbWNwIiwiaHR0cHM6Ly9jZXBvc3RhLXNvbG8uYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc2MjM4MjA1MiwiZXhwIjoxNzYyNDY4NDUyLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoicUprY2NzUVBuQmhnMkROb2FKNGs5U1JGU0J1ZDlUS2YifQ.FIXPrcW2-VbOlkROtO80kiCxk_qZyF0kF7rHdymS6jlgi2FA5oCivSjYO53_DI2Y9xFn48S52ahBfkArSXMxEhv_ou-7n-uMU1oP5eHBQUvKYmkmW9FKVo5c7PJBx0lwA3tEHf0LZQsw9mvIssOgiy16pj0lZOk3K5VKGieNzW-aWn-qoEu2tXyWv0ctv8e1CjEWoqnI7wu8ZenrtQocPhI33BoIGQAn6taYQGlJ5TfuZLTGPy0402CG4AjBnTyF6tAXjYjXbKIkxN4G-IWIerraxdJGVMHsnas3k_uH9CXDrCEsDjiw9oguh869fz8NL1TnkxdmIM7mVEfx84Vejg
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FVTNOMFF3UVVKQlJUVTROa1pFUkRkRU9UTkNNa1V3UVVNMFJrUXpPRE5DTWtJMk9VWTJPUSJ9.eyJpc3MiOiJodHRwczovL2NlcG9zdGEtc29sby5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjhmN2E5Y2M4ZmFiZTAxMjE4ZWJmZDU4IiwiYXVkIjpbImh0dHBzOi8vY2Vwb3N0YS1hZ3cubmdyb2suaW8vbWNwIiwiaHR0cHM6Ly9jZXBvc3RhLXNvbG8uYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc2MjM4NTYzMSwiZXhwIjoxNzYyNDcyMDMxLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoicUprY2NzUVBuQmhnMkROb2FKNGs5U1JGU0J1ZDlUS2YiLCJwZXJtaXNzaW9ucyI6WyJjYWxsOm1jcCIsImNhbGw6c3VwcGx5LWNoYWluIl19.kkCwITMzakxCrnN4isc5SpPmgygEzQY_wGQ748V0nfizkLDFANWPh5EkQYN7EqltoitwFsOGx19QDcVP-v3yrb34snaclcCfDS3lNdjNByOhTm6e0vpvw7qzGu8NUZx7RqOufLjimXp-OdJoRHgMaphJV2Gmcgrv5MtZCdOuWpNrAbuMnCEMANu8KQC-0SZ0nQ1vC-7962djzEhSoLGKRHp8RAzxOXWgHwDjMTwbvOEExJm40C-9c4IoH6yk2ng4RtYa84dZzsUcW4DJt_9OyHgu8y3_2896J7wYWN8HsLfndm7f-cHA2kO-Xc1ER5SzSzgjAxAnspOMdbVVRRmihw
 
 
 {
@@ -1213,9 +1238,15 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FVTNOMFF3UVVKQlJUVTROa1pFUkRkRU9U
     "https://ceposta-agw.ngrok.io/mcp",
     "https://ceposta-solo.auth0.com/userinfo"
   ],
-  "iat": 1762382052,
-  "exp": 1762468452,
+  "iat": 1762385631,
+  "exp": 1762472031,
   "scope": "openid profile email",
-  "azp": "qJkccsQPnBhg2DNoaJ4k9SRFSBud9TKf"
+  "azp": "qJkccsQPnBhg2DNoaJ4k9SRFSBud9TKf",
+  "permissions": [
+    "call:mcp",
+    "call:supply-chain"
+  ]
 }
 ```
+
+Now we can write authorization rules about MCP tools.

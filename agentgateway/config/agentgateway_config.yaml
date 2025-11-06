@@ -634,7 +634,7 @@ binds:
           - 'mcp.tool.name == "microsoft_docs_fetch"'
           - 'mcp.tool.name == "web_search_exa"'
           - "'ai-agents' in jwt.realm_access.roles && mcp.tool.target == 'deepwiki'"
-          - "'supply-chain' in jwt.realm_access.roles && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'openapi')"          
+          - "'supply-chain' in jwt.realm_access.roles && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'openapi')"
         cors:
           allowOrigins:
           - "*"
@@ -686,6 +686,11 @@ binds:
           - x-forwarded-host
           - x-forwarded-proto          
         backendTLS: {}
+        mcpAuthorization:
+          rules:
+          - 'mcp.tool.name == "microsoft_docs_fetch"'
+          - "'call:agent' in jwt.permissions && mcp.tool.target == 'deepwiki'"
+          - "'call:supply-chain' in jwt.permissions && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'deepwiki')"        
         mcpAuthentication:
           issuer: https://ceposta-solo.auth0.com/
           jwksUrl: https://ceposta-solo.auth0.com/.well-known/jwks.json
