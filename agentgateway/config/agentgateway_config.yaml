@@ -591,7 +591,48 @@ binds:
           - x-forwarded-for
           - x-forwarded-host
           - x-forwarded-proto
-                                 
+
+# ------------------------------------------------------------
+# Microsoft Entra route
+# ------------------------------------------------------------
+    - matches:
+      - path:
+          exact: /entra/mcp
+      backends:
+      - mcp:
+          targets:
+          - name: microsoft
+            mcp:
+              host: "learn.microsoft.com"
+              port: 443
+              path: "/api/mcp"              
+          - name: exa-ai
+            mcp:
+              host: "mcp.exa.ai"
+              port: 443
+              path: "/mcp"
+      policies:
+        jwtAuth:
+          mode: strict
+          issuer: https://sts.windows.net/5e7d8166-7876-4755-a1a4-b476d4a344f6/
+          audiences: [api://ec791040-80f8-4129-bf34-96a0e0672c96]
+          jwks:
+            url: https://login.microsoftonline.com/${ENTRA_TENANT_ID}/discovery/v2.0/keys            
+
+        cors:
+          allowOrigins:
+          - "*"
+          allowHeaders:
+          - "*"
+          allowMethods:
+          - "*"
+        backendTLS: {}     
+        requestHeaderModifier:
+          remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
+
 # ------------------------------------------------------------
 # MCP route
 # ------------------------------------------------------------
