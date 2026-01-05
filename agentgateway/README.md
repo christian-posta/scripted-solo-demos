@@ -717,6 +717,10 @@ We can use JWT tokens to enforce fine-grained policy for calling certain LLMs. F
 ./get-keycloak-token.sh mcp-user
 ```
 
+```bash
+TOKEN=$(./get-keycloak-token.sh mcp-user)
+```
+
 example:
 > TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQNGMtZ3pxRDdfUDVteTI1SmNFdkJkSmx0UlQ5OWdwSndoZDFVZUxGVTlVIn0.eyJleHAiOjE3NjE2MDMzMTAsImlhdCI6MTc2MTU5OTcxMCwianRpIjoib25ydHJvOmFlMzgwMTdjLWY5NWQtNGY4YS05YTFiLTE4ZjdjOWQxZmU2YSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvbWNwLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImU1ODcwNGQ2LWRhZWEtNGM3NS04NDhkLWIxY2ZiNjgxOTAxNSIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9wZW53ZWItdWkiLCJzaWQiOiJkM2NmZmViZC01OTE0LTQ0MDUtYTNiZS05Y2QwNDg1N2FjYWMiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6OTk5OSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsic3VwcGx5LWNoYWluIiwiZGVmYXVsdC1yb2xlcy1tY3AtcmVhbG0iLCJhaS1hZ2VudHMiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJNQ1AgVXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6Im1jcC11c2VyIiwiZ2l2ZW5fbmFtZSI6Ik1DUCIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoidXNlckBtY3AuZXhhbXBsZS5jb20ifQ.Bxg5-YT7rD5G8n6d-SLTS34hpQKRYenp8EVm51kkJajOO-txx6efJYuLteSrgmhSD8EP__FAR28quiycdKD5FqiPZPpMoFZE3uSwIzjdZEkOW-t0N4Y2GgwTFr7i4joj-449O-YuORUG36Q8QTOs33VXWY_ElVjKtqTp6DOVKwWJjJC-2dX1e9l2i6NDWzifs6Zhpr6VfNJ3FjoTikCGHW_Ntf9xRMSZ72BTJ80JFfA_c5bi1AePofk1b8dmd9f3eo9yDo71Zy1km0YUqbIPdZbUflEgPvoAE2KSU07E_K45OjDTLMBsuu4sENiRW-4axnEXw65OGbNpCdhkcB3MCA
 
@@ -884,7 +888,7 @@ We will also want body support in the policy engine. So we should optionally inc
 Should deny this:
 
 ```bash
-curl http://localhost:3000/opa/openai/v1/chat/completions \
+curl -v http://localhost:3000/opa/openai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o",
@@ -895,6 +899,14 @@ curl http://localhost:3000/opa/openai/v1/chat/completions \
       }
     ]
   }'
+
+
+* upload completely sent off: 146 bytes
+< HTTP/1.1 403 Forbidden
+< content-length: 0
+< date: Mon, 05 Jan 2026 20:53:12 GMT
+< 
+* Connection #0 to host localhost left intact
 ```
 
 
@@ -911,7 +923,59 @@ curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
 ```
 
 
-_Note: Will save this for later, doesn't work yet_
+_Note: Note, we can further implement policy based on what's in the JWT! We don't do it yet in this example, 
+but the structure of the input is `input.attributes.metadataContext.filterMetadata`_
+
+For example:
+
+```json
+      "metadataContext":{
+        "filterMetadata":{
+            "envoy.filters.http.jwt_authn":{
+              "jwt_payload":{
+                  "acr":"1",
+                  "allowed-origins":[
+                    "http://localhost:9999"
+                  ],
+                  "aud":"account",
+                  "azp":"openweb-ui",
+                  "email":"user@mcp.example.com",
+                  "email_verified":true,
+                  "exp":1767650079,
+                  "family_name":"User",
+                  "given_name":"MCP",
+                  "iat":1767646479,
+                  "iss":"http://localhost:8080/realms/mcp-realm",
+                  "jti":"onrtro:293c632d-cfaf-4e28-8609-b453d87506c9",
+                  "name":"MCP User",
+                  "preferred_username":"mcp-user",
+                  "realm_access":{
+                    "roles":[
+                        "supply-chain",
+                        "default-roles-mcp-realm",
+                        "ai-agents",
+                        "offline_access",
+                        "uma_authorization"
+                    ]
+                  },
+                  "resource_access":{
+                    "account":{
+                        "roles":[
+                          "manage-account",
+                          "manage-account-links",
+                          "view-profile"
+                        ]
+                    }
+                  },
+                  "scope":"profile email",
+                  "sid":"0da0011f-8611-4a67-a20c-e1fed6249dae",
+                  "sub":"e3349fa1-02c5-4d80-b497-4e7963b20148",
+                  "typ":"Bearer"
+              }
+            }
+        }
+      },  
+```
 
 If we add auth to OPA:
 
@@ -929,8 +993,9 @@ curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
 ```
 
 
-## FGA Policy Enforcement (WIP)
+## FGA Policy Enforcement
 
+See the `./policy/openfga/README.md` for setup. 
 
 This should fail:
 
@@ -1061,7 +1126,7 @@ If you start the agentgateway, then go to mcp-inspector, type in the following:
 
 Click "connect" and you should connect up to the tools:
 
-![Grafana Dashboards List](./images/mcp-inspector1.png)
+![](./images/mcp-inspector1.png)
 
 You should see ALL of the tools. This is an example of MCP Virtualization.
 
@@ -1087,7 +1152,7 @@ If you connect with a user token where they are in the `ai-agents` role, you wil
 If you connect with a different user, on that's in the `supply-chain` role, you'll get all of the tools again, this type authorized:
 
 ```bash
-./get-keycloak-token.sh other-user
+./get-keycloak-token.sh mcp-user
 ```
 
 You can add this MCP server to your VS code and pass bearer tokens with the following config:

@@ -49,9 +49,7 @@ binds:
           provider:
             openAI:
               model: gpt-4o
-          routes:
-            "/v1/chat/completions": completions  # LLM processing
-            "*": passthrough                      # Everything else passes through              
+      
       policies:
         urlRewrite:
           path:
@@ -91,8 +89,13 @@ binds:
                   value: '"openai"'
               type: "requests"
         ai:
+          routes:
+            "/v1/chat/completions": completions  # LLM processing
+            "*": passthrough                      # Everything else passes through                
           promptGuard:
             request:
+            - openAIModeration:
+                model: omni-moderation-latest
               rejection:
                 status: 400
                 headers:
@@ -105,11 +108,8 @@ binds:
                       "type": "invalid_request_error",
                       "code": "content_policy_violation"
                     }
-                  }                      
-              openaiModeration:
-                auth:
-                  key: ${OPENAI_API_KEY}   
-              regex:
+                  }   
+            - regex:
                 action: mask
                 rules:
                 - builtin: ssn
@@ -128,11 +128,12 @@ binds:
           name: openai
           provider:
             openAI:
-              model: gpt-4o
+              model: gpt-4o           
+      policies:
+        ai:
           routes:
             "/v1/chat/completions": completions  # LLM processing
-            "*": passthrough                      # Everything else passes through              
-      policies:
+            "*": passthrough                      # Everything else passes through                
         urlRewrite:
           path:
             prefix: ""    # This strips the matched /openai prefix
@@ -173,10 +174,11 @@ binds:
           provider:
             openAI:
               model: gpt-4o
+      policies:
+        ai:
           routes:
             "/v1/chat/completions": passthrough  # LLM processing
-            "*": passthrough                      # Everything else passes through              
-      policies:
+            "*": passthrough     
         jwtAuth:
           mode: optional
           issuer: http://localhost:8080/realms/mcp-realm
@@ -185,10 +187,12 @@ binds:
             url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs             
         extAuthz:
           host: "${EXT_AUTHZ_HOST:-localhost}:9191"  # Direct host:port reference
-          context:  # Custom context extensions sent to policy engine
-            environment: "development"
-            region: "us-west-1"
-            service: "agentgateway"        
+          protocol:
+            grpc:
+              context:  # Custom context extensions sent to policy engine
+                environment: "development"
+                region: "us-west-1"
+                service: "agentgateway"        
           includeRequestBody:
             maxRequestBytes: 8192
             allowPartialMessage: false
@@ -217,10 +221,11 @@ binds:
           provider:
             openAI:
               model: gpt-4o
+      policies:
+        ai:
           routes:
             "/v1/chat/completions": passthrough  # LLM processing
-            "*": passthrough                      # Everything else passes through              
-      policies:
+            "*": passthrough  
         jwtAuth:
           mode: optional
           issuer: http://localhost:8080/realms/mcp-realm
@@ -229,10 +234,12 @@ binds:
             url: http://${KEYCLOAK_HOST:-localhost}:8080/realms/mcp-realm/protocol/openid-connect/certs             
         extAuthz:
           host: "${EXT_AUTHZ_HOST:-localhost}:7070"  # Direct host:port reference
-          context:  # Custom context extensions sent to policy engine
-            environment: "development"
-            region: "us-west-1"
-            service: "agentgateway"        
+          protocol:
+            grpc:
+              context:  # Custom context extensions sent to policy engine
+                environment: "development"
+                region: "us-west-1"
+                service: "agentgateway"        
           # additionally, we need the JWT claims passed through, so 
           # we need to use this until we sort that out:
           # https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack
@@ -260,6 +267,10 @@ binds:
       - path:
           pathPrefix: /failover/openai
       policies:
+        ai:
+          routes:
+            "/v1/chat/completions": passthrough  # LLM processing
+            "*": passthrough                      # Everything else passes through  
         retry:
           attempts: 2        # Retry once (2 total attempts)
           codes: [429]       # Retry on 429 errors
@@ -275,16 +286,18 @@ binds:
                   openAI:
                     model: "gpt-5"
                 hostOverride: "${FAILOVER_HOST:-localhost}:9959"  
-                backendAuth:
-                  key: "INVALID_KEY_TO_FORCE_FAILURE"
+                policies:
+                  backendAuth:
+                    key: "INVALID_KEY_TO_FORCE_FAILURE"
 
           - providers:
               - name: secondary-model
                 provider:
                   openAI:
                     model: "gpt-4o"
-                backendAuth:
-                  key: ${OPENAI_API_KEY}                
+                policies:
+                  backendAuth:
+                    key: ${OPENAI_API_KEY}                
                                  
 
 # ------------------------------------------------------------
@@ -330,7 +343,7 @@ binds:
         ai:
           promptGuard:
             request:
-              regex:
+            - regex:
                 action: mask
                 rules:
                 - builtin: ssn
@@ -360,8 +373,9 @@ binds:
         ai:
           promptGuard:
             request:
-              webhook:
-                target: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7272
+            - webhook:
+                target:
+                  host: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7272
                 # Optional: forward specific request headers to your webhook
                 forwardHeaderMatches:
                 - name: authorization
@@ -393,7 +407,7 @@ binds:
         ai:
           promptGuard:
             request:           
-              regex:
+            - regex:
                 action: mask
                 rules:
                 - builtin: ssn
@@ -450,7 +464,7 @@ binds:
         ai:
           promptGuard:
             request:           
-              regex:
+            - regex:
                 action: mask
                 rules:
                 - builtin: ssn
@@ -475,8 +489,9 @@ binds:
         ai:
           promptGuard:
             request:
-              webhook:
-                target: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7273
+            - webhook:
+                target:
+                  host: ${CUSTOM_WEBHOOK_HOST_MODELARMOR:-localhost}:7273
                 # Optional: forward specific request headers to your webhook
                 forwardHeaderMatches:
                 - name: authorization
@@ -517,7 +532,7 @@ binds:
         ai:
           promptGuard:
             request:
-              regex:
+            - regex:
                 action: mask
                 rules:
                 - builtin: ssn
@@ -572,11 +587,11 @@ binds:
               host: "learn.microsoft.com"
               port: 443
               path: "/api/mcp"              
-          # - name: exa-ai
-          #   mcp:
-          #     host: "mcp.exa.ai"
-          #     port: 443
-          #     path: "/mcp"
+          - name: exa-ai
+            mcp:
+              host: "mcp.exa.ai"
+              port: 443
+              path: "/mcp"
       policies:
         cors:
           allowOrigins:
@@ -734,8 +749,10 @@ binds:
           - "'call:supply-chain' in jwt.permissions && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'deepwiki')"        
         mcpAuthentication:
           issuer: https://ceposta-solo.auth0.com/
-          jwksUrl: https://ceposta-solo.auth0.com/.well-known/jwks.json
-          audience: https://ceposta-agw.ngrok.io/mcp
+          jwks:
+            url: https://ceposta-solo.auth0.com/.well-known/jwks.json
+          audiences:
+          - https://ceposta-agw.ngrok.io/mcp
           provider:
             auth0: {}
           resourceMetadata:

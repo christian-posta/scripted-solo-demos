@@ -1,7 +1,7 @@
 services:
   agentgateway:
     profiles: ["all", "minimal"]
-    image: ghcr.io/agentgateway/agentgateway:0.10.5
+    image: ghcr.io/agentgateway/agentgateway:0.11.0
     volumes:
      - ~/.aws:/root/.aws:ro  # For Bedrock
      - ./guardrail/credentials.json:/app/credentials.json

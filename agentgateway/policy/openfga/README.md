@@ -104,23 +104,18 @@ Then we can start the ext_auth server (go to that dir):
 ```bash
 cd ~/go/src/github.com/christian-posta/extauth-policy-engine
 git checkout ceposta-extauth-fga 
+
+make generate
+go mod tidy
+make build
+
 source .env
 ./policy-engine
 ```
 
 NOTE: Check that the startup prints the store and model id you are expecting!!!
 
-Then start up agentgateway. Then you can call it according to the README.md at the root of the project. At the moment we need to user the agentgateway from the dynamic metadata hack branch:
-
-> https://github.com/howardjohn/agentgateway/tree/extauth/dynamic-meta-hack
-
-Once we sort this out correctly, we can just use a regular build.
-
-```bash
-cargo run -- -f ~/scripted-demos/agentgateway/config/agentgateway_config.yaml
-```
-
-
+Then start up agentgateway. Then you can call it according to the README.md at the root of the project. 
 ## Stopping the Server
 
 ```bash
