@@ -2,7 +2,9 @@
 #--env-file ./openweb-ui/env \
 #--name open-webui ghcr.io/open-webui/open-webui:v0.6.33
 
-source .venv/bin/activate
+# A virtual env needs to be enabled, but we won't script this for now
+# source .venv/bin/activate
+# source .venv-desktop/bin/activate
 
 # set up localhost OIDC
 export WEBUI_URL=http://localhost:9999

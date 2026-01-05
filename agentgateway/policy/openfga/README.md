@@ -90,7 +90,7 @@ This script will:
 Note, we should always do this, because this is what sets up the tuples!!
 
 ```bash
- source .env && python test-relationships.py
+source .env && python test-relationships.py
 ```
 
 If this looks good, we should copy the .env file that gets created (with the model/store ID) over to where the ext-auth server is:
@@ -103,6 +103,7 @@ Then we can start the ext_auth server (go to that dir):
 
 ```bash
 cd ~/go/src/github.com/christian-posta/extauth-policy-engine
+git checkout ceposta-extauth-fga 
 source .env
 ./policy-engine
 ```

@@ -19,7 +19,7 @@ fi
 # Start OpenFGA server
 echo -e "${YELLOW}Starting OpenFGA server...${NC}"
 cd "$(dirname "$0")"
-docker-compose up -d
+docker compose up -d
 
 # Wait for server to be ready
 echo -e "${YELLOW}Waiting for OpenFGA server to be ready...${NC}"
@@ -119,5 +119,5 @@ echo "To run the V3 authorization tests:"
 echo "  source $ENV_FILE && python test-relationships.py"
 echo ""
 echo "To stop the OpenFGA server:"
-echo "  docker-compose down"
+echo "  docker compose down"
 

@@ -108,7 +108,7 @@ Make sure the python env is set up:
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install --no-cache-dir -r requirements.txt
 ```
 
 You should setup a keycloak OIDC client:
@@ -769,6 +769,10 @@ example:
 ./get-keycloak-token.sh other-user
 ```
 
+```bash
+TOKEN=$(./get-keycloak-token.sh other-user)
+```
+
 example:
 
 > TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQNGMtZ3pxRDdfUDVteTI1SmNFdkJkSmx0UlQ5OWdwSndoZDFVZUxGVTlVIn0.eyJleHAiOjE3NjE2MDMzNDIsImlhdCI6MTc2MTU5OTc0MiwianRpIjoib25ydHJvOjZhZDc1ZmRlLTU3NzktNDY3Ni1iMjViLTdiODIwMTg2NDI3MSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvbWNwLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjJmZWRmNWRmLTk3MTgtNGNlNy1iZTM4LTUyMmVhZmE3ZDdjNCIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9wZW53ZWItdWkiLCJzaWQiOiI5NzkyN2NkNS1jYWFlLTQzZmItOWNjZi02ZTcwYmJhNGQwYWQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6OTk5OSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1tY3AtcmVhbG0iLCJhaS1hZ2VudHMiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJPdGhlciBVc2VyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoib3RoZXItdXNlciIsImdpdmVuX25hbWUiOiJPdGhlciIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoib3RoZXJAbWNwLmV4YW1wbGUuY29tIn0.DNI5rpFwvkZRcp1mJrktvLWc20p1teSrN9A26-Wnq5v2wTJHkX1mA5G7rZUKA_YL-gST4lK9yUWuO3DV7iJO5TsQuieCtV8mjPa7_p3UwpwvnoWQPCTSmYnUYJPcL7gNsj8fOcpKWnbtvO68WXQQGL9igqlVXcCR9nkMQNceLvmH8cHmTOPVjcbWdNriitWgHxZIxy0zIgMWiqzwYZ0N34IeHoERKfT4_prstB63Gb5kNwhn4IWgGudNq9_O9-BhuF0LeFh0o2kt-JjUDcSyeYpnnAe1QPQgxsqQzbOHGty2ndSs78R8iWYmB19R4YwDK1-wdWz7HLS9zw3AiHEsNg
@@ -927,12 +931,6 @@ curl -X POST http://localhost:3000/opa/openai/v1/chat/completions \
 
 ## FGA Policy Enforcement (WIP)
 
-We need to uncomment this part in the /fga/openai route:
-
-          # includeRequestBody:
-          #   maxRequestBytes: 8192
-          #   allowPartialMessage: false
-          #   packAsBytes: false
 
 This should fail:
 

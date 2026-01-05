@@ -6,7 +6,7 @@
 KEYCLOAK_HOST="localhost:8080"
 REALM="mcp-realm"
 CLIENT_ID="openweb-ui"
-CLIENT_SECRET="changeme"
+CLIENT_SECRET="${CLIENT_SECRET:-changeme}"
 USERNAME="${1:-mcp-user}"
 PASSWORD="${2:-user123}"
 

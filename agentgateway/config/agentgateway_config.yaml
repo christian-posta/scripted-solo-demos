@@ -572,11 +572,11 @@ binds:
               host: "learn.microsoft.com"
               port: 443
               path: "/api/mcp"              
-          - name: exa-ai
-            mcp:
-              host: "mcp.exa.ai"
-              port: 443
-              path: "/mcp"
+          # - name: exa-ai
+          #   mcp:
+          #     host: "mcp.exa.ai"
+          #     port: 443
+          #     path: "/mcp"
       policies:
         cors:
           allowOrigins:
