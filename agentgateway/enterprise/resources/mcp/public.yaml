@@ -1,0 +1,72 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: public-mcp
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /public/mcp  
+      backendRefs:
+      - name: public-mcp-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+---
+# MCP Backend with multiple targets
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: public-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  mcp:
+    targets:
+      - name: deepwiki
+        static:
+          host: mcp.deepwiki.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)
+      - name: microsoft
+        static:
+          host: learn.microsoft.com
+          port: 443
+          path: /api/mcp
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: public-mcp-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: public-mcp
+  traffic:
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
+  backend:
+    tls: {}  # Empty object enables TLS with default settings (system CA certs)

@@ -1,0 +1,118 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openai
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openai
+      backendRefs:
+        - name: openai-all-models
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+      timeouts:
+        request: "120s"
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openai-all-models
+  namespace: enterprise-agentgateway
+spec:
+  ai:
+    provider:
+      openai: 
+        model: "gpt-4o"
+  policies:
+    auth:
+      secretRef:
+        name: openai-secret
+
+## Set up keycloak JWKS
+---
+# Keycloak Backend for JWKS (if Keycloak is not a Kubernetes Service)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-jwks
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: host.docker.internal  
+    port: 8080
+
+---
+apiVersion: ratelimit.solo.io/v1alpha1
+kind: RateLimitConfig
+metadata:
+  name: openai-route-rate-limit-config
+  namespace: enterprise-agentgateway
+spec:
+  raw:
+    descriptors:
+      - key: generic_key
+        value: "openai"
+        rateLimit:
+          unit: MINUTE
+          requestsPerUnit: 3
+    rateLimits:
+      - actions:
+          - genericKey:
+              descriptorValue: "openai"
+        type: REQUEST   
+---
+# Policy for CORS and JWT Authentication
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: openai-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: openai
+  traffic:
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: false
+    jwtAuthentication:
+      mode: Optional
+      providers:
+        - issuer: http://localhost:8080/realms/mcp-realm
+          audiences:
+            - account
+          jwks:
+            remote:
+              jwksPath: /realms/mcp-realm/protocol/openid-connect/certs
+              backendRef:
+                name: keycloak-jwks
+                kind: AgentgatewayBackend
+                group: agentgateway.dev
+                port: 8080
+    authorization:
+      action: Allow
+      policy:
+        matchExpressions:
+          - "request.method == 'OPTIONS'"  # Allow OPTIONS
+          - "jwt.sub != null"              # Require JWT with sub claim        
+    entRateLimit:
+      global:
+        rateLimitConfigRefs:
+          - name: openai-route-rate-limit-config                  
+

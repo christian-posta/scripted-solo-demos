@@ -1,0 +1,71 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: anthropic
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /anthropic
+      backendRefs:
+        - name: anthropic
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+      timeouts:
+        request: "120s"
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: anthropic
+  namespace: enterprise-agentgateway
+spec:
+  ai:
+    provider:
+      anthropic:
+        model: "claude-sonnet-4-5-20250929"
+  policies:
+    auth:
+      secretRef:
+        name: anthropic-secret
+---
+apiVersion: ratelimit.solo.io/v1alpha1
+kind: RateLimitConfig
+metadata:
+  name: anthropic-route-rate-limit-config
+  namespace: enterprise-agentgateway
+spec:
+  raw:
+    descriptors:
+    - key: generic_key
+      value: "anthropic"
+      rateLimit:
+        requestsPerUnit: 500
+        unit: MINUTE
+    rateLimits:
+    - actions:
+      - genericKey:
+          descriptorValue: "anthropic"
+      type: TOKEN
+---
+# Policy for CORS and JWT Authentication
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: anthropic-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: anthropic
+  traffic:
+    entRateLimit:
+      global:
+        rateLimitConfigRefs:
+          - name: anthropic-route-rate-limit-config    

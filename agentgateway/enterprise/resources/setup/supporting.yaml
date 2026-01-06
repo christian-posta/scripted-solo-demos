@@ -1,0 +1,98 @@
+---
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayParameters
+metadata:
+  name: agentgateway-params
+  namespace: enterprise-agentgateway
+spec:
+  ### -- uncomment to override shared extensions -- ###
+  sharedExtensions:
+    extauth:
+      enabled: true
+      replicas: 1
+      container:
+        image:
+          registry: gcr.io
+          repository: gloo-mesh/ext-auth-service
+          tag: "0.71.4"
+    ratelimiter:
+      enabled: true
+      replicas: 1
+      container:
+        image:
+          registry: gcr.io
+          repository: gloo-mesh/rate-limiter
+          tag: "0.16.4"
+    extCache:
+      enabled: true
+      replicas: 1
+      container:
+        image:
+          registry: docker.io
+          repository: redis
+          tag: "7.2.4-alpine"
+  logging:
+    level: info
+  #--- Image overrides for deployment ---
+  image:
+    registry: ghcr.io
+    repository: agentgateway/agentgateway
+    tag: "0.11.0-alpha.5e5533a2c6bfb8914d69662b06aef48b4e7b85d5"
+  service:
+    metadata:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    spec:
+      type: LoadBalancer
+  #--- Use rawConfig to inline custom configuration from ConfigMap ---
+  rawConfig:
+    config:
+      # --- Label all metrics using a value extracted from the request body
+      #metrics:
+      #  fields:
+      #    add:
+      #      modelId: json(request.body).modelId
+      logging:
+        fields:
+          add:
+            rq.headers.all: 'request.headers'
+            jwt: 'jwt'
+            request.body: json(request.body)
+            response.body: json(response.body)
+            # --- Capture all request headers as individual keys (flattened)
+            rq.headers: 'flatten(request.headers)'
+            # --- Capture a single header by name (example: x-foo)
+            x-foo: 'request.headers["x-foo"]'
+            # --- Capture entire request body
+            request.body: json(request.body)
+            # --- Capture a field in the request body
+            request.body.modelId: json(request.body).modelId
+        format: json
+      # tracing:
+      #   otlpProtocol: grpc
+      #   otlpEndpoint: http://tempo-distributor.monitoring.svc.cluster.local:4317
+      #   randomSampling: 'true'
+      #   fields:
+      #     add:
+      #       gen_ai.operation.name: '"chat"'
+      #       gen_ai.system: "llm.provider"
+      #       gen_ai.prompt: 'llm.prompt'
+      #       gen_ai.completion: 'llm.completion.map(c, {"role":"assistant", "content": c})'
+      #       gen_ai.request.model: "llm.requestModel"
+      #       gen_ai.response.model: "llm.responseModel"
+      #       gen_ai.usage.completion_tokens: "llm.outputTokens"
+      #       gen_ai.usage.prompt_tokens: "llm.inputTokens"
+      #       gen_ai.request: 'flatten(llm.params)'
+      #       # --- Capture all request headers as a single map under rq.headers.all
+      #       rq.headers.all: 'request.headers'
+      #       # --- Capture claims from a verified JWT token if JWT policy is enabled
+      #       jwt: 'jwt'
+      #       # --- Capture the whole response body as JSON
+      #       response.body: 'json(response.body)'
+  #--- Uncomment to add gateway to ambient mesh ---
+  #deployment:
+  #  spec:
+  #    template:
+  #      metadata:
+  #        labels:
+  #          istio.io/dataplane-mode: ambient

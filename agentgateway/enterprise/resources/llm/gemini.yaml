@@ -1,0 +1,35 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gemini
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /gemini
+      backendRefs:
+        - name: gemini
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+      timeouts:
+        request: "120s"
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini
+  namespace: enterprise-agentgateway
+spec:
+  ai:
+    provider:
+      gemini:
+        model: "gemini-2.5-flash-lite"
+  policies:
+    auth:
+      secretRef:
+        name: gemini-secret
