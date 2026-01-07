@@ -68,4 +68,15 @@ spec:
     entRateLimit:
       global:
         rateLimitConfigRefs:
-          - name: anthropic-route-rate-limit-config    
+          - name: anthropic-route-rate-limit-config  
+  backend:   
+    ai:
+      promptGuard:
+        request:
+          - regex:
+              action: Mask
+              builtins:
+                - Ssn
+                - CreditCard
+                - PhoneNumber
+                - Email            
