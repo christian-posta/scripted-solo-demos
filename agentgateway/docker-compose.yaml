@@ -3,7 +3,6 @@ services:
     profiles: ["all", "minimal"]
     image: ghcr.io/agentgateway/agentgateway:0.11.0
     volumes:
-     - ~/.aws:/root/.aws:ro  # For Bedrock
      - ./guardrail/credentials.json:/app/credentials.json
      - ./config/agentgateway_config.yaml:/app/config.yaml
      - ./resources/openapi/petstore.json:/app/openapi.json
@@ -15,7 +14,6 @@ services:
       - "15000:15000" 
       - "15020:15020" 
     environment:
-      AWS_PROFILE: "pa"   
       AWS_REGION: "us-west-2"
     env_file:
      - ./config/.env        

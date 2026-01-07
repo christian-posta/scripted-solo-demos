@@ -114,5 +114,25 @@ spec:
     entRateLimit:
       global:
         rateLimitConfigRefs:
-          - name: openai-route-rate-limit-config                  
+          - name: openai-route-rate-limit-config         
+  backend:   
+    ai:
+      promptGuard:
+        request:
+          - openAIModeration:
+              model: "omni-moderation-latest"
+              policies:
+                auth:
+                  secretRef:
+                    name: openai-secret              
+            response:
+              statusCode: 400
+              message: '{"error":{"message":"Your request was rejected by our content moderation system","type":"invalid_request_error","code":"content_policy_violation"}}'
+          - regex:
+              action: Mask
+              builtins:
+                - Ssn
+                - CreditCard
+                - PhoneNumber
+                - Email
 
