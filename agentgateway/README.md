@@ -373,7 +373,23 @@ _Note 2: at the time of writing, we don't send descriptors from the gateway to t
 
 _Note 3: for anthropic, we enable the `tokenize` setting which means agw will do estimations for tokens on the prompt request and then do a true-up afterward. otherwise, if tokenize is not set, then rate limit true up happens only after the actual token usage is returned (response) from the LLM_
 
-To exercise the rate limit, try send more than 10 requests to OpenAI, or a large prompt to Anthropic. 
+To exercise the rate limit, try send more than 3 requests to OpenAI, or a large prompt to Anthropic. 
+
+```bash
+curl -v http://localhost:3000/anthropic/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-5-20250929",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me about microsoft entra in 500 words"
+      }
+    ]
+  }'
+```
+
+After the response, try again, and you should see 429
 
 
 ## Metrics / Grafana / Cost

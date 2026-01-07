@@ -9,7 +9,7 @@ descriptors:
     value: "openai"
     rate_limit:
       unit: minute
-      requests_per_unit: 10
+      requests_per_unit: 3
 
   # Global rate limit for Anthropic route - 500 tokens per minute
   - key: route
