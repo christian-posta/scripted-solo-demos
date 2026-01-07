@@ -38,3 +38,6 @@ EOF
 kubectl apply -f ./resources/setup/supporting.yaml
 kubectl apply -f ./resources/setup/gateway.yaml
 
+# Optional: dummy failover service (used by /failover/openai route demo)
+kubectl apply -f ./resources/supporting/failover-429.yaml
+

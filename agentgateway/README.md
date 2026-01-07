@@ -462,7 +462,16 @@ You can see metrics and traces from this UI.
 
 ## Failover:
 
-In a separate window, you'll need to start the dummy http server (this is what helps to trigger the conditions for failover)
+In a separate window, you'll need to start the dummy http server (this is what helps to trigger the conditions for failover).
+
+If you want to run it in Docker (recommended when running `agentgateway` via docker compose):
+
+```bash
+# Ensure your .env sets: FAILOVER_HOST="failover-429"
+docker compose --profile all up -d failover-429
+```
+
+Or run it locally with python:
 
 
 ```bash

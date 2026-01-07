@@ -24,6 +24,15 @@ services:
       retries: 3     # Retry up to 3 times if health check fails
       start_period: 40s  # Wait 40 seconds after container start before beginning health checks
 
+  failover-429:
+    profiles: ["all"]
+    container_name: failover-429
+    restart: unless-stopped
+    build:
+      context: ./failover
+    ports:
+      - "127.0.0.1:9959:9959"
+
   jaeger:
     profiles: ["all", "infra"]
     container_name: jaeger
