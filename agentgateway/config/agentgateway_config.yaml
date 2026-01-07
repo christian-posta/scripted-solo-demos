@@ -267,10 +267,6 @@ binds:
       - path:
           pathPrefix: /failover/openai
       policies:
-        ai:
-          routes:
-            "/v1/chat/completions": passthrough  # LLM processing
-            "*": passthrough                      # Everything else passes through  
         retry:
           attempts: 2        # Retry once (2 total attempts)
           codes: [429]       # Retry on 429 errors
