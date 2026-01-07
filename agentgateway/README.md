@@ -231,6 +231,8 @@ To call Bedrock. Make sure your aws credentials are current. For example,
 aws sso login
 ```
 
+Refresh the credentials in `./enterprise/update-bedrock-credentials.sh` which will put them into a .env file in that folder. 
+
 ```bash
 curl http://localhost:3000/bedrock/v1/chat/completions \
   -H "Content-Type: application/json" \
@@ -446,6 +448,17 @@ If you go to the dashboard: `http://localhost:16686` you can see the traces:
 Clicking on one of the traces, you can see more details about the trace:
 
 ![Specific trace](./images/specific-trace.png)
+
+#### Metrics on Kubernetes
+
+For the ./enterprise setup, you can port-forward:
+
+```bash
+kubectl port-forward -n monitoring svc/grafana-prometheus 3002:3000
+```
+
+You can see metrics and traces from this UI. 
+
 
 ## Failover:
 
