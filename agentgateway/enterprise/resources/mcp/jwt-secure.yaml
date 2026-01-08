@@ -1,0 +1,70 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jwt-secure-mcp
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /mcp  
+      backendRefs:
+      - name: public-mcp-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: jwt-secure-mcp-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: jwt-secure-mcp
+  backend:
+    tls: {}  # Enables TLS for backend connections
+    mcp:
+      authorization:
+        action: Allow
+        policy:
+          matchExpressions:
+            - "mcp.tool.name == 'microsoft_docs_fetch'"
+            # - "mcp.tool.name == 'web_search_exa'"
+            - "'ai-agents' in jwt.realm_access.roles && mcp.tool.target == 'deepwiki'"
+            - "'supply-chain' in jwt.realm_access.roles && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'openapi')"
+  traffic:
+    jwtAuthentication:
+      mode: Optional
+      providers:
+        - issuer: http://localhost:8080/realms/mcp-realm
+          audiences:
+            - account
+          jwks:
+            remote:
+              jwksPath: /realms/mcp-realm/protocol/openid-connect/certs
+              backendRef:
+                name: keycloak-jwks
+                kind: AgentgatewayBackend
+                group: agentgateway.dev
+                port: 8080  
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
