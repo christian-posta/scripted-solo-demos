@@ -1,0 +1,80 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openai-policy
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /policy/openai
+      backendRefs:
+        - name: openai-all-models
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+      timeouts:
+        request: "120s"
+## Set up keycloak JWKS
+---
+# Keycloak Backend for JWKS (if Keycloak is not a Kubernetes Service)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-jwks
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: host.docker.internal  
+    port: 8080
+
+---
+# Policy for CORS and JWT Authentication
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: openai-policy-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: openai-policy
+  traffic:
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: false
+    jwtAuthentication:
+      mode: Optional
+      providers:
+        - issuer: http://localhost:8080/realms/mcp-realm
+          audiences:
+            - account
+          jwks:
+            remote:
+              jwksPath: /realms/mcp-realm/protocol/openid-connect/certs
+              backendRef:
+                name: keycloak-jwks
+                kind: AgentgatewayBackend
+                group: agentgateway.dev
+                port: 8080
+    authorization:
+      action: Allow
+      policy:
+        matchExpressions:
+          - "request.method == 'OPTIONS'"  # Allow OPTIONS
+          - "jwt.sub != null && 'supply-chain' in jwt.realm_access.roles"      
+
+
