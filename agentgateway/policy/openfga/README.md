@@ -119,7 +119,7 @@ Then start up agentgateway. Then you can call it according to the README.md at t
 ## Stopping the Server
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 
