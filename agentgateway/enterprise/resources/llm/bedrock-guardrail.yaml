@@ -1,0 +1,74 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bedrock-guardrail
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /guardrail/bedrock
+      backendRefs:
+        - name: bedrock
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+      timeouts:
+        request: "120s"
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: bedrock-guardrail-webhook
+  namespace: enterprise-agentgateway
+subsets:
+- addresses:
+  - ip: 192.168.65.254 # unfortunatley this needs to be an IP address :-/
+  ports:
+  - port: 7273
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bedrock-guardrail-webhook
+  namespace: enterprise-agentgateway
+spec:
+  ports:
+  - port: 7273
+    targetPort: 7273
+    protocol: TCP
+---
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: bedrock-guardrail-prompt-guard
+  namespace: enterprise-agentgateway
+  labels:
+    app: agentgateway
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: bedrock-guardrail
+  backend:
+    ai:
+      promptGuard:
+        request:
+          - webhook:
+              backendRef:
+                name: bedrock-guardrail-webhook
+                namespace: enterprise-agentgateway
+                kind: Service
+                port: 7273
+              forwardHeaderMatches:
+                - name: authorization
+                  type: RegularExpression
+                  value: "Bearer .*"
+                - name: x-custom-header
+                  type: RegularExpression
+                  value: ".*"                

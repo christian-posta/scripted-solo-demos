@@ -26,7 +26,7 @@ BEDROCK_CONFIG = {
     'aws_access_key_id': os.getenv('AWS_ACCESS_KEY_ID'),
     'aws_secret_access_key': os.getenv('AWS_SECRET_ACCESS_KEY'),
     'aws_session_token': os.getenv('AWS_SESSION_TOKEN'),
-    'aws_profile': os.getenv('AWS_PROFILE', 'pa'),
+    'aws_profile': os.getenv('AWS_PROFILE', 'default'),
     'enabled': os.getenv('BEDROCK_GUARDRAIL_ENABLED', 'true').lower() == 'true',
     'mask_requests': os.getenv('BEDROCK_MASK_REQUESTS', 'true').lower() == 'true',
     'mask_responses': os.getenv('BEDROCK_MASK_RESPONSES', 'true').lower() == 'true',
