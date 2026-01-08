@@ -1,0 +1,99 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: public-oauth-mcp
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /secure/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-protected-resource/secure/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-authorization-server/secure/mcp                          
+      backendRefs:
+      - name: public-mcp-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+---
+# Backend for Auth0 JWKS endpoint
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: auth0-jwks
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: ceposta-solo.auth0.com
+    port: 443
+  policies:
+    tls: {}  # Enable TLS for auth0
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: public-oauth-mcp-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: public-oauth-mcp
+  backend:
+    tls: {}  # Enables TLS for backend connections
+    mcp:
+      authorization:
+        action: Allow
+        policy:
+          matchExpressions:
+            - "mcp.tool.name == 'microsoft_docs_fetch'"
+            # - "mcp.tool.name == 'web_search_exa'"
+            - "'ai-agents' in jwt.realm_access.roles && mcp.tool.target == 'deepwiki'"
+            - "'supply-chain' in jwt.realm_access.roles && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'openapi')"
+      authentication:
+        issuer: https://ceposta-solo.auth0.com/
+        audiences:
+          - https://ceposta-agw.ngrok.io/mcp
+        jwks:
+          backendRef:
+            name: auth0-jwks
+            kind: AgentgatewayBackend
+            group: agentgateway.dev
+          jwksPath: .well-known/jwks.json # leave off the initial / for now
+        provider: Auth0
+        resourceMetadata:
+          authorizationServers:
+            - https://ceposta-agw.ngrok.io/secure/mcp
+          resource: https://ceposta-agw.ngrok.io/secure/mcp
+          scopesSupported:
+            - profile
+            - openid
+            - offline_access
+          bearerMethodsSupported:
+            - header
+            - body
+            - query
+          resourceDocumentation: https://ceposta-agw.ngrok.io/secure/mcp/docs
+          resourcePolicyUri: https://ceposta-agw.ngrok.io/secure/mcp/policies            
+  traffic:
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
