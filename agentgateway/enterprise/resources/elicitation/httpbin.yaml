@@ -1,0 +1,114 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  annotations:
+    agentgateway.dev/token-exchange: "8080"
+  labels:
+    app: httpbin
+    service: httpbin
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: tcp
+      port: 9000
+  selector:
+    app: httpbin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+    spec:
+      containers:
+        - image: docker.io/mccutchen/go-httpbin:v2.6.0
+          imagePullPolicy: IfNotPresent
+          name: httpbin
+          command: [ go-httpbin ]
+          args:
+            - "-port"
+            - "8080"
+            - "-max-duration"
+            - "600s" # override default 10s
+          ports:
+            - containerPort: 8080
+        - name: curl
+          image: curlimages/curl:7.83.1
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "200m"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "tail"
+            - "-f"
+            - "/dev/null"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: httpbin-route
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: enterprise-agentgateway
+  rules:
+    - backendRefs:
+        - name: httpbin
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+    - backendRefs:
+        - name: httpbin-backend
+          kind: AgentgatewayBackend
+          group: agentgateway.dev
+      matches:
+        - path:
+            type: PathPrefix
+            value: /backend
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: httpbin-backend
+spec:
+  static:
+    host: httpbin.default.svc.cluster.local
+    port: 8000
+
+---
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: token-exchange-elicit-service
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: httpbin
+  backend:
+    tokenExchange:
+      mode: ElicitationOnly

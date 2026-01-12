@@ -19,13 +19,10 @@ helm upgrade -i -n enterprise-agentgateway enterprise-agentgateway oci://us-dock
 --version $ENTERPRISE_AGW_VERSION \
 --set-string licensing.licenseKey=$AGENTGATEWAY_LICENSE \
 -f -<<EOF
-#--- Optional: override for image registry/tag for the controller
 image:
   registry: us-docker.pkg.dev/solo-public/enterprise-agentgateway
   tag: "$ENTERPRISE_AGW_VERSION"
   pullPolicy: IfNotPresent
-# --- Override the default Agentgateway parameters used by this GatewayClass
-# If the referenced parameters are not found, the controller will use the defaults
 gatewayClassParametersRefs:
   enterprise-agentgateway:
     group: enterpriseagentgateway.solo.io

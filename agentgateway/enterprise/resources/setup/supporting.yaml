@@ -33,6 +33,11 @@ spec:
       deployment:
         spec:
           replicas: 1
+  env:
+    - name: STS_URI
+      value: http://enterprise-agentgateway.enterprise-agentgateway.svc.cluster.local:7777/elicitations/oauth2/token
+    - name: STS_AUTH_TOKEN
+      value: ./var/run/secrets/xds-tokens/xds-token          
   logging:
     level: info
   #--- Image overrides for deployment ---
