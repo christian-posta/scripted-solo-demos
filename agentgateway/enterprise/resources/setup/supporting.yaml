@@ -5,39 +5,41 @@ metadata:
   name: agentgateway-params
   namespace: enterprise-agentgateway
 spec:
-  ### -- uncomment to override shared extensions -- ###
   sharedExtensions:
     extauth:
       enabled: true
-      replicas: 1
-      container:
-        image:
-          registry: gcr.io
-          repository: gloo-mesh/ext-auth-service
-          tag: "0.71.4"
+      image:
+        registry: gcr.io
+        repository: gloo-mesh/ext-auth-service
+        tag: "0.71.4"
+      deployment:
+        spec:
+          replicas: 1
     ratelimiter:
       enabled: true
-      replicas: 1
-      container:
-        image:
-          registry: gcr.io
-          repository: gloo-mesh/rate-limiter
-          tag: "0.16.4"
+      image:
+        registry: gcr.io
+        repository: gloo-mesh/rate-limiter
+        tag: "0.16.4"
+      deployment:
+        spec:
+          replicas: 1
     extCache:
       enabled: true
-      replicas: 1
-      container:
-        image:
-          registry: docker.io
-          repository: redis
-          tag: "7.2.4-alpine"
+      image:
+        registry: docker.io
+        repository: redis
+        tag: "7.2.4-alpine"
+      deployment:
+        spec:
+          replicas: 1
   logging:
     level: info
   #--- Image overrides for deployment ---
-  image:
-    registry: ghcr.io
-    repository: agentgateway/agentgateway
-    tag: "0.11.0-alpha.5e5533a2c6bfb8914d69662b06aef48b4e7b85d5"
+  # image:
+  #   registry: ghcr.io
+  #   repository: agentgateway/agentgateway
+  #   tag: "0.11.0-alpha.5e5533a2c6bfb8914d69662b06aef48b4e7b85d5"
   service:
     metadata:
       annotations:
@@ -86,10 +88,3 @@ spec:
             jwt: 'jwt'
             # --- Capture the whole response body as JSON
             response.body: 'json(response.body)'
-  #--- Uncomment to add gateway to ambient mesh ---
-  #deployment:
-  #  spec:
-  #    template:
-  #      metadata:
-  #        labels:
-  #          istio.io/dataplane-mode: ambient

@@ -12,6 +12,19 @@ You also need an enterprise license key.
 ./setup-observability.sh
 ```
 
+From here, you need to portforward agentgateway
+
+```bash
+kubectl port-forward deployments/agentgateway -n enterprise-agentgateway 3000:8080
+```
+
+For metrics, tracing, dashboards:
+
+```bash
+kubectl port-forward -n monitoring svc/grafana-prometheus 3002:3000       
+```
+
+
 ### Failover dummy service (optional)
 
 The enterprise setup script also applies a small in-cluster service used by the `/failover/openai` demo route:

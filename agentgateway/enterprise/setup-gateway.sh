@@ -10,18 +10,18 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 # Install CRDs
 helm upgrade -i --create-namespace --namespace enterprise-agentgateway \
     --version $ENTERPRISE_AGW_VERSION enterprise-agentgateway-crds \
-    oci://us-docker.pkg.dev/solo-public/gloo-gateway/charts/enterprise-agentgateway-crds
+    oci://us-docker.pkg.dev/solo-public/enterprise-agentgateway/charts/enterprise-agentgateway-crds
 
 
 # Install controller / control plane
-helm upgrade -i -n enterprise-agentgateway enterprise-agentgateway oci://us-docker.pkg.dev/solo-public/gloo-gateway/charts/enterprise-agentgateway \
+helm upgrade -i -n enterprise-agentgateway enterprise-agentgateway oci://us-docker.pkg.dev/solo-public/enterprise-agentgateway/charts/enterprise-agentgateway \
 --create-namespace \
 --version $ENTERPRISE_AGW_VERSION \
 --set-string licensing.licenseKey=$AGENTGATEWAY_LICENSE \
 -f -<<EOF
 #--- Optional: override for image registry/tag for the controller
 image:
-  registry: us-docker.pkg.dev/solo-public/gloo-gateway
+  registry: us-docker.pkg.dev/solo-public/enterprise-agentgateway
   tag: "$ENTERPRISE_AGW_VERSION"
   pullPolicy: IfNotPresent
 # --- Override the default Agentgateway parameters used by this GatewayClass

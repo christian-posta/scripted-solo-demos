@@ -5,19 +5,15 @@ kubectl create secret generic openai-secret -n enterprise-agentgateway \
 --from-literal="Authorization=Bearer $OPENAI_API_KEY" \
 --dry-run=client -oyaml | kubectl apply -f -
 
-kubectl apply -f ./resources/llm/openai.yaml
 
 kubectl create secret generic anthropic-secret -n enterprise-agentgateway \
 --from-literal="Authorization=$ANTHROPIC_API_KEY" \
 --dry-run=client -oyaml | kubectl apply -f -
 
-kubectl apply -f ./resources/llm/anthropic.yaml
 
 kubectl create secret generic gemini-secret -n enterprise-agentgateway \
 --from-literal="Authorization=$GEMINI_API_KEY" \
 --dry-run=client -oyaml | kubectl apply -f -
-
-kubectl apply -f ./resources/llm/gemini.yaml
 
 
 kubectl apply -f - <<EOF
@@ -33,4 +29,17 @@ stringData:
   sessionToken: ${AWS_SESSION_TOKEN}
 EOF
 
+
+# Standard LLM routes
+kubectl apply -f ./resources/llm/openai.yaml
+kubectl apply -f ./resources/llm/anthropic.yaml
+kubectl apply -f ./resources/llm/gemini.yaml
 kubectl apply -f ./resources/llm/bedrock.yaml
+
+# More advanced usecases:
+kubectl apply -f ./resources/llm/openai-failover.yaml
+kubectl apply -f ./resources/llm/gemini-modelarmor.yaml
+kubectl apply -f ./resources/llm/bedrock-guardrail.yaml
+kubectl apply -f ./resources/llm/openai-policy.yaml
+kubectl apply -f ./resources/llm/openai-opa-policy.yaml
+kubectl apply -f ./resources/llm/gemini-a2as.yaml
