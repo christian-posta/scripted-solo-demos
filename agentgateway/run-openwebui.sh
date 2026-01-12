@@ -9,7 +9,7 @@
 # set up localhost OIDC
 export WEBUI_URL=http://localhost:9999
 export OAUTH_CLIENT_ID=openweb-ui
-export OAUTH_CLIENT_SECRET=changeme
+export OAUTH_CLIENT_SECRET=xvOT8QntENYS7ABv1MMxqJzDXWf55Fuc
 export OAUTH_PROVIDER_NAME=Keycloak
 export OPENID_PROVIDER_URL=http://localhost:8080/realms/mcp-realm/.well-known/openid-configuration
 export OAUTH_SCOPES=openid email profile
