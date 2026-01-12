@@ -18,9 +18,35 @@ spec:
             type: Exact
             value: /.well-known/oauth-authorization-server/secure/mcp                          
       backendRefs:
-      - name: public-mcp-backend
+      - name: public-oauth-mcp-backend
         group: agentgateway.dev
         kind: AgentgatewayBackend
+---
+# MCP Backend with multiple targets
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: public-oauth-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  mcp:
+    targets:
+      - name: deepwiki
+        static:
+          host: mcp.deepwiki.com
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)
+      - name: microsoft
+        static:
+          host: learn.microsoft.com
+          port: 443
+          path: /api/mcp
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)        
 ---
 # Backend for Auth0 JWKS endpoint
 apiVersion: agentgateway.dev/v1alpha1
@@ -57,6 +83,7 @@ spec:
           - "'call:agent' in jwt.permissions && mcp.tool.target == 'deepwiki'"
           - "'call:supply-chain' in jwt.permissions && (mcp.tool.target == 'microsoft' || mcp.tool.target == 'deepwiki')"    
       authentication:
+        mode: Optional
         issuer: https://ceposta-solo.auth0.com/
         audiences:
           - https://ceposta-agw.ngrok.io/mcp

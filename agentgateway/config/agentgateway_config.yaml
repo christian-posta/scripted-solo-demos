@@ -94,21 +94,21 @@ binds:
             "*": passthrough                      # Everything else passes through                
           promptGuard:
             request:
-            - openAIModeration:
-                model: omni-moderation-latest
-              rejection:
-                status: 400
-                headers:
-                  set:
-                    content-type: "application/json"                
-                body: |
-                  {
-                    "error": {
-                      "message": "Your request was rejected by our content moderation system",
-                      "type": "invalid_request_error",
-                      "code": "content_policy_violation"
-                    }
-                  }   
+            # - openAIModeration:
+            #     model: omni-moderation-latest
+            #   rejection:
+            #     status: 400
+            #     headers:
+            #       set:
+            #         content-type: "application/json"                
+            #     body: |
+            #       {
+            #         "error": {
+            #           "message": "Your request was rejected by our content moderation system",
+            #           "type": "invalid_request_error",
+            #           "code": "content_policy_violation"
+            #         }
+            #       }   
             - regex:
                 action: mask
                 rules:

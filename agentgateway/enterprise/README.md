@@ -18,6 +18,14 @@ From here, you need to portforward agentgateway
 kubectl port-forward deployments/agentgateway -n enterprise-agentgateway 3000:8080
 ```
 
+If you need the backend config:
+
+```bash
+kubectl port-forward deployments/agentgateway -n enterprise-agentgateway 15000
+
+curl http://localhost:15000/config_dump
+```
+
 For metrics, tracing, dashboards:
 
 ```bash
