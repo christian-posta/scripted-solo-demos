@@ -1,0 +1,107 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: public-oauth-entra
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /entra/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-protected-resource/entra/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-authorization-server/entra/mcp                          
+      backendRefs:
+      - name: public-oauth-entra-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+---
+# MCP Backend with multiple targets
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: public-oauth-entra-backend
+  namespace: enterprise-agentgateway
+spec:
+  mcp:
+    targets:
+      - name: microsoft
+        static:
+          host: learn.microsoft.com
+          port: 443
+          path: /api/mcp
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)        
+---
+# Backend for Auth0 JWKS endpoint
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: entra-jwks
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: login.microsoftonline.com
+    port: 443
+  policies:
+    tls: {}  # Enable TLS for auth0
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: public-oauth-entra-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: public-oauth-entra
+  backend:
+    tls: {}  # Enables TLS for backend connections
+    mcp:
+      authentication:
+        mode: Strict
+        issuer: https://sts.windows.net/$ENTRA_TENANT_ID/
+        audiences:
+          - api://ec791040-80f8-4129-bf34-96a0e0672c96
+        jwks:
+          backendRef:
+            name: entra-jwks
+            kind: AgentgatewayBackend
+            group: agentgateway.dev
+          jwksPath: $ENTRA_TENANT_ID/discovery/v2.0/keys 
+        resourceMetadata:
+          authorizationServers:
+            - https://login.microsoftonline.com/$ENTRA_TENANT_ID/v2.0 
+          resource: https://ceposta-agw.ngrok.io/entra/mcp
+          scopesSupported:
+            - api://ec791040-80f8-4129-bf34-96a0e0672c96/.default 
+          bearerMethodsSupported:
+            - header
+            - body
+            - query
+          resourceDocumentation: https://ceposta-agw.ngrok.io/entra/mcp/docs
+          resourcePolicyUri: https://ceposta-agw.ngrok.io/entra/mcp/policies            
+  traffic:
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
