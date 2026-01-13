@@ -20,6 +20,10 @@ config:
   logging:
     fields:
       add:
+        # auth_header: 'request.headers["authorization"]'
+        token_issuer: jwt.iss
+        token_audience: jwt.aud
+        token_subject: jwt.sub      
         user_id: "jwt.sub" 
         user_name: 'jwt.name'
         authenticated: 'jwt.sub != null'
@@ -609,6 +613,10 @@ binds:
     - matches:
       - path:
           exact: /entra/mcp
+      - path:
+          exact: /.well-known/oauth-protected-resource/entra/mcp
+      - path:
+          exact: /.well-known/oauth-authorization-server/entra/mcp          
       backends:
       - mcp:
           targets:
@@ -617,19 +625,29 @@ binds:
               host: "learn.microsoft.com"
               port: 443
               path: "/api/mcp"              
-          - name: exa-ai
-            mcp:
-              host: "mcp.exa.ai"
-              port: 443
-              path: "/mcp"
       policies:
-        jwtAuth:
+        mcpAuthentication:
           mode: strict
-          issuer: https://sts.windows.net/5e7d8166-7876-4755-a1a4-b476d4a344f6/
-          audiences: [api://ec791040-80f8-4129-bf34-96a0e0672c96]
+          issuer: https://sts.windows.net/${ENTRA_TENANT_ID}/
           jwks:
-            url: https://login.microsoftonline.com/${ENTRA_TENANT_ID}/discovery/v2.0/keys            
-
+            url: https://login.microsoftonline.com/${ENTRA_TENANT_ID}/discovery/v2.0/keys
+          audiences:
+          - api://ec791040-80f8-4129-bf34-96a0e0672c96
+          # - 00000003-0000-0000-c000-000000000000
+          resourceMetadata:
+            authorizationServers:
+            - https://login.microsoftonline.com/${ENTRA_TENANT_ID}/v2.0    
+            resource: https://ceposta-agw.ngrok.io/entra/mcp
+            scopesSupported:
+            - api://ec791040-80f8-4129-bf34-96a0e0672c96/.default 
+            # - openid
+            # - profile
+            bearerMethodsSupported:
+            - header
+            - body
+            - query
+            resourceDocumentation: https://ceposta-agw.ngrok.io/entra/mcp/docs
+            resourcePolicyUri: https://ceposta-agw.ngrok.io/entra/mcp/policies       
         cors:
           allowOrigins:
           - "*"
