@@ -108,5 +108,7 @@ spec:
       kind: Service
       name: httpbin
   backend:
-    tokenExchange:
-      mode: ElicitationOnly
+    # require an elicitaiton and then exchange if it's successful
+    tokenExchange: {}  
+    # tokenExchange:
+      # mode: ElicitationOnly    
