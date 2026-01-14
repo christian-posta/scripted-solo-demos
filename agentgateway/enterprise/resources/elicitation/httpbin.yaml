@@ -3,8 +3,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: httpbin
-  annotations:
-    agentgateway.dev/token-exchange: "8080"
   labels:
     app: httpbin
     service: httpbin
