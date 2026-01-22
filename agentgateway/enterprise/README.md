@@ -52,7 +52,7 @@ Get an access token to use for the exchange
 export TOKEN=$(curl -k -X POST "https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev/protocol/openid-connect/token" \
 -d "client_id=kagent-ui" \
 -d "username=admin" \
--d 'password="$KEYCLOAK_USER_PASSWORD"' \
+-d 'password=$KEYCLOAK_USER_PASSWORD' \
 -d "grant_type=password" | jq -r .access_token)
 ```
 
@@ -106,5 +106,41 @@ Now we need to update to use databricks as the backend elicitation:
 ./setup-elicitation-databricks.sh
 ```
 
-
 Now we need to configure an MCP route for databricks but using our SSO
+
+```bash
+kubectl apply -f resources/elicitation/databricks-mcp.yaml
+```
+
+Can test with this:
+
+```bash
+curl -X POST localhost:3000/databricks/mcp \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}'
+```
+
+Cleanup Deployment:
+
+```bash
+kubectl delete -f resources/elicitation/databricks-mcp.yaml
+```
+
+### Testing GitHub CoPilot
+
+kubectl apply -f resources/elicitation/github-copilot-mcp.yaml
+
+```bash
+curl -X POST localhost:3000/github-copilot/mcp \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}'
+```
+
+
+```bash
+npx @modelcontextprotocol/inspector@0.18.0 --header "Authorization: Bearer $TOKEN" --cli http://localhost:3000/github-copilot/mcp --transport http --method tools/list
+```

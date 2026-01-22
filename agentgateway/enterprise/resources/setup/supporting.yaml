@@ -39,7 +39,7 @@ spec:
     - name: STS_AUTH_TOKEN
       value: ./var/run/secrets/xds-tokens/xds-token          
   logging:
-    level: debug
+    level: info
   #--- Image overrides for deployment ---
   # image:
   #   registry: ghcr.io
