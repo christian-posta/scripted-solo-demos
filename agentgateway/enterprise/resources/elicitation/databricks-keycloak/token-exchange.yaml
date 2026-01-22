@@ -1,0 +1,16 @@
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: databricks-elicitation-mcp-token-exchange-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: databricks-elicitation-mcp-backend 
+      sectionName: databricks 
+  backend:
+    tokenExchange: {}
+  

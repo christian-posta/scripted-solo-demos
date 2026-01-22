@@ -1,0 +1,41 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: databricks-elicitation-mcp
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /databricks/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-protected-resource/databricks/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-authorization-server/databricks/mcp                          
+      backendRefs:
+      - name: databricks-elicitation-mcp-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: databricks-elicitation-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  mcp:
+    targets:
+      - name: databricks
+        static:
+          host: dbc-f1002050-7c6a.cloud.databricks.com
+          port: 443
+          path: /api/2.0/mcp/genie/01f0c67c0cda1eb5b34096d638d3be44
+          protocol: StreamableHTTP
+          policies:
+            tls: {}        
+

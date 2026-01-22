@@ -39,12 +39,16 @@ spec:
     - name: STS_AUTH_TOKEN
       value: ./var/run/secrets/xds-tokens/xds-token          
   logging:
-    level: info
+    level: debug
   #--- Image overrides for deployment ---
   # image:
   #   registry: ghcr.io
   #   repository: agentgateway/agentgateway
   #   tag: "0.11.0-alpha.5e5533a2c6bfb8914d69662b06aef48b4e7b85d5"
+  image:
+    registry: docker.io
+    repository: ceposta/agentgateway-enterprise # stop using this once token exchange is fixed
+    tag: "0.0.1"  
   service:
     metadata:
       annotations:

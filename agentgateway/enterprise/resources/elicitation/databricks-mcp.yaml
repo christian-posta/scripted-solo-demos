@@ -1,0 +1,138 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: databricks-elicitation-mcp
+  namespace: enterprise-agentgateway
+spec:
+  parentRefs:
+  - name: agentgateway
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /databricks/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-protected-resource/databricks/mcp  
+        - path:
+            type: Exact
+            value: /.well-known/oauth-authorization-server/databricks/mcp                          
+      backendRefs:
+      - name: databricks-elicitation-mcp-backend
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+---
+# MCP Backend with multiple targets
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: databricks-elicitation-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  mcp:
+    targets:
+      - name: databricks
+        static:
+          host: dbc-f1002050-7c6a.cloud.databricks.com
+          port: 443
+          path: /api/2.0/mcp/genie/01f0c67c0cda1eb5b34096d638d3be44
+          protocol: StreamableHTTP  # Explicitly set protocol
+          policies:
+            tls: {}  # Enable TLS for HTTPS backend (backendTLS equivalent)        
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: databricks-elicitation-mcp-token-exchange-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: databricks-elicitation-mcp-backend 
+      sectionName: databricks 
+  backend:
+    tokenExchange: {}  
+---
+# Backend for Auth0 JWKS endpoint
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-elicitation-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: demo-keycloak-907026730415.us-east4.run.app
+    port: 443
+  policies:
+    tls: {}  # Enable TLS for auth0    
+---
+# Backend for Auth0 JWKS endpoint
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-elicitation-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: demo-keycloak-907026730415.us-east4.run.app
+    port: 443
+  policies:
+    tls: {}  # Enable TLS for auth0        
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: databricks-elicitation-mcp-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: databricks-elicitation-mcp
+        
+  backend:
+    mcp:
+      authentication:
+        mode: Strict
+        issuer: https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev
+        audiences:
+          - account
+        jwks:
+          backendRef:
+            name: keycloak-elicitation-mcp-backend
+            kind: AgentgatewayBackend
+            group: agentgateway.dev
+          jwksPath: realms/kagent-dev/protocol/openid-connect/certs 
+        # provider: Auth0
+        resourceMetadata:
+          authorizationServers:
+            - https://ceposta-agw.ngrok.io/databricks/mcp
+          resource: https://ceposta-agw.ngrok.io/databricks/mcp
+          scopesSupported:
+            - profile
+            - openid
+            - offline_access
+          bearerMethodsSupported:
+            - header
+            - body
+            - query
+          resourceDocumentation: https://ceposta-agw.ngrok.io/databricks/mcp/docs
+          resourcePolicyUri: https://ceposta-agw.ngrok.io/databricks/mcp/policies   
+  traffic:                           
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto

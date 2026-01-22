@@ -52,7 +52,7 @@ Get an access token to use for the exchange
 export TOKEN=$(curl -k -X POST "https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev/protocol/openid-connect/token" \
 -d "client_id=kagent-ui" \
 -d "username=admin" \
--d 'password=$KEYCLOAK_USER_PASSWORD' \
+-d 'password="$KEYCLOAK_USER_PASSWORD"' \
 -d "grant_type=password" | jq -r .access_token)
 ```
 
@@ -87,5 +87,24 @@ curl localhost:3000/headers -H "Authorization: Bearer $TOKEN"
     ]
   }
 }'
-
 ```
+
+## Databricks MCP with SSO on the client side
+
+In this scenario, we are tying our SSO to our inernal IDP. And we will use an elicitation to connect up to Databricks MCP. 
+
+
+Set up token exchange properly in agent gateway:
+
+```bash
+./setup-elicitation.sh
+```
+
+Now we need to update to use databricks as the backend elicitation:
+
+```bash
+./setup-elicitation-databricks.sh
+```
+
+
+Now we need to configure an MCP route for databricks but using our SSO

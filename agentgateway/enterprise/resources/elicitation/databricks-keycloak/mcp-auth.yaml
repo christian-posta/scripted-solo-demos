@@ -1,0 +1,83 @@
+
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-elicitation-mcp-backend
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: demo-keycloak-907026730415.us-east4.run.app
+    port: 443
+  policies:
+    tls: {}  # Enable TLS for auth0        
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: databricks-elicitation-mcp-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: databricks-elicitation-mcp
+  backend:
+    mcp:
+      authentication:
+        mode: Strict
+        issuer: https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev
+        audiences:
+          - account
+        jwks:
+          backendRef:
+            name: keycloak-elicitation-mcp-backend
+            kind: AgentgatewayBackend
+            group: agentgateway.dev
+          jwksPath: realms/kagent-dev/protocol/openid-connect/certs 
+        # provider: Auth0
+        resourceMetadata:
+          authorizationServers:
+            - https://ceposta-agw.ngrok.io/databricks/mcp
+          resource: https://ceposta-agw.ngrok.io/databricks/mcp
+          scopesSupported:
+            - profile
+            - openid
+            - offline_access
+          bearerMethodsSupported:
+            - header
+            - body
+            - query
+          resourceDocumentation: https://ceposta-agw.ngrok.io/databricks/mcp/docs
+          resourcePolicyUri: https://ceposta-agw.ngrok.io/databricks/mcp/policies   
+  traffic:                           
+    cors:
+      allowOrigins:
+        - "*"
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowCredentials: false
+    headerModifiers:
+      request:
+        remove:
+          - x-forwarded-for
+          - x-forwarded-host
+          - x-forwarded-proto
+---
+# Policy for CORS, header modification, and backend TLS
+apiVersion: enterpriseagentgateway.solo.io/v1alpha1
+kind: EnterpriseAgentgatewayPolicy
+metadata:
+  name: databricks-elicitation-mcp-token-exchange-policy
+  namespace: enterprise-agentgateway
+spec:
+  targetRefs:
+    - group: agentgateway.dev
+      kind: AgentgatewayBackend
+      name: databricks-elicitation-mcp-backend 
+      sectionName: databricks 
+  backend:
+    auth:
+      passthrough: {}
