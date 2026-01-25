@@ -1351,3 +1351,9 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1FVTNOMFF3UVVKQlJUVTROa1pFUkRkRU9U
 ```
 
 Now we can write authorization rules about MCP tools.
+
+## Microsoft Entra SSO for MCP
+
+Please see this for a full breakdown:
+
+https://github.com/christian-posta/agentgateway-entra-sso
