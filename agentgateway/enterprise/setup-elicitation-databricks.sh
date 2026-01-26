@@ -19,7 +19,6 @@ tokenExchange:
   subjectValidator:
     validatorType: remote
     remoteConfig:
-#     url: "https://ceposta-solo.auth0.com/.well-known/jwks.json"
       url: "https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev/protocol/openid-connect/certs"
   actorValidator:
     validatorType: k8s
