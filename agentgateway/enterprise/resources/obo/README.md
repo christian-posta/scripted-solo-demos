@@ -16,7 +16,7 @@ tokenExchange:
   subjectValidator:
     validatorType: remote
     remoteConfig:
-      url: "http://host.docker.internal:8080/realms/mcp-realm/protocol/openid-connect/certs"
+      url: "https://demo-keycloak-907026730415.us-east4.run.app/realms/kagent-dev/protocol/openid-connect/certs"
   actorValidator:
     validatorType: k8s
 ```
@@ -42,7 +42,7 @@ kubectl apply -f resources/obo/httproute.yaml
 ```
 
 
-Note, you'll need a public keycloak client:
+Note, you'll need a public keycloak client if you're setting this up yourself in your own keycloak/IdP:
 
 name; kagent-ui
 redirect: http://localhost:3000/callback
