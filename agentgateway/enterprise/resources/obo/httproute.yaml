@@ -1,0 +1,47 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agent-obo-api  # Different name
+spec:
+  parentRefs:
+  - name: agentgateway
+    namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /obo/agent
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /agent
+      backendRefs:
+        - name: agent-obo
+          kind: Service
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agent-obo-ui  # Different name
+spec:
+  parentRefs:
+  - name: agentgateway
+    namespace: enterprise-agentgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /obo
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: demo-agent-ui
+          kind: Service
+          port: 80

@@ -1,0 +1,106 @@
+# Agent OBO - Combined Kubernetes Resources
+# ServiceAccount, RBAC, Service, and Deployment
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: agent-sa
+  labels:
+    app: agent
+    component: agent
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: agent-role
+  labels:
+    app: agent
+    component: agent
+rules:
+  # Allow reading services for service discovery
+  - apiGroups: [""]
+    resources: ["services", "endpoints"]
+    verbs: ["get", "list", "watch"]
+  # Allow reading ConfigMaps if needed for dynamic configuration
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agent-rolebinding
+  labels:
+    app: agent
+    component: agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: agent-role
+subjects:
+  - kind: ServiceAccount
+    name: agent-sa
+    namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-obo
+  labels:
+    app: agent-obo
+    component: agent
+    mode: obo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: agent-obo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-obo
+  labels:
+    app: agent-obo
+    component: agent
+    mode: obo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-obo
+  template:
+    metadata:
+      labels:
+        app: agent-obo
+        component: agent
+        mode: obo
+    spec:
+      serviceAccountName: agent-sa
+      containers:
+      - name: agent-obo
+        image: docker.io/ceposta/agent-obo:latest
+        # imagePullPolicy: IfNotPresent 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: MCP_TOOLS_URL
+          value: "http://agentgateway.enterprise-agentgateway.svc.cluster.local:8080/public/mcp"
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: google-credentials
+              key: api-key
+        - name: STS_WELL_KNOWN_URI
+          value: "http://enterprise-agentgateway.enterprise-agentgateway.svc.cluster.local:7777/.well-known/oauth-authorization-server"
+        # Optional: Override token endpoint if well-known config returns unreachable URL
+        # - name: STS_TOKEN_ENDPOINT_OVERRIDE
+        #   value: "http://gloo-gateway.gloo-system.svc.cluster.local:7777/oauth/token"
+
