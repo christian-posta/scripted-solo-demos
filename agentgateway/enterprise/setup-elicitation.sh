@@ -5,6 +5,10 @@ source .env
 
 kubectl create secret generic elicitation-oidc -n enterprise-agentgateway  --from-literal=client_id=$GITHUB_CLIENT_ID --from-literal=app_id=2085885 --from-literal=client_secret=$GITHUB_CLIENT_SECRET --from-literal=authorize_url=https://github.com/login/oauth/authorize  --from-literal=access_token_url=https://github.com/login/oauth/access_token --from-literal=scopes=read:user --from-literal=redirect_uri=http://localhost:4000/age/elicitations  --dry-run=client -o yaml | kubectl apply  -f -
 
+# Before installing, we can check current helm values:
+# helm get values enterprise-agentgateway -n enterprise-agentgateway
+# Use this for URL for local keycloak:
+# url: "http://host.docker.internal:8080/realms/mcp-realm/protocol/openid-connect/certs"
 
 helm upgrade -i -n enterprise-agentgateway enterprise-agentgateway oci://us-docker.pkg.dev/solo-public/enterprise-agentgateway/charts/enterprise-agentgateway \
 --reuse-values \

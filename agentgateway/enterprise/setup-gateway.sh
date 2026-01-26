@@ -31,6 +31,11 @@ gatewayClassParametersRefs:
     namespace: enterprise-agentgateway
 EOF
 
+
+# Can later get values from the installation with this:
+
+# helm get values enterprise-agentgateway -n enterprise-agentgateway  
+
 # Install supporting components
 kubectl apply -f ./resources/setup/supporting.yaml
 kubectl apply -f ./resources/setup/gateway.yaml

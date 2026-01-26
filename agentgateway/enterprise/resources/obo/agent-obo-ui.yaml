@@ -25,9 +25,9 @@ spec:
         - name: VITE_AGENT_OBO_URL
           value: "http://localhost:3000/obo"
         - name: VITE_KEYCLOAK_HOSTNAME
-          value: "http://localhost:8080"
+          value: "https://demo-keycloak-907026730415.us-east4.run.app"
         - name: VITE_KEYCLOAK_REALM
-          value: "mcp-realm"
+          value: "kagent-dev"
         - name: VITE_KEYCLOAK_CLIENT_ID
           value: "kagent-ui"
         resources:
