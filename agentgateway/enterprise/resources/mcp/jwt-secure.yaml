@@ -15,7 +15,17 @@ spec:
       - name: public-mcp-backend
         group: agentgateway.dev
         kind: AgentgatewayBackend
-
+---
+# Keycloak Backend for JWKS (if Keycloak is not a Kubernetes Service)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: keycloak-jwks
+  namespace: enterprise-agentgateway
+spec:
+  static:
+    host: host.docker.internal  
+    port: 8080
 ---
 # Policy for CORS, header modification, and backend TLS
 apiVersion: enterpriseagentgateway.solo.io/v1alpha1
